@@ -16,10 +16,13 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "release": "release-it"
+    "release": "release-it",
+    "migrate": "prisma migrate dev --name init"
   },
   "dependencies": {
+    "@prisma/client": "^6.11.1",
     "next": "15.3.5",
+    "prisma": "^6.11.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
@@ -27,13 +30,13 @@
     "@eslint/eslintrc": "^3",
     "@release-it/conventional-changelog": "^10.0.1",
     "@tailwindcss/postcss": "^4",
-    "@types/node": "^20",
+    "@types/node": "^24.0.12",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.3.5",
     "release-it": "^19.0.3",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5.8.3"
   }
 }
