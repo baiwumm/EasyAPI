@@ -2,28 +2,29 @@
  * @Author: 白雾茫茫丶<baiwumm.com>
  * @Date: 2025-07-10 10:55:32
  * @LastEditors: 白雾茫茫丶<baiwumm.com>
- * @LastEditTime: 2025-07-10 14:38:46
+ * @LastEditTime: 2025-07-10 16:02:00
  * @Description: 首页
  */
 import prisma from '@/lib/prisma';
-import Link from 'next/link';
 import { Prisma } from '@prisma/client'
+import APICard from '@/components/APICard'; // 接口卡片
 
 export default async function Home() {
   // 获取分类及关联的API接口
   const categories = await prisma.category.findMany({
     include: {
       apis: {
-        where: { isFeatured: true },
         orderBy: { createdAt: 'desc' },
         take: 3,
         include: {
+          stats: true,
           category: true
         },
       }
     }
   });
 
+  // 获取热门接口
   const apis = await prisma.api.findMany({
     include: {
       stats: { orderBy: { callCount: 'desc' }, take: 1 }, // 获取最新统计
@@ -41,7 +42,7 @@ export default async function Home() {
     <div className="container mx-auto px-4 py-8">
       {/* 热门接口区块 */}
       <section className="mb-12">
-        <h2 className="text-2xl font-semibold mb-6">热门接口</h2>
+        <h2 className="text-xl font-semibold mb-6">热门接口</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {popularApis.map(api => (
             <APICard
@@ -55,7 +56,6 @@ export default async function Home() {
 
       {/* 分类展示区块 */}
       <section>
-        <h2 className="text-2xl font-semibold mb-6">全部接口分类</h2>
         <div className="space-y-8">
           {categories.map(category => (
             <CategorySection
@@ -70,33 +70,6 @@ export default async function Home() {
   );
 }
 
-// API卡片组件
-function APICard({ api, callCount }: {
-  api: Prisma.ApiGetPayload<{ include: { category: true } }>;
-  callCount: number;
-}) {
-  return (
-    <Link href={`/apis/${api.path}`} className="block">
-      <div className="border rounded-lg p-6 hover:shadow-md transition-shadow">
-        <div className="flex justify-between items-start">
-          <h3 className="text-xl font-semibold">{api.name}</h3>
-          <span className="text-sm bg-blue-100 text-blue-800 px-2 py-1 rounded">
-            {api.method}
-          </span>
-        </div>
-        <p className="text-gray-600 my-2 line-clamp-2">{api.description}</p>
-        <div className="flex justify-between items-center mt-4">
-          {api.category && (
-            <span className="text-sm text-purple-600">
-              {api.category.name}
-            </span>
-          )}
-          <span className="text-sm text-gray-500">{callCount}次调用</span>
-        </div>
-      </div>
-    </Link>
-  );
-}
 
 // 分类区块组件
 function CategorySection({
@@ -118,7 +91,7 @@ function CategorySection({
             <APICard
               key={api.id}
               api={api}
-              callCount={0}
+              callCount={api.stats?.[0]?.callCount || 0}
             />
           ))}
         </div>
