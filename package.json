@@ -6,8 +6,8 @@
     "name": "baiwumm",
     "url": "https://baiwumm.com",
     "email": "baiwumm@foxmail.com",
-    "github":"https://github.com/baiwumm",
-    "wechat":"https://wechat.baiwumm.com/"
+    "github": "https://github.com/baiwumm",
+    "wechat": "https://wechat.baiwumm.com/"
   },
   "repository": {
     "type": "git",
@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "@heroui/react": "2.8.0-beta.15",
+    "@next/third-parties": "^15.3.5",
     "@prisma/client": "^6.11.1",
     "framer-motion": "^12.23.3",
     "next": "15.3.5",
