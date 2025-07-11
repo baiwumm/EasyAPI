@@ -2,7 +2,7 @@
  * @Author: 白雾茫茫丶<baiwumm.com>
  * @Date: 2025-07-10 10:55:32
  * @LastEditors: 白雾茫茫丶<baiwumm.com>
- * @LastEditTime: 2025-07-11 09:09:51
+ * @LastEditTime: 2025-07-11 16:10:52
  * @Description: 全局布局文件
  */
 import { HeroUIProvider } from "@heroui/react";
@@ -11,6 +11,7 @@ import "./globals.css";
 import { ThemeProvider } from 'next-themes';
 
 import Header from '@/components/Header'; // 头部布局
+import Footer from '@/components/Footer'; // 底部布局
 
 
 export const metadata: Metadata = {
@@ -31,6 +32,8 @@ export default function RootLayout({
             {/* 头部布局 */}
             <Header />
             <main>{children}</main>
+            {/* 底部 */}
+            <Footer />
           </ThemeProvider>
         </HeroUIProvider>
       </body>
