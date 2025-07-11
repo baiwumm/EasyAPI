@@ -12,26 +12,17 @@ import prisma from '@/lib/prisma';
 
 export default async function HotApiCard() {
   // 获取热门接口
-  const apis = await prisma.api.findMany({
+  const popularApis = await prisma.api.findMany({
     include: {
-      stats: { orderBy: { callCount: 'desc' }, take: 1 }, // 获取最新统计
-      category: true
+      category: true,
     },
+    orderBy: { callCount: 'desc' },
     take: 6
   });
-
-  // 客户端排序（如果必须按统计值排序）
-  const popularApis = apis.sort((a, b) =>
-    (b.stats[0]?.callCount || 0) - (a.stats[0]?.callCount || 0)
-  );
   return popularApis?.length ? (
     <div className="grid grid-cols-[repeat(auto-fill,minmax(20rem,1fr))] gap-4">
       {popularApis.map(api => (
-        <APICard
-          key={api.id}
-          api={api}
-          callCount={api.stats?.[0]?.callCount || 0}
-        />
+        <APICard key={api.id} api={api} />
       ))}
     </div>
   ) : (

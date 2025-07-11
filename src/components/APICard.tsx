@@ -16,10 +16,9 @@ import { formatNumberWithUnit } from '@/lib/utils';
 
 type APICardProps = {
   api: Api;
-  callCount: number;
 }
 
-export default function APICard({ api, callCount = 0 }: APICardProps) {
+export default function APICard({ api }: APICardProps) {
   const [isHovered, setIsHovered] = useState(false);
   return (
     <Link href={`/apis/${api.path}`} target='_blank' className="block">
@@ -39,7 +38,7 @@ export default function APICard({ api, callCount = 0 }: APICardProps) {
           <div className="flex justify-end text-xs text-gray-500 mt-4 gap-3">
             <div className="flex items-center gap-1">
               <Icon icon='ri:star-line' />
-              <span>{formatNumberWithUnit(callCount)}</span>
+              <span>{formatNumberWithUnit(api.callCount)}</span>
             </div>
             {api.isFeatured ? (
               <div className="flex items-center gap-1">

@@ -2,11 +2,11 @@
  * @Author: 白雾茫茫丶<baiwumm.com>
  * @Date: 2025-07-11 11:22:45
  * @LastEditors: 白雾茫茫丶<baiwumm.com>
- * @LastEditTime: 2025-07-11 11:53:40
+ * @LastEditTime: 2025-07-11 16:47:41
  * @Description: 分类区域卡片
  */
 import { Alert } from "@heroui/react";
-import { Prisma, Api, ApiStat } from '@prisma/client';
+import { Api, Category } from '@prisma/client';
 
 import APICard from '@/components/APICard'; // 接口卡片
 import prisma from '@/lib/prisma';
@@ -18,9 +18,7 @@ export default async function CategoryCard() {
     include: {
       apis: {
         orderBy: { createdAt: 'desc' },
-        take: 3,
         include: {
-          stats: true,
           category: true
         },
       }
@@ -44,8 +42,8 @@ function CategorySection({
   category,
   apis
 }: {
-  category: Prisma.CategoryGetPayload<true>;
-  apis: (Api & { stats: ApiStat[] })[];
+  category: Category;
+  apis: Api[];
 }) {
   return (
     <div className="flex flex-col gap-2">
@@ -56,11 +54,7 @@ function CategorySection({
       {apis.length > 0 ? (
         <div className="grid grid-cols-[repeat(auto-fill,minmax(20rem,1fr))] gap-4">
           {apis.map(api => (
-            <APICard
-              key={api.id}
-              api={api}
-              callCount={api?.stats?.[0]?.callCount || 0}
-            />
+            <APICard key={api.id} api={api} />
           ))}
         </div>
       ) : (
