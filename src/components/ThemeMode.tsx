@@ -6,9 +6,10 @@
  * @Description: 主题切换
  */
 'use client';
+import { Icon } from '@iconify/react'
 import { useTheme } from 'next-themes';
 import { useState, useEffect } from 'react';
-import { Icon } from '@iconify/react'
+
 import { THEME_MODE } from '@/lib/enum'
 
 export default function ThemeMode() {

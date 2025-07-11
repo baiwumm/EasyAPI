@@ -2,13 +2,15 @@
  * @Author: 白雾茫茫丶<baiwumm.com>
  * @Date: 2025-07-11 11:22:45
  * @LastEditors: 白雾茫茫丶<baiwumm.com>
- * @LastEditTime: 2025-07-11 11:35:23
+ * @LastEditTime: 2025-07-11 11:53:40
  * @Description: 分类区域卡片
  */
-import prisma from '@/lib/prisma';
-import { Prisma } from '@prisma/client';
-import APICard from '@/components/APICard'; // 接口卡片
 import { Alert } from "@heroui/react";
+import { Prisma, Api, ApiStat } from '@prisma/client';
+
+import APICard from '@/components/APICard'; // 接口卡片
+import prisma from '@/lib/prisma';
+
 
 export default async function CategoryCard() {
   // 获取分类及关联的API接口
@@ -43,7 +45,7 @@ function CategorySection({
   apis
 }: {
   category: Prisma.CategoryGetPayload<true>;
-  apis: Prisma.ApiGetPayload<true>[];
+  apis: (Api & { stats: ApiStat[] })[];
 }) {
   return (
     <div className="flex flex-col gap-2">

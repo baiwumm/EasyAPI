@@ -5,11 +5,13 @@
  * @LastEditTime: 2025-07-11 11:30:12
  * @Description: 首页
  */
-import { Suspense } from 'react'
-import HotApiCard from '@/components/HotApiCard'; // 热门卡片
 import { Spinner } from "@heroui/react";
-import CategoryCard from '@/components/CategoryCard'; // 分类区域卡片
 import { Icon } from '@iconify/react';
+import { Suspense } from 'react'
+
+import CategoryCard from '@/components/CategoryCard'; // 分类区域卡片
+import HotApiCard from '@/components/HotApiCard'; // 热门卡片
+
 
 export default async function Home() {
   return (

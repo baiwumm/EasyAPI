@@ -5,11 +5,13 @@
  * @LastEditTime: 2025-07-11 09:09:51
  * @Description: 全局布局文件
  */
+import { HeroUIProvider } from "@heroui/react";
 import type { Metadata } from "next";
 import "./globals.css";
-import Header from '@/components/Header'; // 头部布局
 import { ThemeProvider } from 'next-themes';
-import { HeroUIProvider } from "@heroui/react";
+
+import Header from '@/components/Header'; // 头部布局
+
 
 export const metadata: Metadata = {
   title: "Create Next App",

@@ -5,9 +5,10 @@
  * @LastEditTime: 2025-07-11 11:14:36
  * @Description: 热门卡片
  */
-import prisma from '@/lib/prisma';
-import APICard from '@/components/APICard'; // 接口卡片
 import { Alert } from "@heroui/react";
+
+import APICard from '@/components/APICard'; // 接口卡片
+import prisma from '@/lib/prisma';
 
 export default async function HotApiCard() {
   // 获取热门接口
