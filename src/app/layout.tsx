@@ -2,13 +2,14 @@
  * @Author: 白雾茫茫丶<baiwumm.com>
  * @Date: 2025-07-10 10:55:32
  * @LastEditors: 白雾茫茫丶<baiwumm.com>
- * @LastEditTime: 2025-07-10 16:51:49
+ * @LastEditTime: 2025-07-11 09:09:51
  * @Description: 全局布局文件
  */
 import type { Metadata } from "next";
 import "./globals.css";
 import Header from '@/components/Header'; // 头部布局
 import { ThemeProvider } from 'next-themes';
+import { HeroUIProvider } from "@heroui/react";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -23,11 +24,13 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body>
-        <ThemeProvider attribute="class" defaultTheme={process.env.DEFAULT_THEME}>
-          {/* 头部布局 */}
-          <Header />
-          <main>{children}</main>
-        </ThemeProvider>
+        <HeroUIProvider>
+          <ThemeProvider attribute="class" defaultTheme={process.env.DEFAULT_THEME}>
+            {/* 头部布局 */}
+            <Header />
+            <main>{children}</main>
+          </ThemeProvider>
+        </HeroUIProvider>
       </body>
     </html>
   );
