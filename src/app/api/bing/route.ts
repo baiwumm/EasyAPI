@@ -2,7 +2,7 @@
  * @Author: 白雾茫茫丶<baiwumm.com>
  * @Date: 2025-07-10 11:25:15
  * @LastEditors: 白雾茫茫丶<baiwumm.com>
- * @LastEditTime: 2025-07-11 17:44:26
+ * @LastEditTime: 2025-07-11 17:59:15
  * @Description: Bing 每日图片
  */
 import { NextResponse } from 'next/server';
@@ -21,6 +21,3 @@ export async function GET() {
     return NextResponse.redirect('https://picsum.photos/1200/630', 302);
   }
 }
-
-// 数据过期时间
-export const revalidate = Number(process.env.NEXT_PUBLIC_CACHE_TIME);
