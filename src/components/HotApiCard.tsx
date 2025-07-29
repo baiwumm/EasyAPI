@@ -2,7 +2,7 @@
  * @Author: 白雾茫茫丶<baiwumm.com>
  * @Date: 2025-07-11 10:33:30
  * @LastEditors: 白雾茫茫丶<baiwumm.com>
- * @LastEditTime: 2025-07-29 08:38:01
+ * @LastEditTime: 2025-07-29 09:24:26
  * @Description: 热门卡片
  */
 import { Alert } from "@heroui/react";
@@ -15,7 +15,6 @@ export default async function HotApiCard() {
   const supabase = await createClient();
   // 获取分类及关联的API接口
   const { data: popularApis } = await supabase.from('ea_apis').select('*,ea_categorys(*)', { count: 'exact' }).order('call_count', { ascending: false }).range(0, 5);
-  console.log('popularApis', popularApis)
   return popularApis?.length ? (
     <div className="grid grid-cols-[repeat(auto-fill,minmax(20rem,1fr))] gap-4">
       {popularApis.map(api => (

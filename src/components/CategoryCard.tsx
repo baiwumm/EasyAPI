@@ -17,7 +17,6 @@ export default async function CategoryCard() {
   const supabase = await createClient();
   // 获取分类及关联的API接口
   const { data: categories } = await supabase.from('ea_categories').select('*,ea_apis(*)', { count: 'exact' }).order('created_at', { ascending: false });
-  console.log('categories', categories)
   return categories?.length ? (
     <div className="space-y-8">
       {categories.map(category => (

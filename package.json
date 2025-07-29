@@ -15,11 +15,10 @@
   },
   "scripts": {
     "dev": "next dev",
-    "build": "prisma generate && next build",
+    "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "release": "release-it",
-    "migrate": "prisma migrate dev --name init"
+    "release": "release-it"
   },
   "dependencies": {
     "@heroui/react": "2.8.0-beta.15",
