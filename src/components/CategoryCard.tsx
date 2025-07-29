@@ -2,28 +2,22 @@
  * @Author: 白雾茫茫丶<baiwumm.com>
  * @Date: 2025-07-11 11:22:45
  * @LastEditors: 白雾茫茫丶<baiwumm.com>
- * @LastEditTime: 2025-07-11 16:47:41
+ * @LastEditTime: 2025-07-28 18:09:51
  * @Description: 分类区域卡片
  */
 import { Alert } from "@heroui/react";
-import { Api, Category } from '@prisma/client';
 
 import APICard from '@/components/APICard'; // 接口卡片
-import prisma from '@/lib/prisma';
+import { createClient } from "@/lib/supabase/client";
+import type { Category, Api } from '@/lib/type';
 
 
 export default async function CategoryCard() {
+  // 创建 Supabase 客户端
+  const supabase = await createClient();
   // 获取分类及关联的API接口
-  const categories = await prisma.category.findMany({
-    include: {
-      apis: {
-        orderBy: { createdAt: 'desc' },
-        include: {
-          category: true
-        },
-      }
-    }
-  });
+  const { data: categories } = await supabase.from('ea_categories').select('*,ea_apis(*)', { count: 'exact' }).order('created_at', { ascending: false });
+  console.log('categories', categories)
   return categories?.length ? (
     <div className="space-y-8">
       {categories.map(category => (
@@ -49,7 +43,7 @@ function CategorySection({
     <div className="flex flex-col gap-2">
       <h3 className="text-xl font-semibold flex items-center">
         {category.name}
-        <span className="ml-2 text-xs text-gray-500">({category.description})</span>
+        <span className="ml-2 text-xs text-gray-500">({category.desc})</span>
       </h3>
       {apis.length > 0 ? (
         <div className="grid grid-cols-[repeat(auto-fill,minmax(20rem,1fr))] gap-4">

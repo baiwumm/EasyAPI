@@ -18,7 +18,7 @@ export default function Header() {
       {/* 左侧 Logo 标题 */}
       <div className="flex gap-1 justify-between items-center grow-0 shrink-0">
         <Image src="/logo.svg" alt="logo" priority width={120} height={40} />
-        <h1 className="font-black text-xl hidden sm:block">{process.env.SITE_DESCRIPTION}</h1>
+        <h1 className="font-black text-xl hidden sm:block">{process.env.NEXT_PUBLIC_SITE_DESCRIPTION}</h1>
       </div>
       <div className="flex gap-2 items-center">
         {/* 暗黑主题 */}

@@ -23,9 +23,9 @@ import pkg from '../../package.json'
 
 
 export const metadata: Metadata = {
-  title: `${process.env.SITE_TITLE} - ${process.env.SITE_DESCRIPTION}`, // 网站标题
-  description: process.env.SITE_DESCRIPTION,
-  applicationName: process.env.SITE_TITLE, // 应用名称
+  title: `${process.env.NEXT_PUBLIC_SITE_NAME} - ${process.env.NEXT_PUBLIC_SITE_DESCRIPTION}`, // 网站标题
+  description: process.env.NEXT_PUBLIC_SITE_DESCRIPTION,
+  applicationName: process.env.NEXT_PUBLIC_SITE_NAME, // 应用名称
   authors: { name: pkg.author.name, url: pkg.author.url }, // 网站作者
   keywords: '简单,API,接口,实用工具,新闻资讯', // 网站关键词
   icons: {
@@ -34,15 +34,15 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'zh_CN',
-    url: process.env.SITE_URL,
-    title: process.env.SITE_TITLE,
-    description: process.env.SITE_DESCRIPTION,
-    siteName: process.env.SITE_TITLE,
+    url: process.env.NEXT_PUBLIC_SITE_URL,
+    title: process.env.NEXT_PUBLIC_SITE_NAME,
+    description: process.env.NEXT_PUBLIC_SITE_DESCRIPTION,
+    siteName: process.env.NEXT_PUBLIC_SITE_NAME,
   },
   twitter: {
     card: 'summary_large_image',
-    title: process.env.SITE_TITLE,
-    description: process.env.SITE_DESCRIPTION,
+    title: process.env.NEXT_PUBLIC_SITE_NAME,
+    description: process.env.NEXT_PUBLIC_SITE_DESCRIPTION,
     creator: pkg.author.github,
   },
 };

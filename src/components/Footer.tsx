@@ -44,8 +44,8 @@ export default function Footer() {
       <div className="flex justify-between items-center px-4 md:px-8 lg:px-32 py-3 max-sm:flex-col gap-2">
         {/* 备案 */}
         <div className="flex items-center gap-2 max-sm:flex-col">
-          {renderIcp('https://beian.miit.gov.cn/#/Integrated/index', '/icp.png', process.env.SITE_ICP)}
-          {renderIcp('https://beian.mps.gov.cn/#/query/webSearch', '/gongan.png', process.env.SITE_GUAN_ICP)}
+          {renderIcp('https://beian.miit.gov.cn/#/Integrated/index', '/icp.png', process.env.NEXT_PUBLIC_SITE_ICP)}
+          {renderIcp('https://beian.mps.gov.cn/#/query/webSearch', '/gongan.png', process.env.NEXT_PUBLIC_SITE_GUAN_ICP)}
         </div>
         {/* 社交图标 */}
         <div className="max-sm:order-first flex items-center gap-2">
