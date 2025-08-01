@@ -1,26 +1,22 @@
-import { dirname } from "path";
-import { fileURLToPath } from "url";
-
-import { FlatCompat } from "@eslint/eslintrc";
-import js from "@eslint/js"; // ESLint v9 内置规则
+// @ts-check
+import withNuxt from "./.nuxt/eslint.config.mjs";
 import importPlugin from "eslint-plugin-import";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-const compat = new FlatCompat({
-  baseDirectory: __dirname,
-});
-
-const eslintConfig = [
-  // 1. 基础规则
-  js.configs.recommended,
-  // 2. Next.js 官方规则
-  ...compat.extends("next/core-web-vitals", "next/typescript"),
-  // 3. Import 插件配置
+export default withNuxt(
+  // Your custom configs here
   {
     plugins: {
       import: importPlugin,
+    },
+    settings: {
+      "import/resolver": {
+        typescript: {
+          project: "./tsconfig.json",
+        },
+        node: {
+          extensions: [".js", ".ts", ".vue", ".tsx"],
+        },
+      },
     },
     rules: {
       // 核心验证规则
@@ -43,15 +39,5 @@ const eslintConfig = [
       "import/no-absolute-path": "error",
       "import/no-cycle": "warn",
     },
-    settings: {
-      "import/resolver": {
-        typescript: {
-          alwaysTryTypes: true,
-          project: "./tsconfig.json",
-        },
-      },
-    },
-  },
-];
-
-export default eslintConfig;
+  }
+);
