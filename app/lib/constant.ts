@@ -1,4 +1,6 @@
 import type { Social } from '~/lib/type'
+import type { SelectItem } from '#ui/types'
+import { REQUEST_METHOD } from '~/lib/enum'
 
 /**
  * @description: 底部备案
@@ -29,4 +31,15 @@ export const FooterSocial: Social[] = [
   { icon: 'i-ri-wechat-line', url: 'https://wechat.baiwumm.com/', tip: '微信' },
   { icon: 'i-ri-mail-line', url: 'mailto:me@baiwumm.com', tip: 'Email' },
   { icon: 'i-ri-quill-pen-line', url: 'https://baiwumm.com', tip: '博客' }
+]
+
+/**
+ * @description: 请求方式
+ */
+export const RequestMethodOptions: SelectItem[] = [
+  { label: REQUEST_METHOD.GET, value: REQUEST_METHOD.GET, icon: 'tabler:http-get' },
+  { label: REQUEST_METHOD.POST, value: REQUEST_METHOD.POST, icon: 'tabler:http-post' },
+  { label: REQUEST_METHOD.PATCH, value: REQUEST_METHOD.PATCH, icon: 'tabler:http-patch' },
+  { label: REQUEST_METHOD.PUT, value: REQUEST_METHOD.PUT, icon: 'tabler:http-put' },
+  { label: REQUEST_METHOD.DELETE, value: REQUEST_METHOD.DELETE, icon: 'tabler:http-delete' },
 ]

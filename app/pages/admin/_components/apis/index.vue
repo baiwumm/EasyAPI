@@ -293,6 +293,27 @@ const columns: TableColumn<ApiList>[] = [
     },
   },
   {
+    accessorKey: "method",
+    header: "请求方法",
+    meta: {
+      class: {
+        td: "text-center",
+        th: "text-center",
+      },
+    },
+    cell: ({ row }) => {
+      const method = row.original.method;
+      const colorMap = {
+        GET: "success",
+        POST: "warning",
+        PUT: "info",
+        DELETE: "error",
+        PATCH: "info",
+      };
+      return h(UBadge, { variant: "soft", color: colorMap[method], label: method });
+    },
+  },
+  {
     accessorKey: "sort",
     meta: {
       class: {
@@ -330,7 +351,9 @@ const columns: TableColumn<ApiList>[] = [
     },
     cell: ({ row }) => {
       const pinned = row.original.pinned;
-      return h(UCheckbox, { disabled: true, defaultValue: pinned || "indeterminate" });
+      return h("div", { class: "flex justify-center" }, [
+        h(UCheckbox, { disabled: true, defaultValue: pinned || "indeterminate" }),
+      ]);
     },
   },
   {
@@ -344,7 +367,9 @@ const columns: TableColumn<ApiList>[] = [
     },
     cell: ({ row }) => {
       const is_featured = row.original.is_featured;
-      return h(UCheckbox, { disabled: true, defaultValue: is_featured || "indeterminate" });
+      return h("div", { class: "flex justify-center" }, [
+        h(UCheckbox, { disabled: true, defaultValue: is_featured || "indeterminate" }),
+      ]);
     },
   },
   {
@@ -423,6 +448,7 @@ const columnVisibilityMap: Record<string, string> = reactive({
   name: "接口名称",
   category_id: "所属分类",
   desc: "接口描述",
+  method: "请求方式",
   path: "接口路径",
   pinned: "置顶",
   is_featured: "推荐",

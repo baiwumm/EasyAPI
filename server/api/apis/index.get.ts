@@ -2,7 +2,7 @@
  * @Author: 白雾茫茫丶<baiwumm.com>
  * @Date: 2024-05-29 14:39:50
  * @LastEditors: 白雾茫茫丶<baiwumm.com>
- * @LastEditTime: 2025-08-01 11:19:14
+ * @LastEditTime: 2025-08-01 13:59:34
  * @Description: 获取接口列表
  */
 import type { Response, PageResponse, ApiList, WebsiteParams } from '~/lib/type'
@@ -25,7 +25,7 @@ export default defineEventHandler(async (event): Promise<Response<PageResponse<A
   // 查询 sql
   let sqlQuery = client
     .from('ea_apis')
-    .select('*,categorys(*)', { count: 'exact' })
+    .select('*,categorys:ea_categorys(*)', { count: 'exact' })
     .range(start, end)
     .order('pinned', {
       ascending: false

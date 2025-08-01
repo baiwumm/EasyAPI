@@ -53,10 +53,26 @@
                 </div>
               </div>
               <div class="flex gap-1 absolute top-2 right-2">
-                <!-- 置顶标签 -->
-                <UBadge variant="soft" v-if="child.pinned" size="sm">置顶</UBadge>
-                <!-- 是否推荐 -->
-                <UBadge color="secondary" variant="soft" v-if="child.is_featured" size="sm">推荐</UBadge>
+                <!-- 请求方式 -->
+                <UBadge variant="soft" size="sm" :color="methodColorMap[child.method]">{{ child.method }}</UBadge>
+              </div>
+              <!-- 底部标签 -->
+              <div class="flex justify-end text-xs text-gray-500 mt-4 gap-3">
+                <!-- 调用次数 -->
+                <div class="flex items-center gap-1">
+                  <UIcon name="ri:star-line" />
+                  <span>{{ formatNumberWithUnit(child.call_count) }}</span>
+                </div>
+                <!-- 推荐 -->
+                <div class="flex items-center gap-1" v-if="child.is_featured">
+                  <UIcon name="ri:thumb-up-line" />
+                  <span>推荐</span>
+                </div>
+                <!-- 置顶 -->
+                <div class="flex items-center gap-1" v-if="child.pinned">
+                  <UIcon name="tabler:pinned" />
+                  <span>置顶</span>
+                </div>
               </div>
             </div>
           </AnimatedContent>
@@ -77,13 +93,25 @@
 
 <script setup lang="ts">
 import type { PageResponse, CategoryList, Response, ApiList } from "~/lib/type";
+import { formatNumberWithUnit } from "~/lib/utils";
+import { REQUEST_METHOD } from "~/lib/enum";
+import type { BadgeProps } from "#ui/types";
+
 const client = useSupabaseClient<ApiList>();
 const toast = useToast();
 
 defineOgImageComponent("Nuxt", {
   headline: "Greetings",
   title: `${process.env.NUXT_SITE_NAME} 👋`,
-  description: "A beautiful personal site navigation!",
+  description: "A beautiful and modern API aggregation platform!",
+});
+
+const methodColorMap = ref<Record<REQUEST_METHOD, BadgeProps["color"]>>({
+  GET: "success",
+  POST: "warning",
+  PUT: "info",
+  DELETE: "error",
+  PATCH: "info",
 });
 
 // 请求分类列表

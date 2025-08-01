@@ -24,7 +24,7 @@ const items = ref<TabsItem[]>([
   },
   {
     label: "接口列表",
-    icon: "ri:planet-line",
+    icon: "eos-icons:api-outlined",
     slot: "apis" as const,
   },
 ]);

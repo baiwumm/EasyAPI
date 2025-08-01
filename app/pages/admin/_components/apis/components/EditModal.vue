@@ -4,7 +4,7 @@
     :title="state.id ? '编辑接口' : '新增接口'"
     :dismissible="false"
     :ui="{ footer: 'justify-end' }"
-    aria-describedby="website-modal"
+    aria-describedby="api-modal"
   >
     <template #body>
       <UForm ref="form" :schema :state class="space-y-4" @submit="onSubmit">
@@ -36,7 +36,34 @@
           </UInput>
         </UFormField>
 
-        <div class="grid grid-cols-2">
+        <UFormField label="接口路径" name="path" required>
+          <UInput
+            v-model="state.path"
+            placeholder="请输入接口路径"
+            class="w-full"
+            size="lg"
+            :maxlength="100"
+            aria-describedby="path"
+          >
+            <template #trailing>
+              <div id="character-count" class="text-xs text-muted tabular-nums" aria-live="polite" role="status">
+                {{ state.path?.length || 0 }}/100
+              </div>
+            </template>
+          </UInput>
+        </UFormField>
+
+        <UFormField name="method" label="请求方式" required>
+          <USelect
+            v-model="state.method"
+            placeholder="请选择请求方式"
+            :items="RequestMethodOptions"
+            size="lg"
+            class="w-full"
+          />
+        </UFormField>
+
+        <div class="grid grid-cols-2 place-items-center">
           <UFormField label="置顶" name="pinned">
             <USwitch unchecked-icon="i-lucide-x" checked-icon="i-lucide-check" v-model="state.pinned" />
           </UFormField>
@@ -81,8 +108,9 @@
 <script setup lang="ts">
 import { z } from "zod";
 import type { ApiEdit, CategoryList } from "~/lib/type";
-import { RESPONSE_STATUS_CODE } from "~/lib/enum";
+import { RESPONSE_STATUS_CODE, REQUEST_METHOD } from "~/lib/enum";
 import type { FormSubmitEvent } from "@nuxt/ui";
+import { RequestMethodOptions } from "~/lib/constant";
 
 const props = defineProps<{
   modelValue: boolean;
@@ -99,13 +127,17 @@ const form = useTemplateRef("form");
 
 const toast = useToast();
 
-const hexColorRegex = /^(#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3}))?$/;
-
 // 表单验证模式
 const schema = z.object({
   id: z.string().optional(),
   category_id: z.string("请选择所属分类"),
   name: z.string("请输入接口名称").min(1, "接口名称不能为空").max(12, "接口名称不能超过12个字符"),
+  path: z
+    .string("请输入接口路径")
+    .min(1, "接口路径不能为空")
+    .max(100, "接口路径不能超过100个字符")
+    .regex(/^\//, "接口路径必须以 / 开头"),
+  method: z.enum(REQUEST_METHOD),
   pinned: z.boolean().optional(),
   is_featured: z.boolean().optional(),
   desc: z.string().max(100, "接口描述不能超过100个字符").optional().nullable(),
@@ -119,6 +151,8 @@ const getDefaultState = (): Partial<Schema> => ({
   id: undefined,
   category_id: undefined,
   name: undefined,
+  path: undefined,
+  method: REQUEST_METHOD.GET,
   pinned: false,
   is_featured: false,
   sort: 1,
@@ -142,7 +176,7 @@ const isOpen = computed({
   set: (value) => emit("update:modelValue", value),
 });
 
-// 监听 website 变化
+// 监听 api 变化
 watch(
   () => props.api,
   (newApi) => {
