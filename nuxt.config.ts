@@ -18,7 +18,6 @@ export default defineNuxtConfig({
     '@nuxt/icon',
     '@nuxt/image',
     '@nuxt/scripts',
-    '@nuxtjs/supabase',
     '@nuxtjs/color-mode',
     '@nuxtjs/seo',
     'nuxt-umami',
@@ -27,14 +26,6 @@ export default defineNuxtConfig({
     'nuxt-gtag',
     'nuxt-clarity-analytics'
   ],
-  // supabase Auth
-  supabase: {
-    redirectOptions: {
-      login: '/login',
-      callback: '/confirm',
-      exclude: ['/']
-    }
-  },
   // nuxt-umami Umami 统计
   umami: {
     id: '27a00f30-5b76-495a-bf6d-46fc160f9a6b',

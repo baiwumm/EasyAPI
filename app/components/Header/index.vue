@@ -2,7 +2,7 @@
  * @Author: 白雾茫茫丶<baiwumm.com>
  * @Date: 2024-04-10 16:25:21
  * @LastEditors: 白雾茫茫丶<baiwumm.com>
- * @LastEditTime: 2025-08-01 12:09:29
+ * @LastEditTime: 2025-08-20 17:45:44
  * @Description: 顶部布局
 -->
 <template>
@@ -21,13 +21,7 @@
       <!-- 夜间模式 -->
       <ColorMode />
       <!-- github -->
-      <SocialIcon url="https://github.com/baiwumm/dream-site" tip="Github" icon="i-simple-icons-github" />
-      <!-- 登录用户头像 -->
-      <user-avatar />
-      <!-- 跳转管理界面 -->
-      <JumpAdmin />
-      <!-- 注销用户按钮 -->
-      <Logout />
+      <SocialIcon url="https://github.com/baiwumm/EasyApi" tip="Github" icon="i-simple-icons-github" />
     </div>
   </header>
 </template>
