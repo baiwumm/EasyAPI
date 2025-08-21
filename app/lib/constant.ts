@@ -1,4 +1,5 @@
 import type { Social } from '~/lib/type'
+import { RESPONSE_STATUS_CODE } from '~/lib/enum'
 
 /**
  * @description: 底部备案
@@ -30,3 +31,27 @@ export const FooterSocial: Social[] = [
   { icon: 'i-ri-mail-line', url: 'mailto:me@baiwumm.com', tip: 'Email' },
   { icon: 'i-ri-quill-pen-line', url: 'https://baiwumm.com', tip: '博客' }
 ]
+
+/**
+ * @description: 统一响应成功格式
+ */
+export function formatSuccess<T = any>(data: T, msg = '请求成功') {
+  return {
+    code: RESPONSE_STATUS_CODE.SUCCESS,
+    msg,
+    data,
+    timestamp: Date.now(),
+  }
+}
+
+/**
+ * @description: 统一响应失败格式
+ */
+export function formatFail(msg = '请求失败', code = RESPONSE_STATUS_CODE.SERVER_ERROR, data: any = []) {
+  return {
+    code,
+    msg,
+    data,
+    timestamp: Date.now(),
+  }
+}
