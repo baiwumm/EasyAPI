@@ -2,7 +2,7 @@
  * @Author: 白雾茫茫丶<baiwumm.com>
  * @Date: 2025-08-21 09:47:50
  * @LastEditors: 白雾茫茫丶<baiwumm.com>
- * @LastEditTime: 2025-08-21 17:44:38
+ * @LastEditTime: 2025-08-22 09:32:03
  * @Description: 
  */
 import { formatSuccess, formatFail } from '~/lib/constant'
@@ -14,6 +14,7 @@ export default defineEventHandler(async (event) => {
   const type = query.type ? query.type.split(',') : []
   const minLength = query.minLength ? parseInt(query.minLength as string, 10) : 0
   const maxLength = query.maxLength ? parseInt(query.maxLength as string, 10) : 0
+  const format = query.format
 
   const params = new URLSearchParams()
 
@@ -27,7 +28,7 @@ export default defineEventHandler(async (event) => {
   if (maxLength) params.set('max_length', String(maxLength))
 
   // 默认返回 json 格式
-  params.set('encode', 'json')
+  params.set('encode', format === 'text' ? 'text' : 'json')
 
   const url = `https://v1.hitokoto.cn/?${params.toString()}`
 
@@ -35,6 +36,13 @@ export default defineEventHandler(async (event) => {
     const res = await fetch(url)
     if (!res.ok) {
       return formatFail(`Hitokoto 接口请求失败：HTTP ${res.status}`)
+    }
+
+    if (format === 'text') {
+      const data = await res.text()
+      // 返回纯文本时，设置 Content-Type 为 text/plain
+      setHeader(event, 'Content-Type', 'text/plain; charset=utf-8')
+      return data
     }
 
     const data = await res.json()
@@ -50,7 +58,7 @@ export default defineEventHandler(async (event) => {
       creatorUid: data.creator_uid,
       reviewer: data.reviewer ?? data.review,
       length: data.length,
-    }, '请求成功')
+    })
   } catch (error: any) {
     return formatFail(error?.message || '获取每日一言失败')
   }

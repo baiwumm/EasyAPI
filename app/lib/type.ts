@@ -1,4 +1,4 @@
-import type { RESPONSE_STATUS_CODE } from '~/lib/enum'
+import type { RESPONSE_STATUS_CODE, REQUEST_METHOD } from '~/lib/enum'
 
 /**
  * @description: 响应体结构
@@ -48,3 +48,22 @@ export type NewsResponse = {
   mobileUrl: string; // 移动端地址
   label?: string; // 标签（微博）
 };
+
+/**
+ * @description: 接口配置项
+ */
+export type ApiList = {
+  name: string; // 接口名称
+  path: string; // 接口地址
+  operationId: string; // 接口 id
+  method?: REQUEST_METHOD; // 接口请求方式
+  is_featured?: boolean; // 是否推荐
+}
+
+/**
+ * @description: 接分类配置项
+ */
+export type CategoryList = {
+  title: string; // 分类名称
+  children: ApiList[];
+}

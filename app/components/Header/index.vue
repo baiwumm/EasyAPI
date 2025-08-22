@@ -2,7 +2,7 @@
  * @Author: 白雾茫茫丶<baiwumm.com>
  * @Date: 2024-04-10 16:25:21
  * @LastEditors: 白雾茫茫丶<baiwumm.com>
- * @LastEditTime: 2025-08-20 17:45:44
+ * @LastEditTime: 2025-08-22 09:52:50
  * @Description: 顶部布局
 -->
 <template>
@@ -22,6 +22,8 @@
       <ColorMode />
       <!-- github -->
       <SocialIcon url="https://github.com/baiwumm/EasyApi" tip="Github" icon="i-simple-icons-github" />
+      <!-- 接口文档 -->
+      <SocialIcon url="https://api-docs.baiwumm.com/" tip="文档" icon="codicon:book" />
     </div>
   </header>
 </template>
