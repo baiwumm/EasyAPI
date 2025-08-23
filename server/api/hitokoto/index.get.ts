@@ -3,7 +3,7 @@
  * @Date: 2025-08-21 09:47:50
  * @LastEditors: 白雾茫茫丶<baiwumm.com>
  * @LastEditTime: 2025-08-22 09:32:03
- * @Description: 
+ * @Description: 每日一言
  */
 import { formatSuccess, formatFail } from '~/lib/constant'
 

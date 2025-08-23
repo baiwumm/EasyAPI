@@ -5,16 +5,6 @@ import type { CategoryList } from '~/lib/type'
  */
 export const CategoryOptions: CategoryList[] = [
   {
-    title: '新闻资讯',
-    children: [
-      {
-        name: '微博热搜',
-        path: '/weibo',
-        operationId: 'getWeiboHotList'
-      }
-    ]
-  },
-  {
     title: '每日推荐',
     children: [
       {
@@ -22,6 +12,21 @@ export const CategoryOptions: CategoryList[] = [
         path: '/hitokoto',
         operationId: 'getHitokoto',
         is_featured: true
+      },
+      {
+        name: 'bind每日壁纸',
+        path: '/bing-wallpaper',
+        operationId: 'getBingWallpaper',
+      }
+    ]
+  },
+  {
+    title: '新闻资讯',
+    children: [
+      {
+        name: '微博热搜',
+        path: '/weibo',
+        operationId: 'getWeiboHotList'
       }
     ]
   }
