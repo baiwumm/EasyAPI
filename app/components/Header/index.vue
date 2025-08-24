@@ -2,7 +2,7 @@
  * @Author: 白雾茫茫丶<baiwumm.com>
  * @Date: 2024-04-10 16:25:21
  * @LastEditors: 白雾茫茫丶<baiwumm.com>
- * @LastEditTime: 2025-08-22 09:52:50
+ * @LastEditTime: 2025-08-24 16:38:41
  * @Description: 顶部布局
 -->
 <template>
@@ -24,6 +24,12 @@
       <SocialIcon url="https://github.com/baiwumm/EasyApi" tip="Github" icon="i-simple-icons-github" />
       <!-- 接口文档 -->
       <SocialIcon url="https://api-docs.baiwumm.com/" tip="文档" icon="codicon:book" />
+      <!-- 登录用户头像 -->
+      <user-avatar />
+      <!-- 跳转管理界面 -->
+      <JumpAdmin />
+      <!-- 注销用户按钮 -->
+      <Logout />
     </div>
   </header>
 </template>

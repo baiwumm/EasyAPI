@@ -26,6 +26,68 @@ export type PaginationParams = {
 }
 
 /**
+ * @description: 接口列表
+ */
+export type ApiList = {
+  id: string; // uuid
+  category_id: string; // 所属分类
+  name: string; // 接口名称
+  desc?: string; // 接口描述
+  path: string; // 接口 url
+  method: REQUEST_METHOD; // 请求方式
+  pinned: boolean; // 是否置顶
+  is_featured: boolean; // 是否推荐
+  call_count: number; // 调用次数
+  last_called: Date; // 最后调用时间
+  sort: number // 排序
+  created_at: Date // 创建时间
+  updated_at: Date // 更新时间
+  categorys: CategoryList; // 所属分类
+  user_id: string // 用户 id
+  email: string // 用户邮箱
+}
+
+/**
+ * @description: 接口分类列表
+ */
+export type CategoryList = {
+  id: string // uuid
+  name: string // 分类名称
+  desc: string // 分类描述
+  user_id: string // 用户 id
+  email: string // 用户邮箱
+  sort: number // 排序
+  apis: ApiList[]; // 接口列表
+  created_at: Date // 创建时间
+  updated_at: Date // 更新时间
+}
+
+/**
+ * @description: 分类查询参数
+ */
+export type CategoryParams = PaginationParams & Partial<Pick<CategoryList, 'name'>>
+
+/**
+ * @description: 新增/编辑参数
+ */
+export type CategoryEdit = Pick<CategoryList, 'name' | 'sort'> &
+  Partial<Pick<CategoryList, 'id' | 'desc'>>
+
+/**
+ * @description: 接口查询参数
+ */
+export type ApiParams = PaginationParams & Partial<Pick<ApiList, 'name' | 'category_id'>>
+
+/**
+ * @description: 新增/编辑参数
+ */
+export type ApiEdit = Pick<
+  ApiList,
+  'category_id' | 'name' | 'path' | 'pinned' | 'is_featured' | 'method' | 'sort'
+> &
+  Partial<Pick<ApiList, 'id' | 'desc'>>
+
+/**
  * @description: 社交图标类型
  */
 export type Social = {
@@ -48,22 +110,3 @@ export type NewsResponse = {
   mobileUrl: string; // 移动端地址
   label?: string; // 标签（微博）
 };
-
-/**
- * @description: 接口配置项
- */
-export type ApiList = {
-  name: string; // 接口名称
-  path: string; // 接口地址
-  operationId: string; // 接口 id
-  method?: REQUEST_METHOD; // 接口请求方式
-  is_featured?: boolean; // 是否推荐
-}
-
-/**
- * @description: 接分类配置项
- */
-export type CategoryList = {
-  title: string; // 分类名称
-  children: ApiList[];
-}
