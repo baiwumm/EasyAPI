@@ -17,6 +17,11 @@ export const CategoryOptions: CategoryList[] = [
         name: 'bind每日壁纸',
         path: '/bing-wallpaper',
         operationId: 'getBingWallpaper',
+      },
+      {
+        name: '舔狗日记',
+        path: '/licking-dog-diary',
+        operationId: 'getLickingDogDiary',
       }
     ]
   },
