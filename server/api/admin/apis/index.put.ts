@@ -2,7 +2,7 @@
  * @Author: 白雾茫茫丶<baiwumm.com>
  * @Date: 2024-06-12 17:45:42
  * @LastEditors: 白雾茫茫丶<baiwumm.com>
- * @LastEditTime: 2024-06-17 17:43:27
+ * @LastEditTime: 2025-08-24 19:03:57
  * @Description: 更新站点列表
  */
 import type { Response, ApiEdit, ApiList } from '~/lib/type'
@@ -34,7 +34,7 @@ export default defineEventHandler(async (event): Promise<Response<ApiList[]>> =>
     if (error.code === '23505') {
       return {
         code: RESPONSE_STATUS_CODE.FAIL,
-        msg: '接口名称已存在!'
+        msg: '接口名称 或 operation_id 已存在!'
       }
     } else {
       throw createError({

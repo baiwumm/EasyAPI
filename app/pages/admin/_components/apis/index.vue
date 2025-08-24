@@ -186,6 +186,7 @@ const handleEdit = (category: ApiList) => {
     "is_featured",
     "desc",
     "sort",
+    "operation_id",
   ]);
   showEditModal.value = true;
 };

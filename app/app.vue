@@ -58,7 +58,7 @@ nuxtApp.hook("page:finish", () => {
 useHead({
   link: [{ rel: "icon", type: "image/x-icon", href: "favicon.ico" }],
   meta: [
-    { name: "keywords", content: "Easy Api,Api,接口,聚合,白雾茫茫丶,谜叶象限" },
+    { name: "keywords", content: "Easy Api,Api,接口,聚合" },
     { name: "description", content: "一个精美、现代化的 API 聚合平台！" },
   ],
 });

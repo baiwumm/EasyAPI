@@ -27,7 +27,7 @@ export default defineEventHandler(async (event): Promise<Response<ApiList[]>> =>
     if (error.code === '23505') {
       return {
         code: RESPONSE_STATUS_CODE.FAIL,
-        msg: '接口名称已存在!'
+        msg: '接口名称 或 operation_id 已存在!'
       }
     } else {
       throw createError({

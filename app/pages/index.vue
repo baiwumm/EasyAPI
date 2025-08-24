@@ -39,6 +39,7 @@
               class="relative h-full cursor-pointer card-base animated-border animate-fade after:border-green-500/50 dark:after:border-green-400/50 shadow-md dark:shadow-[0_4px_6px_-1px_rgb(255,255,255,0.1)]"
               shadow="hover"
               @mouseenter="($event.target as HTMLElement)?.classList?.add('hovered')"
+              @click="openDocs(child.operation_id)"
             >
               <div class="flex flex-col gap-3">
                 <div class="flex gap-2 items-center">

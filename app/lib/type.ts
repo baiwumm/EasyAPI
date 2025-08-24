@@ -45,6 +45,7 @@ export type ApiList = {
   categorys: CategoryList; // 所属分类
   user_id: string // 用户 id
   email: string // 用户邮箱
+  operation_id: string; // 
 }
 
 /**
@@ -83,7 +84,7 @@ export type ApiParams = PaginationParams & Partial<Pick<ApiList, 'name' | 'categ
  */
 export type ApiEdit = Pick<
   ApiList,
-  'category_id' | 'name' | 'path' | 'pinned' | 'is_featured' | 'method' | 'sort'
+  'category_id' | 'name' | 'path' | 'pinned' | 'is_featured' | 'method' | 'sort' | 'operation_id'
 > &
   Partial<Pick<ApiList, 'id' | 'desc'>>
 

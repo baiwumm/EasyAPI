@@ -53,6 +53,23 @@
           </UInput>
         </UFormField>
 
+        <UFormField label="operationId" name="operation_id" required>
+          <UInput
+            v-model="state.operation_id"
+            placeholder="请输入operation_id"
+            class="w-full"
+            size="lg"
+            :maxlength="100"
+            aria-describedby="operation_id"
+          >
+            <template #trailing>
+              <div id="character-count" class="text-xs text-muted tabular-nums" aria-live="polite" role="status">
+                {{ state.operation_id?.length || 0 }}/100
+              </div>
+            </template>
+          </UInput>
+        </UFormField>
+
         <UFormField name="method" label="请求方式" required>
           <USelect
             v-model="state.method"
@@ -137,6 +154,7 @@ const schema = z.object({
     .min(1, "接口路径不能为空")
     .max(100, "接口路径不能超过100个字符")
     .regex(/^\//, "接口路径必须以 / 开头"),
+  operation_id: z.string("请输入operation_id").min(1, "operation_id不能为空").max(100, "operation_id不能超过100个字符"),
   method: z.enum(REQUEST_METHOD),
   pinned: z.boolean().optional(),
   is_featured: z.boolean().optional(),
@@ -152,6 +170,7 @@ const getDefaultState = (): Partial<Schema> => ({
   category_id: undefined,
   name: undefined,
   path: undefined,
+  operation_id: undefined,
   method: REQUEST_METHOD.GET,
   pinned: false,
   is_featured: false,
