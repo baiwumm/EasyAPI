@@ -1,4 +1,11 @@
-// server/middleware/cors.ts
+/*
+ * @Author: 白雾茫茫丶<baiwumm.com>
+ * @Date: 2025-08-23 20:36:33
+ * @LastEditors: 白雾茫茫丶<baiwumm.com>
+ * @LastEditTime: 2025-08-24 20:58:50
+ * @Description: 处理跨域中间件
+ */
+
 export default defineEventHandler((event) => {
   const allowedOrigin = "https://api-docs.baiwumm.com";
   const origin = getHeader(event, "origin");
