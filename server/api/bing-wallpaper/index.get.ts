@@ -22,8 +22,6 @@ export default defineEventHandler(async (event) => {
 
     const responseBody = await response.json();
 
-    console.log('responseBody', responseBody)
-
     const img = responseBody.images?.[0];
 
     const url = `https://www.bing.com${img.url}`
