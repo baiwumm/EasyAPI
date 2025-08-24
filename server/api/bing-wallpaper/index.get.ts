@@ -17,7 +17,7 @@ export default defineEventHandler(async (event) => {
     );
 
     if (!response.ok) {
-      return formatFail('bind每日壁纸：接口出错！', response.status)
+      return formatFail(`bind每日壁纸 接口出错：HTTP ${response.status}`)
     }
 
     const responseBody = await response.json();

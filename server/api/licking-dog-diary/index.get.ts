@@ -2,7 +2,7 @@
  * @Author: 白雾茫茫丶<baiwumm.com>
  * @Date: 2025-08-24 10:38:19
  * @LastEditors: 白雾茫茫丶<baiwumm.com>
- * @LastEditTime: 2025-08-24 10:42:40
+ * @LastEditTime: 2025-08-24 18:33:43
  * @Description: 舔狗日记
  */
 import { formatSuccess, formatFail } from '~/lib/constant'
@@ -17,7 +17,7 @@ export default defineEventHandler(async (event) => {
     );
 
     if (!response.ok) {
-      return formatFail('舔狗日记：接口出错！', response.status)
+      return formatFail(`舔狗日记 接口出错：HTTP ${response.status}`)
     }
 
     const responseBody = await response.json();

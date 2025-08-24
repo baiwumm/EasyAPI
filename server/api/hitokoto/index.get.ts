@@ -35,7 +35,7 @@ export default defineEventHandler(async (event) => {
   try {
     const res = await fetch(url)
     if (!res.ok) {
-      return formatFail(`Hitokoto 接口请求失败：HTTP ${res.status}`)
+      return formatFail(`每日一言 接口出错：HTTP ${res.status}`)
     }
 
     if (format === 'text') {

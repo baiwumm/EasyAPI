@@ -24,7 +24,7 @@ export default defineEventHandler(async (event) => {
     })
 
     if (!response.ok) {
-      return formatFail('微博-热搜榜：接口出错！', response.status)
+      return formatFail(`微博-热搜榜 接口出错：HTTP ${response.status}`)
     }
 
     const responseBody = await response.json()

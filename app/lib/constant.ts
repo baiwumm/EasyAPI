@@ -49,10 +49,11 @@ export function formatSuccess<T = any>(data: T, msg = '请求成功') {
 /**
  * @description: 统一响应失败格式
  */
-export function formatFail(msg = '请求失败', code = RESPONSE_STATUS_CODE.SERVER_ERROR) {
+export function formatFail(msg = '请求失败', data = {}, code = RESPONSE_STATUS_CODE.SERVER_ERROR) {
   return {
     code,
     msg,
+    data,
     timestamp: Date.now(),
   }
 }
