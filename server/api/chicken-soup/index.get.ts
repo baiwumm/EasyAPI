@@ -2,7 +2,7 @@
  * @Author: 白雾茫茫丶<baiwumm.com>
  * @Date: 2025-08-24 18:18:50
  * @LastEditors: 白雾茫茫丶<baiwumm.com>
- * @LastEditTime: 2025-08-24 18:46:52
+ * @LastEditTime: 2025-08-24 20:52:18
  * @Description: 毒鸡汤
  */
 import { formatSuccess, formatFail } from '~/lib/constant';
@@ -14,7 +14,7 @@ export default defineEventHandler(async (event) => {
   const format = query.format || 'standard' // 默认返回标准格式
   try {
     const { data, error } = await supabase.rpc(
-      'get_random_record'
+      'get_random_chicken_soup'
       , {})
 
     if (error) {
