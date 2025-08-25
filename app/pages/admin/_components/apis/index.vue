@@ -117,7 +117,7 @@ const dayjs = useDayjs();
 const current = ref(1); // 当前页
 const pageSize = ref(10); // 每页条数
 const name = ref(""); // 站点名称
-const category_id = ref(""); // 所属分类
+const category_id = ref(undefined); // 所属分类
 
 const toast = useToast();
 
@@ -158,7 +158,7 @@ const currentApi = ref<ApiEdit | null>();
 const handleReset = () => {
   current.value = 1;
   name.value = "";
-  category_id.value = "";
+  category_id.value = undefined;
   deleteId.value = "";
   currentApi.value = null;
 };
@@ -315,6 +315,28 @@ const columns: TableColumn<ApiList>[] = [
     },
   },
   {
+    accessorKey: "path",
+    header: "接口地址",
+    meta: {
+      class: {
+        td: "text-center",
+        th: "text-center",
+      },
+    },
+    cell: ({ row }) => h(UBadge, { variant: "soft", color: "warning", label: row.original.path }),
+  },
+  {
+    accessorKey: "operation_id",
+    header: "operationId",
+    meta: {
+      class: {
+        td: "text-center",
+        th: "text-center",
+      },
+    },
+    cell: ({ row }) => h(UBadge, { variant: "soft", color: "neutral", label: row.original.operation_id }),
+  },
+  {
     accessorKey: "sort",
     meta: {
       class: {
@@ -393,7 +415,10 @@ const columns: TableColumn<ApiList>[] = [
         th: "text-center",
       },
     },
-    cell: ({ row }) => dayjs(row.original.updated_at).format("YYYY-MM-DD HH:mm:ss"),
+    cell: ({ row }) => {
+      const updated_at = row.original.updated_at;
+      return updated_at ? dayjs(row.original.updated_at).format("YYYY-MM-DD HH:mm:ss") : "--";
+    },
   },
   {
     accessorKey: "actions",
@@ -451,6 +476,7 @@ const columnVisibilityMap: Record<string, string> = reactive({
   desc: "接口描述",
   method: "请求方式",
   path: "接口路径",
+  operation_id: "operationId",
   pinned: "置顶",
   is_featured: "推荐",
   actions: "操作",
