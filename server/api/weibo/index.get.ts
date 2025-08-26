@@ -52,7 +52,7 @@ export default defineEventHandler(async (event) => {
     }
 
     return formatFail();
-  } catch (error: any) {
-    return formatFail(error?.message || '微博热搜接口异常')
+  } catch (error) {
+    return formatFail((error as Error)?.message || '微博热搜接口异常')
   }
 })

@@ -33,6 +33,6 @@ export default defineEventHandler(async (event) => {
 
     return formatSuccess(url);
   } catch (error) {
-    return formatFail(error?.message || '获取bind每日壁纸失败')
+    return formatFail((error as Error)?.message || '获取bind每日壁纸失败')
   }
 })

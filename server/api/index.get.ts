@@ -3,17 +3,17 @@
  * @Date: 2025-08-23 20:36:33
  * @LastEditors: 白雾茫茫丶<baiwumm.com>
  * @LastEditTime: 2025-08-24 19:08:52
- * @Description: 
+ * @Description: 入口文件
  */
 import { serverSupabaseClient } from '#supabase/server'
 import { RESPONSE_STATUS_CODE } from '~/lib/enum'
-import type { Response, PageResponse, CategoryList, CategoryParams } from '~/lib/type'
+import type { CategoryList } from '~/lib/type'
 
-export default defineEventHandler(async (event): Promise<Response<PageResponse<CategoryList>>> => {
+export default defineEventHandler(async (event) => {
   const client = await serverSupabaseClient(event)
 
   // 查询 sql
-  const { data, error, count } = await client
+  const { data, error } = await client
     .from('ea_categorys')
     .select('name,desc,apis:ea_apis(name,desc,path,operation_id,method)', { count: 'exact' })
     .range(0, 9999)

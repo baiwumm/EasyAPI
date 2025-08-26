@@ -2,7 +2,7 @@
  * @Author: 白雾茫茫丶<baiwumm.com>
  * @Date: 2025-08-21 09:47:50
  * @LastEditors: 白雾茫茫丶<baiwumm.com>
- * @LastEditTime: 2025-08-22 09:32:03
+ * @LastEditTime: 2025-08-26 10:45:49
  * @Description: 每日一言
  */
 import { formatSuccess, formatFail } from '~/lib/constant'
@@ -11,7 +11,7 @@ export default defineEventHandler(async (event) => {
   const query = getQuery(event)
 
   // 获取 type, minLength, maxLength 参数
-  const type = query.type ? query.type.split(',') : []
+  const type = query.type ? (query.type as string).split(',') : []
   const minLength = query.minLength ? parseInt(query.minLength as string, 10) : 0
   const maxLength = query.maxLength ? parseInt(query.maxLength as string, 10) : 0
   const format = query.format
@@ -59,7 +59,7 @@ export default defineEventHandler(async (event) => {
       reviewer: data.reviewer ?? data.review,
       length: data.length,
     })
-  } catch (error: any) {
-    return formatFail(error?.message || '获取每日一言失败')
+  } catch (error) {
+    return formatFail((error as Error)?.message || '获取每日一言失败')
   }
 })

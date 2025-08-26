@@ -2,8 +2,8 @@
  * @Author: 白雾茫茫丶<baiwumm.com>
  * @Date: 2024-06-13 13:39:14
  * @LastEditors: 白雾茫茫丶<baiwumm.com>
- * @LastEditTime: 2025-08-01 11:22:01
- * @Description: 删除站点
+ * @LastEditTime: 2025-08-26 10:11:52
+ * @Description: 删除接口
  */
 import type { Response, ApiEdit, ApiList } from '~/lib/type'
 import { serverSupabaseClient } from '#supabase/server'

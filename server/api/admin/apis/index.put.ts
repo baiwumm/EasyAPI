@@ -3,7 +3,7 @@
  * @Date: 2024-06-12 17:45:42
  * @LastEditors: 白雾茫茫丶<baiwumm.com>
  * @LastEditTime: 2025-08-24 19:03:57
- * @Description: 更新站点列表
+ * @Description: 更新接口列表
  */
 import type { Response, ApiEdit, ApiList } from '~/lib/type'
 import { serverSupabaseClient } from '#supabase/server'

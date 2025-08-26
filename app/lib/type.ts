@@ -111,3 +111,15 @@ export type NewsResponse = {
   mobileUrl: string; // 移动端地址
   label?: string; // 标签（微博）
 };
+
+/**
+ * @description: 随机子项
+ */
+export type RandomRecord = {
+  id: string; // 主键
+  user_id: string; // 用户 id
+  content: string; // 内容
+  category: string; // 分类
+  source: string; // 来源
+  email: string; // 邮箱
+}

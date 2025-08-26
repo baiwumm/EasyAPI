@@ -2,7 +2,7 @@
  * @Author: 白雾茫茫丶<baiwumm.com>
  * @Date: 2025-08-24 20:58:17
  * @LastEditors: 白雾茫茫丶<baiwumm.com>
- * @LastEditTime: 2025-08-24 21:13:44
+ * @LastEditTime: 2025-08-26 10:44:33
  * @Description: 处理调用次数中间件
  */
 import { serverSupabaseClient } from '#supabase/server'
@@ -23,8 +23,8 @@ export default defineEventHandler(async (event) => {
       .single()
 
     if (data) {
-      // 调用 RPC 函数随机增加 call_count 1~5
-      const increment = Math.floor(Math.random() * 5) + 1
+      // 调用 RPC 函数随机增加 call_count 1~10
+      const increment = Math.floor(Math.random() * 10) + 1
       await supabase.rpc('increment_call_count', {
         row_id: data.id,
         inc: increment

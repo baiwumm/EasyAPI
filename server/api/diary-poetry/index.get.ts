@@ -2,7 +2,7 @@
  * @Author: 白雾茫茫丶<baiwumm.com>
  * @Date: 2025-08-25 09:14:05
  * @LastEditors: 白雾茫茫丶<baiwumm.com>
- * @LastEditTime: 2025-08-25 09:16:57
+ * @LastEditTime: 2025-08-26 10:41:50
  * @Description: 今日诗词
  */
 import { formatSuccess, formatFail } from '~/lib/constant'
@@ -27,6 +27,6 @@ export default defineEventHandler(async (event) => {
 
     return formatSuccess(responseBody);
   } catch (error) {
-    return formatFail(error?.message || '获取今日诗词失败')
+    return formatFail((error as Error)?.message || '获取今日诗词失败')
   }
 })

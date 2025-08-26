@@ -5,14 +5,14 @@
  * @LastEditTime: 2025-08-01 13:59:34
  * @Description: 获取接口列表
  */
-import type { Response, PageResponse, ApiList, WebsiteParams } from '~/lib/type'
+import type { Response, PageResponse, ApiList, ApiParams } from '~/lib/type'
 import { serverSupabaseClient } from '#supabase/server'
 import { RESPONSE_STATUS_CODE } from '~/lib/enum'
 
 export default defineEventHandler(async (event): Promise<Response<PageResponse<ApiList>>> => {
   const client = await serverSupabaseClient(event)
   // 获取请求参数
-  const { current, pageSize, name = '', category_id = '' } = getQuery(event) as WebsiteParams
+  const { current, pageSize, name = '', category_id = '' } = getQuery(event) as ApiParams
   // 判断参数
   if (!current || !pageSize) {
     return { code: RESPONSE_STATUS_CODE.FAIL, msg: '参数错误' }
