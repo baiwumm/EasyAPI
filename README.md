@@ -45,6 +45,7 @@
 - **舔狗日记** - `/api/dog-diary`
 - **每日诗词** - `/api/diary-poetry`
 - **必应壁纸** - `/api/bing-wallpaper`
+- **每日绕口令** - `/api/tongue-twister`
 
 
 ### 📰 新闻资讯
