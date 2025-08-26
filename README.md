@@ -1,104 +1,189 @@
 <div align="center">
-<img alt="logo" src="./public/logo.svg" width="80"/>
-<h2>Dream Site</h2>
-<p>一个简约、精美、现代化的个人站点导航</p>
+  <h1>EasyAPI</h1>
+  <p>一个基于 Nuxt 4 构建的简单易用的 API 服务平台，提供多种实用的 API 接口和管理后台</p>
 </div>
 
 <div align="center">
-  <a href="https://vercel.com" target="_blank">
-    <img alt="Vercel" src="https://img.shields.io/badge/deployed%20on-Vercel-black?style=flat&logo=vercel">
-  </a>
   <a href="https://nuxt.com/" target="_blank">
-    <img alt="Nuxt" src="https://img.shields.io/badge/Nuxt-4.0-black?style=flat&logo=Nuxt">
+    <img alt="Nuxt" src="https://img.shields.io/badge/Nuxt-4.0-00DC82?style=flat&logo=nuxt.js&logoColor=white">
   </a>
-  <a href="https://supabase.com/" target="_blank">
-    <img alt="Supabase" src="https://img.shields.io/badge/Supabase-black?style=flat&logo=Supabase">
+  <a href="https://www.typescriptlang.org/" target="_blank">
+    <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-5.0-3178C6?style=flat&logo=typescript&logoColor=white">
   </a>
-  <a href="https://tailwindcss.com/" target="_blank">
-    <img alt="TaildwindCSS" src="https://img.shields.io/badge/TailwindCSS-black?style=flat&logo=tailwindcss">
+  <a href="https://pnpm.io/" target="_blank">
+    <img alt="pnpm" src="https://img.shields.io/badge/pnpm-8.0-F69220?style=flat&logo=pnpm&logoColor=white">
+  </a>
+  <a href="https://eslint.org/" target="_blank">
+    <img alt="ESLint" src="https://img.shields.io/badge/ESLint-9.0-4B32C3?style=flat&logo=eslint&logoColor=white">
   </a>
   <a href="./LICENSE" target="_blank">
-    <img alt="LICENSE" src="https://img.shields.io/badge/license-MIT-blue">
+    <img alt="LICENSE" src="https://img.shields.io/badge/license-MIT-blue?style=flat">
   </a>
 </div>
 
-## ☘️ 项目简介
-
-`Dream Site` 是一个现代化的个人站点导航系统，旨在为用户提供美观、高效的个人网站收藏与管理体验。无论你是开发者、设计师还是内容创作者，都可以用它来组织和展示你喜爱的网站资源。
-
-## 🌿 在线体验
-
-➡️ [点击打开](https://site.baiwumm.com/)
-
-## 🪴 技术栈
-
-- **前端框架**: [Nuxt 4.0](https://nuxt.com/) (基于Vue 3)
-- **UI组件**: [NuxtUI](https://ui.nuxt.com/)
-- **样式方案**: [Tailwind CSS](https://www.tailwindcss.cn/)
-- **后端服务**: [Supabase](https://supabase.com/) (开源Firebase替代品)
-- **部署平台**: 支持 `Vercel` 等多种部署方式
-
 ## ✨ 特性
-- 🚀 **高性能**: 基于最新前端技术栈，极速响应
-- 🌓 **主题切换**: 完善的亮色/暗黑模式支持
-- 🔍 **SEO友好**: 支持SSR渲染，优化搜索引擎收录
-- 📱 **响应式设计**: 适配各种设备屏幕
-- 🔒 **安全认证**: 基于Supabase的完整用户系统
-- 🧩 **模块化架构**: 清晰的目录结构，便于二次开发
 
-## 🪴 项目截图
+- 🚀 基于 Nuxt 4 构建，性能优异
+- 📱 响应式设计，支持多端访问
+- 🎨 现代化 UI 界面，支持暗黑模式
+- 🔐 完整的用户认证系统
+- 📊 管理后台，支持 API 和分类管理
+- 🌐 多种实用 API 接口
+- ⚡ TypeScript 支持
+- 🎯 RESTful API 设计
 
-| 亮色模式 | 暗色模式 |
-|----------|----------|
-| ![亮色模式](./app/assets/images/light.png) | ![暗色模式](./app/assets/images/dark.png) |
+## 📋 API 接口
 
-| 分类管理 | 站点列表 |
-|----------|----------|
-| ![分类列表](./app/assets/images/caretorys.png) | ![站点列表](./app/assets/images/websites.png) |
+项目提供以下 API 接口：
+
+### 🌅 每日推荐
+- **每日一言** - `/api/hitokoto`
+- **毒鸡汤** - `/api/chicken-soup`
+- **土味情话** - `/api/love-words`
+- **每日笑话** - `/api/dairy-joke`
+- **每日冷知识** - `/api/cold-fact`
+- **舔狗日记** - `/api/dog-diary`
+- **每日诗词** - `/api/diary-poetry`
+- **必应壁纸** - `/api/bing-wallpaper`
+
+
+### 📰 新闻资讯
+- 📱 **微博热搜** - `/api/weibo`
+
+### 管理接口
+- 📊 **API 管理** - `/api/admin/apis`
+- 📂 **分类管理** - `/api/admin/categorys`
 
 ## 🚀 快速开始
 
-### 🌳 环境要求
-- Node.js ≥ 18.17 (推荐最新LTS版本)
-- pnpm (推荐) 或 npm/yarn
+### 环境要求
 
-### 🧑‍💻 本地开发
+- Node.js >= 16
+- pnpm >= 7
+
+### 安装依赖
+
 ```bash
-# 克隆项目
-git clone https://github.com/baiwumm/dream-site.git
-
-# 进入项目目录
-cd dream-site
-
-# 安装依赖
+# 使用 pnpm 安装依赖
 pnpm install
+```
 
+### 开发环境
+
+```bash
 # 启动开发服务器
 pnpm dev
+
+# 服务器将在 http://localhost:3000 启动
 ```
 
-### 📝 初始化数据库
-1. 进入 [supabase 控制台](https://supabase.com/dashboard)，创建项目，并获取`SUPABASE_URL`和`SUPABASE_KEY`
-2. 导入数据库结构，将 `initSupabase.sql` 导入到 `Supabase SQL` 编辑器中执行。
-3. 在根目录下创建`.env`文件，并添加以下内容：
+### 生产构建
+
+```bash
+# 构建生产版本
+pnpm build
+
+# 预览生产版本
+pnpm preview
+```
+
+## 📁 项目结构
+
+```
+EasyAPI/
+├── app/                    # 应用源码
+│   ├── components/         # 组件库
+│   ├── layouts/           # 布局文件
+│   ├── pages/             # 页面文件
+│   ├── lib/               # 工具库
+│   └── assets/            # 静态资源
+├── server/                # 服务端代码
+│   ├── api/               # API 接口
+│   └── middleware/        # 中间件
+├── public/                # 公共静态文件
+└── data.js               # 数据文件
+```
+
+## 🎯 主要功能
+
+### 前台功能
+- 🏠 **首页展示** - 展示所有可用的 API 接口
+- 🔍 **接口搜索** - 快速查找所需的 API
+- 📖 **接口文档** - 详细的 API 使用说明
+- 🌙 **主题切换** - 支持明暗主题切换
+
+### 后台管理
+- 👤 **用户登录** - 安全的用户认证
+- 📊 **API 管理** - 增删改查 API 接口
+- 📂 **分类管理** - 管理 API 分类
+- 📈 **调用统计** - API 调用次数统计
+
+## 🔧 配置说明
+
+### 环境变量
+
+创建 `.env` 文件并配置以下变量：
+
 ```env
-SUPABASE_URL="xxx"
-SUPABASE_KEY="xxx"
+# 应用配置
+NUXT_APP_BASE_URL=http://localhost:3000
+
+# 数据库配置（如需要）
+DATABASE_URL=your_database_url
+
+# 其他配置...
 ```
-4. 进入 `Authentication` ，自行配置 `Policies` 和 `Sign In / Providers`
 
-## ⚙️ Vercel 一键部署
-1. `Fork` 本项目，在 `Vercel` 官网点击 `New Project`
-2. 点击 `Import Git Repository` 并选择你 fork 的此项目并点击 `import`
-3. `PROJECT NAME`自己填，`FRAMEWORK PRESET` 选 `Other` 然后直接点 `Deploy` 接着等部署完成即可
+### Nuxt 配置
 
-<a href="https://vercel.com/dashboard" target="_blank">
-<img alt="vercel 部署" src="./app/assets/images/vercel.svg" />
-</a>
+主要配置在 `nuxt.config.ts` 文件中，包括：
+- 应用基础配置
+- 模块配置
+- 构建配置
+- 服务端配置
 
-## 📜 许可证
-本项目采用 [MIT](LICENSE) 许可证。
+## 📝 开发指南
 
-## ⭐ Star History
+### 添加新的 API 接口
 
-[![Star History Chart](https://api.star-history.com/svg?repos=baiwumm/dream-site&type=Date)](https://star-history.com/#baiwumm/dream-site&Date)
+1. 在 `server/api/` 目录下创建新的接口文件
+2. 在 `data.js` 中添加接口信息
+3. 更新前台展示页面
+
+### 组件开发
+
+项目采用组件化开发，所有组件位于 `app/components/` 目录下，每个组件都有独立的文件夹和 `index.vue` 文件。
+
+### 样式规范
+
+- 使用现代 CSS 特性
+- 支持响应式设计
+- 遵循 BEM 命名规范
+
+## 🤝 贡献指南
+
+1. Fork 本仓库
+2. 创建特性分支 (`git checkout -b feature/AmazingFeature`)
+3. 提交更改 (`git commit -m 'Add some AmazingFeature'`)
+4. 推送到分支 (`git push origin feature/AmazingFeature`)
+5. 开启 Pull Request
+
+## 📄 许可证
+
+本项目基于 MIT 许可证开源 - 查看 [LICENSE](LICENSE) 文件了解详情。
+
+## 🙏 致谢
+
+感谢所有为这个项目做出贡献的开发者们！
+
+## 📞 联系方式
+
+如有问题或建议，欢迎通过以下方式联系：
+
+- 提交 Issue
+- 发起 Pull Request
+- 邮件联系
+
+---
+
+⭐ 如果这个项目对你有帮助，请给它一个星标！
