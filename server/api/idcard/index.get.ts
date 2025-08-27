@@ -6,7 +6,7 @@
  * @Description: 身份证信息查询
  */
 import { formatSuccess, formatFail } from "~/lib/constant";
-import idCard from 'idCard'
+import idCard from 'idcard'
 
 export default defineEventHandler(async (event) => {
   const query = getQuery(event);
