@@ -43,7 +43,7 @@ export default defineNuxtConfig({
     redirectOptions: {
       login: '/login',
       callback: '/confirm',
-      exclude: ['/', '/api/**']
+      include: ['/admin(/*)?'] // 只有 admin 才需要登录
     }
   },
   // nuxt-umami Umami 统计
