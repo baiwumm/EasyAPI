@@ -1,5 +1,5 @@
 <template>
-  <div class="flex justify-between flex-col min-h-[inherit] container mx-auto">
+  <div class="flex justify-between flex-col min-h-[inherit] container mx-auto gap-8">
     <h1 class="text-2xl font-black">{{ title }}</h1>
     <div class="flex justify-center items-center">
       <div class="relative max-w-[80%] min-w-[20%]">
@@ -58,26 +58,38 @@ const props = defineProps({
 
 // 请求数据
 const { data, status, refresh } = await useFetch(`/api/${props.path}`, {
-  transform: (res) => (res as any).data,
+  query: { format: "text" },
 });
+
+// 初始化 useClipboard
+const { copy, isSupported } = useClipboard({ source: data });
 
 // 复制当前文案到剪贴板
 const copyText = async () => {
-  if (data.value) {
-    try {
-      await navigator.clipboard.writeText(data.value);
-      toast.add({
-        title: "文案已复制！",
-        color: "success",
-        icon: "ri:checkbox-circle-line",
-      });
-    } catch (err) {
-      toast.add({
-        title: "复制失败，请手动复制!",
-        color: "error",
-        icon: "ri:close-circle-line",
-      });
-    }
+  if (!data.value) return;
+
+  if (!isSupported.value) {
+    toast.add({
+      title: "复制失败，当前浏览器不支持！",
+      color: "error",
+      icon: "ri:close-circle-line",
+    });
+    return;
+  }
+
+  try {
+    await copy();
+    toast.add({
+      title: "文案已复制！",
+      color: "success",
+      icon: "ri:checkbox-circle-line",
+    });
+  } catch (err) {
+    toast.add({
+      title: "复制失败，请手动复制!",
+      color: "error",
+      icon: "ri:close-circle-line",
+    });
   }
 };
 </script>
