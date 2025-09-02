@@ -53,23 +53,35 @@ const { data, status, refresh } = await useFetch("/api/diary-poetry", {
   transform: (res) => (res as any).data,
 });
 
+// 初始化 useClipboard
+const { copy, isSupported } = useClipboard({ source: data.value.content });
+
 // 复制当前文案到剪贴板
 const copyText = async () => {
-  if (data.value?.content) {
-    try {
-      await navigator.clipboard.writeText(data.value?.content);
-      toast.add({
-        title: "文案已复制！",
-        color: "success",
-        icon: "ri:checkbox-circle-line",
-      });
-    } catch (err) {
-      toast.add({
-        title: "复制失败，请手动复制!",
-        color: "error",
-        icon: "ri:close-circle-line",
-      });
-    }
+  if (!data.value.content) return;
+
+  if (!isSupported.value) {
+    toast.add({
+      title: "复制失败，当前浏览器不支持！",
+      color: "error",
+      icon: "ri:close-circle-line",
+    });
+    return;
+  }
+
+  try {
+    await copy(data.value.content);
+    toast.add({
+      title: "文案已复制！",
+      color: "success",
+      icon: "ri:checkbox-circle-line",
+    });
+  } catch (err) {
+    toast.add({
+      title: "复制失败，请手动复制!",
+      color: "error",
+      icon: "ri:close-circle-line",
+    });
   }
 };
 </script>
