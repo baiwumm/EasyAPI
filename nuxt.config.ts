@@ -36,7 +36,8 @@ export default defineNuxtConfig({
     'dayjs-nuxt',
     '@nuxt/ui',
     'nuxt-gtag',
-    'nuxt-clarity-analytics'
+    'nuxt-clarity-analytics',
+    '@vueuse/nuxt'
   ],
   // supabase Auth
   supabase: {

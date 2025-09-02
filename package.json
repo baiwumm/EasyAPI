@@ -26,6 +26,8 @@
     "@nuxtjs/seo": "3.1.0",
     "@nuxtjs/supabase": "1.5.3",
     "@unhead/vue": "^2.0.3",
+    "@vueuse/core": "^13.9.0",
+    "@vueuse/nuxt": "^13.9.0",
     "dayjs-nuxt": "2.1.11",
     "eslint": "^9.0.0",
     "gsap": "^3.13.0",
