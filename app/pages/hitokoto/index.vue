@@ -1,13 +1,13 @@
 <template>
-  <div class="flex justify-between flex-col min-h-[inherit]">
+  <div class="flex justify-between flex-col min-h-[inherit] container mx-auto">
     <div class="grid grid-cols-1 sm:grid-cols-3 items-center gap-4">
       <!-- 左边标题 -->
       <h1 class="text-2xl font-black justify-self-start">每日一言</h1>
 
       <!-- 中间按钮组 -->
-      <div class="justify-self-start sm:justify-self-center">
+      <div class="justify-self-start lg:justify-self-center">
         <!-- 小屏：flex-wrap，允许换行；大屏：nowrap 强制一行 -->
-        <div class="flex flex-wrap sm:flex-nowrap gap-2">
+        <div class="flex flex-wrap lg:flex-nowrap gap-2">
           <UButton
             v-for="v in typesOptions"
             :key="v.value"
