@@ -55,7 +55,6 @@ import { z } from "zod";
 import type { CategoryEdit } from "~/lib/type";
 import { RESPONSE_STATUS_CODE } from "~/lib/enum";
 import type { FormSubmitEvent } from "@nuxt/ui";
-import { UIcon } from "#components";
 
 const props = defineProps<{
   modelValue: boolean;

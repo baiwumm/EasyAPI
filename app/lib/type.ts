@@ -7,6 +7,7 @@ export type Response<T = any> = {
   code: RESPONSE_STATUS_CODE // 状态码
   msg: string // 状态信息
   data?: T // 数据
+  timestamp: number; // 时间戳
 }
 
 /**
@@ -122,4 +123,18 @@ export type RandomRecord = {
   category: string; // 分类
   source: string; // 来源
   email: string; // 邮箱
+}
+
+/**
+ * @description: 每日一言
+ */
+export type Hitokoto = {
+  id: string
+  content: string
+  type: string
+  from: string | null
+  from_who: string | null
+  creator: string | null
+  length: number
+  commit_from: string | null
 }

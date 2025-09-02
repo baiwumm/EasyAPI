@@ -39,7 +39,7 @@
               class="relative h-full cursor-pointer card-base animated-border animate-fade after:border-green-500/50 dark:after:border-green-400/50 shadow-md dark:shadow-[0_4px_6px_-1px_rgb(255,255,255,0.1)]"
               shadow="hover"
               @mouseenter="($event.target as HTMLElement)?.classList?.add('hovered')"
-              @click="openDocs(child.operation_id)"
+              @click="goToPage(child.path)"
             >
               <div class="flex flex-col gap-3">
                 <div class="flex gap-2 items-center">
@@ -100,6 +100,8 @@ import type { BadgeProps } from "#ui/types";
 
 const toast = useToast();
 
+const router = useRouter();
+
 defineOgImageComponent("Nuxt", {
   headline: "Greetings",
   title: `${process.env.NUXT_SITE_NAME} 👋`,
@@ -132,7 +134,8 @@ definePageMeta({
   title: "一个精美、现代化的 API 聚合平台！",
 });
 
-const openDocs = (operationId: string) => {
-  window.open(`https://api-docs.baiwumm.com/easy-api/apireference/${operationId}`);
+// 跳转页面
+const goToPage = (path: string) => {
+  router.push(path);
 };
 </script>

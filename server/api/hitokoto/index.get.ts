@@ -7,17 +7,7 @@
  */
 import { formatSuccess, formatFail } from '~/lib/constant'
 import { serverSupabaseClient } from '#supabase/server'
-
-type Hitokoto = {
-  id: string
-  content: string
-  type: string
-  from: string | null
-  from_who: string | null
-  creator: string | null
-  length: number
-  commit_from: string | null
-}
+import type { Hitokoto } from '~/lib/type'
 
 export default defineEventHandler(async (event) => {
   const supabase = await serverSupabaseClient(event)
@@ -42,7 +32,7 @@ export default defineEventHandler(async (event) => {
     if (format === 'text') {
       return (data as Hitokoto).content
     }
-    return formatSuccess(data);
+    return formatSuccess<Hitokoto>(data);
   } catch (error) {
     return formatFail((error as Error)?.message || '获取每日一言失败')
   }
