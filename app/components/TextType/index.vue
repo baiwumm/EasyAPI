@@ -48,7 +48,17 @@ const isVisible = ref(!props.startOnVisible);
 const cursorRef = useTemplateRef("cursorRef");
 const containerRef = useTemplateRef("containerRef");
 
-const textArray = computed(() => (Array.isArray(props.text) ? props.text : [props.text]));
+const normalizeText = (t: string) =>
+  t
+    // 1) 真换行（Windows）
+    .replace(/\r\n/g, "\n")
+    // 2) 字面量的 \r\n / \n（因为父组件可能没用 :text）
+    .replace(/\\r\\n/g, "\n")
+    .replace(/\\n/g, "\n")
+    // 3) <br> 也转成换行
+    .replace(/<br\s*\/?>/gi, "\n");
+
+const textArray = computed(() => (Array.isArray(props.text) ? props.text : [props.text]).map(normalizeText));
 
 const getRandomSpeed = () => {
   if (!props.variableSpeed) return props.typingSpeed;
