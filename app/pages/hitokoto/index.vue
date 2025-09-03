@@ -1,6 +1,6 @@
 <template>
   <div class="flex justify-between flex-col min-h-[inherit] container mx-auto">
-    <div class="grid grid-cols-1 sm:grid-cols-3 items-center gap-4">
+    <div class="grid grid-cols-1 sm:grid-cols-3 items-center gap-2">
       <!-- 左边标题 -->
       <h1 class="text-2xl font-black justify-self-start">每日一言</h1>
 
@@ -21,7 +21,7 @@
         </div>
       </div>
     </div>
-    <div class="flex justify-center items-center">
+    <div class="flex justify-center items-center mt-6">
       <div class="relative max-w-[80%] min-w-[20%]">
         <UIcon name="ri:double-quotes-l" class="!size-[4rem] absolute -top-10 -left-10" />
         <TextType
@@ -31,7 +31,7 @@
           :pauseDuration="1500"
           :showCursor="true"
           cursorCharacter="|"
-          class="text-2xl text-cetner py-6"
+          class="text-xl sm:text-2xl text-cetner py-6"
         />
         <TextType
           v-else
@@ -40,7 +40,7 @@
           :pauseDuration="1500"
           :showCursor="true"
           cursorCharacter="|"
-          class="text-2xl text-cetner py-6"
+          class="text-xl sm:text-2xl text-cetner py-6"
         />
         <div v-if="status === 'success'" class="absolute -bottom-4 right-0">
           —— {{ data?.from_who || "" }}{{ data?.from ? `「${data?.from}」` : "" }}
@@ -59,14 +59,21 @@
       >
         换一句
       </UButton>
-      <UButton icon="ph:copy-bold" size="sm" color="neutral" variant="soft" class="cursor-pointer" @click="copyText">
+      <UButton
+        icon="ph:copy-bold"
+        size="sm"
+        color="neutral"
+        variant="soft"
+        class="cursor-pointer"
+        @click="copyText(data.content)"
+      >
         复制
       </UButton>
     </div>
   </div>
 </template>
 <script setup lang="ts">
-const toast = useToast();
+const { copyText } = useCopy();
 
 // 请求参数
 const types = ref("");
@@ -91,36 +98,4 @@ const { data, status, refresh } = await useFetch("/api/hitokoto", {
   query: { types },
   transform: (res) => (res as any).data,
 });
-
-// 初始化 useClipboard
-const { copy, isSupported } = useClipboard({ source: data.value.content });
-
-// 复制当前文案到剪贴板
-const copyText = async () => {
-  if (!data.value.content) return;
-
-  if (!isSupported.value) {
-    toast.add({
-      title: "复制失败，当前浏览器不支持！",
-      color: "error",
-      icon: "ri:close-circle-line",
-    });
-    return;
-  }
-
-  try {
-    await copy(data.value.content);
-    toast.add({
-      title: "文案已复制！",
-      color: "success",
-      icon: "ri:checkbox-circle-line",
-    });
-  } catch (err) {
-    toast.add({
-      title: "复制失败，请手动复制!",
-      color: "error",
-      icon: "ri:close-circle-line",
-    });
-  }
-};
 </script>

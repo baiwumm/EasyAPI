@@ -1,7 +1,7 @@
 <template>
-  <div class="flex justify-between flex-col min-h-[inherit] container mx-auto gap-8">
+  <div class="flex justify-between flex-col min-h-[inherit] container mx-auto gap-2">
     <h1 class="text-2xl font-black">{{ title }}</h1>
-    <div class="flex justify-center items-center">
+    <div class="flex justify-center items-center mt-6">
       <div class="relative max-w-[80%] min-w-[20%]">
         <UIcon name="ri:double-quotes-l" class="!size-[4rem] absolute -top-10 -left-10" />
         <TextType
@@ -11,7 +11,7 @@
           :pauseDuration="1500"
           :showCursor="true"
           cursorCharacter="|"
-          class="text-2xl text-cetner py-6"
+          class="text-xl sm:text-2xl text-cetner py-6"
         />
         <TextType
           v-else
@@ -20,7 +20,7 @@
           :pauseDuration="1500"
           :showCursor="true"
           cursorCharacter="|"
-          class="text-2xl text-cetner py-6"
+          class="text-xl sm:text-2xl text-cetner py-6"
         />
       </div>
     </div>
@@ -36,14 +36,21 @@
       >
         换一句
       </UButton>
-      <UButton icon="ph:copy-bold" size="sm" color="neutral" variant="soft" class="cursor-pointer" @click="copyText">
+      <UButton
+        icon="ph:copy-bold"
+        size="sm"
+        color="neutral"
+        variant="soft"
+        class="cursor-pointer"
+        @click="copyText(data)"
+      >
         复制
       </UButton>
     </div>
   </div>
 </template>
 <script setup lang="ts">
-const toast = useToast();
+const { copyText } = useCopy();
 
 const props = defineProps({
   title: {
@@ -60,36 +67,4 @@ const props = defineProps({
 const { data, status, refresh } = await useFetch(`/api/${props.path}`, {
   query: { format: "text" },
 });
-
-// 初始化 useClipboard
-const { copy, isSupported } = useClipboard({ source: data });
-
-// 复制当前文案到剪贴板
-const copyText = async () => {
-  if (!data.value) return;
-
-  if (!isSupported.value) {
-    toast.add({
-      title: "复制失败，当前浏览器不支持！",
-      color: "error",
-      icon: "ri:close-circle-line",
-    });
-    return;
-  }
-
-  try {
-    await copy();
-    toast.add({
-      title: "文案已复制！",
-      color: "success",
-      icon: "ri:checkbox-circle-line",
-    });
-  } catch (err) {
-    toast.add({
-      title: "复制失败，请手动复制!",
-      color: "error",
-      icon: "ri:close-circle-line",
-    });
-  }
-};
 </script>
