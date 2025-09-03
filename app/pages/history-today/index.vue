@@ -31,7 +31,7 @@
       />
     </div>
     <div class="flex justify-center gap-2">
-      <UInput v-model="time" placeholder="请输入 MM-DD 的形式" maxLength="5" class="w-40" />
+      <UInput v-model="time" placeholder="请输入 MM-DD 的形式" maxLength="5" class="w-40" @keyup.enter="handleSearch" />
       <UButton
         icon="ph:arrows-counter-clockwise-bold"
         size="sm"
