@@ -1,17 +1,18 @@
 <template>
   <div class="flex justify-between flex-col min-h-[inherit] container mx-auto gap-6">
     <h1 class="text-2xl font-black">中文诗词</h1>
-    <div v-if="data && status === 'success'" class="flex justify-center items-center flex-col pb-6">
-      <div class="relative max-w-[80%] min-w-[20%]">
+    <div v-if="data && status === 'success'" class="flex justify-center items-center">
+      <div class="relative max-w-[90%] sm:max-w-[80%] min-w-[20%]">
+        <UIcon name="ri:double-quotes-l" class="!size-[4rem] absolute -top-10 -left-10" />
         <TextType
           :text="data.paragraphs.join('\n')"
           :typingSpeed="75"
           :pauseDuration="1500"
           :showCursor="true"
           cursorCharacter="|"
-          class="text-center text-xl sm:text-2xl leading-[2]"
+          class="text-center text-xl sm:text-2xl leading-[2] py-6"
         />
-        <div class="absolute -bottom-8 right-0">
+        <div class="absolute -bottom-4 right-0">
           —— {{ data?.author || "" }}{{ data?.title ? `《${data?.title}》` : "" }}
         </div>
       </div>
