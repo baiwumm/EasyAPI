@@ -68,3 +68,23 @@ export const RequestMethodOptions: SelectItem[] = [
   { label: REQUEST_METHOD.PUT, value: REQUEST_METHOD.PUT, icon: 'tabler:http-put' },
   { label: REQUEST_METHOD.DELETE, value: REQUEST_METHOD.DELETE, icon: 'tabler:http-delete' },
 ]
+
+/**
+ * @description: 微博爆点配置
+ */
+export const hotLableColor: Record<string, string> = {
+  热: '#ff9406',
+  沸: '#f86400',
+  新: '#ff3852',
+  暖: '#ffab5a',
+  爆: '#bd0000',
+};
+
+/**
+ * @description: Tag 颜色配置
+ */
+export const hotTagColor: Record<string, string> = {
+  0: '#ea444d',
+  1: '#ed702d',
+  2: '#eead3f',
+};
