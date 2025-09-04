@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.5.1](https://github.com/baiwumm/EasyAPI/compare/1.5.0...1.5.1) (2025-09-04)
+
+### ⚡ Performance Improvements | 性能优化
+
+* 设置页面 useHead 代替 definePageMeta ([f00fdb0](https://github.com/baiwumm/EasyAPI/commit/f00fdb0dede559f123fcc08eebe16bd832061551))
+
 ## [1.5.0](https://github.com/baiwumm/EasyAPI/compare/1.4.0...1.5.0) (2025-09-04)
 
 ### ✨ Features | 新功能
