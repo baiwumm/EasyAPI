@@ -35,7 +35,7 @@
     </div>
     <div
       v-else-if="status === 'pending'"
-      class="w-10 h-10 border-4 border-t-blue-500 border-gray-300 rounded-full animate-spin"
+      class="w-10 h-10 border-4 border-t-green-500 border-gray-300 rounded-full animate-spin"
     ></div>
     <div v-else class="flex justify-center max-h-[inherit]">
       <TextType

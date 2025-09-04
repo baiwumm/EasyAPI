@@ -9,9 +9,6 @@ import type { NewsResponse } from '~/lib/type'
 import { formatSuccess, formatFail } from '~/lib/constant'
 
 export default defineEventHandler(async (event) => {
-  const query = getQuery(event)
-  const format = query.format || 'standard' // 默认返回标准格式
-
   const url = 'https://weibo.com/ajax/side/hotSearch'
   try {
     const response = await fetch(url, {
@@ -42,15 +39,8 @@ export default defineEventHandler(async (event) => {
           mobileUrl: `https://s.weibo.com/weibo?q=${encodeURIComponent(key)}&t=31&band_rank=1&Refer=top`,
         }
       })
-
-      // ✅ 根据 format 参数决定返回格式
-      if (format === 'json') {
-        return result
-      }
-
       return formatSuccess(result);
     }
-
     return formatFail();
   } catch (error) {
     return formatFail((error as Error)?.message || '微博热搜接口异常')
