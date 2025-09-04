@@ -11,7 +11,7 @@ watch(
   { immediate: true }
 );
 
-definePageMeta({
+useHead({
   title: "登录确认",
 });
 </script>

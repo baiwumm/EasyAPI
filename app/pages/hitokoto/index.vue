@@ -98,4 +98,8 @@ const { data, status, refresh } = await useFetch("/api/hitokoto", {
   query: { types },
   transform: (res) => (res as any).data,
 });
+
+useHead({
+  title: "每日一言",
+});
 </script>

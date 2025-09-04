@@ -34,4 +34,8 @@ const { copyText } = useCopy();
 const { data, status } = await useFetch("/api/bing-wallpaper", {
   transform: (res) => (res as any).data,
 });
+
+useHead({
+  title: "bind 每日壁纸",
+});
 </script>

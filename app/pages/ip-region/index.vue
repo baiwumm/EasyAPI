@@ -60,4 +60,8 @@ const { data, status, refresh } = await useFetch("/api/ip-region", {
 const handleSearch = async () => {
   await refresh();
 };
+
+useHead({
+  title: "IP 归属地查询",
+});
 </script>

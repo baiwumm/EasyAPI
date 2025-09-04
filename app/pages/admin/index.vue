@@ -29,7 +29,7 @@ const items = ref<TabsItem[]>([
   },
 ]);
 
-definePageMeta({
+useHead({
   title: "后台管理",
 });
 </script>

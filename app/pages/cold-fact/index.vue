@@ -59,4 +59,8 @@ const { copyText } = useCopy();
 const { data, status, refresh } = await useFetch("/api/cold-fact", {
   transform: (res) => (res as any).data,
 });
+
+useHead({
+  title: "每日冷知识",
+});
 </script>

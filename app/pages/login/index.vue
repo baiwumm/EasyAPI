@@ -15,7 +15,7 @@ watchEffect(() => {
 
 const toast = useToast();
 
-definePageMeta({
+useHead({
   title: "用户登录",
 });
 
@@ -115,8 +115,8 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
           error.message === "User already registered"
             ? "该邮箱已被注册"
             : error.message === "Password should be at least 6 characters"
-              ? "密码长度至少为6个字符"
-              : error.message;
+            ? "密码长度至少为6个字符"
+            : error.message;
         toast.add({
           title: "注册失败",
           description: errorMessage,

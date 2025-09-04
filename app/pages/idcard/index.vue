@@ -74,4 +74,8 @@ const handleSearch = async () => {
   }
   await refresh();
 };
+
+useHead({
+  title: "身份证信息查询",
+});
 </script>

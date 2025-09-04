@@ -130,7 +130,7 @@ const { data: categoryList, status: categoryStatus } = await useFetch<Response<P
   }
 );
 
-definePageMeta({
+useHead({
   title: "一个精美、现代化的 API 聚合平台！",
 });
 

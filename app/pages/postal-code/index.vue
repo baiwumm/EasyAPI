@@ -61,4 +61,8 @@ const { data, status, refresh } = await useFetch("/api/postal-code", {
 const handleSearch = async () => {
   await refresh();
 };
+
+useHead({
+  title: "邮政编码查询",
+});
 </script>

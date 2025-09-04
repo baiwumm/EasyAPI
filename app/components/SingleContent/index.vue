@@ -67,4 +67,8 @@ const props = defineProps({
 const { data, status, refresh } = await useFetch(`/api/${props.path}`, {
   query: { format: "text" },
 });
+
+useHead({
+  title: props.title,
+});
 </script>

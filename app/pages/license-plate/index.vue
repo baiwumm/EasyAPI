@@ -73,4 +73,8 @@ const handleSearch = async () => {
   }
   await refresh();
 };
+
+useHead({
+  title: "车牌归属地查询",
+});
 </script>

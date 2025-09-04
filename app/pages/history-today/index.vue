@@ -131,4 +131,8 @@ const handleSearch = async () => {
 const goToPage = (url: string) => {
   window.open(url);
 };
+
+useHead({
+  title: "历史上的今天",
+});
 </script>

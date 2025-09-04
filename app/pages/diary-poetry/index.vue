@@ -59,4 +59,8 @@ const { copyText } = useCopy();
 const { data, status, refresh } = await useFetch("/api/diary-poetry", {
   transform: (res) => (res as any).data,
 });
+
+useHead({
+  title: "今日诗词",
+});
 </script>

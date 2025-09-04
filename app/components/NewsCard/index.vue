@@ -109,4 +109,8 @@ const { data, status, refresh } = await useFetch(`/api/${props.path}`, {
 const handleSearch = async () => {
   await refresh();
 };
+
+useHead({
+  title: props.title,
+});
 </script>

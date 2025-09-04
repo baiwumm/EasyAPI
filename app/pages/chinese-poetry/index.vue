@@ -68,4 +68,8 @@ const { data, status, refresh } = await useFetch("/api/chinese-poetry", {
 const handleSearch = async () => {
   await refresh();
 };
+
+useHead({
+  title: "中文诗词",
+});
 </script>
