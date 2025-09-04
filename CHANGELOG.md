@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.5.2](https://github.com/baiwumm/EasyAPI/compare/1.5.1...1.5.2) (2025-09-04)
+
+### ✨ Features | 新功能
+
+* 新增 百度热搜榜 接口和页面 ([c22f81c](https://github.com/baiwumm/EasyAPI/commit/c22f81c9a4412dfb99fde5971261a46179d1da00))
+* 新增 百度贴吧热议榜 接口和页面 ([efa8f02](https://github.com/baiwumm/EasyAPI/commit/efa8f02c863480ba8e04a65b934315434fec6d00))
+* 新增 哔哩哔哩热门榜 接口和页面 ([b0068b9](https://github.com/baiwumm/EasyAPI/commit/b0068b97d1251207ec669b863658a291d9fc9b76))
+* 新增 抖音热点榜 接口和页面 ([4648335](https://github.com/baiwumm/EasyAPI/commit/464833582a8ecc0b8745c2e8c2d7a934f521c7f6))
+
 ## [1.5.1](https://github.com/baiwumm/EasyAPI/compare/1.5.0...1.5.1) (2025-09-04)
 
 ### ⚡ Performance Improvements | 性能优化
