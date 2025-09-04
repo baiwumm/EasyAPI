@@ -1,5 +1,70 @@
 # Changelog
 
+## [1.5.0](https://github.com/baiwumm/EasyAPI/compare/1.4.0...1.5.0) (2025-09-04)
+
+### ✨ Features | 新功能
+
+* 复制方法统一使用 useClipboard API ([f2cad5f](https://github.com/baiwumm/EasyAPI/commit/f2cad5fe7dd026e0cc629b3e32f44edf966f50c5))
+* 更新 @nuxt/ui 和 nuxt 包版本 ([d173931](https://github.com/baiwumm/EasyAPI/commit/d173931dd2d67d22d6295fbdefde5ee9267551b9))
+* 换行符转义 ([44720b6](https://github.com/baiwumm/EasyAPI/commit/44720b6c83df757871de1b5ede6b8cb08d3c7438))
+* 每日一言 接口添加  minLength 和  maxLength 参数 ([add7618](https://github.com/baiwumm/EasyAPI/commit/add761874c79ef9da1f78c6217b431f1456ac61c))
+* 添加 历史上的今天 接口 ([407ee6f](https://github.com/baiwumm/EasyAPI/commit/407ee6f945067e517e200e3757583339641617f4))
+* 新增 @vueuse/nuxt 包 ([1ea6c95](https://github.com/baiwumm/EasyAPI/commit/1ea6c954d704b3dd0cc2109ba6c21c1dc80af99c))
+* 新增 车牌归属地查询 接口 ([9767543](https://github.com/baiwumm/EasyAPI/commit/9767543111ab646ed01002282ad2ff04938cfd39))
+* 新增 车牌归属地查询 页面 ([cae20b0](https://github.com/baiwumm/EasyAPI/commit/cae20b0aef9eb3d885e7147e6758dd25fd58090b))
+* 新增 毒鸡汤 详情页面 ([0d630fb](https://github.com/baiwumm/EasyAPI/commit/0d630fb7383f898144cf191cb43fd65dfc346305))
+* 新增 疯狂星期四 接口和页面 ([8dd747e](https://github.com/baiwumm/EasyAPI/commit/8dd747efba0cf4b328643352f95a9ad09dc3c8f0))
+* 新增 今日诗词 详情页面 ([8c39be0](https://github.com/baiwumm/EasyAPI/commit/8c39be0797dab13b9ae328dc407854877fe99e06))
+* 新增 今日头条热榜 接口 ([8d415d1](https://github.com/baiwumm/EasyAPI/commit/8d415d1ffb174f50c330f25c7faad93d51b0f7f3))
+* 新增 历史上的今天 页面 ([3f74037](https://github.com/baiwumm/EasyAPI/commit/3f740375dd138c273e03ae3569c276de2340744e))
+* 新增 每日冷知识 详情页面 ([307a06e](https://github.com/baiwumm/EasyAPI/commit/307a06e4de4fca7db01f9a29540225024b8df11b))
+* 新增 每日绕口令 接口 ([f8cffd0](https://github.com/baiwumm/EasyAPI/commit/f8cffd0e9268ea15ce6eb243ccbfbf05c38d8f2f))
+* 新增 每日绕口令 详情页面 ([ef80d6a](https://github.com/baiwumm/EasyAPI/commit/ef80d6a9fb4c0e60a0e3b71b6295af2566504aa6))
+* 新增 每日笑话 详情页面 ([5293e0f](https://github.com/baiwumm/EasyAPI/commit/5293e0f4f8adfdc0f37a923afe25aec30d4ce635))
+* 新增 每日一言 详情页面 ([4de8dd2](https://github.com/baiwumm/EasyAPI/commit/4de8dd2b96810fe7ade12c0f96b587a6a4f1d012))
+* 新增 身份证信息查询 接口 ([12af143](https://github.com/baiwumm/EasyAPI/commit/12af14316598f7fe632f764da8abff01ad0a6025))
+* 新增 身份证信息查询 页面 ([f9fabd8](https://github.com/baiwumm/EasyAPI/commit/f9fabd8ac501b85d12238d2f008c4014ac54632b))
+* 新增 舔狗日记 详情页面 ([c4a1125](https://github.com/baiwumm/EasyAPI/commit/c4a1125988ca97eb1fb1ae9759340248c9b02493))
+* 新增 土味情话 详情页面 ([e72ed50](https://github.com/baiwumm/EasyAPI/commit/e72ed50afc881d082d942fbc86956b32fb7cafcd))
+* 新增 邮政编码查询 页面 ([bf67a82](https://github.com/baiwumm/EasyAPI/commit/bf67a824cfbaf6581fc08014acd7530d6038c063))
+* 新增 知乎热榜 接口 ([ea420fb](https://github.com/baiwumm/EasyAPI/commit/ea420fbb373b025cd6f09173570a7957e0bce128))
+* 新增 中文诗词 接口 ([ca82e14](https://github.com/baiwumm/EasyAPI/commit/ca82e1438bc2234fade70b83f006e189d198e37d))
+* 新增 中文诗词 页面 ([b3ec69b](https://github.com/baiwumm/EasyAPI/commit/b3ec69b7ff17c8dce10642c1cef5afdbf1e5046c))
+* 新增 中文诗词 页面 ([b8eaf5b](https://github.com/baiwumm/EasyAPI/commit/b8eaf5b8f9cc96eca327df9f0d54d1d84029953e))
+* 新增 bind 每日壁纸 页面 ([a00950b](https://github.com/baiwumm/EasyAPI/commit/a00950b31643095eff1b4c7aeb554343430102a3))
+* 新增 IP 归属地查询 接口 ([b66f7e5](https://github.com/baiwumm/EasyAPI/commit/b66f7e5b4bf06188f22ea30fdc53bdccb6bcf402))
+* 新增 IP 归属地查询 页面 ([a9bb557](https://github.com/baiwumm/EasyAPI/commit/a9bb557590e9b111112dee86fd2c06b89682f494))
+* 新增 SingleContent 组件 ([38dcdf0](https://github.com/baiwumm/EasyAPI/commit/38dcdf0213c4a8975484a5557ae2c0cd2f2c6734))
+* 新增复合函数 useCopy ([c63fbe1](https://github.com/baiwumm/EasyAPI/commit/c63fbe1199712da7c5c84cec571b8827222cdcef))
+* 新增新闻资讯接口等页面 ([4317668](https://github.com/baiwumm/EasyAPI/commit/4317668fb12f8409e06afb30e1da669c33439414))
+* 新增邮政编码查询接口 ([e98fddf](https://github.com/baiwumm/EasyAPI/commit/e98fddf3c745b712d81a7d35da4f40ee31c0ded0))
+* 修改 auth 登录规则，只有 admin 及其子页面 才需要登录 ([b3c1cc2](https://github.com/baiwumm/EasyAPI/commit/b3c1cc2be008d8d2d852467f753cbaa2ecf9cc2b))
+* 重构 身份证信息查询 接口 ([bb0b200](https://github.com/baiwumm/EasyAPI/commit/bb0b200541a8da9747ff9f4aa883c8067a933ea4))
+* **hitokoto:** 每日一言 接口改成从数据库获取 ([de3c0c4](https://github.com/baiwumm/EasyAPI/commit/de3c0c4d2876752450c5ff1539ca35364f68143e))
+* update README.md ([902c0b5](https://github.com/baiwumm/EasyAPI/commit/902c0b5f772ce429b2e9f3fe814b7921e7798461))
+
+### 💄 Styles | 风格
+
+* 细节调整 ([352b73a](https://github.com/baiwumm/EasyAPI/commit/352b73abe32c49876a805bd2bd540de722324876))
+* 修改布局最小高度 ([1e496d9](https://github.com/baiwumm/EasyAPI/commit/1e496d9e92e875da5d13f0df04e1e4b24c7202a8))
+
+### ♻ Code Refactoring | 代码重构
+
+* 重构 邮政编码查询 接口 ([f0d51d8](https://github.com/baiwumm/EasyAPI/commit/f0d51d8e64b46f61630477c673e29b63c4fcf489))
+
+### ⚡ Performance Improvements | 性能优化
+
+* 后台接口优化请求逻辑 ([8992408](https://github.com/baiwumm/EasyAPI/commit/8992408b2f5bf884167b956a3a34dce8ac24080c))
+
+### 👷‍ Build System | 构建
+
+* 修复大小写引发的报错 ([474cc8f](https://github.com/baiwumm/EasyAPI/commit/474cc8ff05e22f15f72b0c35575bce75323d4835))
+
+### 🔧 Continuous Integration | CI 配置
+
+* 更新 nuxt 版本 ([e6dd848](https://github.com/baiwumm/EasyAPI/commit/e6dd848f007ea7154e1eea056215adada94bfac4))
+* 删除 package-lock.json 文件 ([83b1969](https://github.com/baiwumm/EasyAPI/commit/83b1969552d0cfe21b89d5f4fd3ef2031e9189f8))
+
 ## [1.4.0](https://github.com/baiwumm/EasyAPI/compare/1.3.0...1.4.0) (2025-08-26)
 
 ### ✨ Features | 新功能
