@@ -94,7 +94,6 @@
 
 <script setup lang="ts">
 import type { PageResponse, CategoryList, Response } from "~/lib/type";
-import { formatNumberWithUnit } from "~/lib/utils";
 import { REQUEST_METHOD } from "~/lib/enum";
 import type { BadgeProps } from "#ui/types";
 

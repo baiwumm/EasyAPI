@@ -89,7 +89,6 @@ import type { PageResponse, CategoryList, Response, CategoryEdit } from "~/lib/t
 import { RESPONSE_STATUS_CODE } from "~/lib/enum";
 import type { TableColumn } from "@nuxt/ui";
 import EditModal from "./components/EditModal.vue";
-import { pick } from "~/lib/utils";
 import type { Column } from "@tanstack/vue-table";
 
 const UBadge = resolveComponent("UBadge");

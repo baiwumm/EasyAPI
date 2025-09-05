@@ -2,13 +2,13 @@
  * @Author: 白雾茫茫丶<baiwumm.com>
  * @Date: 2025-08-25 21:41:04
  * @LastEditors: 白雾茫茫丶<baiwumm.com>
- * @LastEditTime: 2025-08-26 10:37:35
+ * @LastEditTime: 2025-09-05 17:51:42
  * @Description: 每日冷知识
  */
 import { formatSuccess, formatFail } from '~/lib/constant';
 import { serverSupabaseClient } from '#supabase/server'
-import { pick } from '~/lib/utils'
 import type { RandomRecord } from '~/lib/type'
+import { pick } from '~/utils'
 
 export default defineEventHandler(async (event) => {
   const supabase = await serverSupabaseClient(event)

@@ -75,7 +75,6 @@
 </template>
 <script setup lang="ts">
 import { hotLableColor, hotTagColor } from "~/lib/constant";
-import { formatNumber } from "~/lib/utils";
 
 const props = defineProps({
   title: {
