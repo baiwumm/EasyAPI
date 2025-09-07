@@ -1,7 +1,7 @@
 <template>
   <div class="flex justify-between items-center flex-col min-h-[inherit] max-h-[80%] container mx-auto gap-3">
     <h1 class="place-self-start text-2xl font-black">{{ title }}</h1>
-    <div v-if="data && status === 'success'" class="flex items-center justify-center w-full">
+    <div v-if="!isEmpty(data) && status === 'success'" class="flex items-center justify-center w-full">
       <UCard class="overflow-y-scroll max-h-[30rem] max-w-full min-w-[30%]" :ui="{ body: '!py-2' }">
         <ClientOnly>
           <div class="py-2 border-b last:border-b-0 border-gray-200 dark:border-white/25" v-for="(item, index) in data">
@@ -81,10 +81,6 @@ const props = defineProps({
     type: String,
     required: true,
   },
-  path: {
-    type: String,
-    required: true,
-  },
   prefix: {
     type: String,
     required: false,
@@ -99,8 +95,11 @@ const colorMode = useColorMode();
 
 const isLight = colorMode.value === "light";
 
+// 获取请求路劲
+const path = usePath();
+
 // 请求数据
-const { data, status, refresh } = await useFetch(`/api/${props.path}`, {
+const { data, status, refresh } = await useFetch(path, {
   transform: (res) => (res as any).data,
 });
 

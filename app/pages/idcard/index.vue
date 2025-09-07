@@ -1,6 +1,6 @@
 <template>
   <div class="flex justify-between flex-col min-h-[inherit] container mx-auto gap-6">
-    <h1 class="text-2xl font-black">身份证信息查询</h1>
+    <h1 class="text-2xl font-black">{{ title }}</h1>
     <div v-if="data && status === 'success'" class="flex items-center justify-center w-full px-4 text-xl sm:text-2xl">
       <div class="self-center text-left w-full max-w-md">
         <div>性别：{{ data.sex }}</div>
@@ -53,8 +53,13 @@ import idCard from "idcard";
 const toast = useToast();
 const id = ref("510101199502152091");
 
+const title = ref("身份证信息查询");
+
+// 获取请求路劲
+const path = usePath();
+
 // 请求数据
-const { data, status, refresh } = await useFetch("/api/idcard", {
+const { data, status, refresh } = await useFetch(path, {
   query: { id },
   watch: false,
   transform: (res) => (res as any).data,
@@ -76,6 +81,6 @@ const handleSearch = async () => {
 };
 
 useHead({
-  title: "身份证信息查询",
+  title,
 });
 </script>

@@ -2,7 +2,7 @@
   <div class="flex justify-between flex-col min-h-[inherit] container mx-auto">
     <div class="grid grid-cols-1 sm:grid-cols-3 items-center gap-2">
       <!-- 左边标题 -->
-      <h1 class="text-2xl font-black justify-self-start">每日一言</h1>
+      <h1 class="text-2xl font-black justify-self-start">{{ title }}</h1>
 
       <!-- 中间按钮组 -->
       <div class="justify-self-start lg:justify-self-center">
@@ -75,6 +75,8 @@
 <script setup lang="ts">
 const { copyText } = useCopy();
 
+const title = ref("每日一言");
+
 // 请求参数
 const types = ref("");
 const typesOptions = reactive([
@@ -93,13 +95,16 @@ const typesOptions = reactive([
   { value: "l", label: "抖机灵" },
 ]);
 
+// 获取请求路劲
+const path = usePath();
+
 // 请求数据
-const { data, status, refresh } = await useFetch("/api/hitokoto", {
+const { data, status, refresh } = await useFetch(path, {
   query: { types },
   transform: (res) => (res as any).data,
 });
 
 useHead({
-  title: "每日一言",
+  title,
 });
 </script>

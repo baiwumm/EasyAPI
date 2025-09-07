@@ -1,3 +1,3 @@
 <template>
-  <NewsCard title="知乎热榜" path="zhihu" />
+  <NewsCard title="知乎热榜" />
 </template>

@@ -1,6 +1,6 @@
 <template>
   <div class="flex justify-between flex-col min-h-[inherit] container mx-auto gap-6">
-    <h1 class="text-2xl font-black">历史上的今天</h1>
+    <h1 class="text-2xl font-black">{{ title }}</h1>
     <div v-if="items?.length && status === 'success'" class="flex justify-center overflow-x-scroll w-full">
       <UTimeline orientation="horizontal" :default-value="items?.length - 1" :items="items">
         <template #title="{ item }">
@@ -93,8 +93,11 @@ const getRandomFunnyText = (): string => {
 // 获取当前时间
 const time = ref(dayjs().format("MM-DD"));
 
+// 获取请求路劲
+const path = usePath();
+
 // 请求数据
-const { data, status, refresh } = await useFetch<Data[]>("/api/history-today", {
+const { data, status, refresh } = await useFetch<Data[]>(path, {
   query: { time },
   watch: false,
   transform: (res) => (res as any).data,
@@ -132,7 +135,9 @@ const goToPage = (url: string) => {
   window.open(url);
 };
 
+const title = ref("历史上的今天");
+
 useHead({
-  title: "历史上的今天",
+  title,
 });
 </script>

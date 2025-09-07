@@ -1,6 +1,6 @@
 <template>
   <div class="flex justify-between flex-col min-h-[inherit] container mx-auto gap-6">
-    <h1 class="text-2xl font-black">邮政编码查询</h1>
+    <h1 class="text-2xl font-black">{{ title }}</h1>
     <div v-if="data && status === 'success'" class="flex items-center justify-center w-full px-4 text-xl sm:text-2xl">
       <div class="self-center text-left w-full max-w-md">
         <div>省份：{{ data.province || "-" }}</div>
@@ -50,8 +50,13 @@
 const type = ref("1");
 const keyword = ref("524200");
 
+const title = ref("邮政编码查询");
+
+// 获取请求路劲
+const path = usePath();
+
 // 请求数据
-const { data, status, refresh } = await useFetch("/api/postal-code", {
+const { data, status, refresh } = await useFetch(path, {
   query: { type, keyword },
   watch: false,
   transform: (res) => (res as any).data,
@@ -63,6 +68,6 @@ const handleSearch = async () => {
 };
 
 useHead({
-  title: "邮政编码查询",
+  title,
 });
 </script>

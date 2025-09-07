@@ -1,6 +1,6 @@
 <template>
   <div class="flex justify-between flex-col min-h-[inherit] container mx-auto gap-2">
-    <h1 class="text-2xl font-black justify-self-start">bind 每日壁纸</h1>
+    <h1 class="text-2xl font-black justify-self-start">{{ title }}</h1>
     <div class="flex justify-center items-center w-full">
       <TextType
         v-if="status === 'pending'"
@@ -11,7 +11,7 @@
         cursorCharacter="|"
         class="text-lg sm:text-2xl text-cetner py-6"
       />
-      <NuxtImg v-else :src="data" alt="bind 每日壁纸" class="w-[90%]" />
+      <NuxtImg v-else :src="data" :alt="title" class="w-[90%]" />
     </div>
     <div class="flex justify-center gap-2">
       <UButton
@@ -30,12 +30,17 @@
 <script setup lang="ts">
 const { copyText } = useCopy();
 
+const title = ref("bind 每日壁纸");
+
+// 获取请求路劲
+const path = usePath();
+
 // 请求数据
-const { data, status } = await useFetch("/api/bing-wallpaper", {
+const { data, status } = await useFetch(path, {
   transform: (res) => (res as any).data,
 });
 
 useHead({
-  title: "bind 每日壁纸",
+  title,
 });
 </script>

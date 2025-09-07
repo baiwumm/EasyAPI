@@ -1,3 +1,3 @@
 <template>
-  <NewsCard title="百度贴吧热议榜" path="baidutieba" />
+  <NewsCard title="百度贴吧热议榜" />
 </template>

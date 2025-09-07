@@ -57,14 +57,13 @@ const props = defineProps({
     type: String,
     required: true,
   },
-  path: {
-    type: String,
-    required: true,
-  },
 });
 
+// 获取请求路劲
+const path = usePath();
+
 // 请求数据
-const { data, status, refresh } = await useFetch(`/api/${props.path}`, {
+const { data, status, refresh } = await useFetch(path, {
   query: { format: "text" },
 });
 

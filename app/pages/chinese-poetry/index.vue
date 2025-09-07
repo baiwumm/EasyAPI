@@ -1,6 +1,6 @@
 <template>
   <div class="flex justify-between flex-col min-h-[inherit] container mx-auto gap-6">
-    <h1 class="text-2xl font-black">中文诗词</h1>
+    <h1 class="text-2xl font-black">{{ title }}</h1>
     <div v-if="data && status === 'success'" class="flex justify-center items-center">
       <div class="relative max-w-[90%] sm:max-w-[80%] min-w-[20%]">
         <UIcon name="ri:double-quotes-l" class="!size-[4rem] absolute -top-10 -left-10" />
@@ -57,8 +57,13 @@
 // 获取当前时间
 const author = ref("李白");
 
+const title = ref("中文诗词");
+
+// 获取请求路劲
+const path = usePath();
+
 // 请求数据
-const { data, status, refresh } = await useFetch("/api/chinese-poetry", {
+const { data, status, refresh } = await useFetch(path, {
   query: { author },
   watch: false,
   transform: (res) => (res as any).data?.[0],
@@ -70,6 +75,6 @@ const handleSearch = async () => {
 };
 
 useHead({
-  title: "中文诗词",
+  title,
 });
 </script>

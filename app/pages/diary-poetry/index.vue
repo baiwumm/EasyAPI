@@ -1,6 +1,6 @@
 <template>
   <div class="flex justify-between flex-col min-h-[inherit] container mx-auto gap-2">
-    <h1 class="text-2xl font-black justify-self-start">今日诗词</h1>
+    <h1 class="text-2xl font-black justify-self-start">{{ title }}</h1>
     <div class="flex justify-center items-center mt-6">
       <div class="relative max-w-[80%] min-w-[20%]">
         <UIcon name="ri:double-quotes-l" class="!size-[4rem] absolute -top-10 -left-10" />
@@ -55,12 +55,17 @@
 <script setup lang="ts">
 const { copyText } = useCopy();
 
+const title = ref("今日诗词");
+
+// 获取请求路劲
+const path = usePath();
+
 // 请求数据
-const { data, status, refresh } = await useFetch("/api/diary-poetry", {
+const { data, status, refresh } = await useFetch(path, {
   transform: (res) => (res as any).data,
 });
 
 useHead({
-  title: "今日诗词",
+  title,
 });
 </script>

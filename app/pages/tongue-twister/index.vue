@@ -1,3 +1,3 @@
 <template>
-  <SingleContent title="每日绕口令" path="tongue-twister" />
+  <SingleContent title="每日绕口令" />
 </template>

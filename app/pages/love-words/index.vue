@@ -1,3 +1,3 @@
 <template>
-  <SingleContent title="土味情话" path="love-words" />
+  <SingleContent title="土味情话" />
 </template>

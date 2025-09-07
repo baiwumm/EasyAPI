@@ -1,6 +1,6 @@
 <template>
   <div class="flex justify-between flex-col min-h-[inherit] container mx-auto gap-6">
-    <h1 class="text-2xl font-black">车牌归属地查询</h1>
+    <h1 class="text-2xl font-black">{{ title }}</h1>
     <div v-if="data && status === 'success'" class="flex items-center justify-center w-full px-4 text-xl sm:text-2xl">
       <div class="self-center text-left w-full max-w-md">
         <div>省份：{{ data.province || "-" }}</div>
@@ -54,8 +54,13 @@
 const toast = useToast();
 const keyword = ref("粤A");
 
+const title = ref("车牌归属地查询");
+
+// 获取请求路劲
+const path = usePath();
+
 // 请求数据
-const { data, status, refresh } = await useFetch("/api/license-plate", {
+const { data, status, refresh } = await useFetch(path, {
   query: { keyword },
   watch: false,
   transform: (res) => (res as any).data?.[0],
@@ -75,6 +80,6 @@ const handleSearch = async () => {
 };
 
 useHead({
-  title: "车牌归属地查询",
+  title,
 });
 </script>

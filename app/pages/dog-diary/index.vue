@@ -1,3 +1,3 @@
 <template>
-  <SingleContent title="舔狗日记" path="dog-diary" />
+  <SingleContent title="舔狗日记" />
 </template>
