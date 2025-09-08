@@ -41,10 +41,17 @@
           :showCursor="true"
           cursorCharacter="|"
           class="text-xl sm:text-2xl text-cetner py-6"
+          :onSentenceComplete="onSentenceComplete"
         />
-        <div v-if="status === 'success'" class="absolute -bottom-4 right-0">
-          —— {{ data?.from_who || "" }}{{ data?.from ? `「${data?.from}」` : "" }}
-        </div>
+        <TextType
+          v-if="status === 'success' && showFormContent"
+          :text="formContent"
+          :typingSpeed="75"
+          :pauseDuration="1500"
+          :showCursor="false"
+          cursorCharacter="|"
+          class="absolute -bottom-4 right-0"
+        />
       </div>
     </div>
     <div class="flex justify-center gap-2">
@@ -95,6 +102,9 @@ const typesOptions = reactive([
   { value: "l", label: "抖机灵" },
 ]);
 
+// 在句子打印完成之后显示来源信息
+const showFormContent = ref(false);
+
 // 获取请求路劲
 const path = usePath();
 
@@ -102,7 +112,20 @@ const path = usePath();
 const { data, status, refresh } = await useFetch(path, {
   query: { types },
   transform: (res) => (res as any).data,
+  onRequest: () => {
+    showFormContent.value = false;
+  },
 });
+
+// 右下角来源信息
+const formContent = computed(() =>
+  data.value?.content ? `—— ${data.value?.from_who || ""}${data.value?.from ? `「${data.value?.from}」` : ""}` : ""
+);
+
+// 每个句子完成后触发回调
+const onSentenceComplete = (sentence: string, index: number) => {
+  showFormContent.value = true;
+};
 
 useHead({
   title,

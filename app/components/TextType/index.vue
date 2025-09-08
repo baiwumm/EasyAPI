@@ -109,6 +109,8 @@ const executeTypingAnimation = () => {
       timeout = setTimeout(() => {
         isDeleting.value = true;
       }, props.pauseDuration);
+    } else {
+      props.onSentenceComplete?.(textArray.value[currentTextIndex.value], currentTextIndex.value);
     }
   }
 };

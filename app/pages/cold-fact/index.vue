@@ -21,10 +21,17 @@
           :showCursor="true"
           cursorCharacter="|"
           class="text-xl text-cetner py-6"
+          :onSentenceComplete="onSentenceComplete"
         />
-        <div v-if="status === 'success'" class="absolute -bottom-4 right-0">
-          —— {{ data?.source || "" }}{{ data?.category ? `「${data?.category}」` : "" }}
-        </div>
+        <TextType
+          v-if="status === 'success' && showFormContent"
+          :text="formContent"
+          :typingSpeed="75"
+          :pauseDuration="1500"
+          :showCursor="false"
+          cursorCharacter="|"
+          class="absolute -bottom-4 right-0"
+        />
       </div>
     </div>
     <div class="flex justify-center gap-2">
@@ -57,13 +64,31 @@ const { copyText } = useCopy();
 
 const title = ref("每日冷知识");
 
+// 在句子打印完成之后显示来源信息
+const showFormContent = ref(false);
+
 // 获取请求路劲
 const path = usePath();
 
 // 请求数据
 const { data, status, refresh } = await useFetch(path, {
   transform: (res) => (res as any).data,
+  onRequest: () => {
+    showFormContent.value = false;
+  },
 });
+
+// 右下角来源信息
+const formContent = computed(() =>
+  data.value?.content
+    ? `—— ${data.value?.source || ""}${data.value?.category ? `「${data.value?.category}」` : ""}`
+    : ""
+);
+
+// 每个句子完成后触发回调
+const onSentenceComplete = (sentence: string, index: number) => {
+  showFormContent.value = true;
+};
 
 useHead({
   title,

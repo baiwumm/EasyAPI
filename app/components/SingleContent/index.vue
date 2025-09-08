@@ -42,7 +42,7 @@
         color="neutral"
         variant="soft"
         class="cursor-pointer"
-        @click="copyText(data)"
+        @click="copyText(data as string)"
       >
         复制
       </UButton>

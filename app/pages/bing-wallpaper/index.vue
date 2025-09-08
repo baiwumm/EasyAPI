@@ -11,7 +11,7 @@
         cursorCharacter="|"
         class="text-lg sm:text-2xl text-cetner py-6"
       />
-      <NuxtImg v-else :src="data" :alt="title" class="w-[90%]" />
+      <NuxtImg v-else :src="data" :alt="title" class="w-[90%] rounded-md" />
     </div>
     <div class="flex justify-center gap-2">
       <UButton
