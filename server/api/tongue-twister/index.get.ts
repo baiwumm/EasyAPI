@@ -2,7 +2,7 @@
  * @Author: 白雾茫茫丶<baiwumm.com>
  * @Date: 2025-08-26 17:00:36
  * @LastEditors: 白雾茫茫丶<baiwumm.com>
- * @LastEditTime: 2025-08-26 17:02:09
+ * @LastEditTime: 2025-09-08 09:19:26
  * @Description: 每日绕口令
  */
 import { formatSuccess, formatFail } from '~/lib/constant';
@@ -12,7 +12,6 @@ import type { RandomRecord } from '~/lib/type'
 export default defineEventHandler(async (event) => {
   const supabase = await serverSupabaseClient(event)
   const query = getQuery(event)
-  const format = query.format || 'standard' // 默认返回标准格式
   try {
     const { data, error } = await supabase.rpc('get_random_tongue_twister')
 
@@ -21,7 +20,7 @@ export default defineEventHandler(async (event) => {
     } else {
       const content = (data as RandomRecord).content;
       // ✅ 根据 format 参数决定返回格式
-      if (format === 'text') {
+      if (query.format === 'text') {
         return content
       }
       return formatSuccess(content);

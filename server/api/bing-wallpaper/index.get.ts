@@ -9,8 +9,6 @@ import { formatSuccess, formatFail } from '~/lib/constant'
 
 export default defineEventHandler(async (event) => {
   const query = getQuery(event)
-  const format = query.format || 'standard' // 默认返回标准格式
-
   try {
     const response = await fetch(
       "https://www.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1&mkt=zh-CN"
@@ -27,7 +25,7 @@ export default defineEventHandler(async (event) => {
     const url = `https://www.bing.com${img.url}`
 
     // ✅ 根据 format 参数决定返回格式
-    if (format === 'text') {
+    if (query.format === 'text') {
       return url
     }
 

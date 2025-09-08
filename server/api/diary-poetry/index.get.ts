@@ -9,8 +9,6 @@ import { formatSuccess, formatFail } from '~/lib/constant'
 
 export default defineEventHandler(async (event) => {
   const query = getQuery(event)
-  const format = query.format || 'standard' // 默认返回标准格式
-
   try {
     const response = await fetch("https://v1.jinrishici.com/all.json");
 
@@ -21,7 +19,7 @@ export default defineEventHandler(async (event) => {
     const responseBody = await response.json();
 
     // ✅ 根据 format 参数决定返回格式
-    if (format === 'text') {
+    if (query.format === 'text') {
       return responseBody.content
     }
 

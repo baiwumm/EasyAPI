@@ -2,7 +2,7 @@
  * @Author: 白雾茫茫丶<baiwumm.com>
  * @Date: 2025-08-25 21:41:04
  * @LastEditors: 白雾茫茫丶<baiwumm.com>
- * @LastEditTime: 2025-09-05 17:51:42
+ * @LastEditTime: 2025-09-08 09:16:04
  * @Description: 每日冷知识
  */
 import { formatSuccess, formatFail } from '~/lib/constant';
@@ -13,7 +13,6 @@ import { pick } from '~/utils'
 export default defineEventHandler(async (event) => {
   const supabase = await serverSupabaseClient(event)
   const query = getQuery(event)
-  const format = query.format || 'standard' // 默认返回标准格式
   try {
     const { data, error } = await supabase.rpc('get_random_cold_fact')
 
@@ -22,7 +21,7 @@ export default defineEventHandler(async (event) => {
     } else {
       const content = (data as RandomRecord).content;
       // ✅ 根据 format 参数决定返回格式
-      if (format === 'text') {
+      if (query.format === 'text') {
         return content
       }
       return formatSuccess(pick(data, ['content', 'category', 'source']));

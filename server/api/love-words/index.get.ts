@@ -12,7 +12,6 @@ import type { RandomRecord } from '~/lib/type'
 export default defineEventHandler(async (event) => {
   const supabase = await serverSupabaseClient(event)
   const query = getQuery(event)
-  const format = query.format || 'standard' // 默认返回标准格式
   try {
     const { data, error } = await supabase.rpc('get_random_love_words')
 
@@ -21,7 +20,7 @@ export default defineEventHandler(async (event) => {
     } else {
       const content = (data as RandomRecord).content;
       // ✅ 根据 format 参数决定返回格式
-      if (format === 'text') {
+      if (query.format === 'text') {
         return content
       }
       return formatSuccess(content);
