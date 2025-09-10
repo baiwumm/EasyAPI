@@ -56,6 +56,9 @@ importers:
       idcard:
         specifier: ^4.2.0
         version: 4.2.0
+      lunar-typescript:
+        specifier: ^1.8.1
+        version: 1.8.1
       motion-v:
         specifier: ^1.5.0
         version: 1.7.0(@vueuse/core@13.9.0(vue@3.5.20(typescript@5.9.2)))(vue@3.5.20(typescript@5.9.2))
@@ -4905,6 +4908,9 @@ packages:
   lru-cache@7.18.3:
     resolution: {integrity: sha512-jumlc0BIUrS3qJGgIkWZsyfAM7NCWiBcCDhnd+3NNM5KbBmLTgHVfWBcg6W+rLUsIpzpERPsvwUP7CckAQSOoA==}
     engines: {node: '>=12'}
+
+  lunar-typescript@1.8.1:
+    resolution: {integrity: sha512-NJMhSe+DcSlCXQ/4Hp2fxRpSxlwnB5NXRTjq25KblMmRKL3BeriUm3Ar2OYmjdfI5kwugGylt1KB6MXXiKI+aQ==}
 
   luxon@3.7.1:
     resolution: {integrity: sha512-RkRWjA926cTvz5rAb1BqyWkKbbjzCGchDUIKMCUvNi17j6f6j8uHGDV82Aqcqtzd+icoYpELmG3ksgGiFNNcNg==}
@@ -12362,6 +12368,8 @@ snapshots:
       yallist: 3.1.1
 
   lru-cache@7.18.3: {}
+
+  lunar-typescript@1.8.1: {}
 
   luxon@3.7.1: {}
 
