@@ -1,5 +1,38 @@
 # Changelog
 
+## [1.5.3](https://github.com/baiwumm/EasyAPI/compare/1.5.2...1.5.3) (2025-09-10)
+
+### ✨ Features | 新功能
+
+* 添加页面过渡效果 ([d7a2f66](https://github.com/baiwumm/EasyAPI/commit/d7a2f66d929364654f36bdf0f8c91bde03a0de66))
+* 新增 豆瓣电影新片榜 接口和页面 ([df65623](https://github.com/baiwumm/EasyAPI/commit/df6562310652f3bd06486f15b73acc6c54af0436))
+* 新增 法定节假日 接口和页面 ([23e90fb](https://github.com/baiwumm/EasyAPI/commit/23e90fb1ca0e136624d79e68e065d555e8b55c76))
+* 新增 国际区号查询 接口和页面 ([f90d7fc](https://github.com/baiwumm/EasyAPI/commit/f90d7fcabdcdf0ba72f92b82b0d2eaa98d84a700))
+* 新增 快手热榜 接口和页面 ([0ab03ea](https://github.com/baiwumm/EasyAPI/commit/0ab03ea3b92f051acb5a4175622e5c6fe1b99d05))
+* 新增 骂人宝典（祖安语录） 接口和页面 ([647e25f](https://github.com/baiwumm/EasyAPI/commit/647e25f30b1b4f81acb450654e6e85dbecd389b3))
+* 新增 澎湃新闻热榜 接口和页面 ([ab13a9c](https://github.com/baiwumm/EasyAPI/commit/ab13a9cab497778f11c43354ac605f62d7e02a1e))
+* 新增 随机字符串 接口和页面 ([f00f003](https://github.com/baiwumm/EasyAPI/commit/f00f00379187118ff2e232c7421ae12e8a24a548))
+* 新增 腾讯新闻热点榜 接口和页面 ([aff63ff](https://github.com/baiwumm/EasyAPI/commit/aff63ff46050f0d2901c1819603f4a176f35c1b0))
+* 新增 网易新闻热榜 接口和页面 ([4ac1a60](https://github.com/baiwumm/EasyAPI/commit/4ac1a6027430ad26e9be3cd6bfd55f28801311f4))
+* 新增 稀土掘金热榜 接口和页面 ([3a764dc](https://github.com/baiwumm/EasyAPI/commit/3a764dc86daa69aafcdad71384859f74f5af250b))
+* 新增 歇后语 接口和页面 ([32fff92](https://github.com/baiwumm/EasyAPI/commit/32fff92dbefafcf0856965db90905b981c5a59fd))
+* 新增 英雄联盟更新公告 接口和页面 ([fe0104b](https://github.com/baiwumm/EasyAPI/commit/fe0104bdfe07b08ff74c6ec782315be6f1cf12d0))
+* 新增 cheerio 包 ([fffbc0c](https://github.com/baiwumm/EasyAPI/commit/fffbc0c5643d358e2a5f66ee29466ec24508a0de))
+* 新增 JsonWrapper 组件，展示接口 JSON 数据 ([ee9c15a](https://github.com/baiwumm/EasyAPI/commit/ee9c15af567b3d1b556d274d33aacfb045f6f714))
+* 新增 lunar-typescript 包 ([22ddfe9](https://github.com/baiwumm/EasyAPI/commit/22ddfe94d85d8ed56c44532169420a1e444d70a8))
+
+### 💄 Styles | 风格
+
+* 样式微调 ([5e638f4](https://github.com/baiwumm/EasyAPI/commit/5e638f4055a0db6505372c66aca7aa0e830861a5))
+
+### ⚡ Performance Improvements | 性能优化
+
+* 调整 utils 文件夹位置 ([f733ca5](https://github.com/baiwumm/EasyAPI/commit/f733ca5d88ffd64b0a9ccc500ea7e5e3ddf290b9))
+* 新增 usePath 函数，规范接口获取 ([e4ac629](https://github.com/baiwumm/EasyAPI/commit/e4ac62902aa3c9782c3f5e2fc3b937b3f270ba9d))
+* 修改复制成功文案 ([f434dcb](https://github.com/baiwumm/EasyAPI/commit/f434dcbe5c3406565cf52b0f2498db88c940e4e7))
+* 优化 format 参数逻辑 ([4fd543a](https://github.com/baiwumm/EasyAPI/commit/4fd543a33351ab4c6c13ca7d261a6a8913dc2809))
+* 优化个别接口页面展示 ([ff0a797](https://github.com/baiwumm/EasyAPI/commit/ff0a797e959ea5efa9e878f709f31ce3074f711c))
+
 ## [1.5.2](https://github.com/baiwumm/EasyAPI/compare/1.5.1...1.5.2) (2025-09-04)
 
 ### ✨ Features | 新功能
