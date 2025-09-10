@@ -2,7 +2,7 @@
   <div class="flex justify-between flex-col min-h-[inherit] container mx-auto gap-2">
     <h1 class="text-2xl font-black justify-self-start">{{ title }}</h1>
     <div class="flex justify-center items-center mt-6">
-      <div class="relative max-w-[80%] min-w-[20%]">
+      <div class="relative max-w-[85%] min-w-[20%]">
         <UIcon name="ri:double-quotes-l" class="!size-[4rem] absolute -top-10 -left-10" />
         <TextType
           v-if="status === 'pending'"
