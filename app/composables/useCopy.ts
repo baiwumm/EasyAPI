@@ -25,7 +25,7 @@ export const useCopy = () => {
     try {
       await copy(text)
       toast.add({
-        title: '文案已复制！',
+        title: '已复制！',
         color: 'success',
         icon: 'ri:checkbox-circle-line',
       })
