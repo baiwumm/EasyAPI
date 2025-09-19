@@ -11,7 +11,7 @@
         cursorCharacter="|"
         class="text-lg sm:text-2xl text-cetner py-6"
       />
-      <NuxtImg v-else :src="data" :alt="title" class="w-[90%] rounded-md" />
+      <NuxtImg v-else :src="data.url" :alt="data.title" class="w-[90%] rounded-md" />
     </div>
     <div class="flex justify-center gap-2">
       <UButton
@@ -20,7 +20,7 @@
         color="neutral"
         variant="soft"
         class="cursor-pointer"
-        @click="copyText(data)"
+        @click="copyText(data.url)"
       >
         复制
       </UButton>
