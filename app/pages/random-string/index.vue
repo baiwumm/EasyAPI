@@ -19,6 +19,7 @@
       <USelect v-model="typeVal" multiple :items="typeOptions" class="w-48" placeholder="请选择类型组合" />
       <UInputNumber v-model="length" :min="1" :max="100" class="w-48" placeholder="请输入字符串长度" />
       <UInputNumber v-model="count" :min="1" :max="50" class="w-48" placeholder="请输入生成的数量" />
+      <UInput v-model="exclude" class="w-48" placeholder="请输入需要排除的字符" />
       <UButton
         icon="ph:arrows-counter-clockwise-bold"
         size="sm"
@@ -40,11 +41,13 @@ const title = ref("随机字符串");
 const typeVal = ref<string[]>(["number", "lower", "upper"]); // 类型组合
 const length = ref(16); // 字符串长度
 const count = ref(10); // 生成的数量
+const exclude = ref(""); // 需要排除的字符
 
 const typeOptions = ref([
   { value: "number", label: "数字" },
   { value: "lower", label: "小写字母" },
   { value: "upper", label: "大写字母" },
+  { value: "symbol", label: "特殊字符" },
 ]);
 
 // 获取请求路劲
@@ -53,7 +56,7 @@ const type = computed(() => typeVal.value.join(","));
 
 // 请求数据
 const { data, status, refresh } = await useFetch(path, {
-  query: { type, length, count },
+  query: { type, length, count, exclude },
   watch: false,
   transform: (res) => (res as any).data,
 });
