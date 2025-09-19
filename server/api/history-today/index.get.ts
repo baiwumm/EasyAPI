@@ -2,7 +2,7 @@
  * @Author: 白雾茫茫丶<baiwumm.com>
  * @Date: 2025-08-29 17:00:19
  * @LastEditors: 白雾茫茫丶<baiwumm.com>
- * @LastEditTime: 2025-08-29 17:21:03
+ * @LastEditTime: 2025-09-19 09:27:00
  * @Description: 历史上的今天
  */
 import { formatSuccess, formatFail } from '~/lib/constant'
@@ -39,6 +39,7 @@ export default defineEventHandler(async (event) => {
       return {
         id: index,
         title: v.title.replace(/<[^>]+>/g, ''),
+        desc: v.desc.replace(/<[^>]+>/g, ''),
         year: v.year,
         type: v.type,
         url: v.link,
