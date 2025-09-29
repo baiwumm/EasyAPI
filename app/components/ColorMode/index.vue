@@ -48,7 +48,7 @@ async function toggleDark({ clientX: x, clientY: y }: MouseEvent) {
 </script>
 
 <template>
-  <UTooltip :text="`切换${$colorMode.value === 'dark' ? '白天' : '黑夜'}模式`">
+  <UTooltip arrow :text="`切换${$colorMode.value === 'dark' ? '白天' : '黑夜'}模式`">
     <UButton
       :icon="$colorMode.value === 'dark' ? 'i-heroicons-moon-solid' : 'i-heroicons-sun-solid'"
       size="lg"

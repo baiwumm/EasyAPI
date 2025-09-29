@@ -3,11 +3,18 @@
     <!-- 首页加载全屏动画 -->
     <FullLoading v-if="isFullLoading" />
     <UApp>
-      <NuxtLayout>
-        <!-- 在页面导航之间显示一个进度条 -->
-        <NuxtLoadingIndicator />
-        <NuxtPage />
-      </NuxtLayout>
+      <!-- 头部 -->
+      <GlobalHeader />
+      <!-- 主体内容 -->
+      <UMain class="p-4">
+        <NuxtLayout>
+          <!-- 在页面导航之间显示一个进度条 -->
+          <NuxtLoadingIndicator />
+          <NuxtPage />
+        </NuxtLayout>
+      </UMain>
+      <!-- 底部 -->
+      <UFooter />
     </UApp>
     <!-- 鼠标特效 -->
     <SplashCursor
