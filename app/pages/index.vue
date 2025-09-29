@@ -35,24 +35,18 @@
             v-for="child in item.apis || []"
             :key="child.id"
           >
-            <div
-              class="relative h-full cursor-pointer card-base animated-border animate-fade after:border-green-500/50 dark:after:border-green-400/50 shadow-md dark:shadow-[0_4px_6px_-1px_rgb(255,255,255,0.1)]"
-              shadow="hover"
-              @mouseenter="($event.target as HTMLElement)?.classList?.add('hovered')"
-              @click="goToPage(child.path)"
+            <UPageCard
+              class="relative"
+              :title="child.name"
+              :description="child.desc"
+              :to="child.path"
+              spotlight
+              spotlight-color="primary"
+              :ui="{
+                title: 'text-lg',
+                description: 'text-xs line-clamp-2 leading-6',
+              }"
             >
-              <div class="flex flex-col gap-3">
-                <div class="flex gap-2 items-center">
-                  <div class="flex flex-col gap-0.5">
-                    <div class="flex gap-1 items-center">
-                      <div class="text-lg font-semibold">{{ child.name }}</div>
-                    </div>
-                  </div>
-                </div>
-                <div class="text-xs text-gray-500 dark:text-gray-400 line-clamp-2 leading-6">
-                  {{ child.desc }}
-                </div>
-              </div>
               <div class="flex gap-1 absolute top-2 right-2">
                 <!-- 请求方式 -->
                 <UBadge variant="soft" size="sm" :color="methodColorMap[child.method]">{{ child.method }}</UBadge>
@@ -75,7 +69,7 @@
                   <span>置顶</span>
                 </div>
               </div>
-            </div>
+            </UPageCard>
           </AnimatedContent>
         </div>
         <div v-else class="flex justify-center items-center flex-col">
@@ -98,8 +92,6 @@ import { REQUEST_METHOD } from "~/lib/enum";
 import type { BadgeProps } from "#ui/types";
 
 const toast = useToast();
-
-const router = useRouter();
 
 defineOgImageComponent("Nuxt", {
   headline: "Greetings",
@@ -132,9 +124,4 @@ const { data: categoryList, status: categoryStatus } = await useFetch<Response<P
 useHead({
   title: "一个精美、现代化的 API 聚合平台！",
 });
-
-// 跳转页面
-const goToPage = (path: string) => {
-  router.push(path);
-};
 </script>
