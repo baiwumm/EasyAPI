@@ -2,7 +2,7 @@
  * @Author: 白雾茫茫丶<baiwumm.com>
  * @Date: 2024-05-30 13:52:19
  * @LastEditors: 白雾茫茫丶<baiwumm.com>
- * @LastEditTime: 2025-08-01 12:04:20
+ * @LastEditTime: 2025-09-29 11:52:15
  * @Description: 底部布局
 -->
 <template>
@@ -24,7 +24,7 @@
           color="neutral"
         >
           <div class="flex items-center gap-2">
-            <NuxtImg :src="`/${icon}`" :alt="tip" class="w-4" />
+            <img :src="`/${icon}`" :alt="tip" class="w-4" />
             {{ tip }}
           </div>
         </UButton>
