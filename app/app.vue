@@ -14,7 +14,7 @@
         </NuxtLayout>
       </UMain>
       <!-- 底部 -->
-      <UFooter />
+      <GlobalFooter />
     </UApp>
     <!-- 鼠标特效 -->
     <SplashCursor
