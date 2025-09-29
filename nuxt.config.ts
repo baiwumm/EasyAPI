@@ -97,8 +97,5 @@ export default defineNuxtConfig({
   experimental: {
     viewTransition: true
   },
-  css: ['~/assets/css/main.css'],
-  nitro: {
-    preset: 'vercel' // 必须
-  }
+  css: ['~/assets/css/main.css']
 })
