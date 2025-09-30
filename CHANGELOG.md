@@ -1,5 +1,41 @@
 # Changelog
 
+## [1.6.0](https://github.com/baiwumm/EasyAPI/compare/1.5.3...1.6.0) (2025-09-30)
+
+### ✨ Features | 新功能
+
+* 更新底部社交信息 ([c7e9888](https://github.com/baiwumm/EasyAPI/commit/c7e9888c50bb627cee5e894df4df6337f2bf8d0c))
+* 新增 二十四节气 接口和页面 ([527b95c](https://github.com/baiwumm/EasyAPI/commit/527b95c6c387d2feb652c9055327cc2c5fbbff0a))
+* 新增 十二时辰黄历 接口和页面 ([5c4b89d](https://github.com/baiwumm/EasyAPI/commit/5c4b89dd84eeeff874717d253d862b0bef526b9b))
+* 新增 随机颜色 接口和页面 ([1a42467](https://github.com/baiwumm/EasyAPI/commit/1a424678f90a6a3efd26d57538c99b9a2ab85da9))
+* 新增 BMI 计算器 接口和页面 ([65a8080](https://github.com/baiwumm/EasyAPI/commit/65a80806c99462c996eda349793160390a53d284))
+
+### 🐛 Bug Fixes | Bug 修复
+
+* 修复 NuxtImg 本地优化的问题 ([f8018e8](https://github.com/baiwumm/EasyAPI/commit/f8018e8670d5d1f59080a8bb340b39b8de3a29ba))
+
+### 💄 Styles | 风格
+
+* 调整卡片内间距 ([11f27b0](https://github.com/baiwumm/EasyAPI/commit/11f27b0b5d0f16b8bbf6f91b906e381725261484))
+
+### ⚡ Performance Improvements | 性能优化
+
+* 删除没用的组件 ([0319881](https://github.com/baiwumm/EasyAPI/commit/0319881b9addef13c3e9fd4b950c096bacccd630))
+* 新增 密码强度检测 接口和页面 ([8520ed5](https://github.com/baiwumm/EasyAPI/commit/8520ed592b6efbb7dba6af87572be7d9afa3153a))
+* 新增 生成二维码 接口和页面 ([59fdc43](https://github.com/baiwumm/EasyAPI/commit/59fdc431b8e2305b86714852e28ba0f3e708ce59))
+* 新增 颜色转换 接口和页面 ([6157e69](https://github.com/baiwumm/EasyAPI/commit/6157e69dba715b91d17459e1d1d4a2f0c01fae0e))
+* 优化 历史上的今天 接口 ([bb71347](https://github.com/baiwumm/EasyAPI/commit/bb71347a21cb656fe8a79e2745d61ceabd87a02f))
+* 优化 随机字符串 接口 ([e6845e1](https://github.com/baiwumm/EasyAPI/commit/e6845e1086e1d84122165273fa140d83bcb94992))
+* 优化 bind 每日壁纸 接口 ([d6cb600](https://github.com/baiwumm/EasyAPI/commit/d6cb600328ec426894e540cf7ce2398c68a6ea62))
+* 优化底部布局 ([e131e33](https://github.com/baiwumm/EasyAPI/commit/e131e33aa1974341a9631e58de34c4e47c56688c))
+* 优化首页卡片布局 ([d0aa25e](https://github.com/baiwumm/EasyAPI/commit/d0aa25e1c8ee7fb679ae49526029ca007e3ed35f))
+* 重构布局，优化顶部布局 ([106b08f](https://github.com/baiwumm/EasyAPI/commit/106b08f757479f61d2596876366e23cdbf7794a9))
+* update pnpm-lock.yaml ([5170391](https://github.com/baiwumm/EasyAPI/commit/517039176b509fdb172366177a45c72d69535f7e))
+
+### 🔧 Continuous Integration | CI 配置
+
+* 更新 @nuxt/ui 和 nuxt 版本 ([7041234](https://github.com/baiwumm/EasyAPI/commit/704123481f44d31c19f7cf6319f35861267f7384))
+
 ## [1.5.3](https://github.com/baiwumm/EasyAPI/compare/1.5.2...1.5.3) (2025-09-10)
 
 ### ✨ Features | 新功能
