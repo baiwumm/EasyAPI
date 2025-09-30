@@ -43,6 +43,7 @@
               spotlight
               spotlight-color="primary"
               :ui="{
+                container: 'p-2 sm:p-4',
                 title: 'text-lg',
                 description: 'text-xs line-clamp-2 leading-6',
               }"
@@ -52,7 +53,7 @@
                 <UBadge variant="soft" size="sm" :color="methodColorMap[child.method]">{{ child.method }}</UBadge>
               </div>
               <!-- 底部标签 -->
-              <div class="flex justify-end text-xs text-gray-500 mt-4 gap-3">
+              <div class="flex justify-end text-xs text-gray-500 mt-2 gap-3">
                 <!-- 调用次数 -->
                 <div class="flex items-center gap-1">
                   <UIcon name="ri:star-line" />
