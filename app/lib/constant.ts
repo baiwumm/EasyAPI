@@ -2,6 +2,7 @@ import type { Social } from '~/lib/type'
 import { RESPONSE_STATUS_CODE } from '~/lib/enum'
 import type { SelectItem } from '#ui/types'
 import { REQUEST_METHOD } from '~/lib/enum'
+import pkg from '../../package.json'
 
 /**
  * @description: 底部备案
@@ -28,9 +29,9 @@ export const FooterSocial: Social[] = [
     url: 'https://um.baiwumm.com/share/1pv7JW0MdRPqy4nr',
     tip: '网站统计'
   },
-  { icon: 'i-ri-github-line', url: 'https://github.com/baiwumm', tip: 'Github' },
-  { icon: 'i-ri-mail-line', url: 'mailto:me@baiwumm.com', tip: 'Email' },
-  { icon: 'i-ri-quill-pen-line', url: 'https://baiwumm.com', tip: '博客' }
+  { icon: 'i-ri-github-line', url: `https://github.com/${pkg.author.name}`, tip: 'Github' },
+  { icon: 'i-ri-mail-line', url: `mailto:${pkg.author.email}`, tip: 'Email' },
+  { icon: 'i-ri-quill-pen-line', url: pkg.author.url, tip: '博客' }
 ]
 
 /**
