@@ -47,6 +47,7 @@
                 title: 'text-lg',
                 description: 'text-xs line-clamp-2 leading-6',
               }"
+              @click="handleClick(child.name)"
             >
               <div class="flex gap-1 absolute top-2 right-2">
                 <!-- 请求方式 -->
@@ -88,6 +89,7 @@
 </template>
 
 <script setup lang="ts">
+import { track } from "@vercel/analytics";
 import type { PageResponse, CategoryList, Response } from "~/lib/type";
 import { REQUEST_METHOD } from "~/lib/enum";
 import type { BadgeProps } from "#ui/types";
@@ -121,6 +123,11 @@ const { data: categoryList, status: categoryStatus } = await useFetch<Response<P
     },
   }
 );
+
+// 点击卡片回调
+const handleClick = (name: string) => {
+  track(name);
+};
 
 useHead({
   title: "一个精美、现代化的 API 聚合平台！",
