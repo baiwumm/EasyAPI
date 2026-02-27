@@ -2,17 +2,22 @@
  * @Author: 白雾茫茫丶<baiwumm.com>
  * @Date: 2026-01-22 16:01:46
  * @LastEditors: 白雾茫茫丶<baiwumm.com>
- * @LastEditTime: 2026-02-02 18:03:41
+ * @LastEditTime: 2026-02-26 18:06:14
  * @Description: 管理后台
  */
 import { Folder, Globe } from "@gravity-ui/icons";
 import { Tabs } from "@heroui/react";
+import type { Metadata } from "next";
 import { type FC } from 'react';
 
 import Apis from './components/apis'
 import Categorys from './components/categorys'
 
 import { ADMIN_TABS } from '@/enums';
+
+export const metadata: Metadata = {
+  title: '后台管理',
+}
 
 const Admin: FC = () => {
   return (

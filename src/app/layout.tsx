@@ -10,7 +10,10 @@ import FullLoading from '@/components/FullLoading';
 import pkg from '#/package.json';
 
 export const metadata: Metadata = {
-  title: `让 API 集成更简单 | ${process.env.NEXT_PUBLIC_APP_NAME}`,
+  title: {
+    template: `%s | ${process.env.NEXT_PUBLIC_APP_NAME}`,
+    default: `让 API 集成更简单 | ${process.env.NEXT_PUBLIC_APP_NAME}`
+  },
   description: process.env.NEXT_PUBLIC_APP_DESC,
   keywords: process.env.NEXT_PUBLIC_APP_KEYWORDS,
   authors: [{ name: process.env.NEXT_PUBLIC_COPYRIGHT, url: pkg.author.url }],
