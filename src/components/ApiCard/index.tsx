@@ -2,7 +2,7 @@
  * @Author: 白雾茫茫丶<baiwumm.com>
  * @Date: 2026-02-25 11:10:45
  * @LastEditors: 白雾茫茫丶<baiwumm.com>
- * @LastEditTime: 2026-02-26 10:48:28
+ * @LastEditTime: 2026-02-27 14:46:55
  * @Description: 接口卡片
  */
 "use client";
@@ -21,7 +21,7 @@ const ApiCard: FC<ApiCardProps> = memo(function ApiCard({ data }) {
 
   const formatter = new Intl.NumberFormat('zh-CN', {
     notation: 'compact',
-    maximumFractionDigits: 1,
+    maximumFractionDigits: 2,
   });
   return (
     <Card
