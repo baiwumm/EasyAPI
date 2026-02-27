@@ -2,7 +2,7 @@
  * @Author: 白雾茫茫丶<baiwumm.com>
  * @Date: 2026-01-22 16:24:30
  * @LastEditors: 白雾茫茫丶<baiwumm.com>
- * @LastEditTime: 2026-01-23 14:38:55
+ * @LastEditTime: 2026-02-27 14:42:15
  * @Description: 代理层
  */
 import { NextRequest } from 'next/server'
@@ -22,6 +22,6 @@ export const config = {
      * - 静态资源 (如 .css, .png)
      * - API 路由 (可选，但通常不需要保护)
      */
-    '/((?!api|_next|[^?]*\\.(?:html?|css|js|json|xml|txt|md|png|jpg|jpeg|gif|webp|avif|ico|bmp|svg|tiff|tif|mp4|webm|ogg|mp3|wav|flac|aac|woff|woff2|eot|ttf|otf|webmanifest)$).*)',
+    '/((?!_next|[^?]*\\.(?:html?|css|js|json|xml|txt|md|png|jpg|jpeg|gif|webp|avif|ico|bmp|svg|tiff|tif|mp4|webm|ogg|mp3|wav|flac|aac|woff|woff2|eot|ttf|otf|webmanifest)$).*)',
   ],
 }
