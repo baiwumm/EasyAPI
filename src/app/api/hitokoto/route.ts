@@ -2,7 +2,7 @@
  * @Author: 白雾茫茫丶<baiwumm.com>
  * @Date: 2026-02-27 09:47:30
  * @LastEditors: 白雾茫茫丶<baiwumm.com>
- * @LastEditTime: 2026-02-27 09:54:09
+ * @LastEditTime: 2026-02-28 10:17:11
  * @Description: 每日一言
  */
 import { NextRequest, NextResponse } from 'next/server'
@@ -11,10 +11,6 @@ import { RESPONSE } from '@/enums'
 import { getSupabaseServerClient } from '@/lib/supabase/server'
 import { responseMessage } from '@/lib/utils'
 
-/**
- * @description: 查询接口列表
- * @param {Request} request
- */
 export async function GET(request: NextRequest) {
   try {
     const supabase = await getSupabaseServerClient();

@@ -107,7 +107,7 @@ export default function ClientComponent() {
     )
   }
   return (
-    <div className="flex-1 flex flex-col justify-between">
+    <div className="flex-1 flex flex-col justify-between gap-4">
       {/* 头部区域 */}
       <div className="shrink-0">
         <div className="grid grid-cols-1 sm:grid-cols-3 items-center gap-2">
