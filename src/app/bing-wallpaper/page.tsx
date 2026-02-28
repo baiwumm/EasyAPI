@@ -1,0 +1,33 @@
+/*
+ * @Author: 白雾茫茫丶<baiwumm.com>
+ * @Date: 2026-02-28 14:42:52
+ * @LastEditors: 白雾茫茫丶<baiwumm.com>
+ * @LastEditTime: 2026-02-28 14:57:38
+ * @Description: bind 每日壁纸
+ */
+import type { Metadata } from "next";
+import Image from 'next/image';
+
+import CopyText from '@/components/CopyText';
+import { get } from '@/lib/utils';
+
+export const metadata: Metadata = {
+  title: 'bind 每日壁纸',
+}
+
+export default async function BingWallpaper() {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/bing-wallpaper`);
+  const data = await res.json();
+  const url = get(data, 'data.url', '');
+  return (
+    <div className="flex-1 flex flex-col justify-between gap-4">
+      <h1 className="text-2xl font-black shrink-0">bind 每日壁纸</h1>
+      <div className="relative flex-1 w-full h-full">
+        <Image fill src={url} alt={get(data, 'data.title', '')} className="object-cover rounded-2xl" />
+      </div>
+      <div className="flex justify-center shrink-0">
+        <CopyText content={url} />
+      </div>
+    </div>
+  )
+}
