@@ -10,6 +10,7 @@ import { ArrowsRotateLeft, QuoteOpen } from '@gravity-ui/icons';
 import { Button, Spinner } from '@heroui/react';
 import { useRequest } from 'ahooks';
 import { usePathname } from 'next/navigation';
+import { useMemo, useState } from 'react';
 
 import AlertContent from '@/components/AlertContent';
 import CopyText from '@/components/CopyText';
@@ -19,16 +20,38 @@ import { getApiData } from '@/services/common';
 
 type QuoteWorldProps = {
   title: string;
+  formWhoField?: string;
+  fromField?: string;
 }
 
-export default function QuoteWorld({ title }: QuoteWorldProps) {
+export default function QuoteWorld({ title, formWhoField = '', fromField = '' }: QuoteWorldProps) {
   const pathname = usePathname();
+  const [showFormContent, setShowFormContent] = useState(false);
 
   // 请求数据
   const { data = {}, loading, error, run } = useRequest(
     async () =>
-      get(await getApiData(pathname), 'data', {})
+      get(await getApiData(pathname), 'data', {}), {
+    onBefore: () => {
+      setShowFormContent(false);
+    },
+  }
   );
+
+  // 右下角来源信息
+  const formContent = useMemo(() => {
+    if (!formWhoField || !fromField) {
+      return null
+    }
+    const content = get(data, 'content', '');
+    const from_who = get(data, formWhoField);
+    const from = get(data, fromField, '');
+    return content ? `—— ${from_who || ''}${from ? `「${from}」` : ""}` : ""
+  }, [data, formWhoField, fromField]);
+
+  const onSentenceComplete = () => {
+    setShowFormContent(true)
+  }
 
   // 渲染内容
   const renderContent = () => {
@@ -61,7 +84,18 @@ export default function QuoteWorld({ title }: QuoteWorldProps) {
           pauseDuration={1500}
           loop={false}
           className="text-xl sm:text-2xl py-6"
+          onSentenceComplete={onSentenceComplete}
         />
+        {showFormContent && formContent ? (
+          <TypingAnimation
+            text={formContent}
+            typingSpeed={75}
+            pauseDuration={1500}
+            loop={false}
+            showCursor={false}
+            className="absolute -bottom-4 right-0 text-muted"
+          />
+        ) : null}
       </div>
     )
   }
