@@ -1,16 +1,26 @@
 'use client'
 import { ArrowsRotateLeft, CircleCheck, CircleXmark } from '@gravity-ui/icons';
-import { Button, ColorSwatch, type Key, ListBox, NumberField, Select, Spinner, toast } from '@heroui/react';
+import { Button, ColorSwatch, ListBox, NumberField, Select, Spinner, toast } from '@heroui/react';
 import { useRequest } from 'ahooks';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
+import tinycolor from "tinycolor2";
 
 import AlertContent from '@/components/AlertContent';
 import useClipboard from '@/hooks/use-clipboard';
 import { get } from '@/lib/utils';
 import { getApiData } from '@/services/common';
 
-const formatOptions = [
+type Format = "hex" | "rgb" | "hsl" | "hsv" | "all";
+
+type Color = string | {
+  hex: string;
+  rgb: string;
+  hsl: string;
+  hsv: string;
+};
+
+const formatOptions: { value: Format, label: string }[] = [
   { value: "all", label: "全部" },
   { value: "hex", label: "Hex" },
   { value: "rgb", label: "Rgb" },
@@ -18,65 +28,17 @@ const formatOptions = [
   { value: "hsv", label: "Hsv" },
 ];
 
-function hsvStringToHex(hsv: string): string {
-  const HSV_REGEX = /^hsv\(\s*([0-9]+(?:\.[0-9]+)?)\s*,\s*([0-9]+(?:\.[0-9]+)?)%?\s*,\s*([0-9]+(?:\.[0-9]+)?)%?\s*\)$/i;
-  // 解析 "hsv(h, s%, v%)"
-  const match = hsv.match(HSV_REGEX);
-  if (!match) {
-    return "#000000"; // 默认返回黑色
-  }
-
-  const [, hStr, sStr, vStr] = match;
-  const h = parseFloat(hStr as string);
-  let s = parseFloat(sStr as string);
-  let v = parseFloat(vStr as string);
-
-  // 归一化
-  s /= 100;
-  v /= 100;
-
-  const c = v * s;
-  const hh = h / 60;
-  const x = c * (1 - Math.abs((hh % 2) - 1));
-  let r = 0,
-    g = 0,
-    b = 0;
-
-  if (hh >= 0 && hh < 1) [r, g, b] = [c, x, 0];
-  else if (hh >= 1 && hh < 2) [r, g, b] = [x, c, 0];
-  else if (hh >= 2 && hh < 3) [r, g, b] = [0, c, x];
-  else if (hh >= 3 && hh < 4) [r, g, b] = [0, x, c];
-  else if (hh >= 4 && hh < 5) [r, g, b] = [x, 0, c];
-  else if (hh >= 5 && hh < 6) [r, g, b] = [c, 0, x];
-
-  const m = v - c;
-  r = Math.round((r + m) * 255);
-  g = Math.round((g + m) * 255);
-  b = Math.round((b + m) * 255);
-
-  return `#${r.toString(16).padStart(2, "0")}${g.toString(16).padStart(2, "0")}${b
-    .toString(16)
-    .padStart(2, "0")}`.toUpperCase();
-}
-
-// 获取颜色字符串
-const getColorString = (v) => v.hex || v.string || v;
-
 export default function ClientComponent() {
   const pathname = usePathname();
   const { copy, isSupported } = useClipboard();
-  const [format, setFormat] = useState<Key | null>("all"); // 颜色格式
+  const [format, setFormat] = useState<Format>("all"); // 颜色格式
   const [count, setCount] = useState(10); // 生成的数量
-  const [isHsv, setIsHsv] = useState(false);
 
   // 请求数据
   const { data = [], loading, error, run } = useRequest(
     async (params) =>
       get(await getApiData(pathname, params), 'data', []), {
-    defaultParams: [{ format, count }],
-    onSuccess: () => {
-      setIsHsv(format === "hsv");
-    },
+    defaultParams: [{ format, count }]
   },
   );
 
@@ -139,17 +101,18 @@ export default function ClientComponent() {
     }
     return (
       <div className="flex justify-center items-center flex-wrap gap-2">
-        {data.map((v) => {
-          const color = isHsv ? hsvStringToHex(getColorString(v)) : getColorString(v);
+        {data.map((v: Record<keyof Color, string>) => {
+          const rawColor = format === 'all' ? v.hex : v;
+          const displayColor = format === "hsv" ? tinycolor(rawColor).toHexString() : rawColor;
           return (
             <ColorSwatch
-              key={color}
-              aria-label={color}
-              color={color}
-              onClick={() => handleCopy(getColorString(v))}
+              key={displayColor}
+              aria-label={displayColor}
+              color={displayColor}
+              onClick={() => handleCopy(rawColor)}
               className="cursor-pointer"
               style={() => ({
-                boxShadow: `0 0 10px 2px ${color}`,
+                boxShadow: `0 0 10px 2px ${displayColor}`,
               })}
             />
           )
@@ -174,7 +137,7 @@ export default function ClientComponent() {
             className="w-50"
             placeholder="请选择颜色格式"
             value={format}
-            onChange={(value) => setFormat(value)}
+            onChange={(value) => setFormat(value as Format)}
             aria-label="颜色格式"
           >
             <Select.Trigger>
