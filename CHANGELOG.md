@@ -1,5 +1,34 @@
 # Changelog
 
+## [2.2.0](https://github.com/baiwumm/EasyAPI/compare/2.1.0...2.2.0) (2026-03-03)
+
+### ✨ Features | 新功能
+
+* 新增 qrcode 包 ([aaa97ed](https://github.com/baiwumm/EasyAPI/commit/aaa97ed1b92a6fcd76520ee5f3ac92b24e56a59d))
+* 新增 tinycolor2 包 ([460ac27](https://github.com/baiwumm/EasyAPI/commit/460ac27c81f27d2441944551cf273840a0b0d53a))
+* **BingWallpaper:** 新增《bind 每日壁纸》页面 ([6c129c3](https://github.com/baiwumm/EasyAPI/commit/6c129c328e56aa726429f3ce26363277b2ee87fa))
+* **ChickenSoup:** 新增《毒鸡汤》页面 ([552ba28](https://github.com/baiwumm/EasyAPI/commit/552ba28377f2243047e913f4ae83dd13a5191325))
+* **ChinesePoetry:** 新增《中文诗词》页面 ([3d6d63e](https://github.com/baiwumm/EasyAPI/commit/3d6d63e597176214d7ba4df984046bff815e1c5c))
+* **ColdFact:** 新增《每日冷知识》页面 ([373a6d1](https://github.com/baiwumm/EasyAPI/commit/373a6d16d00761735694b2f648a2baaf6f985486))
+* **ColorConversion:** 新增 《颜色转换》接口和页面 ([c3720af](https://github.com/baiwumm/EasyAPI/commit/c3720af5ca3abfa4d84bd6671a7ca583b8ede6d9))
+* **DiaryPoetry:** 新增《今日诗词》页面 ([21887db](https://github.com/baiwumm/EasyAPI/commit/21887dbdc3aae4aafb9be7005ffef7bdb377ca9a))
+* **DogDiary:** 新增《舔狗日记》页面 ([9208166](https://github.com/baiwumm/EasyAPI/commit/92081665cf7e1c1cea79a87e62dc6826c7d04057))
+* **Kfc:** 新增《疯狂星期四》页面 ([e1f7800](https://github.com/baiwumm/EasyAPI/commit/e1f78005904cdf15ec35e4707bea0e5153cc0ab7))
+* **LoveWords:** 新增《土味情话》页面 ([4f8bd42](https://github.com/baiwumm/EasyAPI/commit/4f8bd42e956f6301b856a6e99737def38c97d132))
+* **PasswordStrength:** 新增 《密码强度检测》接口和页面 ([9669197](https://github.com/baiwumm/EasyAPI/commit/96691973d5f047e2f1658447293a3671a806b8eb))
+* **Qrcode:** 新增 《生成二维码》页面 ([52b0133](https://github.com/baiwumm/EasyAPI/commit/52b0133f1c24131141a65d7e5df832eff7d1a4a0))
+* **RandomColor:** 新增《随机颜色》页面 ([ea05390](https://github.com/baiwumm/EasyAPI/commit/ea05390b62a323d60481ed8010b9baa8c38243ac))
+* **RandomString:** 新增《随机字符串》页面 ([d54bcda](https://github.com/baiwumm/EasyAPI/commit/d54bcdac2d6c296f8bf80ce32d54111ce6d5a8c0))
+* **Riddle:** 新增《歇后语》页面 ([e6e3c67](https://github.com/baiwumm/EasyAPI/commit/e6e3c67252956419a852576ff506d44636072b1a))
+* **Swearing:** 新增《骂人宝典（祖安语录）》页面 ([04cc2da](https://github.com/baiwumm/EasyAPI/commit/04cc2da1507a637272353613882a71932f095b72))
+* **TongueTwister:** 新增《每日绕口令》页面 ([dbf1ea1](https://github.com/baiwumm/EasyAPI/commit/dbf1ea106151806600469d2545d1c2ec790f1368))
+* **TongueTwister:** 新增《每日笑话》页面 ([ddcfda6](https://github.com/baiwumm/EasyAPI/commit/ddcfda63a43a415361ad322a0e35b5526ecbe0a0))
+
+### ⚡ Performance Improvements | 性能优化
+
+* 细节调整 ([b3331d1](https://github.com/baiwumm/EasyAPI/commit/b3331d18bd53c0961dbf94371d6099078eaea1d2))
+* **RandomColor:** 优化页面逻辑 ([a1cf480](https://github.com/baiwumm/EasyAPI/commit/a1cf480b80a703b67db0b3d212eb740d9151bf34))
+
 ## [2.1.0](https://github.com/baiwumm/EasyAPI/compare/2.0.0...2.1.0) (2026-02-27)
 
 ### ✨ Features | 新功能
