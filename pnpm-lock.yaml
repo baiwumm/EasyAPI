@@ -68,6 +68,9 @@ importers:
       idcard:
         specifier: ^4.2.0
         version: 4.2.0
+      lunar-typescript:
+        specifier: ^1.8.6
+        version: 1.8.6
       motion:
         specifier: ^12.23.12
         version: 12.27.5(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
@@ -3124,6 +3127,9 @@ packages:
   lru-cache@7.18.3:
     resolution: {integrity: sha512-jumlc0BIUrS3qJGgIkWZsyfAM7NCWiBcCDhnd+3NNM5KbBmLTgHVfWBcg6W+rLUsIpzpERPsvwUP7CckAQSOoA==}
     engines: {node: '>=12'}
+
+  lunar-typescript@1.8.6:
+    resolution: {integrity: sha512-5Eo4T/cnuXfrgO4k5LCpOGHIUOuz5hCF/IfNv0T29WY2shR36Hiz+ecN9WjnUuxUKhql9gbOkPaQoqLFKtPRNA==}
 
   macos-release@3.4.0:
     resolution: {integrity: sha512-wpGPwyg/xrSp4H4Db4xYSeAr6+cFQGHfspHzDUdYxswDnUW0L5Ov63UuJiSr8NMSpyaChO4u1n0MXUvVPtrN6A==}
@@ -7526,6 +7532,8 @@ snapshots:
       yallist: 3.1.1
 
   lru-cache@7.18.3: {}
+
+  lunar-typescript@1.8.6: {}
 
   macos-release@3.4.0: {}
 
