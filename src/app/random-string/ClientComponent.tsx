@@ -1,7 +1,8 @@
 'use client'
 import { ArrowsRotateLeft, CircleCheck, CircleXmark, Copy } from '@gravity-ui/icons';
-import { Button, Chip, Input, type Key, ListBox, NumberField, Select, Spinner, toast } from '@heroui/react';
+import { Button, Chip, Description, Input, Label, ListBox, NumberField, Select, Spinner, TextField, toast } from '@heroui/react';
 import { useRequest } from 'ahooks';
+import { type Options } from 'crypto-random-string'
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 
@@ -10,32 +11,63 @@ import useClipboard from '@/hooks/use-clipboard';
 import { get } from '@/lib/utils';
 import { getApiData } from '@/services/common';
 
-const typeOptions = [
-  { value: "number", label: "数字" },
-  { value: "lower", label: "小写字母" },
-  { value: "upper", label: "大写字母" },
-  { value: "symbol", label: "特殊字符" },
-];
+const RANDOM_STRING_TYPE_OPTIONS = [
+  {
+    label: '字母 + 数字',
+    value: 'alphanumeric',
+    description: '最常用的随机字符串类型'
+  },
+  {
+    label: 'URL 安全 Base64',
+    value: 'url-safe',
+    description: '适用于 URL，不包含 + /'
+  },
+  {
+    label: '纯数字（0-9）',
+    value: 'numeric',
+    description: '常用于验证码、短信码'
+  },
+  {
+    label: '易区分字符',
+    value: 'distinguishable',
+    description: '去除 0/O、1/l 等易混淆字符'
+  },
+  {
+    label: '十六进制（0-9 a-f）',
+    value: 'hex',
+    description: '常用于哈希、Token、ID'
+  },
+  {
+    label: 'Base64 编码',
+    value: 'base64',
+    description: '包含大小写字母、数字、+ /'
+  },
+  {
+    label: '可打印 ASCII 字符',
+    value: 'ascii-printable',
+    description: '包含字母、数字、符号、标点'
+  }
+]
 
 export default function ClientComponent() {
   const pathname = usePathname();
   const { copy, isSupported } = useClipboard();
-  const [types, setTypes] = useState<Key[]>(["number", "lower"]); // 类型组合
+  const [type, setType] = useState<Options['type']>('alphanumeric');
   const [length, setLength] = useState(16); // 字符串长度
   const [count, setCount] = useState(10); // 生成的数量
-  const [exclude, setExclude] = useState(''); // 需要排除的字符
+  const [characters, setCharacters] = useState(''); // 自定义字符集
 
   // 请求数据
   const { data = [], loading, error, run } = useRequest(
     async (params) =>
       get(await getApiData(pathname, params), 'data', []), {
-    defaultParams: [{ type: Array.from(types).join(','), length, count, exclude }]
+    defaultParams: [{ type, length, count, characters }]
   },
   );
 
   // 请求数据
   const reFresh = () => {
-    run({ type: Array.from(types).join(','), length, count, exclude });
+    run({ type, length, count, characters });
   }
 
   // 点击复制回调
@@ -92,9 +124,10 @@ export default function ClientComponent() {
     }
     return (
       <div className="flex justify-center items-center flex-wrap gap-2">
-        {data.map((v, i) => (
+        {data.map((v) => (
           <Chip
             key={v}
+            size='lg'
             color='accent'
             variant='soft'
             onClick={() => handleCopy(v)}
@@ -121,11 +154,10 @@ export default function ClientComponent() {
       <div className="flex justify-center shrink-0">
         <div className="flex items-center gap-2 flex-wrap">
           <Select
-            selectionMode="multiple"
-            className="w-50"
-            placeholder="请选择类型组合"
-            value={types}
-            onChange={(keys) => setTypes(keys)}
+            className="w-60"
+            placeholder="请选择类型"
+            value={type}
+            onChange={(val) => setType(val as Options['type'])}
             aria-label="类型组合"
           >
             <Select.Trigger>
@@ -134,9 +166,12 @@ export default function ClientComponent() {
             </Select.Trigger>
             <Select.Popover>
               <ListBox>
-                {typeOptions.map(({ value, label }) => (
+                {RANDOM_STRING_TYPE_OPTIONS.map(({ value, label, description }) => (
                   <ListBox.Item key={value} id={value} textValue={label}>
-                    {label}
+                    <div className="flex flex-col">
+                      <Label>{label}</Label>
+                      <Description>{description}</Description>
+                    </div>
                     <ListBox.ItemIndicator />
                   </ListBox.Item>
                 ))}
@@ -144,6 +179,7 @@ export default function ClientComponent() {
             </Select.Popover>
           </Select>
           <NumberField minValue={1} maxValue={100} value={length} onChange={setLength} aria-label="字符串长度">
+            <Description>字符串长度</Description>
             <NumberField.Group>
               <NumberField.DecrementButton />
               <NumberField.Input className="w-20" />
@@ -151,13 +187,24 @@ export default function ClientComponent() {
             </NumberField.Group>
           </NumberField>
           <NumberField minValue={1} maxValue={50} value={count} onChange={setCount} aria-label="生成的数量">
+            <Description>生成的数量</Description>
             <NumberField.Group>
               <NumberField.DecrementButton />
               <NumberField.Input className="w-20" />
               <NumberField.IncrementButton />
             </NumberField.Group>
           </NumberField>
-          <Input aria-label="排除的字符" className="w-50" placeholder="请输入需要排除的字符" value={exclude} onChange={(event) => setExclude(event.target.value)} />
+          <TextField>
+            <Description>会忽略 type</Description>
+            <Input
+              aria-label="自定义字符集"
+              maxLength={65536}
+              className="w-50"
+              placeholder="自定义字符集"
+              value={characters}
+              onChange={(event) => setCharacters(event.target.value)}
+            />
+          </TextField>
           <Button size='sm' isPending={loading} onPress={reFresh} className="bg-accent-soft text-accent hover:bg-accent-soft-hover">
             {({ isPending }) => (
               <>
