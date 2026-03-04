@@ -91,7 +91,7 @@ const JsonContent: FC<JsonContentProps> = ({ title, children, params = {}, onRef
               </>
             )}
           </Button>
-          <CopyText content={Object.keys(data).length > 0 ? JSON.stringify(data, null, 2) : ''} />
+          <CopyText content={Object.keys(data || {}).length > 0 ? JSON.stringify(data || {}, null, 2) : ''} />
         </div>
       </div>
     </div>
