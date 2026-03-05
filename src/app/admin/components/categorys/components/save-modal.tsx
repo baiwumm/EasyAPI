@@ -80,7 +80,7 @@ const SaveModal: FC<SaveModalProps> = ({ state, initialValues, handleRefresh }) 
                   }}
                 >
                   <Label>分类名称</Label>
-                  <Input aria-label="Name" fullWidth variant="secondary" placeholder="请输入分类名称" />
+                  <Input aria-label="分类名称" fullWidth variant="secondary" placeholder="请输入分类名称" />
                   <FieldError />
                 </TextField>
                 <TextField
@@ -89,7 +89,7 @@ const SaveModal: FC<SaveModalProps> = ({ state, initialValues, handleRefresh }) 
                   defaultValue={initialValues?.desc ?? ""}
                 >
                   <Label>分类描述</Label>
-                  <TextArea aria-label="Desc" fullWidth variant="secondary" placeholder="请输入分类描述" />
+                  <TextArea aria-label="分类描述" fullWidth variant="secondary" placeholder="请输入分类描述" rows={4} />
                 </TextField>
                 <NumberField
                   isRequired
