@@ -1,5 +1,21 @@
 # Changelog
 
+## [2.3.0](https://github.com/baiwumm/EasyAPI/compare/2.2.1...2.3.0) (2026-03-05)
+
+### ✨ Features | 新功能
+
+* update README.md ([ef28988](https://github.com/baiwumm/EasyAPI/commit/ef28988eed2c2918f66565df626cb709297c901d))
+
+### 💄 Styles | 风格
+
+* UI 细节优化 ([a25519a](https://github.com/baiwumm/EasyAPI/commit/a25519a1c5c72a8b23df49a4c52447c1327d03ec))
+
+### ⚡ Performance Improvements | 性能优化
+
+* 删除没用的文件 ([146e56d](https://github.com/baiwumm/EasyAPI/commit/146e56d7f7179340dbd0cbec666b130d0be2f89c))
+* **Apis:** 更换 Table 和 Pagination 组件，优化页面 UI 显示 ([7629478](https://github.com/baiwumm/EasyAPI/commit/7629478b18611fc2f96b2921741b6fbac206973f))
+* **Categorys:** 更换 Table 和 Pagination 组件，优化页面 UI 显示 ([c546426](https://github.com/baiwumm/EasyAPI/commit/c5464263c80881b8729d4a83df32df5ed20e41ce))
+
 ## [2.2.1](https://github.com/baiwumm/EasyAPI/compare/2.2.0...2.2.1) (2026-03-05)
 
 ### ✨ Features | 新功能
