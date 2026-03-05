@@ -1,5 +1,31 @@
 # Changelog
 
+## [2.2.1](https://github.com/baiwumm/EasyAPI/compare/2.2.0...2.2.1) (2026-03-05)
+
+### ✨ Features | 新功能
+
+* 更新 HeroUI 版本到 3.0.0-beta.8 ([09e40e4](https://github.com/baiwumm/EasyAPI/commit/09e40e4958502e13552f0dfb6175658ac1925072))
+* 新增 @internationalized/date 包 ([2cb759a](https://github.com/baiwumm/EasyAPI/commit/2cb759a5fd95a50faadaabb00c1698a2932085b2))
+* 新增 idcard 包 ([6f9a4af](https://github.com/baiwumm/EasyAPI/commit/6f9a4af8082fc37a796057f4f8a16d654b4153c2))
+* 新增 lunar-typescript 包 ([bbfce35](https://github.com/baiwumm/EasyAPI/commit/bbfce352924753fbfcac021e8f2f46d50d5ad5af))
+* **Almanac:** 新增《十二时辰黄历》接口和页面 ([515622c](https://github.com/baiwumm/EasyAPI/commit/515622c1cd49320cf45de52bf927f5078b203266))
+* **BMI:** 新增《BMI 计算器》接口和页面 ([ac04cd6](https://github.com/baiwumm/EasyAPI/commit/ac04cd604c7944c6fba198bcb5d9236e684f3876))
+* **components:** 新增 《JsonContent》组件 ([5ec3470](https://github.com/baiwumm/EasyAPI/commit/5ec3470ead0e9a0c35de5b44ae6b49177f82fd66))
+* **CountryCode:** 新增《国际区号查询》接口和页面 ([7a6acf3](https://github.com/baiwumm/EasyAPI/commit/7a6acf376078b3d8b01be7c9660087f86339ee94))
+* **Holiday:** 新增《法定节假日》接口和页面 ([c108c6b](https://github.com/baiwumm/EasyAPI/commit/c108c6b640da4191ee8985cb237edc91d73ea29d))
+* **Idcard:** 新增《身份证信息查询》页面 ([12340a7](https://github.com/baiwumm/EasyAPI/commit/12340a7e7457cfdcb80bb791ef51dc6c414598f8))
+* **IpRegion:** 新增《IP 归属地查询》页面 ([e7ea794](https://github.com/baiwumm/EasyAPI/commit/e7ea794b543a92adf887f9c762ccece3c6d313de))
+* **PostalCode:** 新增《邮政编码查询》页面 ([0ec8262](https://github.com/baiwumm/EasyAPI/commit/0ec826207204fb1eae16aadddd496e3d5d7f5aa4))
+* **SolarTerm:** 新增《二十四节气》接口和页面 ([25dece8](https://github.com/baiwumm/EasyAPI/commit/25dece8f9689af6711aadb127684980b6c7b49f1))
+
+### 💄 Styles | 风格
+
+* **LicensePlate:** 使用 Table 形式展示数据 ([81ca8e2](https://github.com/baiwumm/EasyAPI/commit/81ca8e27ce6556ad3f0a9ade4bd3c47907dea9bf))
+
+### ⚡ Performance Improvements | 性能优化
+
+* **RandomString:** 优化组件逻辑 ([748a47b](https://github.com/baiwumm/EasyAPI/commit/748a47b5d96e9617a46227d98a7d75d553cb793f))
+
 ## [2.2.0](https://github.com/baiwumm/EasyAPI/compare/2.1.0...2.2.0) (2026-03-03)
 
 ### ✨ Features | 新功能
