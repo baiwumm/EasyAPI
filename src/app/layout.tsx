@@ -12,7 +12,7 @@ import pkg from '#/package.json';
 export const metadata: Metadata = {
   title: {
     template: `%s | ${process.env.NEXT_PUBLIC_APP_NAME}`,
-    default: `让 API 集成更简单 | ${process.env.NEXT_PUBLIC_APP_NAME}`
+    default: `${process.env.NEXT_PUBLIC_APP_TITLE} | ${process.env.NEXT_PUBLIC_APP_NAME}`
   },
   description: process.env.NEXT_PUBLIC_APP_DESC,
   keywords: process.env.NEXT_PUBLIC_APP_KEYWORDS,

@@ -113,14 +113,14 @@ export default function ClientComponent() {
     <div className="flex justify-center items-center flex-1">
       <Card className="w-lg max-w-md shadow-md">
         <Card.Header>
-          <div className="flex gap-1 items-center">
+          <div className="flex gap-1 items-center flex-col">
             <Image
               src="/logo.svg"
               width={120}
               height={32}
               alt="Logo"
             />
-            <p className="text-sm text-muted">让 API 集成更简单，马上登录！</p>
+            <Description>{process.env.NEXT_PUBLIC_APP_TITLE}，马上登录！</Description>
           </div>
         </Card.Header>
         <Separator />
@@ -194,15 +194,15 @@ export default function ClientComponent() {
           </Form>
           <div className="flex justify-end items-center w-full mt-2">
             {isSignup ? (
-              <p className="text-sm text-center">
+              <Description>
                 已经有账户？
-                <Link className="underline-offset-4 hover:underline" onClick={() => setIsSignup(false)}>立即登录</Link>
-              </p>
+                <Link className="underline-offset-4 hover:underline text-xs" onClick={() => setIsSignup(false)}>立即登录</Link>
+              </Description>
             ) : (
-              <p className="text-sm text-center">
+              <Description>
                 需要创建一个账户？
-                <Link className="underline-offset-4 hover:underline" onClick={() => setIsSignup(true)}>立即注册</Link>
-              </p>
+                <Link className="underline-offset-4 hover:underline text-xs" onClick={() => setIsSignup(true)}>立即注册</Link>
+              </Description>
             )}
           </div>
         </Card.Content>

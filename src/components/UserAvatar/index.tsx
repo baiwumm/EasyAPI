@@ -2,12 +2,12 @@
  * @Author: 白雾茫茫丶<baiwumm.com>
  * @Date: 2026-01-22 15:44:57
  * @LastEditors: 白雾茫茫丶<baiwumm.com>
- * @LastEditTime: 2026-01-27 14:04:47
+ * @LastEditTime: 2026-03-05 11:09:52
  * @Description: 用户头像
  */
 import { useRouter } from '@bprogress/next/app';
 import { ArrowRightFromSquare, GearDot, Person } from '@gravity-ui/icons';
-import { AlertDialog, Avatar, Button, Dropdown, Label, Separator, Spinner, Tooltip, useOverlayState } from '@heroui/react';
+import { AlertDialog, Avatar, Badge, Button, Dropdown, Label, Separator, Spinner, Tooltip, useOverlayState } from '@heroui/react';
 import { type FC, type Key, useState } from 'react';
 
 import { useSupabaseUser } from '@/hooks/use-supabase-user';
@@ -64,15 +64,15 @@ const UserAvatar: FC = () => {
     <>
       <Dropdown isOpen={open} onOpenChange={setOpen}>
         <Dropdown.Trigger>
-          <div className="relative">
+          <Badge.Anchor>
             <Avatar className="size-8">
               <Avatar.Image alt="在线用户" src={avatar} />
               <Avatar.Fallback>
                 <Person />
               </Avatar.Fallback>
             </Avatar>
-            <span className="absolute right-0 bottom-0 size-2 rounded-full bg-green-500 ring-2 ring-background" />
-          </div>
+            <Badge color="success" placement="bottom-right" size="sm" className="rounded-full min-h-3 min-w-3" />
+          </Badge.Anchor>
         </Dropdown.Trigger>
         <Dropdown.Popover>
           <div className="flex items-center gap-3 p-3">
