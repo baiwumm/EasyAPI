@@ -131,6 +131,7 @@ const SaveModal: FC<SaveModalProps> = ({
                       ))}
                     </ListBox>
                   </Select.Popover>
+                  <FieldError />
                 </Select>
                 <TextField
                   isRequired
@@ -209,10 +210,11 @@ const SaveModal: FC<SaveModalProps> = ({
                       ))}
                     </ListBox>
                   </Select.Popover>
+                  <FieldError />
                 </Select>
                 <TextField name="desc" maxLength={500} defaultValue={initialValues?.desc ?? ""}>
                   <Label>接口描述</Label>
-                  <TextArea aria-label="接口描述" fullWidth variant="secondary" rows={3} maxLength={200} placeholder="请输入接口描述" />
+                  <TextArea aria-label="接口描述" fullWidth variant="secondary" rows={4} maxLength={200} placeholder="请输入接口描述" />
                 </TextField>
                 <div className="grid grid-cols-2 items-center gap-4">
                   {SwitchOptions.map(({ name, label }) => (

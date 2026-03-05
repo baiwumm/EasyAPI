@@ -2,7 +2,7 @@
  * @Author: 白雾茫茫丶<baiwumm.com>
  * @Date: 2026-01-23 15:24:22
  * @LastEditors: 白雾茫茫丶<baiwumm.com>
- * @LastEditTime: 2026-02-25 14:33:22
+ * @LastEditTime: 2026-03-05 18:05:39
  * @Description: 接口列表
  */
 "use client"
@@ -40,7 +40,7 @@ const InitialParams: App.ApiQueryParams = {
   category_id: '',
 };
 
-const Websites: FC = () => {
+const Apis: FC = () => {
   // 搜索参数
   const [searchParams, setSearchParams] = useSetState<App.ApiQueryParams>(InitialParams);
   // 排序
@@ -142,6 +142,9 @@ const Websites: FC = () => {
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
+    defaultColumn: {
+      enableSorting: false, // 默认全部不能排序
+    },
   })
 
   useEffect(() => {
@@ -173,7 +176,7 @@ const Websites: FC = () => {
           saveModalState={saveModalState}
         />
         <Card.Content>
-          <DataTable table={table} colSpan={columns.length} loading={loading} />
+          <DataTable table={table} loading={loading} />
         </Card.Content>
         <Card.Footer>
           <DataTablePagination table={table} total={total || 0} />
@@ -191,4 +194,4 @@ const Websites: FC = () => {
     </>
   )
 }
-export default Websites;
+export default Apis;
