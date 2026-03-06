@@ -1,4 +1,3 @@
-import { ArrowRightArrowLeft, ArrowUpArrowDown } from '@gravity-ui/icons';
 import { Enum } from 'enum-plus';
 
 /**
@@ -33,16 +32,6 @@ export const ADMIN_TABS = Enum({
   CATEGOTYS: { value: 'categorys', label: '接口分类' },
   APIS: { value: 'apis', label: '接口列表' },
 })
-
-/**
- * @description: 过渡动画方向
- */
-export const TRANSITION_DIRECTION = Enum({
-  LTR: { value: 'ltr', label: '左到右', icon: <ArrowRightArrowLeft className="-scale-x-100" />, clipPath: ['inset(0 100% 0 0)', 'inset(0 0 0 0)'] },
-  RTL: { value: 'rtl', label: '右到左', icon: <ArrowRightArrowLeft />, clipPath: ['inset(0 0 0 100%)', 'inset(0 0 0 0)'] },
-  TTB: { value: 'ttb', label: '上到下', icon: <ArrowUpArrowDown />, clipPath: ['inset(0 0 100% 0)', 'inset(0 0 0 0)'] },
-  BTT: { value: 'btt', label: '下到上', icon: <ArrowUpArrowDown className="-scale-x-100" />, clipPath: ['inset(100% 0 0 0)', 'inset(0 0 0 0)'] }
-});
 
 /**
  * @description: 请求方式
