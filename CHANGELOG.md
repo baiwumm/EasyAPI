@@ -1,5 +1,19 @@
 # Changelog
 
+## [2.4.0](https://github.com/baiwumm/EasyAPI/compare/2.3.0...2.4.0) (2026-03-06)
+
+### ✨ Features | 新功能
+
+* 更新 demo 图 ([29166d4](https://github.com/baiwumm/EasyAPI/commit/29166d42d62800ec7ce6e332bbad5583a40b829d))
+
+### ⚡ Performance Improvements | 性能优化
+
+* 删除 store 相关的文件 ([cd98d64](https://github.com/baiwumm/EasyAPI/commit/cd98d64fbb2901971bfda990c896b9bc5113c099))
+
+### 🔧 Continuous Integration | CI 配置
+
+* 删除 zustand 库 ([8c9ec86](https://github.com/baiwumm/EasyAPI/commit/8c9ec868be23953f0fc6c126e798c2b8bc22358a))
+
 ## [2.3.0](https://github.com/baiwumm/EasyAPI/compare/2.2.1...2.3.0) (2026-03-05)
 
 ### ✨ Features | 新功能
