@@ -121,6 +121,7 @@ export default function ClientComponent() {
           <Select
             className="w-50"
             placeholder="请选择年份"
+            aria-label="年份"
             value={year}
             onChange={(value) => setYear(value as number)}
           >

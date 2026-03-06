@@ -18,7 +18,7 @@ export default function ClientComponent() {
   }
   return (
     <JsonContent title="邮政编码查询" params={{ keyword, type }} onRefresh={onRefresh}>
-      <Select className="w-50" placeholder="请选择" value={type} onChange={(value) => setType(value as number)}>
+      <Select className="w-50" placeholder="请选择" aria-label="邮政编码" value={type} onChange={(value) => setType(value as number)}>
         <Select.Trigger>
           <Select.Value />
           <Select.Indicator />

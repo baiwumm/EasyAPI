@@ -104,6 +104,7 @@ export default function ClientComponent() {
         <div className="flex items-center gap-2 flex-wrap">
           <Select
             className="w-50"
+            aria-label="年份"
             placeholder="请选择年份"
             value={year}
             onChange={(value) => setYear(value as number)}

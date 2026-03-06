@@ -13,7 +13,7 @@ import { getApiData } from '@/services/common';
 type JsonContentProps = {
   title: string;
   children: ReactNode;
-  params: Record<string, string>;
+  params: Record<string, any>;
   onRefresh: () => boolean;
   searchText?: string;
 }
