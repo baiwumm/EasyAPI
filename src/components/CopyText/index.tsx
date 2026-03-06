@@ -2,7 +2,7 @@
  * @Author: 白雾茫茫丶<baiwumm.com>
  * @Date: 2026-02-27 10:56:12
  * @LastEditors: 白雾茫茫丶<baiwumm.com>
- * @LastEditTime: 2026-02-27 13:42:52
+ * @LastEditTime: 2026-03-06 16:48:49
  * @Description: 复制文案
  */
 'use client'
@@ -10,7 +10,7 @@ import { Check, CircleCheck, CircleXmark, Copy } from '@gravity-ui/icons'
 import { Button, toast } from '@heroui/react'
 import { type FC, useCallback, useRef, useState } from 'react'
 
-import useClipboard from '@/hooks/use-clipboard';
+import { useCopy } from '@/hooks/use-copy';
 
 type CopyTextProps = {
   content: string
@@ -21,7 +21,7 @@ const CopyText: FC<CopyTextProps> = ({
   content = '',
   timeout = 3000,
 }) => {
-  const { copy, isSupported } = useClipboard();
+  const { copy, isSupported } = useCopy();
   const [copied, setCopied] = useState(false)
   const timerRef = useRef<NodeJS.Timeout | null>(null)
 
@@ -56,7 +56,7 @@ const CopyText: FC<CopyTextProps> = ({
     }
 
     try {
-      await copy(content, content)
+      await copy(content)
 
       setCopied(true)
 

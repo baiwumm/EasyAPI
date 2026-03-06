@@ -1,13 +1,13 @@
 'use client'
-import { ArrowsRotateLeft, CircleCheck, CircleXmark } from '@gravity-ui/icons';
-import { Button, ColorSwatch, ListBox, NumberField, Select, Spinner, toast } from '@heroui/react';
+import { ArrowsRotateLeft } from '@gravity-ui/icons';
+import { Button, ColorSwatch, ListBox, NumberField, Select, Spinner } from '@heroui/react';
 import { useRequest } from 'ahooks';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 import tinycolor from "tinycolor2";
 
 import AlertContent from '@/components/AlertContent';
-import useClipboard from '@/hooks/use-clipboard';
+import { useCopy } from '@/hooks/use-copy';
 import { get } from '@/lib/utils';
 import { getApiData } from '@/services/common';
 
@@ -30,7 +30,7 @@ const formatOptions: { value: Format, label: string }[] = [
 
 export default function ClientComponent() {
   const pathname = usePathname();
-  const { copy, isSupported } = useClipboard();
+  const { copy } = useCopy();
   const [format, setFormat] = useState<Format>("all"); // 颜色格式
   const [count, setCount] = useState(10); // 生成的数量
 
@@ -45,36 +45,6 @@ export default function ClientComponent() {
   // 请求数据
   const reFresh = () => {
     run({ format, count });
-  }
-
-  // 点击复制回调
-  const handleCopy = async (content: string) => {
-    // 无内容
-    if (!content) {
-      toast.danger('复制失败，缺少内容!', {
-        indicator: <CircleXmark />,
-      })
-      return
-    }
-
-    // 浏览器不支持
-    if (!isSupported) {
-      toast.danger('复制失败，当前浏览器不支持！', {
-        indicator: <CircleXmark />,
-      })
-      return
-    }
-
-    try {
-      await copy(content, content)
-      toast.success('复制成功', {
-        indicator: <CircleCheck />,
-      })
-    } catch {
-      toast.danger('复制失败，请手动复制!', {
-        indicator: <CircleXmark />,
-      })
-    }
   }
 
   // 渲染内容
@@ -109,7 +79,7 @@ export default function ClientComponent() {
               key={displayColor}
               aria-label={displayColor}
               color={displayColor}
-              onClick={() => handleCopy(rawColor)}
+              onClick={() => copy(rawColor)}
               className="cursor-pointer"
               style={() => ({
                 boxShadow: `0 0 10px 2px ${displayColor}`,
