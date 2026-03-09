@@ -1,5 +1,15 @@
 # Changelog
 
+## [2.4.2](https://github.com/baiwumm/EasyAPI/compare/2.4.1...2.4.2) (2026-03-09)
+
+### ✨ Features | 新功能
+
+* **components:** 新增 RefreshButton 组件 ([5b12085](https://github.com/baiwumm/EasyAPI/commit/5b12085c9a52d01d2a5d7b1dda51b75fe563018c))
+
+### ⚡ Performance Improvements | 性能优化
+
+* 统一项目 Loading 状态 ([3d23bb6](https://github.com/baiwumm/EasyAPI/commit/3d23bb65aa7a6a94b0f1e1af7d19866c3ff8aa06))
+
 ## [2.4.1](https://github.com/baiwumm/EasyAPI/compare/2.4.0...2.4.1) (2026-03-09)
 
 ### ✨ Features | 新功能
