@@ -43,3 +43,21 @@ export const REQUEST_METHODS = Enum({
   DELETE: { value: 'DELETE', label: 'DELETE' },
   PATCH: { value: 'PATCH', label: 'PATCH' }
 })
+
+/**
+ * @description: 随机头像
+ */
+export const AVATAR_STYLES = Enum({
+  RANDOM: { value: 'random', label: '随机风格' },
+  ADVENTURER: { value: 'adventurer', label: '冒险者' },
+  AVATAAARS: { label: "卡通人物", value: "avataaars" },
+  BOTTTS: { label: "机器人", value: "bottts" },
+  PIXELART: { label: "像素风", value: "pixelArt" },
+  FUNEMOJI: { label: "趣味表情", value: "funEmoji" },
+  LORELEI: { label: "人物插画", value: "lorelei" },
+  MICAH: { label: "简约人物", value: "micah" },
+  NOTIONISTS: { label: "Notion 风格", value: "notionists" },
+  OPENPEEPS: { label: "开源人物", value: "openPeeps" },
+  PERSONAS: { label: "人物头像", value: "personas" },
+  THUMBS: { label: "手势头像", value: "thumbs" }
+})
