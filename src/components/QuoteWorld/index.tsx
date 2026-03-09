@@ -2,7 +2,7 @@
  * @Author: 白雾茫茫丶<baiwumm.com>
  * @Date: 2026-02-28 09:53:08
  * @LastEditors: 白雾茫茫丶<baiwumm.com>
- * @LastEditTime: 2026-02-28 09:58:42
+ * @LastEditTime: 2026-03-09 16:33:12
  * @Description: 一言文案
  */
 'use client'
@@ -14,6 +14,7 @@ import { useMemo, useState } from 'react';
 
 import AlertContent from '@/components/AlertContent';
 import CopyText from '@/components/CopyText';
+import LoadingContent from '@/components/LoadingContent';
 import TypingAnimation from '@/components/TypingAnimation';
 import { get } from '@/lib/utils';
 import { getApiData } from '@/services/common';
@@ -68,12 +69,7 @@ export default function QuoteWorld({ title, formWhoField = '', fromField = '' }:
       )
     }
     if (loading) {
-      return (
-        <div className="flex flex-col items-center gap-2">
-          <Spinner />
-          <span className="text-sm text-muted font-bold">灵感正在路上...</span>
-        </div>
-      )
+      return <LoadingContent text='灵感正在路上...' />
     }
     return (
       <div className="relative max-w-[85%] min-w-[20%]">

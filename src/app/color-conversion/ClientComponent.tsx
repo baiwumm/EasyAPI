@@ -19,6 +19,7 @@ import { useState } from 'react';
 import tinycolor from "tinycolor2";
 
 import AlertContent from '@/components/AlertContent';
+import LoadingContent from '@/components/LoadingContent';
 import { useCopy } from '@/hooks/use-copy';
 import { get } from '@/lib/utils';
 import { getApiData } from '@/services/common';
@@ -75,12 +76,7 @@ export default function ClientComponent() {
       )
     }
     if (loading) {
-      return (
-        <div className="flex flex-col items-center gap-2">
-          <Spinner />
-          <span className="text-sm text-muted font-bold">正在转换...</span>
-        </div>
-      )
+      return <LoadingContent text='正在转换...' />
     }
     return (
       <div className="flex justify-center items-center flex-wrap gap-2">

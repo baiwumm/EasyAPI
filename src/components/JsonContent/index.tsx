@@ -7,6 +7,7 @@ import { type FC, type ReactNode } from 'react';
 
 import AlertContent from '@/components/AlertContent';
 import CopyText from '@/components/CopyText';
+import LoadingContent from '@/components/LoadingContent';
 import { get } from '@/lib/utils';
 import { getApiData } from '@/services/common';
 
@@ -50,12 +51,7 @@ const JsonContent: FC<JsonContentProps> = ({ title, children, params = {}, onRef
       )
     }
     if (loading) {
-      return (
-        <div className="flex flex-col items-center gap-2">
-          <Spinner />
-          <span className="text-sm text-muted font-bold">{`正在${searchText}...`}</span>
-        </div>
-      )
+      return <LoadingContent text={`正在${searchText}...`} />
     }
     return (
       <div className="flex justify-center items-center w-full">

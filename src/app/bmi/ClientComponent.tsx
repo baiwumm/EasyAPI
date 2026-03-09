@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 
 import AlertContent from '@/components/AlertContent';
+import LoadingContent from '@/components/LoadingContent';
 import { get } from '@/lib/utils';
 import { getApiData } from '@/services/common';
 
@@ -42,12 +43,7 @@ export default function ClientComponent() {
       )
     }
     if (loading) {
-      return (
-        <div className="flex flex-col items-center gap-2">
-          <Spinner />
-          <span className="text-sm text-muted font-bold">正在计算...</span>
-        </div>
-      )
+      return <LoadingContent text='正在计算...' />
     }
     const bmi = get(data, 'bmi', 0);
     const isNormal = bmi >= 18.5 && bmi <= 23.9;

@@ -7,6 +7,7 @@ import { useState } from 'react';
 
 import AlertContent from '@/components/AlertContent';
 import EmptyContent from '@/components/EmptyContent';
+import TableLoading from '@/components/TableLoading';
 import { useCopy } from '@/hooks/use-copy';
 import { get } from '@/lib/utils';
 import { getApiData } from '@/services/common';
@@ -72,11 +73,7 @@ export default function ClientComponent() {
             </Table.Content>
           </Table.ScrollContainer>
         </Table>
-        {loading && (
-          <div className="absolute inset-0 flex items-center justify-center bg-background/20 backdrop-blur-[1px] pointer-events-auto">
-            <Spinner />
-          </div>
-        )}
+        <TableLoading loading={loading} />
       </div>
     )
   }

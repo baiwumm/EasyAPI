@@ -2,15 +2,16 @@
  * @Author: 白雾茫茫丶<baiwumm.com>
  * @Date: 2026-01-28 09:01:56
  * @LastEditors: 白雾茫茫丶<baiwumm.com>
- * @LastEditTime: 2026-03-05 17:21:36
+ * @LastEditTime: 2026-03-09 16:39:19
  * @Description: 数据表格
  */
 import { ChevronUp } from '@gravity-ui/icons';
-import { cn, Spinner, Table } from "@heroui/react";
+import { cn, Table } from "@heroui/react";
 import { flexRender, type Table as TableInstance } from '@tanstack/react-table';
 import { type FC } from 'react';
 
 import EmptyContent from '@/components/EmptyContent';
+import TableLoading from '@/components/TableLoading';
 import { ADMIN_TABS } from '@/enums';
 
 type DataTableProps = {
@@ -64,11 +65,7 @@ const DataTable: FC<DataTableProps> = ({ table, loading = false }) => {
           </Table.Content>
         </Table.ScrollContainer>
       </Table>
-      {loading && (
-        <div className="absolute inset-0 flex items-center justify-center bg-background/20 backdrop-blur-[1px] pointer-events-auto">
-          <Spinner />
-        </div>
-      )}
+      <TableLoading loading={loading} />
     </div>
   )
 }

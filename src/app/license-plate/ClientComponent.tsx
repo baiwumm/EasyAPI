@@ -7,6 +7,7 @@ import { useState } from 'react';
 
 import AlertContent from '@/components/AlertContent';
 import EmptyContent from '@/components/EmptyContent';
+import LoadingContent from '@/components/LoadingContent';
 import { get } from '@/lib/utils';
 import { getApiData } from '@/services/common';
 
@@ -46,12 +47,7 @@ export default function ClientComponent() {
       )
     }
     if (loading) {
-      return (
-        <div className="flex flex-col items-center gap-2">
-          <Spinner />
-          <span className="text-sm text-muted font-bold">正在查询...</span>
-        </div>
-      )
+      return <LoadingContent text='正在查询...' />
     }
     return (
       <div className="flex justify-center items-center">

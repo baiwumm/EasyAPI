@@ -2,11 +2,10 @@
  * @Author: 白雾茫茫丶<baiwumm.com>
  * @Date: 2026-01-21 16:33:59
  * @LastEditors: 白雾茫茫丶<baiwumm.com>
- * @LastEditTime: 2026-02-25 11:34:12
+ * @LastEditTime: 2026-03-09 16:20:50
  * @Description: 首页
  */
 "use client";
-import { Spinner } from '@heroui/react';
 import { useRequest } from 'ahooks';
 import { motion } from 'motion/react';
 import { useRouter } from 'next/navigation';
@@ -14,6 +13,7 @@ import { useRouter } from 'next/navigation';
 import AlertContent from '@/components/AlertContent';
 import ApiCard from '@/components/ApiCard';
 import BlurFade from '@/components/BlurFade';
+import LoadingContent from '@/components/LoadingContent';
 import { get } from '@/lib/utils';
 import { getCategorysList } from '@/services/categorys';
 
@@ -39,10 +39,7 @@ export default function Home() {
   if (loading) {
     return (
       <div className="w-full flex-1 flex justify-center items-center">
-        <div className="flex flex-col gap-2 items-center">
-          <Spinner />
-          <span className="text-xs text-muted font-bold">正在加载，请稍后...</span>
-        </div>
+        <LoadingContent text='正在加载，请稍后...' />
       </div>
     );
   }
