@@ -1,6 +1,6 @@
 'use client'
-import { ArrowDownToSquare, ArrowsRotateLeft } from '@gravity-ui/icons';
-import { Button, Input, type Key, ListBox, NumberField, Select, Spinner, toast } from '@heroui/react';
+import { ArrowDownToSquare } from '@gravity-ui/icons';
+import { Button, Input, type Key, ListBox, NumberField, Select, toast } from '@heroui/react';
 import { useRequest } from 'ahooks';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react';
 
 import AlertContent from '@/components/AlertContent';
 import LoadingContent from '@/components/LoadingContent';
+import RefreshButton from '@/components/RefreshButton';
 
 const formatOptions = [
   { value: "png", label: "PNG" },
@@ -170,14 +171,7 @@ export default function ClientComponent() {
             </NumberField.Group>
           </NumberField>
           <Input value={text} onChange={(event) => setText(event.target.value)} aria-label="二维码内容" placeholder='二维码内容' className="w-50" />
-          <Button size='sm' isPending={loading} onPress={reFresh} className="bg-accent-soft text-accent hover:bg-accent-soft-hover">
-            {({ isPending }) => (
-              <>
-                {isPending ? <Spinner color="current" size="sm" /> : <ArrowsRotateLeft />}
-                生成
-              </>
-            )}
-          </Button>
+          <RefreshButton text='生成' loading={loading} onPress={reFresh} />
           <Button size='sm' variant='tertiary' isDisabled={!downloadUrl || loading} onPress={downloadImage}>
             <ArrowDownToSquare />
             下载

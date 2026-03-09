@@ -1,5 +1,5 @@
 'use client'
-import { ArrowsRotateLeft, Copy, Shuffle } from '@gravity-ui/icons';
+import { Copy, Shuffle } from '@gravity-ui/icons';
 import {
   Button,
   Chip,
@@ -11,7 +11,6 @@ import {
   ColorSwatchPicker,
   Label,
   parseColor,
-  Spinner,
 } from '@heroui/react';
 import { useRequest } from 'ahooks';
 import { usePathname } from 'next/navigation';
@@ -20,6 +19,7 @@ import tinycolor from "tinycolor2";
 
 import AlertContent from '@/components/AlertContent';
 import LoadingContent from '@/components/LoadingContent';
+import RefreshButton from '@/components/RefreshButton';
 import { useCopy } from '@/hooks/use-copy';
 import { get } from '@/lib/utils';
 import { getApiData } from '@/services/common';
@@ -160,14 +160,7 @@ export default function ClientComponent() {
               </ColorField>
             </ColorPicker.Popover>
           </ColorPicker>
-          <Button size='sm' isPending={loading} onPress={reFresh} className="bg-accent-soft text-accent hover:bg-accent-soft-hover">
-            {({ isPending }) => (
-              <>
-                {isPending ? <Spinner color="current" size="sm" /> : <ArrowsRotateLeft />}
-                转换
-              </>
-            )}
-          </Button>
+          <RefreshButton text='转换' loading={loading} onPress={reFresh} />
         </div>
       </div>
     </div>

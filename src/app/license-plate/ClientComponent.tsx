@@ -1,6 +1,5 @@
 'use client'
-import { ArrowsRotateLeft } from '@gravity-ui/icons';
-import { Button, Input, Spinner, Table, toast } from '@heroui/react';
+import { Input, Table, toast } from '@heroui/react';
 import { useRequest } from 'ahooks';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
@@ -8,6 +7,7 @@ import { useState } from 'react';
 import AlertContent from '@/components/AlertContent';
 import EmptyContent from '@/components/EmptyContent';
 import LoadingContent from '@/components/LoadingContent';
+import RefreshButton from '@/components/RefreshButton';
 import { get } from '@/lib/utils';
 import { getApiData } from '@/services/common';
 
@@ -97,14 +97,7 @@ export default function ClientComponent() {
             value={keyword}
             onChange={(event) => setKeyword(event.target.value)}
           />
-          <Button size='sm' isPending={loading} onPress={reFresh} className="bg-accent-soft text-accent hover:bg-accent-soft-hover">
-            {({ isPending }) => (
-              <>
-                {isPending ? <Spinner color="current" size="sm" /> : <ArrowsRotateLeft />}
-                查询
-              </>
-            )}
-          </Button>
+          <RefreshButton loading={loading} onPress={reFresh} />
         </div>
       </div>
     </div>

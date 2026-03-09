@@ -1,6 +1,5 @@
 'use client'
-import { ArrowsRotateLeft, QuoteOpen } from '@gravity-ui/icons';
-import { Button, Spinner } from '@heroui/react';
+import { QuoteOpen } from '@gravity-ui/icons';
 import { useRequest } from 'ahooks';
 import { usePathname } from 'next/navigation';
 import { useMemo } from 'react';
@@ -8,6 +7,7 @@ import { useMemo } from 'react';
 import AlertContent from '@/components/AlertContent';
 import CopyText from '@/components/CopyText';
 import LoadingContent from '@/components/LoadingContent';
+import RefreshButton from '@/components/RefreshButton';
 import TypingAnimation from '@/components/TypingAnimation';
 import { get } from '@/lib/utils';
 import { getApiData } from '@/services/common';
@@ -68,14 +68,7 @@ export default function ClientComponent() {
       {/* 底部区域 */}
       <div className="flex justify-center shrink-0">
         <div className="flex items-center gap-2">
-          <Button size='sm' isPending={loading} onPress={run} className="bg-accent-soft text-accent hover:bg-accent-soft-hover">
-            {({ isPending }) => (
-              <>
-                {isPending ? <Spinner color="current" size="sm" /> : <ArrowsRotateLeft />}
-                换一句
-              </>
-            )}
-          </Button>
+          <RefreshButton text='换一句' loading={loading} onPress={run} />
           <CopyText content={formContent} />
         </div>
       </div>

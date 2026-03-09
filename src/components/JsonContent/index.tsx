@@ -1,6 +1,5 @@
 'use client'
-import { ArrowsRotateLeft } from '@gravity-ui/icons';
-import { Button, Card, ScrollShadow, Spinner } from '@heroui/react';
+import { Card, ScrollShadow } from '@heroui/react';
 import { useRequest } from 'ahooks';
 import { usePathname } from 'next/navigation';
 import { type FC, type ReactNode } from 'react';
@@ -8,6 +7,7 @@ import { type FC, type ReactNode } from 'react';
 import AlertContent from '@/components/AlertContent';
 import CopyText from '@/components/CopyText';
 import LoadingContent from '@/components/LoadingContent';
+import RefreshButton from '@/components/RefreshButton';
 import { get } from '@/lib/utils';
 import { getApiData } from '@/services/common';
 
@@ -79,14 +79,7 @@ const JsonContent: FC<JsonContentProps> = ({ title, children, params = {}, onRef
       <div className="flex justify-center shrink-0">
         <div className="flex items-center gap-2 flex-wrap">
           {children}
-          <Button size='sm' isPending={loading} onPress={reload} className="bg-accent-soft text-accent hover:bg-accent-soft-hover">
-            {({ isPending }) => (
-              <>
-                {isPending ? <Spinner color="current" size="sm" /> : <ArrowsRotateLeft />}
-                {searchText}
-              </>
-            )}
-          </Button>
+          <RefreshButton text={searchText} loading={loading} onPress={reload} />
           <CopyText content={Object.keys(data || {}).length > 0 ? JSON.stringify(data || {}, null, 2) : ''} />
         </div>
       </div>

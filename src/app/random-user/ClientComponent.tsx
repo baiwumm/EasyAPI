@@ -1,12 +1,12 @@
 'use client'
-import { ArrowsRotateLeft } from '@gravity-ui/icons';
-import { Avatar, Button, Chip, Description, ListBox, NumberField, Select, Spinner, Table } from '@heroui/react';
+import { Avatar, Chip, Description, ListBox, NumberField, Select, Table } from '@heroui/react';
 import { useRequest } from 'ahooks';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 
 import AlertContent from '@/components/AlertContent';
 import EmptyContent from '@/components/EmptyContent';
+import RefreshButton from '@/components/RefreshButton';
 import TableLoading from '@/components/TableLoading';
 import { get } from '@/lib/utils';
 import { getApiData } from '@/services/common';
@@ -145,14 +145,7 @@ export default function ClientComponent() {
               </ListBox>
             </Select.Popover>
           </Select>
-          <Button size='sm' isPending={loading} onPress={reFresh} className="bg-accent-soft text-accent hover:bg-accent-soft-hover">
-            {({ isPending }) => (
-              <>
-                {isPending ? <Spinner color="current" size="sm" /> : <ArrowsRotateLeft />}
-                生成
-              </>
-            )}
-          </Button>
+          <RefreshButton text='生成' loading={loading} onPress={reFresh} />
         </div>
       </div>
     </div>

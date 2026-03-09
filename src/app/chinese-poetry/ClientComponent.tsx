@@ -1,12 +1,13 @@
 'use client'
-import { ArrowsRotateLeft, QuoteOpen } from '@gravity-ui/icons';
-import { Button, Input, Spinner } from '@heroui/react';
+import { QuoteOpen } from '@gravity-ui/icons';
+import { Input } from '@heroui/react';
 import { useRequest } from 'ahooks';
 import { usePathname } from 'next/navigation';
 import { useMemo, useState } from 'react';
 
 import AlertContent from '@/components/AlertContent';
 import LoadingContent from '@/components/LoadingContent';
+import RefreshButton from '@/components/RefreshButton';
 import TypingAnimation from '@/components/TypingAnimation';
 import { get } from '@/lib/utils';
 import { getApiData } from '@/services/common';
@@ -111,14 +112,7 @@ export default function ClientComponent() {
       <div className="flex justify-center shrink-0">
         <div className="flex items-center gap-2">
           <Input aria-label="作者" className="w-64" placeholder="请输入诗词作者" value={author} onChange={(event) => setAuthor(event.target.value)} />
-          <Button size='sm' isPending={loading} onPress={reFresh} className="bg-accent-soft text-accent hover:bg-accent-soft-hover">
-            {({ isPending }) => (
-              <>
-                {isPending ? <Spinner color="current" size="sm" /> : <ArrowsRotateLeft />}
-                吟诗一首
-              </>
-            )}
-          </Button>
+          <RefreshButton text='吟诗一首' loading={loading} onPress={reFresh} />
         </div>
       </div>
     </div>

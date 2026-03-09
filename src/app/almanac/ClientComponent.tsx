@@ -1,6 +1,5 @@
 'use client'
-import { ArrowsRotateLeft } from '@gravity-ui/icons';
-import { Button, Calendar, Chip, DateField, DatePicker, type DateValue, Spinner, Table } from '@heroui/react';
+import { Calendar, Chip, DateField, DatePicker, type DateValue, Table } from '@heroui/react';
 import { getLocalTimeZone, today } from "@internationalized/date";
 import { useRequest } from 'ahooks';
 import { usePathname } from 'next/navigation';
@@ -8,7 +7,8 @@ import { useState } from 'react';
 
 import AlertContent from '@/components/AlertContent';
 import EmptyContent from '@/components/EmptyContent';
-import LoadingContent from '@/components/LoadingContent';
+import RefreshButton from '@/components/RefreshButton';
+import TableLoading from '@/components/TableLoading';
 import { get } from '@/lib/utils';
 import { getApiData } from '@/services/common';
 
@@ -43,11 +43,8 @@ export default function ClientComponent() {
         />
       )
     }
-    if (loading) {
-      return <LoadingContent text='正在查询...' />
-    }
     return (
-      <div className="flex justify-center items-center">
+      <div className="relative flex justify-center items-center">
         <Table>
           <Table.ScrollContainer className="max-h-150 overflow-y-auto">
             <Table.Content aria-label="法定节假日" className="min-w-150">
@@ -82,6 +79,7 @@ export default function ClientComponent() {
             </Table.Content>
           </Table.ScrollContainer>
         </Table>
+        <TableLoading loading={loading} />
       </div>
     )
   }
@@ -131,14 +129,7 @@ export default function ClientComponent() {
               </Calendar>
             </DatePicker.Popover>
           </DatePicker>
-          <Button size='sm' isPending={loading} onPress={reFresh} className="bg-accent-soft text-accent hover:bg-accent-soft-hover">
-            {({ isPending }) => (
-              <>
-                {isPending ? <Spinner color="current" size="sm" /> : <ArrowsRotateLeft />}
-                查询
-              </>
-            )}
-          </Button>
+          <RefreshButton loading={loading} onPress={reFresh} />
         </div>
       </div>
     </div>

@@ -1,9 +1,9 @@
 'use client'
 import { fakerZH_CN as faker } from "@faker-js/faker";
-import { ArrowsRotateLeft } from '@gravity-ui/icons';
-import { Avatar, Button, ListBox, Select, Spinner } from '@heroui/react';
+import { Avatar, ListBox, Select } from '@heroui/react';
 import { useState } from 'react';
 
+import RefreshButton from '@/components/RefreshButton';
 import { AVATAR_STYLES } from '@/enums';
 
 function generateUsers() {
@@ -74,14 +74,7 @@ export default function ClientComponent() {
               </ListBox>
             </Select.Popover>
           </Select>
-          <Button size='sm' onPress={regenerate} className="bg-accent-soft text-accent hover:bg-accent-soft-hover">
-            {({ isPending }) => (
-              <>
-                {isPending ? <Spinner color="current" size="sm" /> : <ArrowsRotateLeft />}
-                重新生成
-              </>
-            )}
-          </Button>
+          <RefreshButton text='重新生成' onPress={regenerate} />
         </div>
       </div>
     </div>

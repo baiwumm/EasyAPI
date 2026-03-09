@@ -1,6 +1,5 @@
 'use client'
-import { ArrowsRotateLeft } from '@gravity-ui/icons';
-import { Button, ColorSwatch, ListBox, NumberField, Select, Spinner } from '@heroui/react';
+import { ColorSwatch, ListBox, NumberField, Select } from '@heroui/react';
 import { useRequest } from 'ahooks';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
@@ -8,6 +7,7 @@ import tinycolor from "tinycolor2";
 
 import AlertContent from '@/components/AlertContent';
 import LoadingContent from '@/components/LoadingContent';
+import RefreshButton from '@/components/RefreshButton';
 import { useCopy } from '@/hooks/use-copy';
 import { get } from '@/lib/utils';
 import { getApiData } from '@/services/common';
@@ -128,14 +128,7 @@ export default function ClientComponent() {
               <NumberField.IncrementButton />
             </NumberField.Group>
           </NumberField>
-          <Button size='sm' isPending={loading} onPress={reFresh} className="bg-accent-soft text-accent hover:bg-accent-soft-hover">
-            {({ isPending }) => (
-              <>
-                {isPending ? <Spinner color="current" size="sm" /> : <ArrowsRotateLeft />}
-                生成
-              </>
-            )}
-          </Button>
+          <RefreshButton text='生成' loading={loading} onPress={reFresh} />
         </div>
       </div>
     </div>

@@ -1,12 +1,12 @@
 'use client'
-import { ArrowsRotateLeft } from '@gravity-ui/icons';
-import { Button, cn, NumberField, Spinner } from '@heroui/react';
+import { cn, NumberField } from '@heroui/react';
 import { useRequest } from 'ahooks';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 
 import AlertContent from '@/components/AlertContent';
 import LoadingContent from '@/components/LoadingContent';
+import RefreshButton from '@/components/RefreshButton';
 import { get } from '@/lib/utils';
 import { getApiData } from '@/services/common';
 
@@ -107,14 +107,7 @@ export default function ClientComponent() {
               <NumberField.IncrementButton />
             </NumberField.Group>
           </NumberField>
-          <Button size='sm' isPending={loading} onPress={reFresh} className="bg-accent-soft text-accent hover:bg-accent-soft-hover">
-            {({ isPending }) => (
-              <>
-                {isPending ? <Spinner color="current" size="sm" /> : <ArrowsRotateLeft />}
-                计算
-              </>
-            )}
-          </Button>
+          <RefreshButton text='计算' loading={loading} onPress={reFresh} />
         </div>
       </div>
     </div>

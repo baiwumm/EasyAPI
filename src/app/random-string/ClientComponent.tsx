@@ -1,6 +1,6 @@
 'use client'
-import { ArrowsRotateLeft, Copy } from '@gravity-ui/icons';
-import { Button, Chip, Description, Input, Label, ListBox, NumberField, Select, Spinner, TextField } from '@heroui/react';
+import { Copy } from '@gravity-ui/icons';
+import { Chip, Description, Input, Label, ListBox, NumberField, Select, TextField } from '@heroui/react';
 import { useRequest } from 'ahooks';
 import { type Options } from 'crypto-random-string'
 import { usePathname } from 'next/navigation';
@@ -8,6 +8,7 @@ import { useState } from 'react';
 
 import AlertContent from '@/components/AlertContent';
 import LoadingContent from '@/components/LoadingContent';
+import RefreshButton from '@/components/RefreshButton';
 import { useCopy } from '@/hooks/use-copy';
 import { get } from '@/lib/utils';
 import { getApiData } from '@/services/common';
@@ -171,14 +172,7 @@ export default function ClientComponent() {
               onChange={(event) => setCharacters(event.target.value)}
             />
           </TextField>
-          <Button size='sm' isPending={loading} onPress={reFresh} className="bg-accent-soft text-accent hover:bg-accent-soft-hover">
-            {({ isPending }) => (
-              <>
-                {isPending ? <Spinner color="current" size="sm" /> : <ArrowsRotateLeft />}
-                生成
-              </>
-            )}
-          </Button>
+          <RefreshButton text='生成' loading={loading} onPress={reFresh} />
         </div>
       </div>
     </div>
