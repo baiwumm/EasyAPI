@@ -27,11 +27,6 @@ export async function updateSession(request: NextRequest) {
 
   const path = request.nextUrl.pathname;
 
-  // 首页或者 Api 接口直接放行
-  if (path === '/') {
-    return supabaseResponse
-  }
-
   if (path.startsWith('/api')) {
     // 去掉 /api 前缀，并且去掉查询参数
     const reqPath = path.replace(/^\/api/, '').split('?')[0];
@@ -67,11 +62,12 @@ export async function updateSession(request: NextRequest) {
 
   const user = data?.claims
 
+  // 已登录访问登录页码，跳转至管理页面
   if (user && path.startsWith('/login')) {
-    return NextResponse.redirect(new URL('/', request.url))
+    return NextResponse.redirect(new URL('/admin', request.url))
   }
 
-  if (!user && !path.startsWith('/login')) {
+  if (!user && path.startsWith('/admin')) {
     const url = request.nextUrl.clone()
     url.pathname = '/login'
     return NextResponse.redirect(url)
