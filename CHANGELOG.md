@@ -1,5 +1,26 @@
 # Changelog
 
+## [2.4.1](https://github.com/baiwumm/EasyAPI/compare/2.4.0...2.4.1) (2026-03-09)
+
+### ✨ Features | 新功能
+
+* **ApiCard:** 新增 “NEW” 标签显示 ([cb9ae89](https://github.com/baiwumm/EasyAPI/commit/cb9ae892809ba62476e60c038bbf6c2d9b754db2))
+* **hooks:** 新增 useCopy，统一处理 copy 逻辑 ([043a355](https://github.com/baiwumm/EasyAPI/commit/043a35587683f76a52bc523d7850afbc9b43dd6a))
+* **proxy:** 完善中间件逻辑 ([d1bd454](https://github.com/baiwumm/EasyAPI/commit/d1bd454f14f5624b1d7c7531891cc3c6a8a73213))
+* **RandomAvatar:** 新增《随机头像》接口和页面 ([1ada729](https://github.com/baiwumm/EasyAPI/commit/1ada729e0e40a7980259e39799983b936312dd1c))
+* **RandomEmoji:** 新增《随机表情》接口和页面 ([6f6c3bf](https://github.com/baiwumm/EasyAPI/commit/6f6c3bf00a042ba7e56d210c55ecafc13e427070))
+* **RandomUser:** 新增《随机用户》接口和页面 ([045a951](https://github.com/baiwumm/EasyAPI/commit/045a951e23af69d0cf7d72fc3306e0ecaf2a04b0))
+
+### ⚡ Performance Improvements | 性能优化
+
+* 细节调整 ([d0cf40e](https://github.com/baiwumm/EasyAPI/commit/d0cf40e363752435b01bcfcaa97ea5c4853a2138))
+
+### 🔧 Continuous Integration | CI 配置
+
+* 新增 @dicebear/collection、@dicebear/core 包 ([982cf8e](https://github.com/baiwumm/EasyAPI/commit/982cf8ee56a12b60bc005fc99fe99ee3d53558ac))
+* 新增 @faker-js/faker 包 ([e5e1941](https://github.com/baiwumm/EasyAPI/commit/e5e1941b3577f98ec4e46405734170d57f93cc31))
+* 新增 node-emoji 包 ([959ba61](https://github.com/baiwumm/EasyAPI/commit/959ba61779af2fd4014844dbc1c37d50341df8ce))
+
 ## [2.4.0](https://github.com/baiwumm/EasyAPI/compare/2.3.0...2.4.0) (2026-03-06)
 
 ### ✨ Features | 新功能
