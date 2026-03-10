@@ -14,5 +14,5 @@ export const metadata: Metadata = {
 }
 
 export default function RandomColor() {
-  return <ClientComponent />
+  return <ClientComponent title='随机颜色' />
 }

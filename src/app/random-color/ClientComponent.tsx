@@ -2,12 +2,11 @@
 import { ColorSwatch, ListBox, NumberField, Select } from '@heroui/react';
 import { useRequest } from 'ahooks';
 import { usePathname } from 'next/navigation';
-import { useState } from 'react';
+import { type FC, useMemo, useState } from 'react';
 import tinycolor from "tinycolor2";
 
-import AlertContent from '@/components/AlertContent';
-import LoadingContent from '@/components/LoadingContent';
 import RefreshButton from '@/components/RefreshButton';
+import RequestContent from '@/components/RequestContent';
 import { useCopy } from '@/hooks/use-copy';
 import { get } from '@/lib/utils';
 import { getApiData } from '@/services/common';
@@ -29,72 +28,47 @@ const formatOptions: { value: Format, label: string }[] = [
   { value: "hsv", label: "Hsv" },
 ];
 
-export default function ClientComponent() {
+const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
   const pathname = usePathname();
   const { copy } = useCopy();
   const [format, setFormat] = useState<Format>("all"); // 颜色格式
   const [count, setCount] = useState(10); // 生成的数量
 
+  // 参数处理
+  const params = useMemo(() => ({ format, count }), [format, count]);
+
   // 请求数据
   const { data = [], loading, error, run } = useRequest(
-    async (params) =>
-      get(await getApiData(pathname, params), 'data', []), {
-    defaultParams: [{ format, count }]
-  },
+    async () => get(await getApiData(pathname, params), 'data', [])
   );
-
-  // 请求数据
-  const reFresh = () => {
-    run({ format, count });
-  }
-
-  // 渲染内容
-  const renderContent = () => {
-    if (error) {
-      return (
-        <AlertContent
-          status="danger"
-          title="请求失败"
-          description="服务暂时不可用，请稍后重试。"
-          actionText="重新加载"
-          buttonVariant="danger"
-          buttonAction={reFresh}
-        />
-      )
-    }
-    if (loading) {
-      return <LoadingContent text='正在生成...' />
-    }
-    return (
-      <div className="flex justify-center items-center flex-wrap gap-2">
-        {data.map((v: Record<keyof Color, string>) => {
-          const rawColor = format === 'all' ? v.hex : v;
-          const displayColor = format === "hsv" ? tinycolor(rawColor).toHexString() : rawColor;
-          return (
-            <ColorSwatch
-              key={displayColor}
-              aria-label={displayColor}
-              color={displayColor}
-              onClick={() => copy(rawColor)}
-              className="cursor-pointer"
-              style={() => ({
-                boxShadow: `0 0 10px 2px ${displayColor}`,
-              })}
-            />
-          )
-        })}
-      </div>
-    )
-  }
   return (
     <div className="flex-1 flex flex-col justify-between gap-4">
       {/* 头部区域 */}
       <div className="shrink-0">
-        <h1 className="text-2xl font-black">随机颜色</h1>
+        <h1 className="text-2xl font-black">{title}</h1>
       </div>
       {/* 中间区域 */}
       <div className="flex-1 flex justify-center items-center">
-        {renderContent()}
+        <RequestContent error={error} reFresh={run} loading={loading} loadingText='正在生成...'>
+          <div className="flex justify-center items-center flex-wrap gap-2">
+            {data.map((v: Color) => {
+              const rawColor = typeof v === 'string' ? v : v.hex;
+              const displayColor = tinycolor(rawColor).toHexString();
+              return (
+                <ColorSwatch
+                  key={displayColor}
+                  aria-label={displayColor}
+                  color={displayColor}
+                  onClick={() => copy(rawColor)}
+                  className="cursor-pointer"
+                  style={() => ({
+                    boxShadow: `0 0 10px 2px ${displayColor}`,
+                  })}
+                />
+              )
+            })}
+          </div>
+        </RequestContent>
       </div>
       {/* 底部区域 */}
       <div className="flex justify-center shrink-0">
@@ -128,9 +102,10 @@ export default function ClientComponent() {
               <NumberField.IncrementButton />
             </NumberField.Group>
           </NumberField>
-          <RefreshButton text='生成' loading={loading} onPress={reFresh} />
+          <RefreshButton text='生成' loading={loading} onPress={run} />
         </div>
       </div>
     </div>
   )
 }
+export default ClientComponent
