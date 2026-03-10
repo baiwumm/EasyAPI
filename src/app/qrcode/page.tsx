@@ -14,5 +14,5 @@ export const metadata: Metadata = {
 }
 
 export default function Qrcode() {
-  return <ClientComponent />
+  return <ClientComponent title='生成二维码' />
 }

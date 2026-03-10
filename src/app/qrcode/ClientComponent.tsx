@@ -4,11 +4,10 @@ import { Button, Input, type Key, ListBox, NumberField, Select, toast } from '@h
 import { useRequest } from 'ahooks';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { type FC, useEffect, useMemo, useState } from 'react';
 
-import AlertContent from '@/components/AlertContent';
-import LoadingContent from '@/components/LoadingContent';
 import RefreshButton from '@/components/RefreshButton';
+import RequestContent from '@/components/RequestContent';
 
 const formatOptions = [
   { value: "png", label: "PNG" },
@@ -16,7 +15,7 @@ const formatOptions = [
   { value: "dataurl", label: "DATAURL" },
 ];
 
-export default function ClientComponent() {
+const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
   const pathname = usePathname();
   const [format, setFormat] = useState<Key | null>("png"); // 生成格式
   const [size, setSize] = useState(256); // 二维码大小
@@ -24,9 +23,12 @@ export default function ClientComponent() {
   const [imgSrc, setImgSrc] = useState("");
   const [downloadUrl, setDownloadUrl] = useState("");
 
+  // 参数处理
+  const params = useMemo(() => ({ format, size, text }), [format, size, text]);
+
   // 请求数据
   const { loading, error, run } = useRequest(
-    async (params) => {
+    async () => {
       const { format, size, text } = params;
 
       // 构造查询参数
@@ -58,7 +60,6 @@ export default function ClientComponent() {
       }
     },
     {
-      defaultParams: [{ format, size, text }],
       onSuccess: (imgUrl) => {
         setImgSrc(imgUrl);
         setDownloadUrl(imgUrl); // 用于下载
@@ -77,7 +78,7 @@ export default function ClientComponent() {
       toast.danger("参数 text 长度不能超过 2000 个字符");
       return;
     }
-    run({ format, size, text });
+    run();
   }
 
   // 下载图片
@@ -99,44 +100,19 @@ export default function ClientComponent() {
       }
     };
   }, [imgSrc]);
-
-  // 渲染内容
-  const renderContent = () => {
-    if (error) {
-      return (
-        <AlertContent
-          status="danger"
-          title="请求失败"
-          description="服务暂时不可用，请稍后重试。"
-          actionText="重新加载"
-          buttonVariant="danger"
-          buttonAction={reFresh}
-        />
-      )
-    }
-    if (loading) {
-      return <LoadingContent text='正在生成...' />
-    }
-    return (
-      <div className="flex justify-center items-center">
-        <Image
-          src={imgSrc}
-          alt={text || "二维码"}
-          width={size}
-          height={size}
-        />
-      </div>
-    )
-  }
   return (
     <div className="flex-1 flex flex-col justify-between gap-4">
       {/* 头部区域 */}
       <div className="shrink-0">
-        <h1 className="text-2xl font-black">生成二维码</h1>
+        <h1 className="text-2xl font-black">{title}</h1>
       </div>
       {/* 中间区域 */}
       <div className="flex-1 flex justify-center items-center">
-        {renderContent()}
+        <RequestContent error={error} reFresh={reFresh} loading={loading} loadingText='正在生成...'>
+          <div className="flex justify-center items-center">
+            <Image src={imgSrc} alt={text || "二维码"} width={size} height={size} />
+          </div>
+        </RequestContent>
       </div>
       {/* 底部区域 */}
       <div className="flex justify-center shrink-0">
@@ -181,3 +157,4 @@ export default function ClientComponent() {
     </div>
   )
 }
+export default ClientComponent
