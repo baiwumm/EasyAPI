@@ -10,104 +10,76 @@ import {
   ColorSwatch,
   ColorSwatchPicker,
   Label,
-  parseColor,
+  parseColor
 } from '@heroui/react';
 import { useRequest } from 'ahooks';
 import { usePathname } from 'next/navigation';
-import { useState } from 'react';
+import { type FC, useMemo, useState } from 'react';
 import tinycolor from "tinycolor2";
 
-import AlertContent from '@/components/AlertContent';
-import LoadingContent from '@/components/LoadingContent';
 import RefreshButton from '@/components/RefreshButton';
+import RequestContent from '@/components/RequestContent';
 import { useCopy } from '@/hooks/use-copy';
 import { get } from '@/lib/utils';
 import { getApiData } from '@/services/common';
 
-const colorPresets = [
-  "#ef4444",
-  "#f97316",
-  "#eab308",
-  "#22c55e",
-  "#06b6d4",
-  "#3b82f6",
-  "#8b5cf6",
-  "#ec4899",
-  "#f43f5e",
-];
+const colorPresets = ["#ef4444", "#f97316", "#eab308", "#22c55e", "#06b6d4", "#3b82f6", "#8b5cf6", "#ec4899", "#f43f5e"];
 
-export default function ClientComponent() {
+type DataType = {
+  hex: string;
+  rgb: string;
+  hsl: string;
+  hsv: string;
+}
+
+// 随机颜色
+const getRandomColor = () => {
+  const color = tinycolor.random();
+  return parseColor(color.toHexString());
+};
+
+type ClientComponentProps = {
+  title: string;
+}
+
+const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
   const pathname = usePathname();
   const { copy } = useCopy();
-  const [color, setColor] = useState(parseColor("#2ecc40"));
+  const [color, setColor] = useState(getRandomColor);
+
+  // 参数处理
+  const params = useMemo(() => ({ color }), [color]);
 
   // 请求数据
-  const { data = {}, loading, error, run } = useRequest(
-    async (params) =>
-      get(await getApiData(pathname, params), 'data', {}), {
-    defaultParams: [{ color }]
-  },
+  const { data, loading, error, run } = useRequest(
+    async () => get(await getApiData(pathname, params), 'data', {})
   );
 
   const shuffleColor = () => {
-    const randomHue = Math.floor(Math.random() * 360);
-    const randomSaturation = 50 + Math.floor(Math.random() * 50); // 50-100%
-    const randomLightness = 40 + Math.floor(Math.random() * 30); // 40-70%
-    setColor(parseColor(`hsl(${randomHue}, ${randomSaturation}%, ${randomLightness}%)`));
+    setColor(getRandomColor());
   };
 
-  // 请求数据
-  const reFresh = () => {
-    run({ color });
-  }
-
-  // 渲染内容
-  const renderContent = () => {
-    if (error) {
-      return (
-        <AlertContent
-          status="danger"
-          title="请求失败"
-          description="服务暂时不可用，请稍后重试。"
-          actionText="重新加载"
-          buttonVariant="danger"
-          buttonAction={reFresh}
-        />
-      )
-    }
-    if (loading) {
-      return <LoadingContent text='正在转换...' />
-    }
-    return (
-      <div className="flex justify-center items-center flex-wrap gap-2">
-        {Object.keys(data).map(key => {
-          const color = (data as Record<string, string>)[key];
-          return (
-            <Chip
-              key={key}
-              className="cursor-pointer"
-              onClick={() => copy(color)}
-              style={{
-                backgroundColor: tinycolor(color).toHexString(),
-              }}
-            >
-              <Copy className="text-white mix-blend-difference" />
-              <Chip.Label className="text-white mix-blend-difference">{color}</Chip.Label>
-            </Chip>
-          )
-        })}
-      </div>
-    )
-  }
   return (
     <div className="flex-1 flex flex-col justify-between gap-4">
       {/* 头部区域 */}
       <div className="shrink-0">
-        <h1 className="text-2xl font-black">颜色转换</h1>
+        <h1 className="text-2xl font-black">{title}</h1>
       </div>
       {/* 中间区域 */}
       <div className="flex-1 flex justify-center items-center">
-        {renderContent()}
+        <RequestContent error={error} reFresh={run} loading={loading} loadingText='正在转换...'>
+          <div className="flex justify-center items-center flex-wrap gap-2">
+            {Object.keys(data as DataType || {}).map(key => {
+              const color = (data || {})[key as keyof typeof data];
+              return (
+                <Chip key={key} size='lg' className="cursor-pointer" onClick={() => copy(color)}>
+                  <Copy />
+                  <Chip.Label>{color}</Chip.Label>
+                </Chip>
+              )
+            })}
+          </div>
+        </RequestContent>
       </div>
       {/* 底部区域 */}
       <div className="flex justify-center shrink-0">
@@ -160,9 +132,10 @@ export default function ClientComponent() {
               </ColorField>
             </ColorPicker.Popover>
           </ColorPicker>
-          <RefreshButton text='转换' loading={loading} onPress={reFresh} />
+          <RefreshButton text='转换' loading={loading} onPress={run} />
         </div>
       </div>
     </div>
   )
 }
+export default ClientComponent;

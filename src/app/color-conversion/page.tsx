@@ -14,5 +14,5 @@ export const metadata: Metadata = {
 }
 
 export default function ColorConversion() {
-  return <ClientComponent />
+  return <ClientComponent title='颜色转换' />
 }
