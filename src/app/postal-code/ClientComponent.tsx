@@ -2,12 +2,12 @@
 import { Chip, Input, ListBox, Select, Table, toast } from '@heroui/react';
 import { useRequest } from 'ahooks';
 import { usePathname } from 'next/navigation';
-import { type FC, useState } from 'react';
+import { type FC, useMemo, useState } from 'react';
 
-import AlertContent from '@/components/AlertContent';
 import CopyText from '@/components/CopyText';
 import EmptyContent from '@/components/EmptyContent';
 import RefreshButton from '@/components/RefreshButton';
+import RequestContent from '@/components/RequestContent';
 import TableLoading from '@/components/TableLoading';
 import { get } from '@/lib/utils';
 import { getApiData } from '@/services/common';
@@ -29,10 +29,12 @@ const ClientComponent: FC = () => {
   const [type, setType] = useState<Type>(1);
   const [keyword, setKeyword] = useState('524200');
 
+  // 参数处理
+  const params = useMemo(() => ({ keyword, type }), [keyword, type]);
+
   // 请求数据
   const { data, loading, error, run } = useRequest<PostalCode | PostalCode[], { keyword: string, type: number }[]>(
-    async () =>
-      get(await getApiData(pathname, { keyword, type }), 'data'),
+    async () => get(await getApiData(pathname, params), 'data'),
   );
 
   // 请求数据
@@ -41,7 +43,7 @@ const ClientComponent: FC = () => {
       toast.danger("参数 keyWord 必填");
       return;
     }
-    run({ keyword, type })
+    run()
   }
 
   // 列定义
@@ -52,70 +54,6 @@ const ClientComponent: FC = () => {
     { label: '区县', value: 'area' },
     { label: '电话区号', value: 'areaCode' }
   ]
-
-  // 渲染内容
-  const renderContent = () => {
-    if (error) {
-      return (
-        <AlertContent
-          status="danger"
-          title="请求失败"
-          description="服务暂时不可用，请稍后重试。"
-          actionText="重新加载"
-          buttonVariant="danger"
-          buttonAction={reload}
-        />
-      )
-    }
-    return (
-      <div className="relative flex justify-center items-center">
-        <Table>
-          <Table.ScrollContainer>
-            <Table.Content aria-label={title} className="min-w-80">
-              {Array.isArray(data) || type === 2 ? (
-                <>
-                  <Table.Header>
-                    {columns.map(({ label, value }) => (
-                      <Table.Column key={value} isRowHeader={value === 'postCode'}>{label}</Table.Column>
-                    ))}
-                  </Table.Header>
-                  <Table.Body renderEmptyState={() => <EmptyContent />}>
-                    {(Array.isArray(data) ? data : []).map(({ postCode, province, city, area, areaCode }, index) => (
-                      <Table.Row key={index}>
-                        <Table.Cell>
-                          <Chip>{postCode}</Chip>
-                        </Table.Cell>
-                        <Table.Cell>{province}</Table.Cell>
-                        <Table.Cell>{city}</Table.Cell>
-                        <Table.Cell>{area}</Table.Cell>
-                        <Table.Cell>{areaCode}</Table.Cell>
-                      </Table.Row>
-                    ))}
-                  </Table.Body>
-                </>
-              ) : (
-                <>
-                  <Table.Header>
-                    <Table.Column isRowHeader>字段</Table.Column>
-                    <Table.Column>值</Table.Column>
-                  </Table.Header>
-                  <Table.Body renderEmptyState={() => <EmptyContent />}>
-                    {columns.map(({ label, value }) => (
-                      <Table.Row key={value}>
-                        <Table.Cell>{label}</Table.Cell>
-                        <Table.Cell>{value === 'postCode' ? <Chip variant='soft' color='accent'>{get(data, 'postCode', '--')}</Chip> : get(data, value, '--')}</Table.Cell>
-                      </Table.Row>
-                    ))}
-                  </Table.Body>
-                </>
-              )}
-            </Table.Content>
-          </Table.ScrollContainer>
-        </Table>
-        <TableLoading loading={loading} />
-      </div>
-    )
-  }
   return (
     <div className="flex-1 flex flex-col justify-between gap-4">
       {/* 头部区域 */}
@@ -124,7 +62,54 @@ const ClientComponent: FC = () => {
       </div>
       {/* 中间区域 */}
       <div className="flex-1 flex justify-center items-center">
-        {renderContent()}
+        <RequestContent error={error} reFresh={reload}>
+          <div className="relative flex justify-center items-center">
+            <Table>
+              <Table.ScrollContainer>
+                <Table.Content aria-label={title} className="min-w-80">
+                  {Array.isArray(data) || type === 2 ? (
+                    <>
+                      <Table.Header>
+                        {columns.map(({ label, value }) => (
+                          <Table.Column key={value} isRowHeader={value === 'postCode'}>{label}</Table.Column>
+                        ))}
+                      </Table.Header>
+                      <Table.Body renderEmptyState={() => <EmptyContent />}>
+                        {(Array.isArray(data) ? data : []).map(({ postCode, province, city, area, areaCode }, index) => (
+                          <Table.Row key={index}>
+                            <Table.Cell>
+                              <Chip>{postCode}</Chip>
+                            </Table.Cell>
+                            <Table.Cell>{province}</Table.Cell>
+                            <Table.Cell>{city}</Table.Cell>
+                            <Table.Cell>{area}</Table.Cell>
+                            <Table.Cell>{areaCode}</Table.Cell>
+                          </Table.Row>
+                        ))}
+                      </Table.Body>
+                    </>
+                  ) : (
+                    <>
+                      <Table.Header>
+                        <Table.Column isRowHeader>字段</Table.Column>
+                        <Table.Column>值</Table.Column>
+                      </Table.Header>
+                      <Table.Body renderEmptyState={() => <EmptyContent />}>
+                        {columns.map(({ label, value }) => (
+                          <Table.Row key={value}>
+                            <Table.Cell>{label}</Table.Cell>
+                            <Table.Cell>{value === 'postCode' ? <Chip variant='soft' color='accent'>{get(data, 'postCode', '--')}</Chip> : get(data, value, '--')}</Table.Cell>
+                          </Table.Row>
+                        ))}
+                      </Table.Body>
+                    </>
+                  )}
+                </Table.Content>
+              </Table.ScrollContainer>
+            </Table>
+            <TableLoading loading={loading} />
+          </div>
+        </RequestContent>
       </div>
       {/* 底部区域 */}
       <div className="flex justify-center shrink-0">
