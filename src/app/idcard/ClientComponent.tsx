@@ -1,9 +1,10 @@
 'use client'
-import { Input, toast } from '@heroui/react';
+import { Chip, Input, toast } from '@heroui/react';
+import dayjs from 'dayjs';
 import idCard from 'idcard';
 import { useState } from 'react';
 
-import JsonContent from '@/components/JsonContent';
+import JsonContent, { type GetColumnsFn } from '@/components/JsonContent';
 
 export default function ClientComponent() {
   const [id, setId] = useState('510101199502152091');
@@ -16,8 +17,20 @@ export default function ClientComponent() {
     }
     return true
   }
+
+  const getColumns: GetColumnsFn<idCard.IdCardSuccessResult & { birthday: string }> = (data) => {
+    const { gender, birthday, age, cardText, constellation, address } = data || {};
+    return [
+      { label: '性别', children: <Chip color='accent' variant='soft'>{{ M: '男', F: '女' }[gender] || '--'}</Chip> },
+      { label: '生日', children: dayjs(String(birthday)).format("YYYY年M月D日") },
+      { label: '年龄', children: <Chip variant='soft'>{age}</Chip> },
+      { label: '身份证类型', children: cardText },
+      { label: '星座', children: `${constellation}座` },
+      { label: '地址', children: address }
+    ]
+  }
   return (
-    <JsonContent title="身份证信息查询" params={{ id }} onRefresh={onRefresh}>
+    <JsonContent title="身份证信息查询" params={{ id }} onRefresh={onRefresh} getColumns={getColumns}>
       <Input value={id} onChange={(event) => setId(event.target.value)} aria-label="身份证" placeholder='请输入身份证号' className="w-50" />
     </JsonContent>
   )

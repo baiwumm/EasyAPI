@@ -2,12 +2,11 @@
  * @Author: 白雾茫茫丶<baiwumm.com>
  * @Date: 2026-03-03 16:49:19
  * @LastEditors: 白雾茫茫丶<baiwumm.com>
- * @LastEditTime: 2026-03-04 09:24:31
+ * @LastEditTime: 2026-03-10 11:23:58
  * @Description: IP 归属地查询
  */
 import { NextRequest, NextResponse } from 'next/server'
 
-import { RESPONSE } from '@/enums';
 import { responseMessage } from '@/lib/utils';
 
 export async function GET(request: NextRequest) {
@@ -17,36 +16,28 @@ export async function GET(request: NextRequest) {
     const ip = searchParams.get('ip')
 
     // 获取客户端 IP
-    const clientIP =
-      ip ||
-      request.headers.get('x-forwarded-for')?.split(',')[0] ||
-      request.headers.get('x-real-ip') ||
-      request.ip || // 在 Vercel 可用
-      null
+    const forwarded = request.headers.get("x-forwarded-for");
+
+    let clientIP =
+      ip || forwarded?.split(",")[0] ||
+      request.headers.get("x-real-ip") ||
+      request.headers.get("cf-connecting-ip") ||
+      request.ip ||
+      null;
 
     // 参数校验
-    if (!clientIP) {
-      return NextResponse.json(responseMessage(null, "无法获取 IP 地址", RESPONSE.ERROR))
+    if (!clientIP || clientIP === "::1" || clientIP === "127.0.0.1") {
+      const res = await fetch("https://ipv4.icanhazip.com");
+      const data = await res.text();
+      clientIP = data;
     }
 
     // 调用淘宝 IP 库接口
-    const res = await fetch(
-      `http://ip.taobao.com/outGetIpInfo?ip=${clientIP}&accessKey=alibaba-inc`,
-      {
-        method: 'GET',
-        cache: 'no-store', // 避免缓存
-      }
-    )
+    const res = await fetch(`http://ip-api.com/json/${clientIP}?lang=zh-CN`)
 
     const json = await res.json();
 
-    if (json.code !== 0 || !json.data) {
-      return NextResponse.json(responseMessage(json))
-    }
-
-    const data = json.data;
-
-    return NextResponse.json(responseMessage(data));
+    return NextResponse.json(responseMessage(json));
   } catch (err) {
     return NextResponse.json(responseMessage(null, (err as Error).message, -1));
   }

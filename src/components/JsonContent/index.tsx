@@ -1,31 +1,40 @@
 'use client'
-import { Card, ScrollShadow } from '@heroui/react';
+import { Table } from '@heroui/react';
 import { useRequest } from 'ahooks';
 import { usePathname } from 'next/navigation';
-import { type FC, type ReactNode } from 'react';
+import { type ReactNode } from 'react';
 
 import AlertContent from '@/components/AlertContent';
 import CopyText from '@/components/CopyText';
-import LoadingContent from '@/components/LoadingContent';
+import EmptyContent from '@/components/EmptyContent';
 import RefreshButton from '@/components/RefreshButton';
+import TableLoading from '@/components/TableLoading';
 import { get } from '@/lib/utils';
 import { getApiData } from '@/services/common';
 
-type JsonContentProps = {
+export type Column = {
+  label: string;
+  children: ReactNode;
+}
+
+export type GetColumnsFn<T> = (data: T) => Column[];
+
+type JsonContentProps<T> = {
   title: string;
   children: ReactNode;
   params: Record<string, any>;
   onRefresh: () => boolean;
   searchText?: string;
+  getColumns: GetColumnsFn<T>;
 }
 
-const JsonContent: FC<JsonContentProps> = ({ title, children, params = {}, onRefresh, searchText = '查询' }) => {
+function JsonContent<T>({ title, children, params = {}, onRefresh, searchText = '查询', getColumns }: JsonContentProps<T>) {
   const pathname = usePathname();
 
   // 请求数据
-  const { data = {}, loading, error, run } = useRequest(
+  const { data, loading, error, run } = useRequest<T, Record<string, any>[]>(
     async () =>
-      get(await getApiData(pathname, params), 'data', {}),
+      get(await getApiData(pathname, params), 'data'),
   );
 
   // 请求数据
@@ -50,18 +59,27 @@ const JsonContent: FC<JsonContentProps> = ({ title, children, params = {}, onRef
         />
       )
     }
-    if (loading) {
-      return <LoadingContent text={`正在${searchText}...`} />
-    }
     return (
-      <div className="flex justify-center items-center w-full">
-        <Card className="max-w-full p-0">
-          <Card.Content>
-            <ScrollShadow className="max-h-100 p-4" orientation="vertical">
-              <pre><code style={{ fontFamily: 'Maple Mono CN' }}>{JSON.stringify(data, null, 2)}</code></pre>
-            </ScrollShadow>
-          </Card.Content>
-        </Card>
+      <div className="relative flex justify-center items-center">
+        <Table>
+          <Table.ScrollContainer>
+            <Table.Content aria-label={title} className="min-w-80">
+              <Table.Header>
+                <Table.Column isRowHeader>字段</Table.Column>
+                <Table.Column>值</Table.Column>
+              </Table.Header>
+              <Table.Body renderEmptyState={() => <EmptyContent />}>
+                {(data ? getColumns(data) : []).map(({ label, children }, index) => (
+                  <Table.Row key={index}>
+                    <Table.Cell>{label}</Table.Cell>
+                    <Table.Cell>{children}</Table.Cell>
+                  </Table.Row>
+                ))}
+              </Table.Body>
+            </Table.Content>
+          </Table.ScrollContainer>
+        </Table>
+        <TableLoading loading={loading} />
       </div>
     )
   }
