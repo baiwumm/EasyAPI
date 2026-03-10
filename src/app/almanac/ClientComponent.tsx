@@ -3,100 +3,98 @@ import { Calendar, Chip, DateField, DatePicker, type DateValue, Table } from '@h
 import { getLocalTimeZone, today } from "@internationalized/date";
 import { useRequest } from 'ahooks';
 import { usePathname } from 'next/navigation';
-import { useState } from 'react';
+import { type FC, useMemo, useState } from 'react';
 
-import AlertContent from '@/components/AlertContent';
 import EmptyContent from '@/components/EmptyContent';
 import RefreshButton from '@/components/RefreshButton';
+import RequestContent from '@/components/RequestContent';
 import TableLoading from '@/components/TableLoading';
 import { get } from '@/lib/utils';
 import { getApiData } from '@/services/common';
 
-export default function ClientComponent() {
+type DataType = {
+  date: string;
+  hours: string;
+  hour: string;
+  yi: string;
+  ji: string;
+  chong: string;
+  sha: string;
+  nayin: string;
+  jiuxing: string;
+}
+
+type ClientComponentProps = {
+  title: string;
+}
+
+const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
   const pathname = usePathname();
   const [date, setDate] = useState<DateValue | null>(today(getLocalTimeZone()));
 
+  // 参数处理
+  const params = useMemo(() => ({
+    date: date?.toString() ?? ''
+  }), [date]);
+
   // 请求数据
   const { data = [], loading, error, run } = useRequest(
-    async (params) =>
-      get(await getApiData(pathname, params), 'data', []), {
-    defaultParams: [{ date: date ? date.toString() : '' }]
-  },
-  );
+    async () => get(await getApiData(pathname, params), 'data', []));
 
-  // 请求数据
-  const reFresh = () => {
-    run({ date: date ? date.toString() : '' });
-  }
-
-  // 渲染内容
-  const renderContent = () => {
-    if (error) {
-      return (
-        <AlertContent
-          status="danger"
-          title="请求失败"
-          description="服务暂时不可用，请稍后重试。"
-          actionText="重新加载"
-          buttonVariant="danger"
-          buttonAction={reFresh}
-        />
-      )
-    }
-    return (
-      <div className="relative flex justify-center items-center">
-        <Table>
-          <Table.ScrollContainer className="max-h-150 overflow-y-auto">
-            <Table.Content aria-label="法定节假日" className="min-w-150">
-              <Table.Header className="sticky top-0 z-10 bg-surface-secondary">
-                <Table.Column>日期</Table.Column>
-                <Table.Column>时段</Table.Column>
-                <Table.Column>时辰</Table.Column>
-                <Table.Column>宜</Table.Column>
-                <Table.Column>忌</Table.Column>
-                <Table.Column>冲</Table.Column>
-                <Table.Column>煞</Table.Column>
-                <Table.Column>纳音</Table.Column>
-                <Table.Column>九星</Table.Column>
-              </Table.Header>
-              <Table.Body renderEmptyState={() => <EmptyContent />}>
-                {data?.length ? data.map(({ date, hours, hour, yi, ji, chong, sha, nayin, jiuxing }, index) => (
-                  <Table.Row key={index}>
-                    <Table.Cell className="w-35">
-                      <Chip color='accent' variant='soft'>{date}</Chip>
-                    </Table.Cell>
-                    <Table.Cell className="w-40">{hours}</Table.Cell>
-                    <Table.Cell className="w-20">{hour}</Table.Cell>
-                    <Table.Cell className="min-w-30">{yi}</Table.Cell>
-                    <Table.Cell className="min-w-30">{ji}</Table.Cell>
-                    <Table.Cell className="min-w-30">{chong}</Table.Cell>
-                    <Table.Cell className="min-w-30">{sha}</Table.Cell>
-                    <Table.Cell className="min-w-30">{nayin}</Table.Cell>
-                    <Table.Cell className="min-w-30">{jiuxing}</Table.Cell>
-                  </Table.Row>
-                )) : []}
-              </Table.Body>
-            </Table.Content>
-          </Table.ScrollContainer>
-        </Table>
-        <TableLoading loading={loading} />
-      </div>
-    )
-  }
+  // 列定义
+  const columns: { label: string, value: keyof DataType; className?: string }[] = [
+    { label: '日期', value: 'date' },
+    { label: '时段', value: 'hours', className: "w-40" },
+    { label: '时辰', value: 'hour', className: "w-20" },
+    { label: '宜', value: 'yi' },
+    { label: '忌', value: 'ji' },
+    { label: '冲', value: 'chong' },
+    { label: '煞', value: 'sha' },
+    { label: '纳音', value: 'nayin' },
+    { label: '九星', value: 'jiuxing' }
+  ];
   return (
     <div className="flex-1 flex flex-col justify-between gap-4">
       {/* 头部区域 */}
       <div className="shrink-0">
-        <h1 className="text-2xl font-black">十二时辰黄历</h1>
+        <h1 className="text-2xl font-black">{title}</h1>
       </div>
       {/* 中间区域 */}
       <div className="flex-1 flex justify-center items-center">
-        {renderContent()}
+        <RequestContent error={error} reFresh={run}>
+          <div className="relative flex justify-center items-center">
+            <Table>
+              <Table.ScrollContainer className="max-h-150 overflow-y-auto">
+                <Table.Content aria-label={title} className="min-w-150">
+                  <Table.Header className="sticky top-0 z-10 bg-surface-secondary">
+                    {columns.map(({ label, value }) => (
+                      <Table.Column key={value} isRowHeader={value === 'date'}>{label}</Table.Column>
+                    ))}
+                  </Table.Header>
+                  <Table.Body renderEmptyState={() => <EmptyContent />}>
+                    {data?.length ? data.map((v, index) => (
+                      <Table.Row key={index}>
+                        {columns.map(({ value, className }) => value === 'date' ? (
+                          <Table.Cell key={value} className="w-35">
+                            <Chip color='accent' variant='soft'>{get(v, 'date', '--')}</Chip>
+                          </Table.Cell>
+                        ) : (
+                          <Table.Cell key={value} className={className || "min-w-30"}>{get(v, value, '--')}</Table.Cell>
+                        ))}
+                      </Table.Row>
+                    )) : []}
+                  </Table.Body>
+                </Table.Content>
+              </Table.ScrollContainer>
+            </Table>
+            <TableLoading loading={loading} />
+          </div>
+        </RequestContent>
       </div>
       {/* 底部区域 */}
       <div className="flex justify-center shrink-0">
         <div className="flex items-center gap-2 flex-wrap">
-          <DatePicker className="w-70" name="date" value={date} onChange={setDate}>
+          <DatePicker className="w-70" name="date" value={date} onChange={setDate} aria-label={title}>
             <DateField.Group fullWidth>
               <DateField.Input>{(segment) => <DateField.Segment segment={segment} />}</DateField.Input>
               <DateField.Suffix>
@@ -106,7 +104,7 @@ export default function ClientComponent() {
               </DateField.Suffix>
             </DateField.Group>
             <DatePicker.Popover>
-              <Calendar aria-label="十二时辰黄历">
+              <Calendar aria-label={title}>
                 <Calendar.Header>
                   <Calendar.YearPickerTrigger>
                     <Calendar.YearPickerTriggerHeading />
@@ -129,9 +127,10 @@ export default function ClientComponent() {
               </Calendar>
             </DatePicker.Popover>
           </DatePicker>
-          <RefreshButton loading={loading} onPress={reFresh} />
+          <RefreshButton loading={loading} onPress={run} />
         </div>
       </div>
     </div>
   )
 }
+export default ClientComponent;

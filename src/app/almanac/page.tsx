@@ -14,5 +14,5 @@ export const metadata: Metadata = {
 }
 
 export default function Almanac() {
-  return <ClientComponent />
+  return <ClientComponent title='十二时辰黄历' />
 }
