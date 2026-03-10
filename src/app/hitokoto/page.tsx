@@ -14,5 +14,5 @@ export const metadata: Metadata = {
 }
 
 export default function Hitokoto() {
-  return <ClientComponent />
+  return <ClientComponent title='每日一言' />
 }
