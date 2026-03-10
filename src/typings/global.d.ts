@@ -66,4 +66,9 @@ declare namespace App {
   type ApiSaveParams = Pick<Api, 'category_id' | 'name' | 'desc' | 'path' | 'method' | 'pinned' | 'is_featured' | 'operation_id' | 'sort'> & {
     id?: string;
   };
+
+  /** @description: 客户端组件 Props */
+  type ClientComponentProps = {
+    title: string;
+  };
 }

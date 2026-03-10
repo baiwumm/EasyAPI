@@ -38,11 +38,7 @@ const getRandomColor = () => {
   return parseColor(color.toHexString());
 };
 
-type ClientComponentProps = {
-  title: string;
-}
-
-const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
+const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
   const pathname = usePathname();
   const { copy } = useCopy();
   const [color, setColor] = useState(getRandomColor);

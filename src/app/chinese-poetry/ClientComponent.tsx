@@ -12,11 +12,7 @@ import TypingAnimation from '@/components/TypingAnimation';
 import { get } from '@/lib/utils';
 import { getApiData } from '@/services/common';
 
-type ClientComponentProps = {
-  title: string;
-}
-
-const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
+const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
   const pathname = usePathname();
   const [author, setAuthor] = useState("李白");
   const [showFormContent, setShowFormContent] = useState(false);

@@ -14,5 +14,5 @@ export const metadata: Metadata = {
 }
 
 export default function Holiday() {
-  return <ClientComponent />
+  return <ClientComponent title='法定节假日' />
 }

@@ -11,11 +11,7 @@ import TableLoading from '@/components/TableLoading';
 import { get } from '@/lib/utils';
 import { getApiData } from '@/services/common';
 
-type ClientComponentProps = {
-  title: string;
-}
-
-const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
+const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
   const pathname = usePathname();
   const [keyword, setKeyword] = useState('中国');
 

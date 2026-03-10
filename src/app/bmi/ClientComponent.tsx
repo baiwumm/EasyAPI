@@ -9,11 +9,7 @@ import RequestContent from '@/components/RequestContent';
 import { get } from '@/lib/utils';
 import { getApiData } from '@/services/common';
 
-type ClientComponentProps = {
-  title: string;
-}
-
-const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
+const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
   const pathname = usePathname();
   const [height, setHeight] = useState(168); // 身高
   const [weight, setWeight] = useState(60); // 体重

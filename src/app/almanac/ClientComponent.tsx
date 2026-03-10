@@ -24,11 +24,7 @@ type DataType = {
   jiuxing: string;
 }
 
-type ClientComponentProps = {
-  title: string;
-}
-
-const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
+const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
   const pathname = usePathname();
   const [date, setDate] = useState<DateValue | null>(today(getLocalTimeZone()));
 
