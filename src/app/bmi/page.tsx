@@ -14,5 +14,5 @@ export const metadata: Metadata = {
 }
 
 export default function Bmi() {
-  return <ClientComponent />
+  return <ClientComponent title='BMI 计算器' />
 }

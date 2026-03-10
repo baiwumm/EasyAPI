@@ -2,71 +2,54 @@
 import { cn, NumberField } from '@heroui/react';
 import { useRequest } from 'ahooks';
 import { usePathname } from 'next/navigation';
-import { useState } from 'react';
+import { type FC, useMemo, useState } from 'react';
 
-import AlertContent from '@/components/AlertContent';
-import LoadingContent from '@/components/LoadingContent';
 import RefreshButton from '@/components/RefreshButton';
+import RequestContent from '@/components/RequestContent';
 import { get } from '@/lib/utils';
 import { getApiData } from '@/services/common';
 
-export default function ClientComponent() {
+type ClientComponentProps = {
+  title: string;
+}
+
+const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
   const pathname = usePathname();
   const [height, setHeight] = useState(168); // 身高
   const [weight, setWeight] = useState(60); // 体重
 
+  // 参数处理
+  const params = useMemo(() => ({
+    height, weight
+  }), [height, weight]);
+
   // 请求数据
   const { data = {}, loading, error, run } = useRequest(
-    async (params) =>
-      get(await getApiData(pathname, params), 'data', {}), {
-    defaultParams: [{ height, weight }]
-  },
-  );
+    async () => get(await getApiData(pathname, params), 'data', {}));
 
-  // 请求数据
-  const reFresh = () => {
-    run({ height, weight });
-  }
-
-  // 渲染内容
-  const renderContent = () => {
-    if (error) {
-      return (
-        <AlertContent
-          status="danger"
-          title="请求失败"
-          description="服务暂时不可用，请稍后重试。"
-          actionText="重新加载"
-          buttonVariant="danger"
-          buttonAction={reFresh}
-        />
-      )
-    }
-    if (loading) {
-      return <LoadingContent text='正在计算...' />
-    }
+  // 计算 bmi 是否正常
+  const isNormal = useMemo(() => {
     const bmi = get(data, 'bmi', 0);
-    const isNormal = bmi >= 18.5 && bmi <= 23.9;
-    return (
-      <div className="flex justify-center items-center flex-wrap gap-2">
-        <div className="flex gap-2 items-center">
-          <span>您的 BMI 是：</span>
-          <span className={cn(isNormal ? 'text-accent' : 'text-danger')}>{get(data, 'bmi', '--')}</span>
-          <span>身体状态:</span>
-          <span className={cn(isNormal ? 'text-accent' : 'text-danger')}>{get(data, 'status', '')}</span>
-        </div>
-      </div>
-    )
-  }
+    return bmi >= 18.5 && bmi <= 23.9;
+  }, [data])
   return (
     <div className="flex-1 flex flex-col justify-between gap-4">
       {/* 头部区域 */}
       <div className="shrink-0">
-        <h1 className="text-2xl font-black">BMI 计算器</h1>
+        <h1 className="text-2xl font-black">{title}</h1>
       </div>
       {/* 中间区域 */}
       <div className="flex-1 flex justify-center items-center">
-        {renderContent()}
+        <RequestContent error={error} reFresh={run} loading={loading} loadingText='正在计算...'>
+          <div className="flex justify-center items-center flex-wrap gap-2">
+            <div className="flex gap-2 items-center">
+              <span>您的 BMI 是：</span>
+              <span className={cn(isNormal ? 'text-accent' : 'text-danger')}>{get(data, 'bmi', '--')}</span>
+              <span>身体状态:</span>
+              <span className={cn(isNormal ? 'text-accent' : 'text-danger')}>{get(data, 'status', '')}</span>
+            </div>
+          </div>
+        </RequestContent>
       </div>
       {/* 底部区域 */}
       <div className="flex justify-center shrink-0">
@@ -107,9 +90,10 @@ export default function ClientComponent() {
               <NumberField.IncrementButton />
             </NumberField.Group>
           </NumberField>
-          <RefreshButton text='计算' loading={loading} onPress={reFresh} />
+          <RefreshButton text='计算' loading={loading} onPress={run} />
         </div>
       </div>
     </div>
   )
 }
+export default ClientComponent;
