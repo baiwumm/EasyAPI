@@ -14,5 +14,5 @@ export const metadata: Metadata = {
 }
 
 export default function CountryCode() {
-  return <ClientComponent />
+  return <ClientComponent title='国际区号查询' />
 }
