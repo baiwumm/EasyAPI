@@ -3,90 +3,68 @@ import { Copy } from '@gravity-ui/icons';
 import { Button, Chip, NumberField, Table } from '@heroui/react';
 import { useRequest } from 'ahooks';
 import { usePathname } from 'next/navigation';
-import { useState } from 'react';
+import { type FC, useMemo, useState } from 'react';
 
-import AlertContent from '@/components/AlertContent';
 import EmptyContent from '@/components/EmptyContent';
 import RefreshButton from '@/components/RefreshButton';
+import RequestContent from '@/components/RequestContent';
 import TableLoading from '@/components/TableLoading';
 import { useCopy } from '@/hooks/use-copy';
 import { get } from '@/lib/utils';
 import { getApiData } from '@/services/common';
 
-export default function ClientComponent() {
+const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
   const pathname = usePathname();
   const { copy } = useCopy();
   const [count, setCount] = useState(10); // 生成的数量
 
+  // 参数处理
+  const params = useMemo(() => ({ count }), [count]);
+
   // 请求数据
   const { data = [], loading, error, run } = useRequest(
-    async (params) =>
-      get(await getApiData(pathname, params), 'data', []), {
-    defaultParams: [{ count }]
-  },
+    async () => get(await getApiData(pathname, params), 'data', [])
   );
-
-  // 请求数据
-  const reFresh = () => {
-    run({ count });
-  }
-
-  // 渲染内容
-  const renderContent = () => {
-    if (error) {
-      return (
-        <AlertContent
-          status="danger"
-          title="请求失败"
-          description="服务暂时不可用，请稍后重试。"
-          actionText="重新加载"
-          buttonVariant="danger"
-          buttonAction={reFresh}
-        />
-      )
-    }
-    return (
-      <div className="relative flex justify-center items-center">
-        <Table>
-          <Table.ScrollContainer className="max-h-150 overflow-y-auto">
-            <Table.Content aria-label="随机表情" className="min-w-150">
-              <Table.Header className="sticky top-0 z-10 bg-surface-secondary">
-                <Table.Column>名称</Table.Column>
-                <Table.Column>表情</Table.Column>
-              </Table.Header>
-              <Table.Body renderEmptyState={() => <EmptyContent />}>
-                {data?.length ? data.map(({ name, emoji }, index) => (
-                  <Table.Row key={index}>
-                    <Table.Cell>
-                      <Chip color='accent' variant='soft'>{name}</Chip>
-                    </Table.Cell>
-                    <Table.Cell>
-                      <div className="flex items-center gap-2">
-                        <span>{emoji}</span>
-                        <Button isIconOnly size="sm" variant="ghost" onPress={() => copy(emoji)}>
-                          <Copy className="size-4 text-muted" />
-                        </Button>
-                      </div>
-                    </Table.Cell>
-                  </Table.Row>
-                )) : []}
-              </Table.Body>
-            </Table.Content>
-          </Table.ScrollContainer>
-        </Table>
-        <TableLoading loading={loading} />
-      </div>
-    )
-  }
   return (
     <div className="flex-1 flex flex-col justify-between gap-4">
       {/* 头部区域 */}
       <div className="shrink-0">
-        <h1 className="text-2xl font-black">随机表情</h1>
+        <h1 className="text-2xl font-black">{title}</h1>
       </div>
       {/* 中间区域 */}
       <div className="flex-1 flex justify-center items-center">
-        {renderContent()}
+        <RequestContent error={error} reFresh={run}>
+          <div className="relative flex justify-center items-center">
+            <Table>
+              <Table.ScrollContainer className="max-h-150 overflow-y-auto">
+                <Table.Content aria-label={title} className="min-w-150">
+                  <Table.Header className="sticky top-0 z-10 bg-surface-secondary">
+                    <Table.Column isRowHeader>名称</Table.Column>
+                    <Table.Column>表情</Table.Column>
+                  </Table.Header>
+                  <Table.Body renderEmptyState={() => <EmptyContent />}>
+                    {data?.length ? data.map(({ name, emoji }, index) => (
+                      <Table.Row key={index}>
+                        <Table.Cell>
+                          <Chip color='accent' variant='soft'>{name}</Chip>
+                        </Table.Cell>
+                        <Table.Cell>
+                          <div className="flex items-center gap-2">
+                            <span>{emoji}</span>
+                            <Button isIconOnly size="sm" variant="ghost" onPress={() => copy(emoji)}>
+                              <Copy className="size-4 text-muted" />
+                            </Button>
+                          </div>
+                        </Table.Cell>
+                      </Table.Row>
+                    )) : []}
+                  </Table.Body>
+                </Table.Content>
+              </Table.ScrollContainer>
+            </Table>
+            <TableLoading loading={loading} />
+          </div>
+        </RequestContent>
       </div>
       {/* 底部区域 */}
       <div className="flex justify-center shrink-0">
@@ -98,9 +76,10 @@ export default function ClientComponent() {
               <NumberField.IncrementButton />
             </NumberField.Group>
           </NumberField>
-          <RefreshButton text='生成' loading={loading} onPress={reFresh} />
+          <RefreshButton text='生成' loading={loading} onPress={run} />
         </div>
       </div>
     </div>
   )
 }
+export default ClientComponent

@@ -14,5 +14,5 @@ export const metadata: Metadata = {
 }
 
 export default function RandomEmoji() {
-  return <ClientComponent />
+  return <ClientComponent title='随机表情' />
 }
