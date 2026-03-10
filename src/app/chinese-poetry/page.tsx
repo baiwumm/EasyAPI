@@ -14,5 +14,5 @@ export const metadata: Metadata = {
 }
 
 export default function ChinesePoetry() {
-  return <ClientComponent />
+  return <ClientComponent title='中文诗词' />
 }
