@@ -11,6 +11,13 @@ import TableLoading from '@/components/TableLoading';
 import { get } from '@/lib/utils';
 import { getApiData } from '@/services/common';
 
+type DataType = {
+  englishName: string;
+  name: string;
+  countryCode: string;
+  phoneCode: string;
+}
+
 const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
   const pathname = usePathname();
   const [keyword, setKeyword] = useState('中国');
@@ -31,6 +38,14 @@ const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
     }
     run();
   }
+
+  // 列定义
+  const columns: { label: string, value: keyof DataType }[] = [
+    { label: '国家（中文）', value: 'englishName' },
+    { label: '国家（英文）', value: 'name' },
+    { label: 'ISO国家代码', value: 'countryCode' },
+    { label: '国际电话区号', value: 'phoneCode' }
+  ]
   return (
     <div className="flex-1 flex flex-col justify-between gap-4">
       {/* 头部区域 */}
@@ -45,18 +60,16 @@ const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
               <Table.ScrollContainer className="max-h-150 overflow-y-auto">
                 <Table.Content aria-label={title} className="min-w-150">
                   <Table.Header className="sticky top-0 z-10 bg-surface-secondary">
-                    <Table.Column isRowHeader>国家（中文）</Table.Column>
-                    <Table.Column>国家（英文）</Table.Column>
-                    <Table.Column>ISO国家代码</Table.Column>
-                    <Table.Column>国际电话区号</Table.Column>
+                    {columns.map(({ label, value }) => (
+                      <Table.Column key={value} isRowHeader={value === 'englishName'}>{label}</Table.Column>
+                    ))}
                   </Table.Header>
                   <Table.Body renderEmptyState={() => <EmptyContent />}>
-                    {data?.length ? data.map(({ englishName, name, countryCode, phoneCode }, index) => (
+                    {data?.length ? data.map((v, index) => (
                       <Table.Row key={index}>
-                        <Table.Cell>{englishName}</Table.Cell>
-                        <Table.Cell>{name}</Table.Cell>
-                        <Table.Cell>{countryCode}</Table.Cell>
-                        <Table.Cell>{phoneCode}</Table.Cell>
+                        {columns.map(({ value }) => (
+                          <Table.Cell key={value}>{get(v, value, '--')}</Table.Cell>
+                        ))}
                       </Table.Row>
                     )) : []}
                   </Table.Body>

@@ -14,5 +14,5 @@ export const metadata: Metadata = {
 }
 
 export default function LicensePlate() {
-  return <ClientComponent />
+  return <ClientComponent title='车牌归属地查询' />
 }

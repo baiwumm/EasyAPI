@@ -2,25 +2,32 @@
 import { Input, Table, toast } from '@heroui/react';
 import { useRequest } from 'ahooks';
 import { usePathname } from 'next/navigation';
-import { useState } from 'react';
+import { type FC, useMemo, useState } from 'react';
 
-import AlertContent from '@/components/AlertContent';
 import EmptyContent from '@/components/EmptyContent';
-import LoadingContent from '@/components/LoadingContent';
 import RefreshButton from '@/components/RefreshButton';
+import RequestContent from '@/components/RequestContent';
+import TableLoading from '@/components/TableLoading';
 import { get } from '@/lib/utils';
 import { getApiData } from '@/services/common';
 
-export default function ClientComponent() {
+type DataType = {
+  province: string;
+  city: string;
+  code: string[]
+  prefix: string;
+}
+
+const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
   const pathname = usePathname();
   const [keyword, setKeyword] = useState('粤');
 
+  // 参数处理
+  const params = useMemo(() => ({ keyword }), [keyword]);
+
   // 请求数据
   const { data = [], loading, error, run } = useRequest(
-    async (params) =>
-      get(await getApiData(pathname, params), 'data', []), {
-    defaultParams: [{ keyword }]
-  },
+    async () => get(await getApiData(pathname, params), 'data', [])
   );
 
   // 请求数据
@@ -29,62 +36,49 @@ export default function ClientComponent() {
       toast.danger("参数 keyword 必填");
       return;
     }
-    run({ keyword });
+    run();
   }
 
-  // 渲染内容
-  const renderContent = () => {
-    if (error) {
-      return (
-        <AlertContent
-          status="danger"
-          title="请求失败"
-          description="服务暂时不可用，请稍后重试。"
-          actionText="重新加载"
-          buttonVariant="danger"
-          buttonAction={reFresh}
-        />
-      )
-    }
-    if (loading) {
-      return <LoadingContent text='正在查询...' />
-    }
-    return (
-      <div className="flex justify-center items-center">
-        <Table>
-          <Table.ScrollContainer className="max-h-150 overflow-y-auto">
-            <Table.Content aria-label="车牌归属地" className="min-w-150">
-              <Table.Header className="sticky top-0 z-10 bg-surface-secondary">
-                <Table.Column>省份</Table.Column>
-                <Table.Column>城市</Table.Column>
-                <Table.Column>省份车牌简称</Table.Column>
-                <Table.Column>车牌号前缀</Table.Column>
-              </Table.Header>
-              <Table.Body renderEmptyState={() => <EmptyContent />}>
-                {data?.length ? data.map(({ province, city, code, prefix }, index) => (
-                  <Table.Row key={index}>
-                    <Table.Cell>{province}</Table.Cell>
-                    <Table.Cell>{city}</Table.Cell>
-                    <Table.Cell>{code}</Table.Cell>
-                    <Table.Cell>{prefix}</Table.Cell>
-                  </Table.Row>
-                )) : []}
-              </Table.Body>
-            </Table.Content>
-          </Table.ScrollContainer>
-        </Table>
-      </div>
-    )
-  }
+  // 列定义
+  const columns: { label: string, value: keyof DataType }[] = [
+    { label: '省份', value: 'province' },
+    { label: '城市', value: 'city' },
+    { label: '省份车牌简称', value: 'code' },
+    { label: '电车牌号前缀号', value: 'prefix' }
+  ]
   return (
     <div className="flex-1 flex flex-col justify-between gap-4">
       {/* 头部区域 */}
       <div className="shrink-0">
-        <h1 className="text-2xl font-black">车牌归属地查询</h1>
+        <h1 className="text-2xl font-black">{title}</h1>
       </div>
       {/* 中间区域 */}
-      <div className="flex-1 flex justify-center items-center">
-        {renderContent()}
+      <div className="relative flex-1 flex justify-center items-center">
+        <RequestContent error={error} reFresh={run}>
+          <div className="flex justify-center items-center">
+            <Table>
+              <Table.ScrollContainer className="max-h-150 overflow-y-auto">
+                <Table.Content aria-label={title} className="min-w-150">
+                  <Table.Header className="sticky top-0 z-10 bg-surface-secondary">
+                    {columns.map(({ label, value }) => (
+                      <Table.Column key={value} isRowHeader={value === 'province'}>{label}</Table.Column>
+                    ))}
+                  </Table.Header>
+                  <Table.Body renderEmptyState={() => <EmptyContent />}>
+                    {data?.length ? data.map((v, index) => (
+                      <Table.Row key={index}>
+                        {columns.map(({ value }) => (
+                          <Table.Cell key={value}>{get(v, value, '--')}</Table.Cell>
+                        ))}
+                      </Table.Row>
+                    )) : []}
+                  </Table.Body>
+                </Table.Content>
+              </Table.ScrollContainer>
+            </Table>
+            <TableLoading loading={loading} />
+          </div>
+        </RequestContent>
       </div>
       {/* 底部区域 */}
       <div className="flex justify-center shrink-0">
@@ -103,3 +97,4 @@ export default function ClientComponent() {
     </div>
   )
 }
+export default ClientComponent
