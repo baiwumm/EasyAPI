@@ -2,12 +2,12 @@
  * @Author: 白雾茫茫丶<baiwumm.com>
  * @Date: 2026-01-22 15:44:57
  * @LastEditors: 白雾茫茫丶<baiwumm.com>
- * @LastEditTime: 2026-03-05 11:09:52
+ * @LastEditTime: 2026-03-11 13:40:36
  * @Description: 用户头像
  */
 import { useRouter } from '@bprogress/next/app';
 import { ArrowRightFromSquare, GearDot, Person } from '@gravity-ui/icons';
-import { AlertDialog, Avatar, Badge, Button, Dropdown, Label, Separator, Spinner, Tooltip, useOverlayState } from '@heroui/react';
+import { AlertDialog, Avatar, Badge, Button, Description, Dropdown, Label, Separator, Spinner, Tooltip, useOverlayState } from '@heroui/react';
 import { type FC, type Key, useState } from 'react';
 
 import { useSupabaseUser } from '@/hooks/use-supabase-user';
@@ -82,11 +82,11 @@ const UserAvatar: FC = () => {
                 <Person />
               </Avatar.Fallback>
             </Avatar>
-            <div className="flex flex-col space-y-2 min-w-0">
-              <p className="font-medium text-sm leading-none">{name}</p>
-              <p className="text-muted-foreground text-xs leading-none overflow-hidden text-ellipsis whitespace-nowrap">
+            <div className="flex flex-col space-y-1 min-w-0">
+              <p className="font-black">{name}</p>
+              <Description className="truncate">
                 {user?.email}
-              </p>
+              </Description>
             </div>
           </div>
           <Separator />
@@ -96,7 +96,7 @@ const UserAvatar: FC = () => {
               <Label>管理后台</Label>
             </Dropdown.Item>
             <Dropdown.Item id="logout" textValue="Logout" variant="danger">
-              <ArrowRightFromSquare className="size-4 shrink-0 text-muted" />
+              <ArrowRightFromSquare className="size-4 shrink-0 text-danger" />
               <Label>退出登录</Label>
             </Dropdown.Item>
           </Dropdown.Menu>

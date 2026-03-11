@@ -2,7 +2,7 @@
  * @Author: 白雾茫茫丶<baiwumm.com>
  * @Date: 2026-01-23 15:24:22
  * @LastEditors: 白雾茫茫丶<baiwumm.com>
- * @LastEditTime: 2026-03-05 18:05:39
+ * @LastEditTime: 2026-03-11 14:07:06
  * @Description: 接口列表
  */
 "use client"
@@ -18,7 +18,7 @@ import {
   type VisibilityState
 } from '@tanstack/react-table';
 import { useRequest, useSetState } from 'ahooks';
-import { type FC, useEffect, useState } from 'react';
+import { type FC, useCallback, useEffect, useMemo, useState } from 'react';
 
 import { getColumns } from './components/columns'
 import DataTable from './components/data-table';
@@ -84,10 +84,10 @@ const Apis: FC = () => {
   }
 
   // 编辑回调
-  const handleEdit = (row: App.Api) => {
+  const handleEdit = useCallback((row: App.Api) => {
     setEditData(row)
     saveModalState.open()
-  }
+  }, [saveModalState])
 
   // 删除接口
   const { loading: delLoading, run: fetchDelApi } = useRequest(delApi, {
@@ -105,10 +105,10 @@ const Apis: FC = () => {
   });
 
   // 删除回调
-  const handleDel = (row: App.Api) => {
+  const handleDel = useCallback((row: App.Api) => {
     setEditData(row)
     delDialogState.open()
-  }
+  }, [delDialogState])
 
   // 确认删除回调
   const handleDelConfirm = () => {
@@ -118,7 +118,10 @@ const Apis: FC = () => {
   }
 
   // 列配置项
-  const columns = getColumns({ handleEdit, handleDel, page: get(data, 'page', 0), pageSize: get(data, 'pageSize', 0) });
+  const columns = useMemo(
+    () => getColumns({ handleEdit, handleDel, page: get(data, 'page', 0), pageSize: get(data, 'pageSize', 0) }),
+    [handleEdit, handleDel, data]
+  )
 
   // 表格实例
   const table = useReactTable({
