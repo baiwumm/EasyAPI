@@ -4,10 +4,10 @@ import { useRequest } from 'ahooks';
 import { usePathname } from 'next/navigation';
 import { type ReactNode } from 'react';
 
-import AlertContent from '@/components/AlertContent';
 import CopyText from '@/components/CopyText';
 import EmptyContent from '@/components/EmptyContent';
 import RefreshButton from '@/components/RefreshButton';
+import RequestContent from '@/components/RequestContent';
 import TableLoading from '@/components/TableLoading';
 import { get } from '@/lib/utils';
 import { getApiData } from '@/services/common';
@@ -44,45 +44,6 @@ function JsonContent<T>({ title, children, params = {}, onRefresh, searchText = 
       run();
     }
   }
-
-  // 渲染内容
-  const renderContent = () => {
-    if (error) {
-      return (
-        <AlertContent
-          status="danger"
-          title="请求失败"
-          description="服务暂时不可用，请稍后重试。"
-          actionText="重新加载"
-          buttonVariant="danger"
-          buttonAction={reload}
-        />
-      )
-    }
-    return (
-      <div className="relative flex justify-center items-center">
-        <Table>
-          <Table.ScrollContainer>
-            <Table.Content aria-label={title} className="min-w-80">
-              <Table.Header>
-                <Table.Column isRowHeader>字段</Table.Column>
-                <Table.Column>值</Table.Column>
-              </Table.Header>
-              <Table.Body renderEmptyState={() => <EmptyContent />}>
-                {(data ? getColumns(data) : []).map(({ label, children }, index) => (
-                  <Table.Row key={index}>
-                    <Table.Cell>{label}</Table.Cell>
-                    <Table.Cell>{children}</Table.Cell>
-                  </Table.Row>
-                ))}
-              </Table.Body>
-            </Table.Content>
-          </Table.ScrollContainer>
-        </Table>
-        <TableLoading loading={loading} />
-      </div>
-    )
-  }
   return (
     <div className="flex-1 flex flex-col justify-between gap-4">
       {/* 头部区域 */}
@@ -91,7 +52,29 @@ function JsonContent<T>({ title, children, params = {}, onRefresh, searchText = 
       </div>
       {/* 中间区域 */}
       <div className="flex-1 flex justify-center items-center">
-        {renderContent()}
+        <RequestContent error={error} reFresh={reload}>
+          <div className="relative flex justify-center items-center">
+            <Table>
+              <Table.ScrollContainer>
+                <Table.Content aria-label={title} className="min-w-80">
+                  <Table.Header>
+                    <Table.Column isRowHeader>字段</Table.Column>
+                    <Table.Column>值</Table.Column>
+                  </Table.Header>
+                  <Table.Body renderEmptyState={() => <EmptyContent />}>
+                    {(data ? getColumns(data) : []).map(({ label, children }, index) => (
+                      <Table.Row key={index}>
+                        <Table.Cell>{label}</Table.Cell>
+                        <Table.Cell>{children}</Table.Cell>
+                      </Table.Row>
+                    ))}
+                  </Table.Body>
+                </Table.Content>
+              </Table.ScrollContainer>
+            </Table>
+            <TableLoading loading={loading} />
+          </div>
+        </RequestContent>
       </div>
       {/* 底部区域 */}
       <div className="flex justify-center shrink-0">
