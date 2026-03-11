@@ -4,11 +4,10 @@ import { Chip, Description, Input, Label, ListBox, NumberField, Select, TextFiel
 import { useRequest } from 'ahooks';
 import { type Options } from 'crypto-random-string'
 import { usePathname } from 'next/navigation';
-import { useState } from 'react';
+import { type FC, useMemo, useState } from 'react';
 
-import AlertContent from '@/components/AlertContent';
-import LoadingContent from '@/components/LoadingContent';
 import RefreshButton from '@/components/RefreshButton';
+import RequestContent from '@/components/RequestContent';
 import { useCopy } from '@/hooks/use-copy';
 import { get } from '@/lib/utils';
 import { getApiData } from '@/services/common';
@@ -51,7 +50,7 @@ const RANDOM_STRING_TYPE_OPTIONS = [
   }
 ]
 
-export default function ClientComponent() {
+const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
   const pathname = usePathname();
   const { copy } = useCopy();
   const [type, setType] = useState<Options['type']>('alphanumeric');
@@ -59,67 +58,42 @@ export default function ClientComponent() {
   const [count, setCount] = useState(10); // 生成的数量
   const [characters, setCharacters] = useState(''); // 自定义字符集
 
+  // 参数处理
+  const params = useMemo(() => ({ type, length, count, characters }), [type, length, count, characters]);
+
   // 请求数据
   const { data = [], loading, error, run } = useRequest(
-    async (params) =>
-      get(await getApiData(pathname, params), 'data', []), {
-    defaultParams: [{ type, length, count, characters }]
-  },
+    async () => get(await getApiData(pathname, params), 'data', [])
   );
-
-  // 请求数据
-  const reFresh = () => {
-    run({ type, length, count, characters });
-  }
-
-  // 渲染内容
-  const renderContent = () => {
-    if (error) {
-      return (
-        <AlertContent
-          status="danger"
-          title="请求失败"
-          description="服务暂时不可用，请稍后重试。"
-          actionText="重新加载"
-          buttonVariant="danger"
-          buttonAction={reFresh}
-        />
-      )
-    }
-    if (loading) {
-      return <LoadingContent text='正在生成...' />
-    }
-    return (
-      <div className="flex justify-center items-center flex-wrap gap-2">
-        {data.map((v) => (
-          <Chip
-            key={v}
-            size='lg'
-            color='accent'
-            variant='soft'
-            onClick={() => copy(v)}
-            className="cursor-pointer"
-          >
-            <Copy />
-            <Chip.Label>{v}</Chip.Label>
-          </Chip>
-        ))}
-      </div>
-    )
-  }
   return (
     <div className="flex-1 flex flex-col justify-between gap-4">
       {/* 头部区域 */}
       <div className="shrink-0">
-        <h1 className="text-2xl font-black">随机字符串</h1>
+        <h1 className="text-2xl font-black">{title}</h1>
       </div>
       {/* 中间区域 */}
       <div className="flex-1 flex justify-center items-center">
-        {renderContent()}
+        <RequestContent error={error} reFresh={run} loading={loading} loadingText='正在生成...'>
+          <div className="flex justify-center items-center flex-wrap gap-2">
+            {data.map((v) => (
+              <Chip
+                key={v}
+                size='lg'
+                color='accent'
+                variant='soft'
+                onClick={() => copy(v)}
+                className="cursor-pointer"
+              >
+                <Copy />
+                <Chip.Label>{v}</Chip.Label>
+              </Chip>
+            ))}
+          </div>
+        </RequestContent>
       </div>
       {/* 底部区域 */}
       <div className="flex justify-center shrink-0">
-        <div className="flex items-center gap-2 flex-wrap">
+        <div className="flex items-end gap-2 flex-wrap">
           <Select
             className="w-60"
             placeholder="请选择类型"
@@ -161,7 +135,7 @@ export default function ClientComponent() {
               <NumberField.IncrementButton />
             </NumberField.Group>
           </NumberField>
-          <TextField>
+          <TextField aria-label="自定义字符集">
             <Description>会忽略 type</Description>
             <Input
               aria-label="自定义字符集"
@@ -172,9 +146,10 @@ export default function ClientComponent() {
               onChange={(event) => setCharacters(event.target.value)}
             />
           </TextField>
-          <RefreshButton text='生成' loading={loading} onPress={reFresh} />
+          <RefreshButton text='生成' loading={loading} onPress={run} />
         </div>
       </div>
     </div>
   )
 }
+export default ClientComponent

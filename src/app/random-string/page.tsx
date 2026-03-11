@@ -2,7 +2,7 @@
  * @Author: 白雾茫茫丶<baiwumm.com>
  * @Date: 2026-02-28 17:18:39
  * @LastEditors: 白雾茫茫丶<baiwumm.com>
- * @LastEditTime: 2026-02-28 17:19:53
+ * @LastEditTime: 2026-03-11 09:05:28
  * @Description: 随机字符串
  */
 import type { Metadata } from "next";
@@ -14,5 +14,5 @@ export const metadata: Metadata = {
 }
 
 export default function RandomString() {
-  return <ClientComponent />
+  return <ClientComponent title='随机字符串' />
 }
