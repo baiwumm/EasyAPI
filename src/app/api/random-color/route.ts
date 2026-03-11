@@ -3,7 +3,7 @@
  * @Date: 2026-03-02 10:39:44
  * @LastEditors: 白雾茫茫丶<baiwumm.com>
  * @LastEditTime: 2026-03-03 10:52:12
- * @Description: 
+ * @Description: 随机颜色
  */
 import { NextRequest, NextResponse } from 'next/server'
 import tinycolor from "tinycolor2";
