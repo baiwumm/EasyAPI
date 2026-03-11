@@ -1,5 +1,15 @@
 # Changelog
 
+## [2.5.1](https://github.com/baiwumm/EasyAPI/compare/2.5.0...2.5.1) (2026-03-11)
+
+### 💄 Styles | 风格
+
+* 细节调整 ([fba8f9a](https://github.com/baiwumm/EasyAPI/commit/fba8f9a992751ab5d37ecb344893d70b3b030010))
+
+### ⚡ Performance Improvements | 性能优化
+
+* 删除没用的代码 ([6bbb6f8](https://github.com/baiwumm/EasyAPI/commit/6bbb6f8ac8b38d0fd551b369b4f41543fd904c5a))
+
 ## [2.5.0](https://github.com/baiwumm/EasyAPI/compare/2.4.2...2.5.0) (2026-03-11)
 
 ### ✨ Features | 新功能
