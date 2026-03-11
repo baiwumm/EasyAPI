@@ -1,5 +1,34 @@
 # Changelog
 
+## [2.5.0](https://github.com/baiwumm/EasyAPI/compare/2.4.2...2.5.0) (2026-03-11)
+
+### ✨ Features | 新功能
+
+* **components:** 新增 RequestContent 组件，统一处理请求失败等 UI 展示 ([886ac57](https://github.com/baiwumm/EasyAPI/commit/886ac578411927e6780a8a3524adab3a935710ec))
+
+### ⚡ Performance Improvements | 性能优化
+
+* 删除 images 冗余的配置 ([c4251a4](https://github.com/baiwumm/EasyAPI/commit/c4251a4b13a3889f6115ba1f997a18a8da1f1565))
+* 优化 JsonContent 组件 JSON 显示展示格式 ([d78168f](https://github.com/baiwumm/EasyAPI/commit/d78168fc04fbe91cb8b4b575c9eb8df960fd1518))
+* **Almanac:** 优化代码逻辑 ([7dd396c](https://github.com/baiwumm/EasyAPI/commit/7dd396cf5092835af5cecf8c624813182bf8a22b))
+* **Bmi:** 优化代码逻辑 ([5fcc85a](https://github.com/baiwumm/EasyAPI/commit/5fcc85a4e6f971b08643d0247f04d740af95b158))
+* **ChinesePoetry:** 优化代码逻辑 ([66729e4](https://github.com/baiwumm/EasyAPI/commit/66729e48ad62f0ad8d8ee785c3c582563c936e66))
+* **ColorConversion:** 优化代码逻辑 ([36746ba](https://github.com/baiwumm/EasyAPI/commit/36746bac2974b30b444c1d78dbd138874016b073))
+* **CountryCode:** 优化代码逻辑 ([2ab2280](https://github.com/baiwumm/EasyAPI/commit/2ab22809f9d323ba53b9b7f88fec90e11c5e137f))
+* **Hitokoto:** 优化代码逻辑 ([0444f08](https://github.com/baiwumm/EasyAPI/commit/0444f082a45cb09d468aaca7b1ed57826ecd1df5))
+* **Holiday:** 优化代码逻辑 ([9782d5c](https://github.com/baiwumm/EasyAPI/commit/9782d5c45f65effef819499d14058e2d2ebee14f))
+* **JsonContent:** 优化代码逻辑 ([1a42136](https://github.com/baiwumm/EasyAPI/commit/1a42136321b2c128899ec5056695770c98c2f31d))
+* **LicensePlate:** 优化代码逻辑 ([fb1a789](https://github.com/baiwumm/EasyAPI/commit/fb1a7898451047185bdb43b633a2e9ed55e2727e))
+* **PostalCode:** 优化代码逻辑 ([f5bd59b](https://github.com/baiwumm/EasyAPI/commit/f5bd59b4442c7a451e561218f3c01c320c080b70))
+* **Qrcode:** 优化代码逻辑 ([385ca1e](https://github.com/baiwumm/EasyAPI/commit/385ca1e2f8c3eb9c2e29ee8dcec1dc7f491eb919))
+* **QuoteWorld:** 优化代码逻辑 ([359803a](https://github.com/baiwumm/EasyAPI/commit/359803ac2a8e31c1b6812f768efdd34936c8213f))
+* **RandomColor:** 优化代码逻辑 ([1b5125f](https://github.com/baiwumm/EasyAPI/commit/1b5125feaba7d38a93cf029748f718cc597c9235))
+* **RandomEmoji:** 优化代码逻辑 ([ba221fe](https://github.com/baiwumm/EasyAPI/commit/ba221fe55b1a48ab5e913f0f6bdd89030a123c76))
+* **RandomString:** 优化代码逻辑 ([69105a3](https://github.com/baiwumm/EasyAPI/commit/69105a3f2606cea5a3fb5fd271627be0f01a20b8))
+* **RandomUser:** 优化代码逻辑 ([dccfac6](https://github.com/baiwumm/EasyAPI/commit/dccfac66ea3921ac92db1d890e216c965de41c49))
+* **Riddle:** 优化代码逻辑 ([1b9a2ed](https://github.com/baiwumm/EasyAPI/commit/1b9a2ed788e41c64d09542c134dd0b4450ee67b2))
+* **SolarTerm:** 优化代码逻辑 ([49c9be0](https://github.com/baiwumm/EasyAPI/commit/49c9be07e60887c20ad61960bf7d25e1a0051acc))
+
 ## [2.4.2](https://github.com/baiwumm/EasyAPI/compare/2.4.1...2.4.2) (2026-03-09)
 
 ### ✨ Features | 新功能
