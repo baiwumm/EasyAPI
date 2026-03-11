@@ -14,5 +14,5 @@ export const metadata: Metadata = {
 }
 
 export default function SolarTerm() {
-  return <ClientComponent />
+  return <ClientComponent title='二十四节气' />
 }
