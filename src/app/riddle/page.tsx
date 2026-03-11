@@ -14,5 +14,5 @@ export const metadata: Metadata = {
 }
 
 export default function Riddle() {
-  return <ClientComponent />
+  return <ClientComponent title='歇后语' />
 }
