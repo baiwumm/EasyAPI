@@ -14,5 +14,5 @@ export const metadata: Metadata = {
 }
 
 export default function RandomUser() {
-  return <ClientComponent />
+  return <ClientComponent title='随机用户' />
 }

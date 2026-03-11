@@ -2,104 +2,82 @@
 import { Avatar, Chip, Description, ListBox, NumberField, Select, Table } from '@heroui/react';
 import { useRequest } from 'ahooks';
 import { usePathname } from 'next/navigation';
-import { useState } from 'react';
+import { type FC, useMemo, useState } from 'react';
 
-import AlertContent from '@/components/AlertContent';
 import EmptyContent from '@/components/EmptyContent';
 import RefreshButton from '@/components/RefreshButton';
+import RequestContent from '@/components/RequestContent';
 import TableLoading from '@/components/TableLoading';
 import { get } from '@/lib/utils';
 import { getApiData } from '@/services/common';
 
-export default function ClientComponent() {
+const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
   const pathname = usePathname();
   const [count, setCount] = useState(5);
   const [gender, setGender] = useState('all');
 
+  // 参数处理
+  const params = useMemo(() => ({ count, gender }), [count, gender]);
+
   // 请求数据
   const { data = [], loading, error, run } = useRequest(
-    async (params) =>
-      get(await getApiData(pathname, params), 'data', []), {
-    defaultParams: [{ count, gender }]
-  },
+    async () => get(await getApiData(pathname, params), 'data', [])
   );
-
-  // 请求数据
-  const reFresh = () => {
-    run({ count, gender });
-  }
-
-  // 渲染内容
-  const renderContent = () => {
-    if (error) {
-      return (
-        <AlertContent
-          status="danger"
-          title="请求失败"
-          description="服务暂时不可用，请稍后重试。"
-          actionText="重新加载"
-          buttonVariant="danger"
-          buttonAction={reFresh}
-        />
-      )
-    }
-    return (
-      <div className="relative flex justify-center items-center">
-        <Table>
-          <Table.ScrollContainer className="max-h-150 overflow-y-auto">
-            <Table.Content aria-label="随机用户" className="min-w-150">
-              <Table.Header className="sticky top-0 z-10 bg-surface-secondary">
-                <Table.Column isRowHeader>姓名</Table.Column>
-                <Table.Column>性别</Table.Column>
-                <Table.Column>手机号码</Table.Column>
-                <Table.Column>公司</Table.Column>
-                <Table.Column>职位</Table.Column>
-                <Table.Column>生日</Table.Column>
-              </Table.Header>
-              <Table.Body renderEmptyState={() => <EmptyContent />}>
-                {data?.length ? data.map(({ id, name, avatar, gender, email, job, phone, birthday, company }) => (
-                  <Table.Row key={id}>
-                    <Table.Cell>
-                      <div className="flex items-center gap-3">
-                        <Avatar size="sm">
-                          <Avatar.Image src={avatar} />
-                          <Avatar.Fallback>
-                            {(name as string)
-                              .split(" ")
-                              .map((n) => n[0])
-                              .join("")}
-                          </Avatar.Fallback>
-                        </Avatar>
-                        <div className="flex flex-col">
-                          <span className="text-xs">{name}</span>
-                          <Description>{email}</Description>
-                        </div>
-                      </div>
-                    </Table.Cell>
-                    <Table.Cell><Chip color={gender === '男' ? 'accent' : 'warning'} variant='soft' className="rounded-full">{gender}</Chip></Table.Cell>
-                    <Table.Cell>{phone}</Table.Cell>
-                    <Table.Cell>{company}</Table.Cell>
-                    <Table.Cell>{job}</Table.Cell>
-                    <Table.Cell>{birthday}</Table.Cell>
-                  </Table.Row>
-                )) : []}
-              </Table.Body>
-            </Table.Content>
-          </Table.ScrollContainer>
-        </Table>
-        <TableLoading loading={loading} />
-      </div>
-    )
-  }
   return (
     <div className="flex-1 flex flex-col justify-between gap-4">
       {/* 头部区域 */}
       <div className="shrink-0">
-        <h1 className="text-2xl font-black">随机用户</h1>
+        <h1 className="text-2xl font-black">{title}</h1>
       </div>
       {/* 中间区域 */}
       <div className="flex-1 flex justify-center items-center">
-        {renderContent()}
+        <RequestContent error={error} reFresh={run}>
+          <div className="relative flex justify-center items-center">
+            <Table>
+              <Table.ScrollContainer className="max-h-150 overflow-y-auto">
+                <Table.Content aria-label={title} className="min-w-150">
+                  <Table.Header className="sticky top-0 z-10 bg-surface-secondary">
+                    <Table.Column isRowHeader>姓名</Table.Column>
+                    <Table.Column>性别</Table.Column>
+                    <Table.Column>手机号码</Table.Column>
+                    <Table.Column>公司</Table.Column>
+                    <Table.Column>职位</Table.Column>
+                    <Table.Column>生日</Table.Column>
+                  </Table.Header>
+                  <Table.Body renderEmptyState={() => <EmptyContent />}>
+                    {data?.length ? data.map(({ id, name, avatar, gender, email, job, phone, birthday, company }) => (
+                      <Table.Row key={id}>
+                        <Table.Cell>
+                          <div className="flex items-center gap-3">
+                            <Avatar size="sm">
+                              <Avatar.Image src={avatar} />
+                              <Avatar.Fallback>
+                                {(name as string)
+                                  .split(" ")
+                                  .map((n) => n[0])
+                                  .join("")}
+                              </Avatar.Fallback>
+                            </Avatar>
+                            <div className="flex flex-col">
+                              <span className="text-xs">{name}</span>
+                              <Description>{email}</Description>
+                            </div>
+                          </div>
+                        </Table.Cell>
+                        <Table.Cell><Chip color={gender === '男' ? 'accent' : 'warning'} variant='soft' className="rounded-full">{gender}</Chip></Table.Cell>
+                        <Table.Cell>{phone}</Table.Cell>
+                        <Table.Cell>{company}</Table.Cell>
+                        <Table.Cell>{job}</Table.Cell>
+                        <Table.Cell>{birthday}</Table.Cell>
+                      </Table.Row>
+                    )) : []}
+                  </Table.Body>
+                </Table.Content>
+              </Table.ScrollContainer>
+            </Table>
+            <TableLoading loading={loading} />
+          </div>
+        </RequestContent>
       </div>
       {/* 底部区域 */}
       <div className="flex justify-center shrink-0">
@@ -145,9 +123,10 @@ export default function ClientComponent() {
               </ListBox>
             </Select.Popover>
           </Select>
-          <RefreshButton text='生成' loading={loading} onPress={reFresh} />
+          <RefreshButton text='生成' loading={loading} onPress={run} />
         </div>
       </div>
     </div>
   )
 }
+export default ClientComponent
