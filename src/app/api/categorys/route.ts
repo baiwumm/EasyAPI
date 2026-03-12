@@ -2,14 +2,14 @@
  * @Author: 白雾茫茫丶<baiwumm.com>
  * @Date: 2026-01-23 16:08:45
  * @LastEditors: 白雾茫茫丶<baiwumm.com>
- * @LastEditTime: 2026-02-26 09:29:40
+ * @LastEditTime: 2026-03-12 15:42:47
  * @Description: 接口分类模块
  */
 import { NextRequest, NextResponse } from 'next/server'
 
 import { RESPONSE } from '@/enums'
 import { getSupabaseServerClient } from '@/lib/supabase/server'
-import { responseMessage } from '@/lib/utils'
+import { catchError, responseMessage } from '@/lib/utils'
 
 /**
  * @description: 查询分类列表
@@ -88,7 +88,7 @@ export async function GET(request: NextRequest) {
       pageSize,
     }));
   } catch (err) {
-    return NextResponse.json(responseMessage(null, (err as Error).message, RESPONSE.ERROR));
+    return NextResponse.json(catchError(err));
   }
 }
 
@@ -117,6 +117,6 @@ export async function POST(request: NextRequest) {
     }
     return NextResponse.json(responseMessage(data));
   } catch (err) {
-    return NextResponse.json(responseMessage(null, (err as Error).message, RESPONSE.ERROR));
+    return NextResponse.json(catchError(err));
   }
 }

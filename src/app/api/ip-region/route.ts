@@ -2,12 +2,12 @@
  * @Author: 白雾茫茫丶<baiwumm.com>
  * @Date: 2026-03-03 16:49:19
  * @LastEditors: 白雾茫茫丶<baiwumm.com>
- * @LastEditTime: 2026-03-10 11:23:58
+ * @LastEditTime: 2026-03-12 15:56:54
  * @Description: IP 归属地查询
  */
 import { NextRequest, NextResponse } from 'next/server'
 
-import { responseMessage } from '@/lib/utils';
+import { catchError, responseMessage } from '@/lib/utils';
 
 export async function GET(request: NextRequest) {
   try {
@@ -19,10 +19,10 @@ export async function GET(request: NextRequest) {
     const forwarded = request.headers.get("x-forwarded-for");
 
     let clientIP =
-      ip || forwarded?.split(",")[0] ||
+      ip ||
+      forwarded?.split(",")[0] ||
       request.headers.get("x-real-ip") ||
       request.headers.get("cf-connecting-ip") ||
-      request.ip ||
       null;
 
     // 参数校验
@@ -39,6 +39,6 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(responseMessage(json));
   } catch (err) {
-    return NextResponse.json(responseMessage(null, (err as Error).message, RESPONSE.ERROR));
+    return NextResponse.json(catchError(err));
   }
 }

@@ -2,14 +2,14 @@
  * @Author: 白雾茫茫丶<baiwumm.com>
  * @Date: 2026-02-28 17:11:21
  * @LastEditors: 白雾茫茫丶<baiwumm.com>
- * @LastEditTime: 2026-03-04 09:49:35
+ * @LastEditTime: 2026-03-12 15:53:59
  * @Description: 随机字符串
  */
 import cryptoRandomString, { type Options } from 'crypto-random-string'
 import { NextRequest, NextResponse } from 'next/server'
 
 import { RESPONSE } from '@/enums'
-import { responseMessage } from '@/lib/utils'
+import { catchError, responseMessage } from '@/lib/utils'
 
 export async function GET(request: NextRequest) {
   try {
@@ -64,6 +64,6 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(responseMessage(result))
   } catch (err) {
-    return NextResponse.json(responseMessage(null, (err as Error).message, RESPONSE.ERROR));
+    return NextResponse.json(catchError(err));
   }
 }

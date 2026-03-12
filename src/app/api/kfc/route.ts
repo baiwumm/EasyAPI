@@ -2,14 +2,14 @@
  * @Author: 白雾茫茫丶<baiwumm.com>
  * @Date: 2026-02-28 15:57:31
  * @LastEditors: 白雾茫茫丶<baiwumm.com>
- * @LastEditTime: 2026-02-28 15:58:23
+ * @LastEditTime: 2026-03-12 15:50:59
  * @Description: 疯狂星期四
  */
 import { NextRequest, NextResponse } from 'next/server'
 
 import { RESPONSE } from '@/enums'
 import { getSupabaseServerClient } from '@/lib/supabase/server'
-import { pick, responseMessage } from '@/lib/utils'
+import { catchError, pick, responseMessage } from '@/lib/utils'
 
 export async function GET(request: NextRequest) {
   try {
@@ -37,6 +37,6 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(responseMessage(pick(data, ['content'])));
   } catch (err) {
-    return NextResponse.json(responseMessage(null, (err as Error).message, RESPONSE.ERROR));
+    return NextResponse.json(catchError(err));
   }
 }

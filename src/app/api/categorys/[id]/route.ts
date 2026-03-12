@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 
 import { RESPONSE } from '@/enums'
 import { getSupabaseServerClient } from '@/lib/supabase/server'
-import { responseMessage } from '@/lib/utils'
+import { catchError, responseMessage } from '@/lib/utils'
 
 /**
  * @description: 修改分类
@@ -38,7 +38,7 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
     // 返回更新后的菜单数据
     return NextResponse.json(responseMessage(data));
   } catch (err) {
-    return NextResponse.json(responseMessage(null, (err as Error).message, RESPONSE.ERROR));
+    return NextResponse.json(catchError(err));
   }
 }
 
@@ -66,6 +66,6 @@ export async function DELETE(request: Request, { params }: { params: Promise<{ i
     // 返回成功响应
     return NextResponse.json(responseMessage(data));
   } catch (err) {
-    return NextResponse.json(responseMessage(null, (err as Error).message, RESPONSE.ERROR));
+    return NextResponse.json(catchError(err));
   }
 }

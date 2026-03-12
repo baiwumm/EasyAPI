@@ -2,13 +2,13 @@
  * @Author: 白雾茫茫丶<baiwumm.com>
  * @Date: 2026-03-06 10:24:39
  * @LastEditors: 白雾茫茫丶<baiwumm.com>
- * @LastEditTime: 2026-03-06 11:22:26
+ * @LastEditTime: 2026-03-12 15:54:14
  * @Description: 随机用户
  */
 import { fakerZH_CN as faker } from "@faker-js/faker";
 import { NextRequest, NextResponse } from 'next/server'
 
-import { responseMessage } from '@/lib/utils'
+import { catchError, responseMessage } from '@/lib/utils'
 
 function createUser(gender?: string) {
   const sex =
@@ -51,6 +51,6 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(responseMessage(users))
   } catch (err) {
-    return NextResponse.json(responseMessage(null, (err as Error).message, RESPONSE.ERROR));
+    return NextResponse.json(catchError(err));
   }
 }

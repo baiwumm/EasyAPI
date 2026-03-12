@@ -2,7 +2,7 @@
  * @Author: 白雾茫茫丶<baiwumm.com>
  * @Date: 2026-03-12 09:22:58
  * @LastEditors: 白雾茫茫丶<baiwumm.com>
- * @LastEditTime: 2026-03-12 14:29:57
+ * @LastEditTime: 2026-03-12 15:39:53
  * @Description: 生成条形码
  */
 import JsBarcode, { type Options } from "jsbarcode";
@@ -11,7 +11,7 @@ import sharp from "sharp";
 import { DOMImplementation, XMLSerializer } from "xmldom";
 
 import { BARCODE_FORMATS, BARCODE_TYPES, RESPONSE } from '@/enums'
-import { responseMessage } from '@/lib/utils'
+import { catchError, responseMessage } from '@/lib/utils'
 
 type BarcodeFormat = typeof BARCODE_FORMATS.keys[number];
 
@@ -98,6 +98,6 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(responseMessage(null, `type 格式错误，支持 ${BARCODE_TYPES.labels.join('、')}`, RESPONSE.ERROR));
   } catch (err) {
-    return NextResponse.json(responseMessage(null, (err as Error).message, RESPONSE.ERROR));
+    return NextResponse.json(catchError(err));
   }
 }

@@ -9,7 +9,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import QRCode from "qrcode"
 
 import { RESPONSE } from '@/enums'
-import { responseMessage } from '@/lib/utils'
+import { catchError, responseMessage } from '@/lib/utils'
 
 export async function GET(request: NextRequest) {
   try {
@@ -72,6 +72,6 @@ export async function GET(request: NextRequest) {
       },
     });
   } catch (err) {
-    return NextResponse.json(responseMessage(null, (err as Error).message, RESPONSE.ERROR));
+    return NextResponse.json(catchError(err));
   }
 }

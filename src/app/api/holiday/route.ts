@@ -2,14 +2,14 @@
  * @Author: 白雾茫茫丶<baiwumm.com>
  * @Date: 2026-03-04 15:55:05
  * @LastEditors: 白雾茫茫丶<baiwumm.com>
- * @LastEditTime: 2026-03-04 16:00:05
+ * @LastEditTime: 2026-03-12 15:49:05
  * @Description: 法定节假日
  */
 import dayjs from 'dayjs';
 import { HolidayUtil } from 'lunar-typescript';
 import { NextRequest, NextResponse } from 'next/server'
 
-import { responseMessage } from '@/lib/utils'
+import { catchError, responseMessage } from '@/lib/utils'
 
 export async function GET(request: NextRequest) {
   try {
@@ -87,6 +87,6 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(responseMessage(Object.values(result)));
   } catch (err) {
-    return NextResponse.json(responseMessage(null, (err as Error).message, RESPONSE.ERROR));
+    return NextResponse.json(catchError(err));
   }
 }

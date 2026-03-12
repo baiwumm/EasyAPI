@@ -8,7 +8,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import tinycolor from "tinycolor2";
 
-import { responseMessage } from '@/lib/utils';
+import { catchError, responseMessage } from '@/lib/utils';
 
 type Format = "hex" | "rgb" | "hsl" | "hsv" | "all";
 
@@ -46,6 +46,6 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(responseMessage(result));
   } catch (err) {
-    return NextResponse.json(responseMessage(null, (err as Error).message, RESPONSE.ERROR));
+    return NextResponse.json(catchError(err));
   }
 }

@@ -2,14 +2,14 @@
  * @Author: 白雾茫茫丶<baiwumm.com>
  * @Date: 2026-03-03 15:28:23
  * @LastEditors: 白雾茫茫丶<baiwumm.com>
- * @LastEditTime: 2026-03-10 10:00:35
+ * @LastEditTime: 2026-03-12 15:50:09
  * @Description: 身份证信息查询
  */
 import idCard from 'idcard';
 import { NextRequest, NextResponse } from 'next/server'
 
 import { RESPONSE } from '@/enums';
-import { responseMessage } from '@/lib/utils';
+import { catchError, responseMessage } from '@/lib/utils';
 
 export async function GET(request: NextRequest) {
   try {
@@ -31,6 +31,6 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(responseMessage(result));
   } catch (err) {
-    return NextResponse.json(responseMessage(null, (err as Error).message, RESPONSE.ERROR));
+    return NextResponse.json(catchError(err));
   }
 }

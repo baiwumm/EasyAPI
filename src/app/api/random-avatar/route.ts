@@ -2,7 +2,7 @@
  * @Author: 白雾茫茫丶<baiwumm.com>
  * @Date: 2026-03-06 17:33:50
  * @LastEditors: 白雾茫茫丶<baiwumm.com>
- * @LastEditTime: 2026-03-09 09:48:15
+ * @LastEditTime: 2026-03-12 15:52:40
  * @Description: 
  */
 import {
@@ -23,7 +23,7 @@ import { faker } from "@faker-js/faker";
 import { NextRequest, NextResponse } from 'next/server'
 
 import { AVATAR_STYLES } from '@/enums';
-import { responseMessage } from '@/lib/utils'
+import { catchError, responseMessage } from '@/lib/utils'
 
 /**
  * style -> dicebear style
@@ -117,6 +117,6 @@ export async function GET(request: NextRequest) {
       }
     });
   } catch (err) {
-    return NextResponse.json(responseMessage(null, (err as Error).message, RESPONSE.ERROR));
+    return NextResponse.json(catchError(err));
   }
 }

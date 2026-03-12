@@ -2,7 +2,7 @@
  * @Author: 白雾茫茫丶<baiwumm.com>
  * @Date: 2026-03-05 09:30:46
  * @LastEditors: 白雾茫茫丶<baiwumm.com>
- * @LastEditTime: 2026-03-05 09:36:26
+ * @LastEditTime: 2026-03-12 15:54:55
  * @Description: 二十四节气
  */
 import dayjs from 'dayjs';
@@ -11,7 +11,7 @@ import { Lunar } from 'lunar-typescript';
 import { NextRequest, NextResponse } from 'next/server'
 
 import { RESPONSE } from '@/enums'
-import { responseMessage } from '@/lib/utils'
+import { catchError, responseMessage } from '@/lib/utils'
 
 dayjs.extend(customParseFormat)
 
@@ -55,6 +55,6 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(responseMessage(result));
   } catch (err) {
-    return NextResponse.json(responseMessage(null, (err as Error).message, RESPONSE.ERROR));
+    return NextResponse.json(catchError(err));
   }
 }

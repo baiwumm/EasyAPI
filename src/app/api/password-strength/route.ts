@@ -2,7 +2,7 @@
  * @Author: 白雾茫茫丶<baiwumm.com>
  * @Date: 2026-03-02 17:15:37
  * @LastEditors: 白雾茫茫丶<baiwumm.com>
- * @LastEditTime: 2026-03-03 09:50:29
+ * @LastEditTime: 2026-03-12 15:51:53
  * @Description: 密码强度检测
  */
 import { zxcvbn, zxcvbnOptions } from '@zxcvbn-ts/core'
@@ -12,7 +12,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import translations from './translations'
 
 import { RESPONSE } from '@/enums'
-import { responseMessage } from '@/lib/utils'
+import { catchError, responseMessage } from '@/lib/utils'
 
 export async function GET(request: NextRequest) {
   try {
@@ -44,6 +44,6 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(responseMessage(result));
   } catch (err) {
-    return NextResponse.json(responseMessage(null, (err as Error).message, RESPONSE.ERROR));
+    return NextResponse.json(catchError(err));
   }
 }

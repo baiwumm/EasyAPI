@@ -17,6 +17,20 @@ export const responseMessage = (
 export const isSuccess = (code?: number): boolean => code === RESPONSE.SUCCESS;
 
 /**
+ * @description: 统一处理 catch 错误
+ */
+export const catchError = (err: unknown): App.IResponse => {
+  let message = "未知错误";
+
+  if (err instanceof Error) {
+    message = err.message;
+  } else if (typeof err === "string") {
+    message = err;
+  }
+  return responseMessage(null, message, RESPONSE.ERROR)
+};
+
+/**
  * Dynamically get a nested value from an array or
  * object with a string.
  *

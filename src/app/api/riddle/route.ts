@@ -9,7 +9,7 @@ import { NextResponse } from 'next/server'
 
 import { RESPONSE } from '@/enums'
 import { getSupabaseServerClient } from '@/lib/supabase/server'
-import { pick, responseMessage } from '@/lib/utils'
+import { catchError, pick, responseMessage } from '@/lib/utils'
 
 export async function GET() {
   try {
@@ -25,6 +25,6 @@ export async function GET() {
 
     return NextResponse.json(responseMessage(pick(data, ['riddle', 'answer'])));
   } catch (err) {
-    return NextResponse.json(responseMessage(null, (err as Error).message, RESPONSE.ERROR));
+    return NextResponse.json(catchError(err));
   }
 }

@@ -2,14 +2,14 @@
  * @Author: 白雾茫茫丶<baiwumm.com>
  * @Date: 2026-03-03 11:16:56
  * @LastEditors: 白雾茫茫丶<baiwumm.com>
- * @LastEditTime: 2026-03-03 11:22:59
+ * @LastEditTime: 2026-03-12 15:47:06
  * @Description: 颜色转换
  */
 import { NextRequest, NextResponse } from 'next/server'
 import tinycolor from "tinycolor2";
 
 import { RESPONSE } from '@/enums';
-import { responseMessage } from '@/lib/utils';
+import { catchError, responseMessage } from '@/lib/utils';
 
 export async function GET(request: NextRequest) {
   try {
@@ -33,6 +33,6 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(responseMessage(result));
   } catch (err) {
-    return NextResponse.json(responseMessage(null, (err as Error).message, RESPONSE.ERROR));
+    return NextResponse.json(catchError(err));
   }
 }
