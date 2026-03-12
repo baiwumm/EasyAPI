@@ -1,5 +1,22 @@
 # Changelog
 
+## [2.5.2](https://github.com/baiwumm/EasyAPI/compare/2.5.1...2.5.2) (2026-03-12)
+
+### ✨ Features | 新功能
+
+* 优化接口 catch 错误编码 ([dccc0e4](https://github.com/baiwumm/EasyAPI/commit/dccc0e440d2063ac2279de1562ef07d415f21bad))
+
+### ⚡ Performance Improvements | 性能优化
+
+* 统一处理 route 的 catch 错误 ([585a2ed](https://github.com/baiwumm/EasyAPI/commit/585a2edc8e4247300506b556b213da801abeca3d))
+* **Barcode:** 新增《生成条形码》接口和页面 ([c5765a0](https://github.com/baiwumm/EasyAPI/commit/c5765a01016c983eac265ebff8ddb6c61be29931))
+* **Barcode:** 优化 UI 显示和错误提示 ([aed3044](https://github.com/baiwumm/EasyAPI/commit/aed304452b322177110fcd20843f04b2474a9876))
+* **RandomIdCard:** 新增《随机身份证号》接口和页面 ([9f32f04](https://github.com/baiwumm/EasyAPI/commit/9f32f0435bf132bb8abe1cd82155de67aed2faac))
+
+### 🔧 Continuous Integration | CI 配置
+
+* 新增 jsbarcode、xmldom、sharp包 ([1004172](https://github.com/baiwumm/EasyAPI/commit/1004172d9f205e77dbf0163e8e06bc4d5983c2e9))
+
 ## [2.5.1](https://github.com/baiwumm/EasyAPI/compare/2.5.0...2.5.1) (2026-03-11)
 
 ### 💄 Styles | 风格
