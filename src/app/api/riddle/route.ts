@@ -25,6 +25,6 @@ export async function GET() {
 
     return NextResponse.json(responseMessage(pick(data, ['riddle', 'answer'])));
   } catch (err) {
-    return NextResponse.json(responseMessage(null, (err as Error).message, -1));
+    return NextResponse.json(responseMessage(null, (err as Error).message, RESPONSE.ERROR));
   }
 }

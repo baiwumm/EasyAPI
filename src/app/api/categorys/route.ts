@@ -88,7 +88,7 @@ export async function GET(request: NextRequest) {
       pageSize,
     }));
   } catch (err) {
-    return NextResponse.json(responseMessage(null, (err as Error).message, -1));
+    return NextResponse.json(responseMessage(null, (err as Error).message, RESPONSE.ERROR));
   }
 }
 
@@ -117,6 +117,6 @@ export async function POST(request: NextRequest) {
     }
     return NextResponse.json(responseMessage(data));
   } catch (err) {
-    return NextResponse.json(responseMessage(null, (err as Error).message, -1));
+    return NextResponse.json(responseMessage(null, (err as Error).message, RESPONSE.ERROR));
   }
 }

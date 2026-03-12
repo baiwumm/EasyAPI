@@ -58,7 +58,7 @@ request.interceptors.response.use(
     // 配置 skipErrorHandler 会跳过默认的错误处理，用于项目中部分特殊的接口
     if (!isSuccess(code) && !get(response, 'config.skipErrorHandler', false)) {
       // 其它状态码统一提示错误信息
-      toast.danger(msg || RESPONSE.label(1), {
+      toast.danger(msg || RESPONSE.label(RESPONSE.ERROR), {
         indicator: <CircleXmarkFill />,
         timeout: 3000
       })

@@ -38,7 +38,7 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
     // 返回更新后的菜单数据
     return NextResponse.json(responseMessage(data));
   } catch (err) {
-    return NextResponse.json(responseMessage(null, (err as Error).message, -1));
+    return NextResponse.json(responseMessage(null, (err as Error).message, RESPONSE.ERROR));
   }
 }
 
@@ -66,6 +66,6 @@ export async function DELETE(request: Request, { params }: { params: Promise<{ i
     // 返回成功响应
     return NextResponse.json(responseMessage(data));
   } catch (err) {
-    return NextResponse.json(responseMessage(null, (err as Error).message, -1));
+    return NextResponse.json(responseMessage(null, (err as Error).message, RESPONSE.ERROR));
   }
 }

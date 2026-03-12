@@ -2,7 +2,7 @@
  * @Author: 白雾茫茫丶<baiwumm.com>
  * @Date: 2026-03-02 15:03:31
  * @LastEditors: 白雾茫茫丶<baiwumm.com>
- * @LastEditTime: 2026-03-02 17:15:48
+ * @LastEditTime: 2026-03-12 09:40:41
  * @Description: 生成二维码
  */
 import { NextRequest, NextResponse } from 'next/server'
@@ -66,12 +66,12 @@ export async function GET(request: NextRequest) {
       width: size,
     });
 
-    return new NextResponse(buffer, {
+    return new NextResponse(new Uint8Array(buffer), {
       headers: {
         "Content-Type": "image/png",
       },
     });
   } catch (err) {
-    return NextResponse.json(responseMessage(null, (err as Error).message, -1));
+    return NextResponse.json(responseMessage(null, (err as Error).message, RESPONSE.ERROR));
   }
 }

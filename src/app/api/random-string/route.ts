@@ -64,6 +64,6 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(responseMessage(result))
   } catch (err) {
-    return NextResponse.json(responseMessage(null, (err as Error).message, -1));
+    return NextResponse.json(responseMessage(null, (err as Error).message, RESPONSE.ERROR));
   }
 }
