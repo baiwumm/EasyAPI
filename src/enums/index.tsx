@@ -69,83 +69,92 @@ export const BARCODE_FORMATS = Enum({
   CODE128: {
     value: "CODE128",
     label: "CODE 128",
-    description: "高密度条形码，支持完整 ASCII 字符集，最常用的通用条码",
-    regex: /^[\x00-\x7F]+$/,
-    message: "CODE128 只支持 ASCII 字符（不支持中文）",
-    example: "HELLO123456"
+    description: "高密度条形码，支持完整 ASCII 字符集，是最常用的通用条码格式。",
+    example: "HELLO123456",
+    charset: "ASCII",
+    hint: ''
   },
+
   CODE39: {
     value: "CODE39",
     label: "CODE 39",
-    description: "支持数字、大写字母和少量符号，常用于工业、物流和军工领域",
-    regex: /^[0-9A-Z\-\. $/+%]+$/,
-    message: "CODE39 只支持大写字母、数字和 - . $ / + %",
-    example: "CODE39TEST"
+    description: "支持数字、大写字母和少量符号，常用于工业、物流和军工领域。",
+    example: "CODE39TEST",
+    charset: "0-9 A-Z - . $ / + %",
+    hint: ''
   },
+
   CODE93: {
     value: "CODE93",
     label: "CODE 93",
-    description: "CODE39 的升级版本，密度更高，可靠性更强",
-    regex: /^[\x00-\x7F]+$/,
-    message: "CODE93 只支持 ASCII 字符",
-    example: "CODE93TEST"
+    description: "CODE39 的升级版本，密度更高，支持完整 ASCII 字符。",
+    example: "CODE93TEST",
+    charset: "ASCII",
+    hint: ''
   },
+
   EAN13: {
     value: "EAN13",
     label: "EAN-13",
-    description: "13位国际商品条码，全球零售商品最常见",
-    regex: /^\d{13}$/,
-    message: "EAN13 必须是 13 位数字",
-    example: "978020137962"
+    description: "13位国际商品条码，全球零售商品最常见的条码标准。",
+    example: "978020137962",
+    charset: '',
+    hint: "输入 12 位数字即可，系统会自动补充第 13 位校验码。",
   },
+
   EAN8: {
     value: "EAN8",
     label: "EAN-8",
-    description: "8位商品条码，用于体积较小的商品",
-    regex: /^\d{8}$/,
-    message: "EAN8 必须是 8 位数字",
-    example: "96385074"
+    description: "8位商品条码，适用于体积较小的商品包装。",
+    example: "9638507",
+    charset: '',
+    hint: "输入 7 位数字即可，系统会自动补充第 8 位校验码。",
   },
+
   UPC: {
     value: "UPC",
     label: "UPC",
-    description: "美国和加拿大常用的商品条码（12位）",
-    regex: /^\d{12}$/,
-    message: "UPC 必须是 12 位数字",
-    example: "123456789999"
+    description: "北美地区常用的商品条码标准（UPC-A）。",
+    example: "12345678999",
+    charset: '',
+    hint: "输入 11 位数字即可，系统会自动补充第 12 位校验码。",
   },
+
   ITF14: {
     value: "ITF14",
     label: "ITF-14",
-    description: "用于物流和外箱包装的条码，固定14位数字",
-    regex: /^\d{14}$/,
-    message: "ITF14 必须是 14 位数字",
-    example: "10012345678902"
+    description: "用于物流包装箱的条码标准，通常用于外箱识别。",
+    example: "1001234567890",
+    charset: '',
+    hint: "输入 13 位数字即可，系统会自动补充第 14 位校验码。",
   },
+
   MSI: {
     value: "MSI",
     label: "MSI",
-    description: "库存管理条码，常见于仓储系统",
-    regex: /^\d+$/,
-    message: "MSI 只支持数字",
-    example: "123456789"
+    description: "库存管理系统常用条码格式，仅支持数字。",
+    example: "123456789",
+    charset: "0-9",
+    hint: ''
   },
+
   pharmacode: {
     value: "pharmacode",
     label: "Pharmacode",
-    description: "制药行业条码，用于药品包装识别",
-    regex: /^\d+$/,
-    message: "Pharmacode 只支持数字",
-    example: "12345"
+    description: "制药行业使用的条码，用于药品包装识别。",
+    example: "12345",
+    charset: "0-9",
+    hint: ''
   },
+
   codabar: {
     value: "codabar",
     label: "Codabar",
-    description: "常用于图书馆、血库和物流系统",
-    regex: /^[A-D][0-9\-$:/.+]+[A-D]$/,
-    message: "Codabar 必须以 A-D 开头和结尾",
-    example: "A123456A"
-  }
+    description: "常用于图书馆、血库和物流系统的条码格式。",
+    example: "A123456A",
+    charset: "0-9 - $ : / . +",
+    hint: "必须以 A、B、C 或 D 开头和结尾。",
+  },
 });
 
 /**

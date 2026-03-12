@@ -2,7 +2,7 @@
  * @Author: 白雾茫茫丶<baiwumm.com>
  * @Date: 2026-03-12 09:22:58
  * @LastEditors: 白雾茫茫丶<baiwumm.com>
- * @LastEditTime: 2026-03-12 15:39:53
+ * @LastEditTime: 2026-03-12 16:09:45
  * @Description: 生成条形码
  */
 import JsBarcode, { type Options } from "jsbarcode";
@@ -19,18 +19,6 @@ function isValidFormat(format: string): format is BarcodeFormat {
   return BARCODE_FORMATS.keys.includes(format as BarcodeFormat);
 }
 
-function validateText(format: string, text: string) {
-  const rule = BARCODE_FORMATS.raw(format);
-
-  if (!rule) return null;
-
-  if (!rule.regex.test(text)) {
-    return rule.message;
-  }
-
-  return null;
-}
-
 export async function GET(request: NextRequest) {
   try {
     // 解析 URL 查询参数
@@ -45,12 +33,6 @@ export async function GET(request: NextRequest) {
 
     if (!isValidFormat(format)) {
       return NextResponse.json(responseMessage(null, `format 格式错误，只支持${BARCODE_FORMATS.labels.join('、')}`, RESPONSE.ERROR));
-    }
-
-    const error = validateText(format, text);
-
-    if (error) {
-      return NextResponse.json(responseMessage(null, error, RESPONSE.ERROR));
     }
 
     // 创建 SVG DOM

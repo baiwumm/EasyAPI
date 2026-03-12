@@ -9,6 +9,7 @@ import { type FC, useEffect, useMemo, useState } from 'react';
 import RefreshButton from '@/components/RefreshButton';
 import RequestContent from '@/components/RequestContent';
 import { BARCODE_FORMATS, BARCODE_TYPES, RESPONSE } from '@/enums'
+import { isSuccess } from '@/lib/utils';
 
 type BarCodeTypes = typeof BARCODE_TYPES.valueType;
 type BarcodeFormats = typeof BARCODE_FORMATS.valueType;
@@ -43,11 +44,13 @@ const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
 
       // 如果是 JSON，说明是错误信息
       if (contentType.includes("application/json")) {
-        const json = await res.json();
-        toast.danger(json?.msg || RESPONSE.label(RESPONSE.ERROR), {
-          indicator: <CircleXmarkFill />,
-          timeout: 3000
-        })
+        const { code, msg } = await res.json();
+        if (!isSuccess(code)) {
+          toast.danger(msg || RESPONSE.label(RESPONSE.ERROR), {
+            indicator: <CircleXmarkFill />,
+            timeout: 3000
+          })
+        }
         return null;
       }
 
@@ -85,10 +88,6 @@ const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
       toast.danger("参数 text 必填");
       return;
     }
-    if (text.length > 2000) {
-      toast.danger("参数 text 长度不能超过 2000 个字符");
-      return;
-    }
     run();
   }
 
@@ -103,6 +102,10 @@ const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
     link.click();
     document.body.removeChild(link);
   };
+
+  //  format 配置
+
+  const formatRaw = useMemo(() => BARCODE_FORMATS.raw(format), [format]);
 
   useEffect(() => {
     return () => {
@@ -132,7 +135,10 @@ const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
                     className="max-w-125 h-auto"
                     unoptimized
                   />
-                  <Description className="text-danger">{BARCODE_FORMATS.raw(format).description}</Description>
+                  <Description className="text-danger">{formatRaw.description}</Description>
+                  {formatRaw.hint && <Description className="text-danger">提示: {formatRaw.hint}</Description>}
+                  {formatRaw.charset && <Description className="text-danger">允许字符: {formatRaw.charset}</Description>}
+                  {formatRaw.example && <Description className="text-danger">示例: {formatRaw.example}</Description>}
                 </>
               ) : null}
             </div>
