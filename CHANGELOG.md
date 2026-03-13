@@ -1,5 +1,27 @@
 # Changelog
 
+## [2.6.0](https://github.com/baiwumm/EasyAPI/compare/2.5.2...2.6.0) (2026-03-13)
+
+### ✨ Features | 新功能
+
+* **password-strength:** 优化接口信息中文展示 ([a465193](https://github.com/baiwumm/EasyAPI/commit/a46519362ad85cfaa52303fc3ccd71ea8e851c14))
+
+### ⚡ Performance Improvements | 性能优化
+
+* 统一组件代码格式 ([bdea0a9](https://github.com/baiwumm/EasyAPI/commit/bdea0a9330453250bbea0da8f6f355112d2f6f43))
+* **PostalCode:** 优化接口和页面逻辑 ([c9652bf](https://github.com/baiwumm/EasyAPI/commit/c9652bf88e3638c92aba40c920259631a2436b5b))
+* **Qrcode:** 优化接口和页面逻辑 ([8fe3b47](https://github.com/baiwumm/EasyAPI/commit/8fe3b47e2b88b33c6d9e4ef69922c02d55f122e9))
+* **RandomAvatar:** 优化接口和页面展示 ([266d828](https://github.com/baiwumm/EasyAPI/commit/266d8286deca09978aeaa4bb64fc9fafd1e456b7))
+* **RandomColor:** 优化接口和页面逻辑 ([9bd0855](https://github.com/baiwumm/EasyAPI/commit/9bd08553429d8283c709204d047e5fc1e516063b))
+* **RandomImage:** 新增《随机图片》接口和页面 ([29cd461](https://github.com/baiwumm/EasyAPI/commit/29cd461abd8464f7c7e239452c7f35c87970ba73))
+* **RandomPerson:** 新增《随机人物》接口和页面 ([c25b8e1](https://github.com/baiwumm/EasyAPI/commit/c25b8e1258f5aa82e0cc31d5caa44c10ec0f4a7f))
+* **RandomString:** 优化接口和页面逻辑 ([7f41106](https://github.com/baiwumm/EasyAPI/commit/7f41106e9129329b0c11426a0768bf36108dae81))
+* **RandomUser:** 优化接口和页面逻辑 ([35ca3ad](https://github.com/baiwumm/EasyAPI/commit/35ca3ad629c605e275b3e70d7a48ebf9f4cbe72c))
+
+### 🔧 Continuous Integration | CI 配置
+
+* 新增 @zxcvbn-ts/language-zh 包 ([9d98e31](https://github.com/baiwumm/EasyAPI/commit/9d98e312d57e54db544dd556d414a59d9b2656e8))
+
 ## [2.5.2](https://github.com/baiwumm/EasyAPI/compare/2.5.1...2.5.2) (2026-03-12)
 
 ### ✨ Features | 新功能
