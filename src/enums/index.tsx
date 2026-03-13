@@ -45,25 +45,25 @@ export const REQUEST_METHODS = Enum({
 })
 
 /**
- * @description: 随机头像
+ * @description: 随机头像 - 风格
  */
 export const AVATAR_STYLES = Enum({
   RANDOM: { value: 'random', label: '随机风格' },
   ADVENTURER: { value: 'adventurer', label: '冒险者' },
-  AVATAAARS: { label: "卡通人物", value: "avataaars" },
-  BOTTTS: { label: "机器人", value: "bottts" },
-  PIXELART: { label: "像素风", value: "pixelArt" },
-  FUNEMOJI: { label: "趣味表情", value: "funEmoji" },
-  LORELEI: { label: "人物插画", value: "lorelei" },
-  MICAH: { label: "简约人物", value: "micah" },
-  NOTIONISTS: { label: "Notion 风格", value: "notionists" },
-  OPENPEEPS: { label: "开源人物", value: "openPeeps" },
-  PERSONAS: { label: "人物头像", value: "personas" },
-  THUMBS: { label: "手势头像", value: "thumbs" }
+  AVATAAARS: { value: "avataaars", label: "卡通人物" },
+  BOTTTS: { value: "bottts", label: "机器人" },
+  PIXELART: { value: "pixelArt", label: "像素风" },
+  FUNEMOJI: { value: "funEmoji", label: "趣味表情" },
+  LORELEI: { value: "lorelei", label: "人物插画" },
+  MICAH: { value: "micah", label: "简约人物" },
+  NOTIONISTS: { value: "notionists", label: "Notion 风格" },
+  OPENPEEPS: { value: "openPeeps", label: "开源人物" },
+  PERSONAS: { value: "personas", label: "人物头像" },
+  THUMBS: { value: "thumbs", label: "手势头像" }
 })
 
 /**
- * @description: 条形码类型
+ * @description: 条形码 - 类型
  */
 export const BARCODE_FORMATS = Enum({
   CODE128: {
@@ -158,9 +158,29 @@ export const BARCODE_FORMATS = Enum({
 });
 
 /**
- * @description: 条形码生成格式
+ * @description: 条形码 - 生成格式
  */
 export const BARCODE_TYPES = Enum({
   SVG: { value: 'svg', label: 'SVG' },
   PNG: { value: 'png', label: 'PNG' },
 })
+
+/**
+ * @description: 随机人物肖像 - 性别
+ */
+export const PERSON_SEXS = Enum({
+  GENERIC: { value: 'generic', label: '通用' },
+  MALE: { value: 'male', label: '男性' },
+  FEMALE: { value: "female", label: "女性" }
+})
+
+/**
+ * @description: 随机人物肖像 - 大小
+ */
+export const PERSON_SIZES = Enum({
+  SIZE_32: { value: 32, label: "32" },
+  SIZE_64: { value: 64, label: "64" },
+  SIZE_128: { value: 128, label: "128" },
+  SIZE_256: { value: 256, label: "256" },
+  SIZE_512: { value: 512, label: "512" }
+});
