@@ -36,6 +36,7 @@
     "@vercel/analytics": "^1.6.1",
     "@zxcvbn-ts/core": "^3.0.4",
     "@zxcvbn-ts/language-common": "^3.0.4",
+    "@zxcvbn-ts/language-zh": "4.0.0-beta.3",
     "ahooks": "^3.9.6",
     "axios": "^1.13.2",
     "class-variance-authority": "^0.7.1",
