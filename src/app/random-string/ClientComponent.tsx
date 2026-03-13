@@ -8,52 +8,15 @@ import { type FC, useMemo, useState } from 'react';
 
 import RefreshButton from '@/components/RefreshButton';
 import RequestContent from '@/components/RequestContent';
+import { RANDOM_STRING_TYPES } from '@/enums';
 import { useCopy } from '@/hooks/use-copy';
 import { get } from '@/lib/utils';
 import { getApiData } from '@/services/common';
 
-const RANDOM_STRING_TYPE_OPTIONS = [
-  {
-    label: '字母 + 数字',
-    value: 'alphanumeric',
-    description: '最常用的随机字符串类型'
-  },
-  {
-    label: 'URL 安全 Base64',
-    value: 'url-safe',
-    description: '适用于 URL，不包含 + /'
-  },
-  {
-    label: '纯数字（0-9）',
-    value: 'numeric',
-    description: '常用于验证码、短信码'
-  },
-  {
-    label: '易区分字符',
-    value: 'distinguishable',
-    description: '去除 0/O、1/l 等易混淆字符'
-  },
-  {
-    label: '十六进制（0-9 a-f）',
-    value: 'hex',
-    description: '常用于哈希、Token、ID'
-  },
-  {
-    label: 'Base64 编码',
-    value: 'base64',
-    description: '包含大小写字母、数字、+ /'
-  },
-  {
-    label: '可打印 ASCII 字符',
-    value: 'ascii-printable',
-    description: '包含字母、数字、符号、标点'
-  }
-]
-
 const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
   const pathname = usePathname();
   const { copy } = useCopy();
-  const [type, setType] = useState<Options['type']>('alphanumeric');
+  const [type, setType] = useState<Options['type']>(RANDOM_STRING_TYPES.ALPHANUMERIC);
   const [length, setLength] = useState(16); // 字符串长度
   const [count, setCount] = useState(10); // 生成的数量
   const [characters, setCharacters] = useState(''); // 自定义字符集
@@ -107,11 +70,11 @@ const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
             </Select.Trigger>
             <Select.Popover>
               <ListBox>
-                {RANDOM_STRING_TYPE_OPTIONS.map(({ value, label, description }) => (
+                {RANDOM_STRING_TYPES.items.map(({ value, label, raw }) => (
                   <ListBox.Item key={value} id={value} textValue={label}>
                     <div className="flex flex-col">
                       <Label>{label}</Label>
-                      <Description>{description}</Description>
+                      <Description>{raw.description}</Description>
                     </div>
                     <ListBox.ItemIndicator />
                   </ListBox.Item>

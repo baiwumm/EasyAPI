@@ -212,3 +212,16 @@ export const RANDOM_COLOR_FORMATS = Enum({
   HSL: { value: "hsl", label: "Hsl" },
   HSV: { value: "hsv", label: "Hsv" },
 });
+
+/**
+ * @description: 随机字符串 - 类型
+ */
+export const RANDOM_STRING_TYPES = Enum({
+  ALPHANUMERIC: { value: 'alphanumeric', label: '字母 + 数字', description: '最常用的随机字符串类型' },
+  URL_SAFE: { value: 'url-safe', label: 'URL 安全 Base64', description: '适用于 URL，不包含 + /' },
+  NUMERIC: { value: 'numeric', label: '纯数字（0-9）', description: '常用于验证码、短信码' },
+  DISTINGUISHABLE: { value: 'distinguishable', label: '易区分字符', description: '去除 0/O、1/l 等易混淆字符' },
+  HEX: { value: 'hex', label: '十六进制（0-9 a-f）', description: '常用于哈希、Token、ID' },
+  BASE64: { value: 'base64', label: 'Base64 编码', description: '包含大小写字母、数字、+ /' },
+  ASCII_PRINTABLE: { value: 'ascii-printable', label: '可打印 ASCII 字符', description: '包含字母、数字、符号、标点' }
+});
