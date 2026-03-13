@@ -2,24 +2,25 @@
  * @Author: 白雾茫茫丶<baiwumm.com>
  * @Date: 2026-03-06 10:24:39
  * @LastEditors: 白雾茫茫丶<baiwumm.com>
- * @LastEditTime: 2026-03-12 15:54:14
+ * @LastEditTime: 2026-03-13 14:47:40
  * @Description: 随机用户
  */
 import { fakerZH_CN as faker } from "@faker-js/faker";
 import { NextRequest, NextResponse } from 'next/server'
 
+import { RANDOM_USER_GENDER } from '@/enums';
 import { catchError, responseMessage } from '@/lib/utils'
 
-function createUser(gender?: string) {
+function createUser(gender: string | null) {
   const sex =
-    gender === "male" || gender === "female"
+    gender === RANDOM_USER_GENDER.MALE || gender === RANDOM_USER_GENDER.FEMALE
       ? gender
-      : faker.helpers.arrayElement(["male", "female"]);
+      : faker.helpers.arrayElement([RANDOM_USER_GENDER.MALE, RANDOM_USER_GENDER.FEMALE]);
 
   return {
     id: faker.string.uuid(),
     name: faker.person.fullName({ sex }),
-    gender: { female: '女', male: '男' }[sex] || '未知',
+    gender: RANDOM_USER_GENDER.label(sex) || '未知',
     username: faker.internet.username(),
     phone: `1${faker.string.numeric(10)}`,
     email: faker.internet.email(),
@@ -45,7 +46,7 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
 
     const count = Math.min(Number(searchParams.get("count")) || 1, 20);
-    const gender = searchParams.get("gender") || undefined;
+    const gender = searchParams.get("gender");
 
     const users = Array.from({ length: count }, () => createUser(gender));
 

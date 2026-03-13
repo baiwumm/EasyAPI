@@ -225,3 +225,12 @@ export const RANDOM_STRING_TYPES = Enum({
   BASE64: { value: 'base64', label: 'Base64 编码', description: '包含大小写字母、数字、+ /' },
   ASCII_PRINTABLE: { value: 'ascii-printable', label: '可打印 ASCII 字符', description: '包含字母、数字、符号、标点' }
 });
+
+/**
+ * @description: 随机用户 - 性别
+ */
+export const RANDOM_USER_GENDER = Enum({
+  GENERIC: { value: 'generic', label: '随机' },
+  MALE: { value: 'male', label: '男' },
+  FEMALE: { value: "female", label: "女" }
+})

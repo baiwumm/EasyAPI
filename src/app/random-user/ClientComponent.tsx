@@ -8,13 +8,16 @@ import EmptyContent from '@/components/EmptyContent';
 import RefreshButton from '@/components/RefreshButton';
 import RequestContent from '@/components/RequestContent';
 import TableLoading from '@/components/TableLoading';
+import { RANDOM_USER_GENDER } from '@/enums';
 import { get } from '@/lib/utils';
 import { getApiData } from '@/services/common';
+
+type Gender = typeof RANDOM_USER_GENDER.valueType;
 
 const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
   const pathname = usePathname();
   const [count, setCount] = useState(5);
-  const [gender, setGender] = useState('all');
+  const [gender, setGender] = useState<Gender>(RANDOM_USER_GENDER.GENERIC);
 
   // 参数处理
   const params = useMemo(() => ({ count, gender }), [count, gender]);
@@ -64,7 +67,7 @@ const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
                             </div>
                           </div>
                         </Table.Cell>
-                        <Table.Cell><Chip color={gender === '男' ? 'accent' : 'warning'} variant='soft' className="rounded-full">{gender}</Chip></Table.Cell>
+                        <Table.Cell><Chip color={gender === RANDOM_USER_GENDER.label(RANDOM_USER_GENDER.MALE) ? 'accent' : 'warning'} variant='soft' className="rounded-full">{gender}</Chip></Table.Cell>
                         <Table.Cell>{phone}</Table.Cell>
                         <Table.Cell>{company}</Table.Cell>
                         <Table.Cell>{job}</Table.Cell>
@@ -82,6 +85,28 @@ const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
       {/* 底部区域 */}
       <div className="flex justify-center shrink-0">
         <div className="flex items-center gap-2 flex-wrap">
+          <Select
+            className="w-50"
+            placeholder="请选择性别"
+            aria-label="性别"
+            value={gender}
+            onChange={(value) => setGender(value as Gender)}
+          >
+            <Select.Trigger>
+              <Select.Value />
+              <Select.Indicator />
+            </Select.Trigger>
+            <Select.Popover>
+              <ListBox className="max-h-60 overflow-y-scroll">
+                {RANDOM_USER_GENDER.items.map(({ value, label }) => (
+                  <ListBox.Item key={value} id={value} textValue={label}>
+                    {label}
+                    <ListBox.ItemIndicator />
+                  </ListBox.Item>
+                ))}
+              </ListBox>
+            </Select.Popover>
+          </Select>
           <NumberField
             minValue={1}
             maxValue={20}
@@ -95,34 +120,6 @@ const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
               <NumberField.IncrementButton />
             </NumberField.Group>
           </NumberField>
-          <Select
-            className="w-50"
-            placeholder="请选择性别"
-            aria-label="性别"
-            value={gender}
-            onChange={(value) => setGender(value as string)}
-          >
-            <Select.Trigger>
-              <Select.Value />
-              <Select.Indicator />
-            </Select.Trigger>
-            <Select.Popover>
-              <ListBox className="max-h-60 overflow-y-scroll">
-                <ListBox.Item id="all" textValue="随机">
-                  随机
-                  <ListBox.ItemIndicator />
-                </ListBox.Item>
-                <ListBox.Item id="male" textValue="男">
-                  男
-                  <ListBox.ItemIndicator />
-                </ListBox.Item>
-                <ListBox.Item id="female" textValue="女">
-                  女
-                  <ListBox.ItemIndicator />
-                </ListBox.Item>
-              </ListBox>
-            </Select.Popover>
-          </Select>
           <RefreshButton text='生成' loading={loading} onPress={run} />
         </div>
       </div>
