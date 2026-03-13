@@ -68,3 +68,12 @@ export const pick = <T extends object, TKeys extends keyof T>(
     return acc
   }, {} as Pick<T, TKeys>)
 }
+
+/**
+ * @description: 限制值范围
+ * @param {number} value
+ * @param {number} min
+ * @param {number} max
+ * @return {number}
+ */
+export const clamp = (value: number, min: number = 0, max: number = Number.MAX_SAFE_INTEGER): number => Math.min(Math.max(value, min), max);

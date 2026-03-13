@@ -2,7 +2,7 @@
  * @Author: 白雾茫茫丶<baiwumm.com>
  * @Date: 2026-03-06 17:33:50
  * @LastEditors: 白雾茫茫丶<baiwumm.com>
- * @LastEditTime: 2026-03-12 18:05:32
+ * @LastEditTime: 2026-03-13 17:56:26
  * @Description: 
  */
 import {
@@ -23,7 +23,7 @@ import { faker } from "@faker-js/faker";
 import { NextRequest, NextResponse } from 'next/server'
 
 import { AVATAR_STYLES } from '@/enums';
-import { catchError, responseMessage } from '@/lib/utils'
+import { catchError, clamp, responseMessage } from '@/lib/utils'
 
 /**
  * style -> dicebear style
@@ -50,16 +50,14 @@ export async function GET(request: NextRequest) {
     /**
    * 参数
    */
-    const countParam = parseInt(params.get("count") || "1")
-    const sizeParam = parseInt(params.get("size") || "128")
     const styleParam = (params.get("style") || AVATAR_STYLES.ADVENTURER) as typeof AVATAR_STYLES.values[number];
     const seedParam = params.get("seed")
 
     /**
      * 参数限制
      */
-    const count = Math.min(Math.max(countParam, 1), 20)
-    const size = Math.min(Math.max(sizeParam, 16), 512)
+    const count = clamp(parseInt(params.get("count") || "1"), 1, 20);
+    const size = clamp(parseInt(params.get("size") || "128"), 16, 512);
 
     /**
      * style 校验
