@@ -192,3 +192,12 @@ export const POSTALCODE_TYPES = Enum({
   CODE_TO_AREA: { value: 1, label: "邮编查地区" },
   AREA_TO_CODE: { value: 2, label: "地区查邮编" },
 });
+
+/**
+ * @description: 生成二维码 - 格式
+ */
+export const QRCODE_FORMATS = Enum({
+  PNG: { value: "png", label: "PNG" },
+  SVG: { value: "svg", label: "SVG" },
+  DATAURL: { value: "dataurl", label: "DATAURL" },
+});

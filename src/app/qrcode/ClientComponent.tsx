@@ -1,6 +1,6 @@
 'use client'
 import { ArrowDownToSquare } from '@gravity-ui/icons';
-import { Button, Input, type Key, ListBox, NumberField, Select, toast } from '@heroui/react';
+import { Button, Input, ListBox, NumberField, Select, toast } from '@heroui/react';
 import { useRequest } from 'ahooks';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
@@ -8,16 +8,13 @@ import { type FC, useEffect, useMemo, useState } from 'react';
 
 import RefreshButton from '@/components/RefreshButton';
 import RequestContent from '@/components/RequestContent';
+import { QRCODE_FORMATS } from '@/enums';
 
-const formatOptions = [
-  { value: "png", label: "PNG" },
-  { value: "svg", label: "SVG" },
-  { value: "dataurl", label: "DATAURL" },
-];
+type Format = typeof QRCODE_FORMATS.valueType;
 
 const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
   const pathname = usePathname();
-  const [format, setFormat] = useState<Key | null>("png"); // 生成格式
+  const [format, setFormat] = useState<Format>(QRCODE_FORMATS.PNG); // 生成格式
   const [size, setSize] = useState(256); // 二维码大小
   const [text, setText] = useState(process.env.NEXT_PUBLIC_APP_NAME!);
   const [imgSrc, setImgSrc] = useState("");
@@ -46,10 +43,10 @@ const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
       }
 
       // 根据 format 决定如何读取响应
-      if (format === 'dataurl') {
+      if (format === QRCODE_FORMATS.DATAURL) {
         const json = await res.json();
         return json.data; // 直接返回 data 字符串
-      } else if (format === 'svg') {
+      } else if (format === QRCODE_FORMATS.SVG) {
         const svgText = await res.text();
         // 转为 data URL 以便 img 标签显示
         return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svgText)}`;
@@ -121,7 +118,7 @@ const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
             className="w-50"
             placeholder="请选择生成格式"
             value={format}
-            onChange={(value) => setFormat(value)}
+            onChange={(value) => setFormat(value as Format)}
             aria-label="生成格式"
           >
             <Select.Trigger>
@@ -130,7 +127,7 @@ const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
             </Select.Trigger>
             <Select.Popover>
               <ListBox>
-                {formatOptions.map(({ value, label }) => (
+                {QRCODE_FORMATS.items.map(({ value, label }) => (
                   <ListBox.Item key={value} id={value} textValue={label}>
                     {label}
                     <ListBox.ItemIndicator />

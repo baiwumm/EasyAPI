@@ -2,13 +2,13 @@
  * @Author: 白雾茫茫丶<baiwumm.com>
  * @Date: 2026-03-02 15:03:31
  * @LastEditors: 白雾茫茫丶<baiwumm.com>
- * @LastEditTime: 2026-03-12 09:40:41
+ * @LastEditTime: 2026-03-13 14:17:23
  * @Description: 生成二维码
  */
 import { NextRequest, NextResponse } from 'next/server'
 import QRCode from "qrcode"
 
-import { RESPONSE } from '@/enums'
+import { QRCODE_FORMATS, RESPONSE } from '@/enums'
 import { catchError, responseMessage } from '@/lib/utils'
 
 export async function GET(request: NextRequest) {
@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
     const { searchParams } = request.nextUrl;
 
     const text = searchParams.get("text") || "";
-    const format = searchParams.get("format") || "png"; // png | svg | dataurl
+    const format = searchParams.get("format") || QRCODE_FORMATS.PNG; // png | svg | dataurl
     const size = parseInt(searchParams.get("size") || "256");
 
     // 参数校验
@@ -29,9 +29,9 @@ export async function GET(request: NextRequest) {
       return NextResponse.json(responseMessage(null, "参数 text 长度不能超过 2000 个字符", RESPONSE.ERROR));
     }
 
-    const allowedFormats = ["png", "svg", "dataurl"];
-    if (!allowedFormats.includes(format)) {
-      return NextResponse.json(responseMessage(null, `参数 format 必须是 ${allowedFormats.join(", ")}`, RESPONSE.ERROR));
+    const allowedFormats = QRCODE_FORMATS.values;
+    if (!allowedFormats.includes(format as typeof QRCODE_FORMATS.valueType)) {
+      return NextResponse.json(responseMessage(null, `参数 format 必须是 ${allowedFormats.join("、")}`, RESPONSE.ERROR));
     }
 
     if (isNaN(size) || size < 64 || size > 1000) {
@@ -39,7 +39,7 @@ export async function GET(request: NextRequest) {
     }
 
     // SVG
-    if (format === "svg") {
+    if (format === QRCODE_FORMATS.SVG) {
       const svg = await QRCode.toString(text, {
         type: "svg",
         width: size,
@@ -53,7 +53,7 @@ export async function GET(request: NextRequest) {
     }
 
     // DataURL
-    if (format === "dataurl") {
+    if (format === QRCODE_FORMATS.DATAURL) {
       const dataUrl = await QRCode.toDataURL(text, {
         width: size,
       });
