@@ -2,7 +2,7 @@
  * @Author: 白雾茫茫丶<baiwumm.com>
  * @Date: 2026-03-06 17:33:50
  * @LastEditors: 白雾茫茫丶<baiwumm.com>
- * @LastEditTime: 2026-03-12 15:52:40
+ * @LastEditTime: 2026-03-12 18:05:32
  * @Description: 
  */
 import {
@@ -18,7 +18,7 @@ import {
   pixelArt,
   thumbs
 } from "@dicebear/collection";
-import { createAvatar } from "@dicebear/core";
+import { createAvatar, type Style } from "@dicebear/core";
 import { faker } from "@faker-js/faker";
 import { NextRequest, NextResponse } from 'next/server'
 
@@ -28,7 +28,7 @@ import { catchError, responseMessage } from '@/lib/utils'
 /**
  * style -> dicebear style
  */
-const STYLE_MAP = {
+const STYLE_MAP: Record<string, Style<any>> = {
   adventurer,
   avataaars,
   bottts,
@@ -40,9 +40,7 @@ const STYLE_MAP = {
   openPeeps,
   personas,
   thumbs
-} as const;
-
-type AvatarStyle = keyof typeof STYLE_MAP
+};
 
 export async function GET(request: NextRequest) {
   try {
@@ -79,7 +77,7 @@ export async function GET(request: NextRequest) {
       ) as typeof styleParam
     }
 
-    const style = STYLE_MAP[styleValue as AvatarStyle]
+    const style = STYLE_MAP[styleValue]
 
     /**
      * 多个头像 → 返回 URL 数组
@@ -89,7 +87,7 @@ export async function GET(request: NextRequest) {
 
       const urls = Array.from({ length: count }, () => {
         const seed = faker.string.uuid();
-        return `${baseUrl}/api/avatar?seed=${seed}&size=${size}&style=${styleValue}`;
+        return `${baseUrl}/api/random-avatar?seed=${seed}&size=${size}&style=${styleValue}`;
       });
 
       return NextResponse.json(responseMessage(urls));
