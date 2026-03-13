@@ -7,11 +7,12 @@ import tinycolor from "tinycolor2";
 
 import RefreshButton from '@/components/RefreshButton';
 import RequestContent from '@/components/RequestContent';
+import { RANDOM_COLOR_FORMATS } from '@/enums';
 import { useCopy } from '@/hooks/use-copy';
 import { get } from '@/lib/utils';
 import { getApiData } from '@/services/common';
 
-type Format = "hex" | "rgb" | "hsl" | "hsv" | "all";
+type Format = typeof RANDOM_COLOR_FORMATS.valueType;
 
 type Color = string | {
   hex: string;
@@ -20,18 +21,10 @@ type Color = string | {
   hsv: string;
 };
 
-const formatOptions: { value: Format, label: string }[] = [
-  { value: "all", label: "全部" },
-  { value: "hex", label: "Hex" },
-  { value: "rgb", label: "Rgb" },
-  { value: "hsl", label: "Hsl" },
-  { value: "hsv", label: "Hsv" },
-];
-
 const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
   const pathname = usePathname();
   const { copy } = useCopy();
-  const [format, setFormat] = useState<Format>("all"); // 颜色格式
+  const [format, setFormat] = useState<Format>(RANDOM_COLOR_FORMATS.ALL); // 颜色格式
   const [count, setCount] = useState(10); // 生成的数量
 
   // 参数处理
@@ -86,7 +79,7 @@ const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
             </Select.Trigger>
             <Select.Popover>
               <ListBox>
-                {formatOptions.map(({ value, label }) => (
+                {RANDOM_COLOR_FORMATS.items.map(({ value, label }) => (
                   <ListBox.Item key={value} id={value} textValue={label}>
                     {label}
                     <ListBox.ItemIndicator />

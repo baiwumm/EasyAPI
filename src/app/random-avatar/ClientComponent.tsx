@@ -6,6 +6,8 @@ import { type FC, useState } from 'react';
 import RefreshButton from '@/components/RefreshButton';
 import { AVATAR_STYLES } from '@/enums';
 
+type Style = typeof AVATAR_STYLES.valueType;
+
 function generateUsers(length = 5) {
   return Array.from({ length }).map(() => ({
     name: faker.person.fullName(),
@@ -13,7 +15,7 @@ function generateUsers(length = 5) {
 }
 
 const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
-  const [style, setStyle] = useState<typeof AVATAR_STYLES.valueType>(AVATAR_STYLES.RANDOM);
+  const [style, setStyle] = useState<Style>(AVATAR_STYLES.RANDOM);
   const [users, setUsers] = useState(generateUsers);
   const [count, setCount] = useState(5); // 生成的数量
   const [size, setSize] = useState(128); // 生成的大小
@@ -55,7 +57,7 @@ const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
             placeholder="头像风格"
             aria-label="头像风格"
             value={style}
-            onChange={(value) => setStyle(value as typeof AVATAR_STYLES.valueType)}
+            onChange={(value) => setStyle(value as Style)}
           >
             <Select.Trigger>
               <Select.Value />

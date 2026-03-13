@@ -201,3 +201,14 @@ export const QRCODE_FORMATS = Enum({
   SVG: { value: "svg", label: "SVG" },
   DATAURL: { value: "dataurl", label: "DATAURL" },
 });
+
+/**
+ * @description: 随机颜色 - 格式
+ */
+export const RANDOM_COLOR_FORMATS = Enum({
+  ALL: { value: "all", label: "全部" },
+  HEX: { value: "hex", label: "Hex" },
+  RGB: { value: "rgb", label: "Rgb" },
+  HSL: { value: "hsl", label: "Hsl" },
+  HSV: { value: "hsv", label: "Hsv" },
+});
