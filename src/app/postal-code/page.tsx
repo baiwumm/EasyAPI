@@ -14,5 +14,5 @@ export const metadata: Metadata = {
 }
 
 export default function PostalCode() {
-  return <ClientComponent />
+  return <ClientComponent title='邮政编码查询' />
 }

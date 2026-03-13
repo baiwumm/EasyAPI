@@ -184,3 +184,11 @@ export const PERSON_SIZES = Enum({
   SIZE_256: { value: 256, label: "256" },
   SIZE_512: { value: 512, label: "512" }
 });
+
+/**
+ * @description: 邮政编码查询 - 方式
+ */
+export const POSTALCODE_TYPES = Enum({
+  CODE_TO_AREA: { value: 1, label: "邮编查地区" },
+  AREA_TO_CODE: { value: 2, label: "地区查邮编" },
+});

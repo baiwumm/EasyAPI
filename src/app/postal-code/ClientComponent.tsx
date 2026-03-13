@@ -2,17 +2,18 @@
 import { Chip, Input, ListBox, Select, Table, toast } from '@heroui/react';
 import { useRequest } from 'ahooks';
 import { usePathname } from 'next/navigation';
-import { type FC, useMemo, useState } from 'react';
+import { type FC, useState } from 'react';
 
 import CopyText from '@/components/CopyText';
 import EmptyContent from '@/components/EmptyContent';
 import RefreshButton from '@/components/RefreshButton';
 import RequestContent from '@/components/RequestContent';
 import TableLoading from '@/components/TableLoading';
+import { POSTALCODE_TYPES } from '@/enums';
 import { get } from '@/lib/utils';
 import { getApiData } from '@/services/common';
 
-type Type = 1 | 2;
+type Type = typeof POSTALCODE_TYPES.valueType;
 
 type PostalCode = {
   province: string;
@@ -22,19 +23,19 @@ type PostalCode = {
   postCode: string;
 }
 
-const title = '邮政编码查询';
-
-const ClientComponent: FC = () => {
+const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
   const pathname = usePathname();
-  const [type, setType] = useState<Type>(1);
+  const [type, setType] = useState<Type>(POSTALCODE_TYPES.CODE_TO_AREA);
   const [keyword, setKeyword] = useState('524200');
 
-  // 参数处理
-  const params = useMemo(() => ({ keyword, type }), [keyword, type]);
+  // 实际请求参数
+  const [params, setParams] = useState({ keyword, type });
 
   // 请求数据
   const { data, loading, error, run } = useRequest<PostalCode | PostalCode[], { keyword: string, type: number }[]>(
-    async () => get(await getApiData(pathname, params), 'data'),
+    async (params) => get(await getApiData(pathname, params), 'data'), {
+    defaultParams: [params]
+  },
   );
 
   // 请求数据
@@ -43,7 +44,9 @@ const ClientComponent: FC = () => {
       toast.danger("参数 keyWord 必填");
       return;
     }
-    run()
+    const newParams = { keyword, type };
+    setParams(newParams);
+    run(newParams);
   }
 
   // 列定义
@@ -67,7 +70,7 @@ const ClientComponent: FC = () => {
             <Table>
               <Table.ScrollContainer>
                 <Table.Content aria-label={title} className="min-w-80">
-                  {Array.isArray(data) || type === 2 ? (
+                  {Array.isArray(data) || params.type === POSTALCODE_TYPES.AREA_TO_CODE ? (
                     <>
                       <Table.Header>
                         {columns.map(({ label, value }) => (
@@ -121,14 +124,12 @@ const ClientComponent: FC = () => {
             </Select.Trigger>
             <Select.Popover>
               <ListBox>
-                <ListBox.Item id={1} textValue="邮编查地区">
-                  邮编查地区
-                  <ListBox.ItemIndicator />
-                </ListBox.Item>
-                <ListBox.Item id={2} textValue="地区查邮编">
-                  地区查邮编
-                  <ListBox.ItemIndicator />
-                </ListBox.Item>
+                {POSTALCODE_TYPES.items.map(({ value, label }) => (
+                  <ListBox.Item key={value} id={value} textValue={label}>
+                    {label}
+                    <ListBox.ItemIndicator />
+                  </ListBox.Item>
+                ))}
               </ListBox>
             </Select.Popover>
           </Select>
