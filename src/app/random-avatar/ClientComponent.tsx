@@ -1,7 +1,7 @@
 'use client'
 import { fakerZH_CN as faker } from "@faker-js/faker";
 import { Avatar, ListBox, NumberField, Select } from '@heroui/react';
-import { useState } from 'react';
+import { type FC, useState } from 'react';
 
 import RefreshButton from '@/components/RefreshButton';
 import { AVATAR_STYLES } from '@/enums';
@@ -12,7 +12,7 @@ function generateUsers(length = 5) {
   }));
 }
 
-export default function ClientComponent() {
+const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
   const [style, setStyle] = useState<typeof AVATAR_STYLES.valueType>(AVATAR_STYLES.RANDOM);
   const [users, setUsers] = useState(generateUsers);
   const [count, setCount] = useState(5); // 生成的数量
@@ -25,7 +25,7 @@ export default function ClientComponent() {
     <div className="flex-1 flex flex-col justify-between gap-4">
       {/* 头部区域 */}
       <div className="shrink-0">
-        <h1 className="text-2xl font-black">随机头像</h1>
+        <h1 className="text-2xl font-black">{title}</h1>
       </div>
       {/* 中间区域 */}
       <div className="flex-1 flex justify-center items-center">
@@ -96,3 +96,4 @@ export default function ClientComponent() {
     </div>
   )
 }
+export default ClientComponent;

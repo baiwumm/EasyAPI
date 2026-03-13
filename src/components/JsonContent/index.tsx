@@ -32,7 +32,7 @@ function JsonContent<T>({ title, children, params = {}, onRefresh, searchText = 
   const pathname = usePathname();
 
   // 请求数据
-  const { data, loading, error, run } = useRequest<T, Record<string, any>[]>(
+  const { data, loading, error, run } = useRequest<T, (typeof params)[]>(
     async () =>
       get(await getApiData(pathname, params), 'data'),
   );

@@ -2,11 +2,11 @@
 import { Chip, Input, toast } from '@heroui/react';
 import dayjs from 'dayjs';
 import idCard from 'idcard';
-import { useState } from 'react';
+import { type FC, useState } from 'react';
 
 import JsonContent, { type GetColumnsFn } from '@/components/JsonContent';
 
-export default function ClientComponent() {
+const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
   const [id, setId] = useState('510101199502152091');
 
   // 请求数据
@@ -30,8 +30,9 @@ export default function ClientComponent() {
     ]
   }
   return (
-    <JsonContent title="身份证信息查询" params={{ id }} onRefresh={onRefresh} getColumns={getColumns}>
+    <JsonContent title={title} params={{ id }} onRefresh={onRefresh} getColumns={getColumns}>
       <Input value={id} onChange={(event) => setId(event.target.value)} aria-label="身份证" placeholder='请输入身份证号' className="w-50" />
     </JsonContent>
   )
 }
+export default ClientComponent;

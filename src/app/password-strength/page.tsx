@@ -2,7 +2,7 @@
  * @Author: 白雾茫茫丶<baiwumm.com>
  * @Date: 2026-03-02 17:56:43
  * @LastEditors: 白雾茫茫丶<baiwumm.com>
- * @LastEditTime: 2026-03-02 18:04:36
+ * @LastEditTime: 2026-03-13 09:59:29
  * @Description: 密码强度检测
  */
 import type { Metadata } from "next";
@@ -14,5 +14,5 @@ export const metadata: Metadata = {
 }
 
 export default function PasswordStrength() {
-  return <ClientComponent />
+  return <ClientComponent title='密码强度检测' />
 }

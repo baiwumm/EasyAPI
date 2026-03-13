@@ -1,11 +1,11 @@
 'use client'
 import { Chip, type ChipProps, Input, toast } from '@heroui/react';
 import { type ZxcvbnResult } from '@zxcvbn-ts/core';
-import { useState } from 'react';
+import { type FC, useState } from 'react';
 
 import JsonContent, { type GetColumnsFn } from '@/components/JsonContent';
 
-export default function ClientComponent() {
+const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
   const [password, setPassword] = useState('abc123456');
 
   // 请求数据
@@ -75,8 +75,9 @@ export default function ClientComponent() {
     ];
   };
   return (
-    <JsonContent title="密码强度检测" searchText='检测' params={{ password }} onRefresh={onRefresh} getColumns={getColumns}>
+    <JsonContent title={title} searchText='检测' params={{ password }} onRefresh={onRefresh} getColumns={getColumns}>
       <Input value={password} onChange={(event) => setPassword(event.target.value)} aria-label="密码" placeholder='请输入密码' className="w-50" />
     </JsonContent>
   )
 }
+export default ClientComponent;

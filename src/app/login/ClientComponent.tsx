@@ -3,7 +3,7 @@ import { useRouter } from '@bprogress/next/app';
 import { Check, CircleInfo, CircleXmark, Envelope, Eye, EyeSlash, Lock } from '@gravity-ui/icons';
 import { Button, Card, Description, FieldError, Form, InputGroup, Label, Link, Separator, Spinner, TextField, toast } from '@heroui/react';
 import Image from 'next/image';
-import { type FormEvent, useState } from 'react';
+import { type FC, type FormEvent, useState } from 'react';
 
 import { OAUTH_PROVIDERS } from '@/enums';
 import { GithubIcon, GoogleIcon } from '@/lib/icons'
@@ -14,7 +14,7 @@ type EmailForm = {
   password: string;
 }
 
-export default function ClientComponent() {
+const ClientComponent: FC = () => {
   const supabase = getSupabaseBrowserClient();
   const router = useRouter();
   const [emailLoading, setEmailLoading] = useState(false);
@@ -232,3 +232,4 @@ export default function ClientComponent() {
     </div>
   )
 }
+export default ClientComponent;

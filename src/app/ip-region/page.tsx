@@ -14,5 +14,5 @@ export const metadata: Metadata = {
 }
 
 export default function IpRegion() {
-  return <ClientComponent />
+  return <ClientComponent title='IP 归属地查询' />
 }

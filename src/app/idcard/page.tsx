@@ -14,5 +14,5 @@ export const metadata: Metadata = {
 }
 
 export default function Idcard() {
-  return <ClientComponent />
+  return <ClientComponent title='身份证信息查询' />
 }
