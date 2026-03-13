@@ -2,14 +2,13 @@
  * @Author: 白雾茫茫丶<baiwumm.com>
  * @Date: 2026-03-02 17:15:37
  * @LastEditors: 白雾茫茫丶<baiwumm.com>
- * @LastEditTime: 2026-03-12 15:51:53
+ * @LastEditTime: 2026-03-13 14:56:02
  * @Description: 密码强度检测
  */
 import { zxcvbn, zxcvbnOptions } from '@zxcvbn-ts/core'
 import * as zxcvbnCommonPackage from '@zxcvbn-ts/language-common'
+import * as zxcvbnZhPackage from '@zxcvbn-ts/language-zh'
 import { NextRequest, NextResponse } from 'next/server'
-
-import translations from './translations'
 
 import { RESPONSE } from '@/enums'
 import { catchError, responseMessage } from '@/lib/utils'
@@ -31,10 +30,11 @@ export async function GET(request: NextRequest) {
     }
 
     const options = {
-      translations,
+      translations: zxcvbnZhPackage.translations,
       graphs: zxcvbnCommonPackage.adjacencyGraphs,
       dictionary: {
-        ...zxcvbnCommonPackage.dictionary
+        ...zxcvbnCommonPackage.dictionary,
+        ...zxcvbnZhPackage.dictionary
       },
     }
 
