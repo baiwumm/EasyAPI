@@ -1,5 +1,22 @@
 # Changelog
 
+## [2.6.1](https://github.com/baiwumm/EasyAPI/compare/2.6.0...2.6.1) (2026-03-16)
+
+### ✨ Features | 新功能
+
+* 更新 Hero UI 版本 ([4540f6e](https://github.com/baiwumm/EasyAPI/commit/4540f6e36606add95cdc14f25341743f604fc291))
+* 新增 clamp 函数，优化代码逻辑 ([4abd40b](https://github.com/baiwumm/EasyAPI/commit/4abd40b4eda85bac9720704555c72719dead8a26))
+
+### ⚡ Performance Improvements | 性能优化
+
+* 删除 ProgressCircle 组件 ([c221142](https://github.com/baiwumm/EasyAPI/commit/c2211423b25b93eaf784a0a90a27d50816095e63))
+* **BackTop:** 使用 Hero UI 的 ProgressCircle 组件，优化卡顿 ([e6e6986](https://github.com/baiwumm/EasyAPI/commit/e6e698623da09b5336dbaf72d3ebfe40eabae890))
+* **TailwindColorPalette:** 新增《Tailwind 色板生成器》接口和页面 ([3f95d30](https://github.com/baiwumm/EasyAPI/commit/3f95d304a52cb09b9ef5041c69b501eaede980ab))
+
+### 🔧 Continuous Integration | CI 配置
+
+* 新增 uicolors-generator包 ([6a9f749](https://github.com/baiwumm/EasyAPI/commit/6a9f74901c70cfebe4566375d4fc3e2171e02810))
+
 ## [2.6.0](https://github.com/baiwumm/EasyAPI/compare/2.5.2...2.6.0) (2026-03-13)
 
 ### ✨ Features | 新功能
