@@ -119,6 +119,9 @@ importers:
       tinycolor2:
         specifier: ^1.6.0
         version: 1.6.0
+      uicolors-generator:
+        specifier: ^1.2.4
+        version: 1.2.4(chroma-js@3.2.0)
       xmldom:
         specifier: ^0.6.0
         version: 0.6.0
@@ -2319,6 +2322,9 @@ packages:
     resolution: {integrity: sha512-TQMmc3w+5AxjpL8iIiwebF73dRDF4fBIieAqGn9RGCWaEVwQ6Fb2cGe31Yns0RRIzii5goJ1Y7xbMwo1TxMplw==}
     engines: {node: '>= 20.19.0'}
 
+  chroma-js@3.2.0:
+    resolution: {integrity: sha512-os/OippSlX1RlWWr+QDPcGUZs0uoqr32urfxESG9U93lhUfbnlyckte84Q8P1UQY/qth983AS1JONKmLS4T0nw==}
+
   ci-info@4.3.1:
     resolution: {integrity: sha512-Wdy2Igu8OcBpI2pZePZ5oWjPC38tmDVx5WKUXKwlLYkA0ozo85sLsLvkBbBn/sZaSCMFOGZJ14fvW9t5/d7kdA==}
     engines: {node: '>=8'}
@@ -4139,6 +4145,11 @@ packages:
     resolution: {integrity: sha512-v3Xu+yuwBXisp6QYTcH4UbH+xYJXqnq2m/LtQVWKWzYc1iehYnLixoQDN9FH6/j9/oybfd6W9Ghwkl8+UMKTKQ==}
     engines: {node: '>=0.8.0'}
     hasBin: true
+
+  uicolors-generator@1.2.4:
+    resolution: {integrity: sha512-BqNMp7rXio6ON4XM1+ZM3RdGSo7vZvxUlMk14FVKEgWcphlpq4XKAYhGnXYMju68TSa6OO+rV8fbZFzJPIZRKQ==}
+    peerDependencies:
+      chroma-js: 3.x
 
   unbox-primitive@1.1.0:
     resolution: {integrity: sha512-nWJ91DjeOkej/TA8pXQ3myruKpKEYgqvpw9lz4OPHj/NWFNluYrjbz9j01CJ8yKQd2g4jFoOkINCTW2I5LEEyw==}
@@ -6812,6 +6823,8 @@ snapshots:
     dependencies:
       readdirp: 5.0.0
 
+  chroma-js@3.2.0: {}
+
   ci-info@4.3.1: {}
 
   citty@0.1.6:
@@ -8905,6 +8918,10 @@ snapshots:
 
   uglify-js@3.19.3:
     optional: true
+
+  uicolors-generator@1.2.4(chroma-js@3.2.0):
+    dependencies:
+      chroma-js: 3.2.0
 
   unbox-primitive@1.1.0:
     dependencies:
