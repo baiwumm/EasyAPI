@@ -1,5 +1,23 @@
 # Changelog
 
+## [2.6.2](https://github.com/baiwumm/EasyAPI/compare/2.6.1...2.6.2) (2026-07-02)
+
+### ✨ Features | 新功能
+
+* 删除 umami 统计代码 ([62d1cb3](https://github.com/baiwumm/EasyAPI/commit/62d1cb3ca32286465a514c2bc6fc212dffbcd120))
+* 替换 demo 图 ([33adaa2](https://github.com/baiwumm/EasyAPI/commit/33adaa25d48f6e83e76d5e8ff9c3f612b75d6b78))
+* 修改背景动画属性 ([dfd93f8](https://github.com/baiwumm/EasyAPI/commit/dfd93f8105f8b1566e764fb65bfb0b1e8fe33809))
+
+### 💄 Styles | 风格
+
+* 优化 UI 样式 ([cbed35e](https://github.com/baiwumm/EasyAPI/commit/cbed35e862bd0c912c722dcc642f3f5eb5402530))
+* **components:** 更新 Status 组件 variant 样式 ([199e1da](https://github.com/baiwumm/EasyAPI/commit/199e1da153e34a46f2d8c86fb3796d77b20dacc9))
+
+### 🔧 Continuous Integration | CI 配置
+
+* 更新 Hero UI 版本 ([ee37cf2](https://github.com/baiwumm/EasyAPI/commit/ee37cf22c75f3008f4416ffb88664f223806c4b1))
+* 更新 Hero UI 版本 ([bc84b91](https://github.com/baiwumm/EasyAPI/commit/bc84b919c31a6350b673d06294ecbe8454e2dd49))
+
 ## [2.6.1](https://github.com/baiwumm/EasyAPI/compare/2.6.0...2.6.1) (2026-03-16)
 
 ### ✨ Features | 新功能
