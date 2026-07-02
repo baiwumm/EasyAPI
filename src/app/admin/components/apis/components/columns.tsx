@@ -119,6 +119,7 @@ export const getColumns = ({
         cell: ({ getValue }) => (
           <Switch isSelected={getValue()} isReadOnly>
             {({ isSelected }) => (
+              <Switch.Content>
               <Switch.Control>
                 <Switch.Thumb>
                   <Switch.Icon>
@@ -130,6 +131,7 @@ export const getColumns = ({
                   </Switch.Icon>
                 </Switch.Thumb>
               </Switch.Control>
+              </Switch.Content>
             )}
           </Switch>
         ),

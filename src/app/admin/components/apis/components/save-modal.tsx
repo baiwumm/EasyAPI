@@ -219,10 +219,10 @@ const SaveModal: FC<SaveModalProps> = ({
                 <div className="grid grid-cols-2 items-center gap-4">
                   {SwitchOptions.map(({ name, label }) => (
                     <Checkbox key={name} id={name} name={name} defaultSelected={get(initialValues, name, false)} >
+                      <Checkbox.Content>
                       <Checkbox.Control>
                         <Checkbox.Indicator />
                       </Checkbox.Control>
-                      <Checkbox.Content>
                         <Label htmlFor={name}>{label}</Label>
                       </Checkbox.Content>
                     </Checkbox>
