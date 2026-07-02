@@ -77,3 +77,18 @@ export const pick = <T extends object, TKeys extends keyof T>(
  * @return {number}
  */
 export const clamp = (value: number, min: number = 0, max: number = Number.MAX_SAFE_INTEGER): number => Math.min(Math.max(value, min), max);
+
+/**
+ * 解析 bind 每日图片
+ */
+
+export const getUrl = (url: string) => {
+  const id = (new URL(url).searchParams.get('id') || '').replace(/_\d+x\d+\.jpg$/, '')
+  return `https://bing.com/th?id=${id}_1920x1080.jpg`
+}
+// https://cn.bing.com//th?id=OHR.GipuzcoaSummer_ZH-CN1926924422_UHD.jpg
+// https://cn.bing.com/th?id=OHR.GipuzcoaSummer_ZH-CN1926924422_1920x1080.jpg
+export const get4kUrl = (url: string) => {
+  const id = (new URL(url).searchParams.get('id') || '').replace(/_\d+x\d+\.jpg$/, '')
+  return `https://bing.com/th?id=${id}_UHD.jpg`
+}

@@ -2,13 +2,13 @@
  * @Author: 白雾茫茫丶<baiwumm.com>
  * @Date: 2026-02-28 14:38:12
  * @LastEditors: 白雾茫茫丶<baiwumm.com>
- * @LastEditTime: 2026-03-12 15:42:01
+ * @LastEditTime: 2026-07-02 14:08:23
  * @Description: bind 每日壁纸
  */
 import { NextRequest, NextResponse } from 'next/server'
 
 import { RESPONSE } from '@/enums'
-import { catchError, responseMessage } from '@/lib/utils'
+import { catchError, get4kUrl, getUrl, responseMessage } from '@/lib/utils'
 
 export async function GET(request: NextRequest) {
   try {
@@ -27,18 +27,6 @@ export async function GET(request: NextRequest) {
     const responseBody = await response.json();
 
     const img = responseBody.images?.[0];
-
-    const getUrl = (url: string) => {
-      const id = (new URL(url).searchParams.get('id') || '').replace(/_\d+x\d+\.jpg$/, '')
-      return `https://bing.com/th?id=${id}_1920x1080.jpg`
-    }
-
-    // https://cn.bing.com//th?id=OHR.GipuzcoaSummer_ZH-CN1926924422_UHD.jpg
-    // https://cn.bing.com/th?id=OHR.GipuzcoaSummer_ZH-CN1926924422_1920x1080.jpg
-    const get4kUrl = (url: string) => {
-      const id = (new URL(url).searchParams.get('id') || '').replace(/_\d+x\d+\.jpg$/, '')
-      return `https://bing.com/th?id=${id}_UHD.jpg`
-    }
 
     const url = `https://bing.com${img.url}`;
 
