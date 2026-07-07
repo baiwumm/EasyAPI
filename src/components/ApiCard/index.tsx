@@ -2,11 +2,11 @@
  * @Author: 白雾茫茫丶<baiwumm.com>
  * @Date: 2026-02-25 11:10:45
  * @LastEditors: 白雾茫茫丶<baiwumm.com>
- * @LastEditTime: 2026-07-07 15:01:31
+ * @LastEditTime: 2026-07-07 15:33:53
  * @Description: 接口卡片
  */
 "use client";
-import { Pin, Star, ThumbsUp } from '@gravity-ui/icons';
+import { PinFill, StarFill, ThumbsUpFill } from '@gravity-ui/icons';
 import { Card, Chip, cn, Description } from '@heroui/react';
 import dayjs from 'dayjs';
 import Link from 'next/link';
@@ -45,21 +45,21 @@ const ApiCard: FC<ApiCardProps> = memo(function ApiCard({ data }) {
         <Card.Footer className="flex justify-end">
           <div className='flex items-center gap-2 text-xs text-muted'>
             {/* 调用次数 */}
-            <div className="flex items-center gap-1">
-              <Star className="size-3" />
+            <div className="flex items-center gap-0.5">
+              <StarFill className="size-3" />
               <Description>{formatter.format(call_count)}</Description>
             </div>
             {/* 置顶 */}
             {pinned ? (
-              <div className="flex items-center gap-1">
-                <Pin className="size-3" />
+              <div className="flex items-center gap-0.5">
+                <PinFill className="size-3" />
                 <Description>置顶</Description>
               </div>
             ) : null}
             {/* 推荐 */}
             {is_featured ? (
-              <div className="flex items-center gap-1">
-                <ThumbsUp className="size-3" />
+              <div className="flex items-center gap-0.5">
+                <ThumbsUpFill className="size-3" />
                 <Description>推荐</Description>
               </div>
             ) : null}
