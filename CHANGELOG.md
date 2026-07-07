@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.7.1](https://github.com/baiwumm/EasyAPI/compare/2.7.0...2.7.1) (2026-07-07)
+
+### ✨ Features | 新功能
+
+* 更改图标 ([a5ff0ff](https://github.com/baiwumm/EasyAPI/commit/a5ff0ff929e6c44410290106a80833fffb2d4167))
+
 ## [2.7.0](https://github.com/baiwumm/EasyAPI/compare/2.6.2...2.7.0) (2026-07-07)
 
 ### ✨ Features | 新功能
