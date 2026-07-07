@@ -2,7 +2,7 @@
  * @Author: 白雾茫茫丶<baiwumm.com>
  * @Date: 2026-01-13 17:03:51
  * @LastEditors: 白雾茫茫丶<baiwumm.com>
- * @LastEditTime: 2026-07-07 14:27:34
+ * @LastEditTime: 2026-07-07 15:17:42
  * @Description: 主题切换
  */
 "use client";
@@ -14,8 +14,8 @@ import { type FC } from "react";
 
 import { THEME_MODE } from '@/enums';
 
-const MotionMoon = motion(Moon);
-const MotionSun = motion(Sun);
+const MotionMoon = motion.create(Moon);
+const MotionSun = motion.create(Sun);
 
 const ThemeSwitcher: FC = () => {
   const { theme, setTheme } = useTheme();

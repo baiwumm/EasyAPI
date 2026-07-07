@@ -2,7 +2,7 @@
  * @Author: 白雾茫茫丶<baiwumm.com>
  * @Date: 2026-01-21 16:33:59
  * @LastEditors: 白雾茫茫丶<baiwumm.com>
- * @LastEditTime: 2026-07-07 14:42:35
+ * @LastEditTime: 2026-07-07 15:17:37
  * @Description: 首页
  */
 "use client";
@@ -17,7 +17,7 @@ import SkeletonContent from '@/components/SkeletonContent'
 import { get } from '@/lib/utils';
 import { getCategorysList } from '@/services/categorys';
 
-const MotionApiCard = motion(ApiCard);
+const MotionApiCard = motion.create(ApiCard);
 
 export default function Home() {
   const router = useRouter();
