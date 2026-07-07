@@ -2,7 +2,7 @@
  * @Author: 白雾茫茫丶<baiwumm.com>
  * @Date: 2026-01-13 17:03:51
  * @LastEditors: 白雾茫茫丶<baiwumm.com>
- * @LastEditTime: 2026-07-07 15:17:42
+ * @LastEditTime: 2026-07-07 18:09:37
  * @Description: 主题切换
  */
 "use client";
@@ -21,41 +21,39 @@ const ThemeSwitcher: FC = () => {
   const { theme, setTheme } = useTheme();
   const isDark = theme === THEME_MODE.DARK;
   return (
-    <>
-      <Tooltip>
-        <Button
-          aria-label="ThemeSwitcher"
-          variant="ghost"
-          size='sm'
-          isIconOnly
-          onPress={() => setTheme(theme === THEME_MODE.DARK ? THEME_MODE.LIGHT : THEME_MODE.DARK)}
-        >
-          <AnimatePresence mode="wait" initial={false}>
-            {isDark ? (
-              <MotionMoon
-                key="moon"
-                initial={{ opacity: 0, scale: 0.6 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.6 }}
-                transition={{ duration: 0.2, ease: "easeInOut" }}
-              />
-            ) : (
-              <MotionSun
-                key="sun"
-                initial={{ opacity: 0, scale: 0.6 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.6 }}
-                transition={{ duration: 0.2, ease: "easeInOut" }}
-              />
-            )}
-          </AnimatePresence>
-        </Button>
-        <Tooltip.Content showArrow>
-          <Tooltip.Arrow />
-          主题切换
-        </Tooltip.Content>
-      </Tooltip>
-    </>
+    <Tooltip>
+      <Button
+        aria-label="ThemeSwitcher"
+        variant="ghost"
+        size='sm'
+        isIconOnly
+        onPress={() => setTheme(theme === THEME_MODE.DARK ? THEME_MODE.LIGHT : THEME_MODE.DARK)}
+      >
+        <AnimatePresence mode="wait" initial={false}>
+          {isDark ? (
+            <MotionMoon
+              key="moon"
+              initial={{ opacity: 0, scale: 0.6 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.6 }}
+              transition={{ duration: 0.2, ease: "easeInOut" }}
+            />
+          ) : (
+            <MotionSun
+              key="sun"
+              initial={{ opacity: 0, scale: 0.6 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.6 }}
+              transition={{ duration: 0.2, ease: "easeInOut" }}
+            />
+          )}
+        </AnimatePresence>
+      </Button>
+      <Tooltip.Content showArrow>
+        <Tooltip.Arrow />
+        主题切换
+      </Tooltip.Content>
+    </Tooltip>
   );
 };
 
