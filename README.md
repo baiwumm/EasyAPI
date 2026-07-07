@@ -79,7 +79,7 @@ NEXT_PUBLIC_APP_DESC = '基于 Next.js 构建的高性能 API 聚合平台，统
 # 项目关键词
 NEXT_PUBLIC_APP_KEYWORDS = 'Easy Api,API聚合,API管理,接口聚合平台,Next.js API,Next.js聚合,API网关,微服务网关,接口代理,请求转发,数据缓存,RESTful API,第三方API集成,Serverless,Next.js 16,TypeScript,API路由,后端即服务,BaaS,低代码平台,开发工具'
 # 项目域名
-NEXT_PUBLIC_APP_URL = 'http://localhost:5173'
+NEXT_PUBLIC_APP_URL = 'http://localhost:3000'
 # 版权
 NEXT_PUBLIC_COPYRIGHT = '白雾茫茫丶'
 # 网站ICP
