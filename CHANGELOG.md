@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.7.2](https://github.com/baiwumm/EasyAPI/compare/2.7.1...2.7.2) (2026-07-07)
+
+### 💄 Styles | 风格
+
+* UI 调整 ([b0861de](https://github.com/baiwumm/EasyAPI/commit/b0861dead85f86a8d979f3b132c31abf1e9c864e))
+
 ## [2.7.1](https://github.com/baiwumm/EasyAPI/compare/2.7.0...2.7.1) (2026-07-07)
 
 ### ✨ Features | 新功能
