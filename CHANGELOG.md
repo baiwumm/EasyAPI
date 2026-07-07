@@ -1,5 +1,26 @@
 # Changelog
 
+## [2.7.0](https://github.com/baiwumm/EasyAPI/compare/2.6.2...2.7.0) (2026-07-07)
+
+### ✨ Features | 新功能
+
+* 更新 demo 截图，添加 .env.example 文件 ([0b19310](https://github.com/baiwumm/EasyAPI/commit/0b193105cec61ab447609b445cafe5774d24e8ba))
+
+### 💄 Styles | 风格
+
+* **ApiCard:** 更新卡片样式 ([e1bc7ba](https://github.com/baiwumm/EasyAPI/commit/e1bc7ba3fda02d3ee83cb1728c330007935366fb))
+
+### ⚡ Performance Improvements | 性能优化
+
+* 使用 motion.create 代替 motion() ([3621005](https://github.com/baiwumm/EasyAPI/commit/362100506abaef7eebbd79e1bc669a75933aa51b))
+* 移除 @bprogress/core 包 ([136823a](https://github.com/baiwumm/EasyAPI/commit/136823ac702ede0c876a3503b683dd0596932bec))
+* 移除 query-string 包 ([5c555b5](https://github.com/baiwumm/EasyAPI/commit/5c555b581cc66eb218c5fca6c457a271fe5c23ed))
+* 重构页面排版 ([3c3714a](https://github.com/baiwumm/EasyAPI/commit/3c3714a5a3eeac79e97ad0f69f9c5e8e8b354301))
+
+### 👷‍ Build System | 构建
+
+* 修复 bing-wallpaper 页面导致打包报错的问题 ([20c4eb2](https://github.com/baiwumm/EasyAPI/commit/20c4eb2ada49d4cd1904d3a3eeb010faaf957de2))
+
 ## [2.6.2](https://github.com/baiwumm/EasyAPI/compare/2.6.1...2.6.2) (2026-07-02)
 
 ### ✨ Features | 新功能
