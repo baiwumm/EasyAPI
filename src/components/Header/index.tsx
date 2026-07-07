@@ -2,11 +2,11 @@
  * @Author: 白雾茫茫丶<baiwumm.com>
  * @Date: 2026-01-21 17:57:28
  * @LastEditors: 白雾茫茫丶<baiwumm.com>
- * @LastEditTime: 2026-07-07 13:59:19
+ * @LastEditTime: 2026-07-07 16:21:45
  * @Description: 顶部导航
  */
 "use client"
-import { AbbrApi, House } from '@gravity-ui/icons';
+import { AbbrApi, HouseFill } from '@gravity-ui/icons';
 import { Button, Tooltip } from '@heroui/react';
 import Image from 'next/image';
 import Link from "next/link";
@@ -60,7 +60,7 @@ const Header: FC = () => {
         <Tooltip>
           <Link href={pkg.author.url} aria-label="主页" target="_blank">
             <Button variant="ghost" isIconOnly size='sm'>
-              <House />
+              <HouseFill />
             </Button>
           </Link>
           <Tooltip.Content showArrow>
