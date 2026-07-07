@@ -2,7 +2,7 @@
  * @Author: 白雾茫茫丶<baiwumm.com>
  * @Date: 2026-01-21 17:57:28
  * @LastEditors: 白雾茫茫丶<baiwumm.com>
- * @LastEditTime: 2026-03-06 09:03:05
+ * @LastEditTime: 2026-07-07 13:59:19
  * @Description: 顶部导航
  */
 "use client"
@@ -13,6 +13,7 @@ import Link from "next/link";
 import { type FC, type ReactNode } from 'react';
 
 import ThemeSwitcher from '@/components/ThemeSwitcher';
+import TimeAndLunar from '@/components/TimeAndLunar';
 import UserAvatar from '@/components/UserAvatar';
 import pkg from '#/package.json';
 
@@ -32,42 +33,43 @@ const socials: Social[] = [
 
 const Header: FC = () => {
   return (
-    <header className="sticky top-0 border-b border-default h-15 z-20 backdrop-blur-sm" id="header">
-      <div className="flex justify-between items-center container mx-auto h-full px-4">
-        {/* 左侧 Logo */}
-        <Link href="/">
-          <Image src='/logo.png' width={120} height={32} alt="Logo" />
-        </Link>
-        {/* 右侧区域 */}
-        <div className="flex items-center gap-2">
-          <ThemeSwitcher />
-          {socials.map(({ name, url, icon }) => (
-            <Tooltip key={name} delay={0}>
-              <Link href={url} aria-label={name} target="_blank">
-                <Button variant="outline" isIconOnly size='sm' className="rounded-full">
-                  {icon}
-                </Button>
-              </Link>
-              <Tooltip.Content showArrow>
-                <Tooltip.Arrow />
-                {name}
-              </Tooltip.Content>
-            </Tooltip>
-          ))}
-          <Tooltip>
-            <Link href={pkg.author.url} aria-label="主页" target="_blank">
-              <Button variant="outline" isIconOnly size='sm' className="rounded-full">
-                <House />
+    <header className="sticky top-0 p-4 z-20 backdrop-blur-sm container mx-auto flex justify-between items-center" id="header">
+      {/* 左侧 Logo */}
+      <Link href="/">
+        <div className="w-30 h-8 relative justify-self-start">
+          <Image src="/logo.png" fill alt="Logo" />
+        </div>
+      </Link>
+      <TimeAndLunar />
+      {/* 右侧区域 */}
+      <div className="flex items-center gap-2 justify-self-end">
+        <ThemeSwitcher />
+        {socials.map(({ name, url, icon }) => (
+          <Tooltip key={name} delay={0}>
+            <Link href={url} aria-label={name} target="_blank">
+              <Button variant="ghost" isIconOnly size='sm'>
+                {icon}
               </Button>
             </Link>
             <Tooltip.Content showArrow>
               <Tooltip.Arrow />
-              博客
+              {name}
             </Tooltip.Content>
           </Tooltip>
-          {/* 登录用户信息 */}
-          <UserAvatar />
-        </div>
+        ))}
+        <Tooltip>
+          <Link href={pkg.author.url} aria-label="主页" target="_blank">
+            <Button variant="ghost" isIconOnly size='sm'>
+              <House />
+            </Button>
+          </Link>
+          <Tooltip.Content showArrow>
+            <Tooltip.Arrow />
+            个人主页
+          </Tooltip.Content>
+        </Tooltip>
+        {/* 登录用户信息 */}
+        <UserAvatar />
       </div>
     </header >
   )

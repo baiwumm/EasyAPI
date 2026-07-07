@@ -2,7 +2,7 @@
  * @Author: 白雾茫茫丶<baiwumm.com>
  * @Date: 2026-01-22 15:44:57
  * @LastEditors: 白雾茫茫丶<baiwumm.com>
- * @LastEditTime: 2026-03-11 13:40:36
+ * @LastEditTime: 2026-07-07 14:12:22
  * @Description: 用户头像
  */
 import { useRouter } from '@bprogress/next/app';
@@ -71,7 +71,7 @@ const UserAvatar: FC = () => {
                 <Person />
               </Avatar.Fallback>
             </Avatar>
-            <Badge color="success" placement="bottom-right" size="sm" className="rounded-full min-h-3 min-w-3" />
+            <Badge color="success" placement="bottom-right" size="sm" className="min-h-3 min-w-3" />
           </Badge.Anchor>
         </Dropdown.Trigger>
         <Dropdown.Popover>
@@ -133,7 +133,7 @@ const UserAvatar: FC = () => {
     </>
   ) : (
     <Tooltip>
-      <Button variant="outline" isIconOnly size='sm' className="rounded-full" onClick={() => router.push('/login')}>
+      <Button variant="ghost" isIconOnly size='sm' onClick={() => router.push('/login')}>
         <Person />
       </Button>
       <Tooltip.Content showArrow>

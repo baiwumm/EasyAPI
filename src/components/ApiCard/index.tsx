@@ -2,7 +2,7 @@
  * @Author: 白雾茫茫丶<baiwumm.com>
  * @Date: 2026-02-25 11:10:45
  * @LastEditors: 白雾茫茫丶<baiwumm.com>
- * @LastEditTime: 2026-03-06 14:32:47
+ * @LastEditTime: 2026-07-07 14:32:56
  * @Description: 接口卡片
  */
 "use client";
@@ -28,21 +28,17 @@ const ApiCard: FC<ApiCardProps> = memo(function ApiCard({ data }) {
   const isNew = dayjs(created_at).isAfter(dayjs().subtract(7, 'day'));
   return (
     <Card
-      className={cn("flex flex-col h-full relative overflow-hidden shadow-lg rounded-4xl transition-transform duration-300 hover:-translate-y-1.5 animated-border animate-fade after:border-(--accent) cursor-pointer")}
-      onMouseEnter={(e) => {
-        e.currentTarget.classList.add('hovered');
-      }}
+      className={cn("flex flex-col h-full relative overflow-hidden rounded-4xl transition-transform duration-300 hover:-translate-y-1.5 cursor-pointer")}
       onClick={() => router.push(path)}
     >
       <Card.Header>
-        {isNew ? (
-          <div className="flex items-center gap-1">
-            <Card.Title className="text-lg font-bold">{name}</Card.Title>
-            <Chip color='danger' variant='soft' size='sm'>NEW</Chip>
+        <div className="flex items-center gap-2 justify-between">
+          <div className="flex-1 flex items-center gap-1 min-w-0">
+            <Card.Title className="flex-1 truncate text-base font-bold">{name}</Card.Title>
+            {isNew && <Chip color='danger' variant='soft' size='sm' className="shrink-0">NEW</Chip>}
           </div>
-        ) : (
-          <Card.Title className="text-lg font-bold">{name}</Card.Title>
-        )}
+          <Chip color="success" variant='soft' size='sm' className='shrink-0'>{method}</Chip>
+        </div>
         {desc ? (
           <Card.Description className="text-xs overflow-hidden line-clamp-2 wrap-break-word mt-1">{desc}</Card.Description>
         ) : null}
@@ -70,9 +66,6 @@ const ApiCard: FC<ApiCardProps> = memo(function ApiCard({ data }) {
           ) : null}
         </div>
       </Card.Footer>
-      <div className="absolute right-2 top-2 flex gap-1">
-        <Chip color="success" variant='soft' size='sm'>{method}</Chip>
-      </div>
     </Card>
   )
 })

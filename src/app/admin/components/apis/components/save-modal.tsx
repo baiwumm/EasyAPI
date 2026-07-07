@@ -220,9 +220,9 @@ const SaveModal: FC<SaveModalProps> = ({
                   {SwitchOptions.map(({ name, label }) => (
                     <Checkbox key={name} id={name} name={name} defaultSelected={get(initialValues, name, false)} >
                       <Checkbox.Content>
-                      <Checkbox.Control>
-                        <Checkbox.Indicator />
-                      </Checkbox.Control>
+                        <Checkbox.Control>
+                          <Checkbox.Indicator />
+                        </Checkbox.Control>
                         <Label htmlFor={name}>{label}</Label>
                       </Checkbox.Content>
                     </Checkbox>

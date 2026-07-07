@@ -13,7 +13,7 @@
     "issues": "https://github.com/baiwumm/EasyAPI/issues"
   },
   "scripts": {
-    "dev": "next dev -p 5173",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
@@ -29,6 +29,7 @@
     "@heroui/styles": "3.2.1",
     "@internationalized/date": "^3.11.0",
     "@next/third-parties": "^16.1.6",
+    "@number-flow/react": "^0.6.1",
     "@supabase/ssr": "^0.8.0",
     "@supabase/supabase-js": "^2.91.0",
     "@tanstack/react-table": "^8.21.3",
@@ -38,7 +39,6 @@
     "@zxcvbn-ts/language-zh": "4.0.0-beta.3",
     "ahooks": "^3.9.6",
     "axios": "^1.13.2",
-    "class-variance-authority": "^0.7.1",
     "crypto-random-string": "^5.0.0",
     "dayjs": "^1.11.19",
     "enum-plus": "^3.1.6",

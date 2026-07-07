@@ -67,7 +67,7 @@ const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
                             </div>
                           </div>
                         </Table.Cell>
-                        <Table.Cell><Chip color={gender === RANDOM_USER_GENDER.label(RANDOM_USER_GENDER.MALE) ? 'accent' : 'warning'} variant='soft' className="rounded-full">{gender}</Chip></Table.Cell>
+                        <Table.Cell><Chip color={gender === RANDOM_USER_GENDER.label(RANDOM_USER_GENDER.MALE) ? 'accent' : 'warning'} variant='soft'>{gender}</Chip></Table.Cell>
                         <Table.Cell>{phone}</Table.Cell>
                         <Table.Cell>{company}</Table.Cell>
                         <Table.Cell>{job}</Table.Cell>

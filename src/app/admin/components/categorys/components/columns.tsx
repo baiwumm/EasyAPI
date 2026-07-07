@@ -25,7 +25,7 @@ export const getColumns = ({
       id: "index",
       header: "序号",
       cell: ({ row }) => (
-        <Chip className="rounded-full">
+        <Chip>
           {(page - 1) * pageSize + row.index + 1}
         </Chip>
       ),
@@ -34,7 +34,7 @@ export const getColumns = ({
     columnHelper.accessor("name", {
       header: "分类名称",
       cell: ({ getValue }) => (
-        <Chip color="accent" variant="primary" className="rounded-full">
+        <Chip color="accent" variant="primary">
           {getValue()}
         </Chip>
       ),
@@ -43,7 +43,7 @@ export const getColumns = ({
     columnHelper.accessor('apis', {
       header: "接口个数",
       cell: ({ getValue }) => (
-        <Chip color="accent" variant="soft" className="rounded-full">
+        <Chip color="accent" variant="soft">
           {getValue()?.length || 0}
         </Chip>
       ),
@@ -75,7 +75,7 @@ export const getColumns = ({
       header: "排序",
       enableSorting: true,
       cell: ({ getValue }) => (
-        <Chip color="warning" variant="soft" className="rounded-full">
+        <Chip color="warning" variant="soft">
           {getValue()}
         </Chip>
       ),
