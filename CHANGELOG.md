@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.7.3](https://github.com/baiwumm/EasyAPI/compare/2.7.2...2.7.3) (2026-07-15)
+
+### 💄 Styles | 风格
+
+* 优化加载和错误界面 UI ([196b9e9](https://github.com/baiwumm/EasyAPI/commit/196b9e91485fb51f7c40d5f4f3a0deca05acc752))
+
 ## [2.7.2](https://github.com/baiwumm/EasyAPI/compare/2.7.1...2.7.2) (2026-07-07)
 
 ### 💄 Styles | 风格
