@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.7.4](https://github.com/baiwumm/EasyAPI/compare/2.7.3...2.7.4) (2026-07-21)
+
+### 🐛 Bug Fixes | Bug 修复
+
+* **CopyText:** 修复复制成功提示重复的问题 ([057a933](https://github.com/baiwumm/EasyAPI/commit/057a93356e353cfa8c5077d3953969bcc23d0f9c))
+
 ## [2.7.3](https://github.com/baiwumm/EasyAPI/compare/2.7.2...2.7.3) (2026-07-15)
 
 ### 💄 Styles | 风格
