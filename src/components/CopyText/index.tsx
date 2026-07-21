@@ -2,11 +2,11 @@
  * @Author: 白雾茫茫丶<baiwumm.com>
  * @Date: 2026-02-27 10:56:12
  * @LastEditors: 白雾茫茫丶<baiwumm.com>
- * @LastEditTime: 2026-03-06 16:48:49
+ * @LastEditTime: 2026-07-21 15:42:08
  * @Description: 复制文案
  */
 'use client'
-import { Check, CircleCheck, CircleXmark, Copy } from '@gravity-ui/icons'
+import { Check, CircleXmark, Copy } from '@gravity-ui/icons'
 import { Button, toast } from '@heroui/react'
 import { type FC, useCallback, useRef, useState } from 'react'
 
@@ -59,10 +59,6 @@ const CopyText: FC<CopyTextProps> = ({
       await copy(content)
 
       setCopied(true)
-
-      toast.success('复制成功', {
-        indicator: <CircleCheck />,
-      })
 
       resetState()
     } catch {
