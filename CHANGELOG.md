@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.7.5](https://github.com/baiwumm/EasyAPI/compare/2.7.4...2.7.5) (2026-07-22)
+
+### ⚡ Performance Improvements | 性能优化
+
+* **layout:** 优化布局结构 ([b6d103d](https://github.com/baiwumm/EasyAPI/commit/b6d103da17a56dd2ce84b48e237c5bd85cc9f1f7))
+
 ## [2.7.4](https://github.com/baiwumm/EasyAPI/compare/2.7.3...2.7.4) (2026-07-21)
 
 ### 🐛 Bug Fixes | Bug 修复
