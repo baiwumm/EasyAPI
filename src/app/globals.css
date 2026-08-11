@@ -122,47 +122,86 @@
   }
 }
 
-/* 路由切换动画 */
+/* 路由切换动画：方向感知滑动，先退出旧视图、再进入新视图 */
 @theme {
-  --view-duration-enter: 500ms;
-  --view-duration-exit: 500ms;
+  --view-duration-exit: 200ms;
+  --view-duration-enter: 220ms;
   --view-delay-enter: var(--view-duration-exit);
   /* 新视图的延迟 = 旧视图的持续时间 */
 }
 
-/* 默认动画，左右模糊渐变 */
-@keyframes blur-slide-enter {
+/* 前进：新视图从右侧滑入，旧视图向左轻移淡出 */
+@keyframes view-enter-forward {
   from {
-    filter: blur(8px);
     opacity: 0;
-    transform: translateX(50px);
+    transform: translateX(24px);
   }
 
   to {
-    filter: blur(0);
     opacity: 1;
     transform: translateX(0);
   }
 }
 
-@keyframes blur-slide-exit {
+@keyframes view-exit-forward {
   from {
-    filter: blur(0);
     opacity: 1;
     transform: translateX(0);
   }
 
   to {
-    filter: blur(8px);
     opacity: 0;
-    transform: translateX(-50px);
+    transform: translateX(-16px);
   }
 }
 
+/* 后退：新视图从左侧滑入，旧视图向右轻移淡出 */
+@keyframes view-enter-backward {
+  from {
+    opacity: 0;
+    transform: translateX(-24px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes view-exit-backward {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateX(16px);
+  }
+}
+
+/* 默认按前进方向过渡：旧视图先退出，新视图随后进入 */
 ::view-transition-new(blur-slide) {
-  animation: var(--view-duration-enter) ease-out var(--view-delay-enter) both blur-slide-enter;
+  animation: var(--view-duration-enter) ease-out var(--view-delay-enter) both view-enter-forward;
 }
 
 ::view-transition-old(blur-slide) {
-  animation: var(--view-duration-exit) ease-in both blur-slide-exit;
+  animation: var(--view-duration-exit) ease-in both view-exit-forward;
+}
+
+/* 浏览器前进/后退时（html[data-nav-dir='backward']）反向滑动 */
+html[data-nav-dir='backward']::view-transition-new(blur-slide) {
+  animation: var(--view-duration-enter) ease-out var(--view-delay-enter) both view-enter-backward;
+}
+
+html[data-nav-dir='backward']::view-transition-old(blur-slide) {
+  animation: var(--view-duration-exit) ease-in both view-exit-backward;
+}
+
+/* 系统开启减弱动效时禁用转场动画 */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-new(blur-slide),
+  ::view-transition-old(blur-slide) {
+    animation: none;
+  }
 }
