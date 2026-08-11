@@ -9,8 +9,6 @@ import { createElement } from 'react'
 import { RESPONSE } from '@/enums'
 import { isSuccess } from '@/lib/utils'
 
-import { finishLoading, startLoading } from './nprogress'
-
 type ApiResponse<T = unknown> = App.IResponse<T>
 
 interface HttpRequestConfig {
@@ -58,7 +56,6 @@ async function request<T>(
   data?: unknown,
   config?: HttpRequestConfig,
 ): Promise<ApiResponse<T>> {
-  startLoading()
   const controller = new AbortController()
   const timer = setTimeout(() => controller.abort(), config?.timeout ?? DEFAULT_TIMEOUT)
 
@@ -102,7 +99,6 @@ async function request<T>(
   }
   finally {
     clearTimeout(timer)
-    finishLoading()
   }
 }
 

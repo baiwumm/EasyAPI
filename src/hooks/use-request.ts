@@ -2,6 +2,7 @@
  * @Author: 白雾茫茫丶<baiwumm.com>
  * @Description: 自实现 useRequest，保持 ahooks 函数式签名与行为兼容
  */
+import { useProgress } from '@bprogress/next'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
 interface UseRequestOptions<T, P extends unknown[]> {
@@ -36,6 +37,8 @@ export function useRequest<T, P extends unknown[] = []>(
     onFinally,
   } = options
 
+  const { start, stop } = useProgress()
+
   const serviceRef = useRef(service)
   const onBeforeRef = useRef(onBefore)
   const onSuccessRef = useRef(onSuccess)
@@ -68,6 +71,7 @@ export function useRequest<T, P extends unknown[] = []>(
 
   const run = useCallback(async (...args: P) => {
     onBeforeRef.current?.(args)
+    start()
     setLoading(true)
     setError(undefined)
 
@@ -84,10 +88,11 @@ export function useRequest<T, P extends unknown[] = []>(
       // 与 ahooks 一致：run 不向外抛错，错误只进入 error 状态与 onError 回调
     }
     finally {
+      stop()
       setLoading(false)
       onFinallyRef.current?.(args)
     }
-  }, [])
+  }, [start, stop])
 
   // 自动模式：挂载时执行一次（与 ahooks useRequest 语义一致，defaultParams 变化不重新请求）
   useEffect(() => {

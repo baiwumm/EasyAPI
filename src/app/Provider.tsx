@@ -12,7 +12,6 @@ import { ViewTransition } from 'react'
 import BackTop from '@/components/BackTop'
 import Footer from '@/components/Footer'
 import Header from '@/components/Header'
-import ProgressBridge from '@/components/ProgressBridge'
 import { useAvailableHeight } from '@/hooks/use-available-height'
 
 import type { FC, PropsWithChildren } from 'react'
@@ -25,7 +24,6 @@ const Providers: FC<PropsWithChildren> = ({ children }) => {
   })
   return (
     <ProgressProvider color="var(--accent)" options={{ showSpinner: true }} shallowRouting>
-      <ProgressBridge />
       {/* 顶部 */}
       <Header />
       {/* 主体内容 */}
