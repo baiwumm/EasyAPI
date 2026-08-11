@@ -70,7 +70,7 @@ export default function RootLayout({
         {/* Vercel 分析 */}
         <Analytics />
       </head>
-      <body className="bg-background text-foreground">
+      <body className="bg-background text-foreground flex min-h-screen flex-col">
         <ThemeProvider attribute="class" enableSystem={false}>
           <MotionConfig reducedMotion="user">
             <FullLoading>
