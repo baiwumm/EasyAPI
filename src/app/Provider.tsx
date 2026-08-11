@@ -7,13 +7,15 @@
  */
 'use client'
 import { AppProgressProvider as ProgressProvider } from '@bprogress/next'
+import dynamic from 'next/dynamic'
 import { useEffect, ViewTransition } from 'react'
 
-import BackTop from '@/components/BackTop'
-import Footer from '@/components/Footer'
 import Header from '@/components/Header'
 
 import type { FC, PropsWithChildren } from 'react'
+
+/** 返回顶部按钮：纯交互增强，首屏不需要，拆为独立 chunk 客户端懒加载 */
+const BackTop = dynamic(() => import('@/components/BackTop'), { ssr: false })
 
 /** 后退方向标记保留时间，动画结束后清除，避免影响后续前进导航 */
 const NAV_DIR_RESET_DELAY = 1000
@@ -46,8 +48,6 @@ const Providers: FC<PropsWithChildren> = ({ children }) => {
           {children}
         </main>
       </ViewTransition>
-      {/* 底部版权 */}
-      <Footer />
       <BackTop />
     </ProgressProvider>
   )

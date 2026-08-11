@@ -8,7 +8,7 @@
 'use client'
 import { QuoteOpen } from '@gravity-ui/icons'
 import { usePathname } from 'next/navigation'
-import { useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 
 import CopyText from '@/components/CopyText'
 import RefreshButton from '@/components/RefreshButton'
@@ -52,9 +52,10 @@ const QuoteWorld: FC<QuoteWorldProps> = ({ title, formWhoField = '', fromField =
     return content ? `—— ${from_who || ''}${from ? `「${from}」` : ''}` : ''
   }, [data, formWhoField, fromField])
 
-  const onSentenceComplete = () => {
+  // 稳定引用：避免每次渲染新建函数导致 TypingAnimation 的 effect 重跑
+  const onSentenceComplete = useCallback(() => {
     setShowFormContent(true)
-  }
+  }, [])
   return (
     <div className="flex-1 flex flex-col justify-between gap-4">
       {/* 头部区域 */}

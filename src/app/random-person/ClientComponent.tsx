@@ -25,24 +25,16 @@ const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
   const [sex, setSex] = useState<PersonSex>(PERSON_SEXS.GENERIC)
   const [size, setSize] = useState<PersonSize>(PERSON_SIZES.SIZE_128)
 
-  // 实际请求参数
-  const [params, setParams] = useState({
-    count,
-    sex,
-    size,
-  })
-
   const { data = [], loading, error, run } = useRequest(
     async params => get(await getApiData(pathname, params), 'data', []),
     {
-      defaultParams: [params],
+      defaultParams: [{ count, sex, size }],
     },
   )
 
   const handleGenerate = () => {
-    const newParams = { count, sex, size }
-    setParams(newParams)
-    run(newParams)
+    // 事件处理器中直接传参，无需维护可派生的 params state
+    run({ count, sex, size })
   }
 
   return (
@@ -60,10 +52,10 @@ const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
               <Image
                 key={url}
                 alt={title}
-                height={params.size}
+                height={size}
                 loading="eager"
                 src={url}
-                width={params.size}
+                width={size}
                 onClick={() => copy(url)}
                 className="rounded-xl cursor-pointer"
               />

@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 
-import { RESPONSE } from '@/enums'
+import { getBingWallpaper } from '@/lib/server/bing-wallpaper'
 import { catchError, get4kUrl, getUrl, responseMessage } from '@/lib/utils'
 
 /*
@@ -17,31 +17,20 @@ export async function GET(request: NextRequest) {
     // 解析 URL 查询参数
     const searchParams = request.nextUrl.searchParams
     const format = searchParams.get('format')
-    const response = await fetch(
-      'https://www.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1&mkt=zh-CN',
-    )
 
-    // 执行失败
-    if (!response.ok) {
-      return NextResponse.json(responseMessage(null, `bind 每日壁纸 接口出错：HTTP ${response.status}`, RESPONSE.ERROR))
-    }
-
-    const responseBody = await response.json()
-
-    const img = responseBody.images?.[0]
-
-    const url = `https://bing.com${img.url}`
+    // 模块级缓存：每日壁纸一天内不变，避免重复请求 Bing
+    const wallpaper = await getBingWallpaper()
 
     const result = {
-      url: getUrl(url),
-      url_4k: get4kUrl(url),
-      title: img.title,
-      copyright: img.copyright,
+      url: getUrl(wallpaper.url),
+      url_4k: get4kUrl(wallpaper.url),
+      title: wallpaper.title,
+      copyright: wallpaper.copyright,
     }
 
     // 返回 text 格式
     if (format === 'text') {
-      return new NextResponse(getUrl(url), {
+      return new NextResponse(getUrl(wallpaper.url), {
         headers: {
           'Content-Type': 'text/plain; charset=utf-8',
         },

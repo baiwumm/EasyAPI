@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 
 import { RESPONSE } from '@/enums'
-import { getSupabaseServerClient } from '@/lib/supabase/server'
+import { getSupabaseServerClient, requireUser } from '@/lib/supabase/server'
 import { catchError, responseMessage } from '@/lib/utils'
 
 /*
@@ -19,7 +19,6 @@ import type { NextRequest } from 'next/server'
  */
 export async function GET(request: NextRequest) {
   try {
-    const supabase = await getSupabaseServerClient()
     // 解析 URL 查询参数
     const searchParams = request.nextUrl.searchParams
     const pageIndex = Number(searchParams.get('pageIndex') || '0')
@@ -27,7 +26,7 @@ export async function GET(request: NextRequest) {
     const name = searchParams.get('name')
     const category_id = searchParams.get('category_id')
 
-    // 判断参数
+    // 判断参数（同步校验前置，通过后才创建客户端）
     if (
       Number.isNaN(pageIndex)
       || Number.isNaN(pageSize)
@@ -40,6 +39,8 @@ export async function GET(request: NextRequest) {
     // 计算分页
     const start = pageIndex * pageSize
     const end = start + pageSize - 1
+
+    const supabase = await getSupabaseServerClient()
 
     // 查询 sql
     let sqlQuery = supabase
@@ -93,6 +94,12 @@ export async function GET(request: NextRequest) {
  */
 export async function POST(request: NextRequest) {
   try {
+    // 校验登录态
+    const user = await requireUser()
+    if (!user) {
+      return NextResponse.json(responseMessage(null, '未登录', RESPONSE.ERROR), { status: 401 })
+    }
+
     const supabase = await getSupabaseServerClient()
     // 解析请求体
     const body = await request.json() // 如果是 JSON 数据

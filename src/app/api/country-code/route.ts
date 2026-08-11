@@ -15,14 +15,16 @@ import type { NextRequest } from 'next/server'
 
 export async function GET(request: NextRequest) {
   try {
-    const supabase = await getSupabaseServerClient()
     // 解析 URL 查询参数
     const searchParams = request.nextUrl.searchParams
     const keyword = searchParams.get('keyword')
 
+    // 同步参数校验前置，通过后才创建客户端
     if (!keyword) {
       return NextResponse.json(responseMessage(null, '请输入查询关键字', RESPONSE.ERROR))
     }
+
+    const supabase = await getSupabaseServerClient()
 
     // 按邮编查地区，返回单个对象
     const { data, error } = await supabase

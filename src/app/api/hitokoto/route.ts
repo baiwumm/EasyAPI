@@ -15,7 +15,6 @@ import type { NextRequest } from 'next/server'
 
 export async function GET(request: NextRequest) {
   try {
-    const supabase = await getSupabaseServerClient()
     // 解析 URL 查询参数
     const searchParams = request.nextUrl.searchParams
     // 参数处理
@@ -32,6 +31,13 @@ export async function GET(request: NextRequest) {
       : null
 
     const format = searchParams.get('format')
+
+    // 同步参数校验前置，通过后才创建客户端
+    if ((minLength !== null && Number.isNaN(minLength)) || (maxLength !== null && Number.isNaN(maxLength))) {
+      return NextResponse.json(responseMessage(null, 'minLength/maxLength 必须是数字', RESPONSE.ERROR))
+    }
+
+    const supabase = await getSupabaseServerClient()
 
     // 调用接口
     const { data, error } = await supabase.rpc('get_random_hitokoto', {

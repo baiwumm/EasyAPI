@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useId, useRef, useState } from 'react'
+import { useId, useRef, useState } from 'react'
 import { flushSync } from 'react-dom'
 
 interface UseBlurCircleThemeProps {
@@ -7,6 +7,31 @@ interface UseBlurCircleThemeProps {
   blurAmount?: number
   isDarkMode?: boolean // 由 next-themes 控制
   onDarkModeChange?: (isDark: boolean) => void // 调用 next-themes 的 setTheme
+}
+
+// 基础样式为 app 级全局资源，模块加载时注入一次（SSR 阶段无 document 自动跳过）
+const BASE_STYLE_ID = 'blur-circle-base-style'
+const BASE_STYLE = `
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+    mix-blend-mode: normal;
+  }
+  
+  /* 修复高分辨率屏幕的闪烁 */
+  ::view-transition-group(root),
+  ::view-transition-image-pair(root),
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    backface-visibility: hidden;
+    perspective: 1000px;
+  }
+`
+if (typeof document !== 'undefined' && !document.getElementById(BASE_STYLE_ID)) {
+  const style = document.createElement('style')
+  style.id = BASE_STYLE_ID
+  style.textContent = BASE_STYLE
+  document.head.appendChild(style)
 }
 
 export function useBlurCircleTheme(props: UseBlurCircleThemeProps = {}) {
@@ -22,32 +47,6 @@ export function useBlurCircleTheme(props: UseBlurCircleThemeProps = {}) {
   const id = useId()
   const animationIdRef = useRef(`blur-circle-${id}`)
   const [isAnimating, setIsAnimating] = useState(false)
-
-  // 注入基础样式
-  useEffect(() => {
-    const styleId = 'blur-circle-base-style'
-    if (!document.getElementById(styleId)) {
-      const style = document.createElement('style')
-      style.id = styleId
-      style.textContent = `
-        ::view-transition-old(root),
-        ::view-transition-new(root) {
-          animation: none;
-          mix-blend-mode: normal;
-        }
-        
-        /* 修复高分辨率屏幕的闪烁 */
-        ::view-transition-group(root),
-        ::view-transition-image-pair(root),
-        ::view-transition-old(root),
-        ::view-transition-new(root) {
-          backface-visibility: hidden;
-          perspective: 1000px;
-        }
-      `
-      document.head.appendChild(style)
-    }
-  }, [])
 
   // 创建模糊圆遮罩
   const createBlurCircleMask = (blur: number) => {

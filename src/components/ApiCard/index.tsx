@@ -18,13 +18,14 @@ interface ApiCardProps {
   data: App.Api
 }
 
+// 模块级常量：避免每次重渲染创建新的 Intl 实例
+const formatter = new Intl.NumberFormat('zh-CN', {
+  notation: 'compact',
+  maximumFractionDigits: 2,
+})
+
 const ApiCard: FC<ApiCardProps> = memo(({ data }) => {
   const { name, desc, path, method, call_count = 0, pinned, is_featured, created_at } = data || {}
-
-  const formatter = new Intl.NumberFormat('zh-CN', {
-    notation: 'compact',
-    maximumFractionDigits: 2,
-  })
 
   const isNew = dayjs(created_at).isAfter(dayjs().subtract(7, 'day'))
   return (

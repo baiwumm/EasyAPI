@@ -4,7 +4,7 @@ import {
   motion,
   useInView,
 } from 'motion/react'
-import { useRef } from 'react'
+import { useMemo, useRef } from 'react'
 
 import type {
   MotionProps,
@@ -47,7 +47,8 @@ export default function BlurFade({
   const ref = useRef(null)
   const inViewResult = useInView(ref, { once: true, margin: inViewMargin })
   const isInView = !inView || inViewResult
-  const defaultVariants: Variants = {
+  // 变体随方向/偏移/模糊参数变化，仅在参数变化时重建，避免每次渲染分配新对象
+  const defaultVariants = useMemo<Variants>(() => ({
     hidden: {
       [direction === 'left' || direction === 'right' ? 'x' : 'y']:
         direction === 'right' || direction === 'down' ? -offset : offset,
@@ -59,7 +60,7 @@ export default function BlurFade({
       opacity: 1,
       filter: 'none',
     },
-  }
+  }), [direction, offset, blur])
   const combinedVariants = variant || defaultVariants
   return (
     <motion.div

@@ -11,12 +11,45 @@ importers:
       '@bprogress/next':
         specifier: ^3.2.12
         version: 3.2.12(next@16.3.0(@types/node@20.19.30)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      '@dicebear/adventurer':
+        specifier: 9.4.0
+        version: 9.4.0(@dicebear/core@9.4.0)
+      '@dicebear/avataaars':
+        specifier: 9.4.0
+        version: 9.4.0(@dicebear/core@9.4.0)
+      '@dicebear/bottts':
+        specifier: 9.4.0
+        version: 9.4.0(@dicebear/core@9.4.0)
       '@dicebear/collection':
         specifier: ^9.4.0
         version: 9.4.0(@dicebear/core@9.4.0)
       '@dicebear/core':
         specifier: ^9.4.0
         version: 9.4.0
+      '@dicebear/fun-emoji':
+        specifier: 9.4.0
+        version: 9.4.0(@dicebear/core@9.4.0)
+      '@dicebear/lorelei':
+        specifier: 9.4.0
+        version: 9.4.0(@dicebear/core@9.4.0)
+      '@dicebear/micah':
+        specifier: 9.4.0
+        version: 9.4.0(@dicebear/core@9.4.0)
+      '@dicebear/notionists':
+        specifier: 9.4.0
+        version: 9.4.0(@dicebear/core@9.4.0)
+      '@dicebear/open-peeps':
+        specifier: 9.4.0
+        version: 9.4.0(@dicebear/core@9.4.0)
+      '@dicebear/personas':
+        specifier: 9.4.0
+        version: 9.4.0(@dicebear/core@9.4.0)
+      '@dicebear/pixel-art':
+        specifier: 9.4.0
+        version: 9.4.0(@dicebear/core@9.4.0)
+      '@dicebear/thumbs':
+        specifier: 9.4.0
+        version: 9.4.0(@dicebear/core@9.4.0)
       '@faker-js/faker':
         specifier: ^10.3.0
         version: 10.3.0

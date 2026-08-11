@@ -8,15 +8,18 @@
 'use client'
 import { AbbrApi, HouseFill } from '@gravity-ui/icons'
 import { Button, Tooltip } from '@heroui/react'
+import dynamic from 'next/dynamic'
 import Image from 'next/image'
 import Link from 'next/link'
 
 import ThemeSwitcher from '@/components/ThemeSwitcher'
 import TimeAndLunar from '@/components/TimeAndLunar'
-import UserAvatar from '@/components/UserAvatar'
 import pkg from '#/package.json'
 
 import type { FC, ReactNode } from 'react'
+
+/** 用户头像：依赖 supabase-js，拆为独立 chunk 按需加载 */
+const UserAvatar = dynamic(() => import('@/components/UserAvatar'))
 
 interface Social {
   name: string

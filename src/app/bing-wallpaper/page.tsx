@@ -1,6 +1,7 @@
 import Image from 'next/image'
 
 import CopyText from '@/components/CopyText'
+import { getBingWallpaper } from '@/lib/server/bing-wallpaper'
 import { getUrl } from '@/lib/utils'
 
 /*
@@ -16,28 +17,21 @@ export const metadata: Metadata = {
   title: 'bind 每日壁纸',
 }
 
-export default async function BingWallpaper() {
-  const res = await fetch(
-    'https://www.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1&mkt=zh-CN',
-  )
-  if (!res.ok) {
-    throw new Error(`Failed to fetch Bing wallpaper: ${res.status}`)
-  }
-  const body = await res.json()
+// 每日壁纸一天内不变，页面级 ISR 缓存 24 小时
+export const revalidate = 86400
 
-  const img = body.images?.[0]
-  if (!img) {
-    throw new Error('No wallpaper found')
-  }
-  const url = `https://bing.com${img.url}`
+export default async function BingWallpaper() {
+  // 模块级缓存：每日壁纸一天内不变，避免每次访问重复请求 Bing
+  const wallpaper = await getBingWallpaper()
+
   return (
     <div className="flex-1 flex flex-col justify-between gap-4">
       <h1 className="text-2xl font-black shrink-0">bind 每日壁纸</h1>
       <div className="relative flex-1 w-full h-full">
-        <Image alt={img.title} fill src={getUrl(url)} className="object-cover rounded-2xl" />
+        <Image alt={wallpaper.title} fill src={getUrl(wallpaper.url)} className="object-cover rounded-2xl" />
       </div>
       <div className="flex justify-center shrink-0">
-        <CopyText content={url} />
+        <CopyText content={wallpaper.url} />
       </div>
     </div>
   )

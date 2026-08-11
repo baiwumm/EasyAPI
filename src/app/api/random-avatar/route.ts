@@ -5,20 +5,20 @@
  * @LastEditTime: 2026-03-13 17:56:26
  * @Description:
  */
-import {
-  adventurer,
-  avataaars,
-  bottts,
-  funEmoji,
-  lorelei,
-  micah,
-  notionists,
-  openPeeps,
-  personas,
-  pixelArt,
-  thumbs,
-} from '@dicebear/collection'
+// 直接导入独立子包，绕开 @dicebear/collection 的巨型 barrel（会解析全部 30+ 风格）；
+// namespace 导入与 collection 内部一致，提供 create/meta/schema，满足 Style 类型
+import * as adventurer from '@dicebear/adventurer'
+import * as avataaars from '@dicebear/avataaars'
+import * as bottts from '@dicebear/bottts'
 import { createAvatar } from '@dicebear/core'
+import * as funEmoji from '@dicebear/fun-emoji'
+import * as lorelei from '@dicebear/lorelei'
+import * as micah from '@dicebear/micah'
+import * as notionists from '@dicebear/notionists'
+import * as openPeeps from '@dicebear/open-peeps'
+import * as personas from '@dicebear/personas'
+import * as pixelArt from '@dicebear/pixel-art'
+import * as thumbs from '@dicebear/thumbs'
 import { faker } from '@faker-js/faker'
 import { NextResponse } from 'next/server'
 

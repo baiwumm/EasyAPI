@@ -8,7 +8,7 @@ import { DatabaseFill, Plus } from '@gravity-ui/icons'
 import { Button, Typography } from '@heroui/react'
 import { motion } from 'motion/react'
 import { useRouter } from 'next/navigation'
-import { useMemo } from 'react'
+import { useCallback } from 'react'
 
 import AlertContent from '@/components/AlertContent'
 import ApiCard from '@/components/ApiCard'
@@ -37,11 +37,12 @@ interface HomeContentProps {
 
 export default function HomeContent({ data }: HomeContentProps) {
   const router = useRouter()
-  const list = useMemo(() => data ?? [], [data])
+  // 简单表达式无需 useMemo
+  const list = data ?? []
 
-  const goAdmin = () => {
+  const goAdmin = useCallback(() => {
     router.push('/admin')
-  }
+  }, [router])
 
   if (!list?.length) {
     return (

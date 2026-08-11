@@ -1,5 +1,4 @@
 'use client'
-import { fakerZH_CN as faker } from '@faker-js/faker'
 import { Avatar, ListBox, NumberField, Select } from '@heroui/react'
 import { useState } from 'react'
 
@@ -10,9 +9,65 @@ import type { FC } from 'react'
 
 type Style = typeof AVATAR_STYLES.valueType
 
+// 随机姓名池（本地常量，避免在客户端引入 @faker-js/faker 约 500KB 的 bundle）
+const NAME_POOL = [
+  // 中文名
+  '张伟',
+  '王芳',
+  '李娜',
+  '刘洋',
+  '陈静',
+  '杨帆',
+  '赵磊',
+  '黄敏',
+  '周杰',
+  '吴婷',
+  '徐强',
+  '孙丽',
+  '马超',
+  '朱琳',
+  '胡军',
+  '郭涛',
+  '何雪',
+  '高远',
+  '林欣',
+  '罗成',
+  '郑爽',
+  '梁博',
+  '谢宁',
+  '宋佳',
+  '唐明',
+  '许晴',
+  '韩雪',
+  '冯宇',
+  '邓超',
+  '曹阳',
+  // 英文名
+  'Alice',
+  'Bob',
+  'Carol',
+  'David',
+  'Eve',
+  'Frank',
+  'Grace',
+  'Henry',
+  'Ivy',
+  'Jack',
+  'Kevin',
+  'Lily',
+  'Mike',
+  'Nina',
+  'Oliver',
+  'Pam',
+  'Quinn',
+  'Ryan',
+  'Sara',
+  'Tom',
+]
+
 function generateUsers(length = 5) {
   return Array.from({ length }).map(() => ({
-    name: faker.person.fullName(),
+    name: NAME_POOL[Math.floor(Math.random() * NAME_POOL.length)]!,
   }))
 }
 

@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 
 import { RESPONSE } from '@/enums'
-import { getSupabaseServerClient } from '@/lib/supabase/server'
+import { getSupabaseServerClient, requireUser } from '@/lib/supabase/server'
 import { catchError, responseMessage } from '@/lib/utils'
 
 import type { NextRequest } from 'next/server'
@@ -12,8 +12,16 @@ import type { NextRequest } from 'next/server'
  */
 export async function DELETE(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const supabase = await getSupabaseServerClient()
+    // 先解析动态参数（不依赖客户端）
     const { id } = await params
+
+    // 校验登录态
+    const user = await requireUser()
+    if (!user) {
+      return NextResponse.json(responseMessage(null, '未登录', RESPONSE.ERROR), { status: 401 })
+    }
+
+    const supabase = await getSupabaseServerClient()
 
     // 删除分类
     const { data, error } = await supabase
@@ -41,9 +49,16 @@ export async function DELETE(request: Request, { params }: { params: Promise<{ i
  */
 export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const supabase = await getSupabaseServerClient()
-    // 获取动态参数
+    // 先解析动态参数（不依赖客户端）
     const { id } = await params
+
+    // 校验登录态
+    const user = await requireUser()
+    if (!user) {
+      return NextResponse.json(responseMessage(null, '未登录', RESPONSE.ERROR), { status: 401 })
+    }
+
+    const supabase = await getSupabaseServerClient()
     // 解析请求体
     const body = await request.json() // 如果是 JSON 数据
 

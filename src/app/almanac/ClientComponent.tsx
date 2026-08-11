@@ -27,6 +27,19 @@ interface DataType {
   jiuxing: string
 }
 
+// 列定义不依赖 state/props，提升为模块级常量
+const columns: { label: string, value: keyof DataType, className?: string }[] = [
+  { label: '日期', value: 'date' },
+  { label: '时段', value: 'hours', className: 'w-40' },
+  { label: '时辰', value: 'hour', className: 'w-20' },
+  { label: '宜', value: 'yi' },
+  { label: '忌', value: 'ji' },
+  { label: '冲', value: 'chong' },
+  { label: '煞', value: 'sha' },
+  { label: '纳音', value: 'nayin' },
+  { label: '九星', value: 'jiuxing' },
+]
+
 const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
   const pathname = usePathname()
   const [date, setDate] = useState<DateValue | null>(() => today(getLocalTimeZone()))
@@ -41,18 +54,6 @@ const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
     async () => get(await getApiData(pathname, params), 'data', []),
   )
 
-  // 列定义
-  const columns: { label: string, value: keyof DataType, className?: string }[] = [
-    { label: '日期', value: 'date' },
-    { label: '时段', value: 'hours', className: 'w-40' },
-    { label: '时辰', value: 'hour', className: 'w-20' },
-    { label: '宜', value: 'yi' },
-    { label: '忌', value: 'ji' },
-    { label: '冲', value: 'chong' },
-    { label: '煞', value: 'sha' },
-    { label: '纳音', value: 'nayin' },
-    { label: '九星', value: 'jiuxing' },
-  ]
   return (
     <div className="flex-1 flex flex-col justify-between gap-4">
       {/* 头部区域 */}

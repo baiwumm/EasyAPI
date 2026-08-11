@@ -15,15 +15,20 @@ import type { NextRequest } from 'next/server'
 
 export async function GET(request: NextRequest) {
   try {
-    const supabase = await getSupabaseServerClient()
     // 解析 URL 查询参数
     const searchParams = request.nextUrl.searchParams
     const type = Number(searchParams.get('type') || POSTALCODE_TYPES.CODE_TO_AREA) // 1：根据邮编查地区，2：根据地区查邮编
     const keyword = searchParams.get('keyword') // 1：邮政编码，2：地区名称（模糊查询）
 
+    // 同步参数校验前置，通过后才创建客户端
     if (!keyword) {
       return NextResponse.json(responseMessage(null, '请输入查询关键字', RESPONSE.ERROR))
     }
+    if (type !== POSTALCODE_TYPES.CODE_TO_AREA && type !== POSTALCODE_TYPES.AREA_TO_CODE) {
+      return NextResponse.json(responseMessage(null, `type 参数错误，只能是${POSTALCODE_TYPES.values.join('、')}`, RESPONSE.ERROR))
+    }
+
+    const supabase = await getSupabaseServerClient()
 
     let data
     const selectFields = 'province,city,area,areaCode,postCode'

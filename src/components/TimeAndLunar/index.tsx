@@ -19,11 +19,15 @@ const TimeAndLunar: FC = memo(() => {
 
   useEffect(() => {
     let lastDate = ''
-    let frameId: number
+    let lastSeconds = -1
 
-    const tick = () => {
+    const update = () => {
       const current = new Date()
-      setNow(current)
+      // 时钟只显示到秒：秒未变化时跳过 setState，避免 60fps 无意义重渲染
+      if (current.getSeconds() !== lastSeconds) {
+        lastSeconds = current.getSeconds()
+        setNow(current)
+      }
 
       const dateStr = dayjs(current).format('YYYY-MM-DD')
       if (dateStr !== lastDate) {
@@ -34,12 +38,12 @@ const TimeAndLunar: FC = memo(() => {
           `${l.getYearInGanZhi()}年 ${l.getMonthInGanZhi()}月 ${l.getDayInGanZhi()}日 ${l.getMonthInChinese()}月${l.getDayInChinese()} 星期${l.getWeekInChinese()}`,
         )
       }
-
-      frameId = requestAnimationFrame(tick)
     }
 
-    frameId = requestAnimationFrame(tick)
-    return () => cancelAnimationFrame(frameId)
+    // 250ms 轮询：秒跳变后及时更新，同时避免每帧触发
+    update()
+    const id = window.setInterval(update, 250)
+    return () => window.clearInterval(id)
   }, [])
 
   const d = now

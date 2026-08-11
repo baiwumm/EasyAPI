@@ -15,10 +15,10 @@ import { getSupabaseServerClient } from '@/lib/supabase/server'
 export const fetchHomeData = cache(async (): Promise<App.Category[]> => {
   const supabase = await getSupabaseServerClient()
 
-  // 查询 sql
+  // 查询 sql（只取页面实际用到的列，减小 RSC 序列化体积）
   const { data, error } = await supabase
     .from('ea_categorys')
-    .select('*,apis:ea_apis(*)')
+    .select('id,name,sort,created_at,apis:ea_apis(id,name,desc,path,method,call_count,pinned,is_featured,created_at,sort)')
     .order('sort', {
       ascending: false,
     })

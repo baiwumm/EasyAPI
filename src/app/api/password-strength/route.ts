@@ -15,6 +15,16 @@ import { catchError, responseMessage } from '@/lib/utils'
 
 import type { NextRequest } from 'next/server'
 
+// zxcvbn 全局配置与请求无关，模块加载时初始化一次，避免每个请求重复 setOptions
+zxcvbnOptions.setOptions({
+  translations: zxcvbnZhPackage.translations,
+  graphs: zxcvbnCommonPackage.adjacencyGraphs,
+  dictionary: {
+    ...zxcvbnCommonPackage.dictionary,
+    ...zxcvbnZhPackage.dictionary,
+  },
+})
+
 export async function GET(request: NextRequest) {
   try {
     // 解析 URL 查询参数
@@ -30,17 +40,6 @@ export async function GET(request: NextRequest) {
     if (password.length > 128) {
       return NextResponse.json(responseMessage(null, '参数 password 长度不能超过 128 个字符', RESPONSE.ERROR))
     }
-
-    const options = {
-      translations: zxcvbnZhPackage.translations,
-      graphs: zxcvbnCommonPackage.adjacencyGraphs,
-      dictionary: {
-        ...zxcvbnCommonPackage.dictionary,
-        ...zxcvbnZhPackage.dictionary,
-      },
-    }
-
-    zxcvbnOptions.setOptions(options)
 
     const result = zxcvbn(password)
 
