@@ -8,7 +8,6 @@ import {
   Select,
   toast,
 } from '@heroui/react'
-import { useRequest } from 'ahooks'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
@@ -16,6 +15,7 @@ import { useEffect, useMemo, useState } from 'react'
 import RefreshButton from '@/components/RefreshButton'
 import RequestContent from '@/components/RequestContent'
 import { QRCODE_FORMATS } from '@/enums'
+import { useRequest } from '@/hooks/use-request'
 
 import type { FC } from 'react'
 

@@ -7,7 +7,6 @@ import {
   Table,
   toast,
 } from '@heroui/react'
-import { useRequest } from 'ahooks'
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
 
@@ -17,6 +16,7 @@ import RefreshButton from '@/components/RefreshButton'
 import RequestContent from '@/components/RequestContent'
 import TableLoading from '@/components/TableLoading'
 import { POSTALCODE_TYPES } from '@/enums'
+import { useRequest } from '@/hooks/use-request'
 import { get } from '@/lib/utils'
 import { getApiData } from '@/services/common'
 

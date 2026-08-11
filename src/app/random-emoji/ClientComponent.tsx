@@ -1,7 +1,6 @@
 'use client'
 import { Copy } from '@gravity-ui/icons'
 import { Button, Chip, NumberField, Table } from '@heroui/react'
-import { useRequest } from 'ahooks'
 import { usePathname } from 'next/navigation'
 import { useMemo, useState } from 'react'
 
@@ -10,6 +9,7 @@ import RefreshButton from '@/components/RefreshButton'
 import RequestContent from '@/components/RequestContent'
 import TableLoading from '@/components/TableLoading'
 import { useCopy } from '@/hooks/use-copy'
+import { useRequest } from '@/hooks/use-request'
 import { get } from '@/lib/utils'
 import { getApiData } from '@/services/common'
 

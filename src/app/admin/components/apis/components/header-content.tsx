@@ -20,14 +20,15 @@ import ColumnsVisibility from '@/components/ColumnsVisibility'
 
 import type { useOverlayState } from '@heroui/react'
 import type { Table } from '@tanstack/react-table'
-import type { SetState } from 'ahooks/es/useSetState'
-import type { FC, KeyboardEvent } from 'react'
+import type { Dispatch, FC, KeyboardEvent, SetStateAction } from 'react'
 
 interface HeaderContentProps {
   table: Table<App.Api>
   categorysList: App.Category[]
-  searchParams: App.ApiQueryParams
-  setSearchParams: SetState<App.ApiQueryParams>
+  name: string
+  categoryId: string
+  setName: Dispatch<SetStateAction<string>>
+  setCategoryId: Dispatch<SetStateAction<string>>
   loading: boolean
   handleSearch: VoidFunction
   handleReset: VoidFunction
@@ -37,8 +38,10 @@ interface HeaderContentProps {
 const HeaderContent: FC<HeaderContentProps> = ({
   table,
   categorysList = [],
-  searchParams,
-  setSearchParams,
+  name,
+  categoryId,
+  setName,
+  setCategoryId,
   loading = false,
   handleSearch,
   handleReset,
@@ -57,8 +60,8 @@ const HeaderContent: FC<HeaderContentProps> = ({
         <SearchField
           aria-label="接口名称"
           variant="secondary"
-          value={searchParams.name}
-          onChange={value => setSearchParams({ name: value })}
+          value={name}
+          onChange={setName}
           onKeyDown={handleKeyDown}
         >
           <SearchField.Group>
@@ -71,8 +74,8 @@ const HeaderContent: FC<HeaderContentProps> = ({
           aria-label="所属分类"
           variant="secondary"
           placeholder="所属分类"
-          value={searchParams.category_id}
-          onChange={id => setSearchParams({ category_id: id as string })}
+          value={categoryId}
+          onChange={id => setCategoryId(id as string)}
           className="w-60"
         >
           <Select.Trigger>

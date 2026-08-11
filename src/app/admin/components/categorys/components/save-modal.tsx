@@ -15,10 +15,10 @@ import {
   toast,
 
 } from '@heroui/react'
-import { useRequest } from 'ahooks'
 import { useEffect, useRef } from 'react'
 
 import { RESPONSE } from '@/enums'
+import { useRequest } from '@/hooks/use-request'
 import { addCategory, updateCategory } from '@/services/categorys'
 
 import type { UseOverlayStateReturn } from '@heroui/react'

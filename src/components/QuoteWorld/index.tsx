@@ -7,7 +7,6 @@
  */
 'use client'
 import { QuoteOpen } from '@gravity-ui/icons'
-import { useRequest } from 'ahooks'
 import { usePathname } from 'next/navigation'
 import { useMemo, useState } from 'react'
 
@@ -15,6 +14,7 @@ import CopyText from '@/components/CopyText'
 import RefreshButton from '@/components/RefreshButton'
 import RequestContent from '@/components/RequestContent'
 import TypingAnimation from '@/components/TypingAnimation'
+import { useRequest } from '@/hooks/use-request'
 import { get } from '@/lib/utils'
 import { getApiData } from '@/services/common'
 

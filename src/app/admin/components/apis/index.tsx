@@ -16,11 +16,11 @@ import {
   useReactTable,
 
 } from '@tanstack/react-table'
-import { useRequest, useSetState } from 'ahooks'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import DataTablePagination from '@/components/DataTablePagination'
 import { RESPONSE } from '@/enums'
+import { useRequest } from '@/hooks/use-request'
 import { get } from '@/lib/utils'
 import { delApi, getApisList } from '@/services/apis'
 import { getCategorysList } from '@/services/categorys'
@@ -31,7 +31,7 @@ import DeleteDialog from './components/delete-dialog'
 import HeaderContent from './components/header-content'
 import SaveModal from './components/save-modal'
 
-import type { SortingState, VisibilityState } from '@tanstack/react-table'
+import type { PaginationState, SortingState, VisibilityState } from '@tanstack/react-table'
 import type { FC } from 'react'
 
 // 初始参数
@@ -44,7 +44,13 @@ const InitialParams: App.ApiQueryParams = {
 
 const Apis: FC = () => {
   // 搜索参数
-  const [searchParams, setSearchParams] = useSetState<App.ApiQueryParams>(InitialParams)
+  const [name, setName] = useState('')
+  const [categoryId, setCategoryId] = useState('')
+  const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 10 })
+  const searchParams = useMemo<App.ApiQueryParams>(
+    () => ({ name, category_id: categoryId, ...pagination }),
+    [name, categoryId, pagination],
+  )
   // 排序
   const [sorting, setSorting] = useState<SortingState>([])
   // 受控列
@@ -81,7 +87,9 @@ const Apis: FC = () => {
 
   // 重置
   const handleReset = () => {
-    setSearchParams(InitialParams)
+    setName('')
+    setCategoryId('')
+    setPagination({ pageIndex: 0, pageSize: 10 })
     run(InitialParams)
   }
 
@@ -132,14 +140,11 @@ const Apis: FC = () => {
     pageCount: Math.ceil((total || 0) / searchParams.pageSize),
     getRowId: (row: App.Api) => row.id,
     state: {
-      pagination: {
-        pageIndex: searchParams.pageIndex,
-        pageSize: searchParams.pageSize,
-      },
+      pagination,
       sorting,
       columnVisibility,
     },
-    onPaginationChange: setSearchParams,
+    onPaginationChange: setPagination,
     manualPagination: true,
     onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
@@ -171,13 +176,15 @@ const Apis: FC = () => {
     <>
       <Card className="shadow-lg">
         <HeaderContent
+          name={name}
+          categoryId={categoryId}
           categorysList={categorysList || []}
           handleReset={handleReset}
           handleSearch={handleSearch}
           loading={loading}
           saveModalState={saveModalState}
-          searchParams={searchParams}
-          setSearchParams={setSearchParams}
+          setCategoryId={setCategoryId}
+          setName={setName}
           table={table}
         />
         <Card.Content>

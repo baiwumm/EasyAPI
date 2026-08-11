@@ -13,13 +13,12 @@ import ColumnsVisibility from '@/components/ColumnsVisibility'
 
 import type { useOverlayState } from '@heroui/react'
 import type { Table } from '@tanstack/react-table'
-import type { SetState } from 'ahooks/es/useSetState'
-import type { FC, KeyboardEvent } from 'react'
+import type { Dispatch, FC, KeyboardEvent, SetStateAction } from 'react'
 
 interface HeaderContentProps {
   table: Table<App.Category>
-  searchParams: App.CategoryQueryParams
-  setSearchParams: SetState<App.CategoryQueryParams>
+  name: string
+  setName: Dispatch<SetStateAction<string>>
   loading: boolean
   handleSearch: VoidFunction
   handleReset: VoidFunction
@@ -28,8 +27,8 @@ interface HeaderContentProps {
 
 const HeaderContent: FC<HeaderContentProps> = ({
   table,
-  searchParams,
-  setSearchParams,
+  name,
+  setName,
   loading = false,
   handleSearch,
   handleReset,
@@ -48,8 +47,8 @@ const HeaderContent: FC<HeaderContentProps> = ({
         <SearchField
           aria-label="分类名称"
           variant="secondary"
-          value={searchParams.name}
-          onChange={value => setSearchParams({ name: value })}
+          value={name}
+          onChange={setName}
           onKeyDown={handleKeyDown}
         >
           <SearchField.Group>

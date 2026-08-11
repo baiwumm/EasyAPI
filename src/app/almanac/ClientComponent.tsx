@@ -1,7 +1,6 @@
 'use client'
 import { Calendar, Chip, DateField, DatePicker, Table } from '@heroui/react'
 import { getLocalTimeZone, today } from '@internationalized/date'
-import { useRequest } from 'ahooks'
 import { usePathname } from 'next/navigation'
 import { useMemo, useState } from 'react'
 
@@ -9,6 +8,7 @@ import EmptyContent from '@/components/EmptyContent'
 import RefreshButton from '@/components/RefreshButton'
 import RequestContent from '@/components/RequestContent'
 import TableLoading from '@/components/TableLoading'
+import { useRequest } from '@/hooks/use-request'
 import { get } from '@/lib/utils'
 import { getApiData } from '@/services/common'
 
