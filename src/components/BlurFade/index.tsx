@@ -14,6 +14,7 @@ import type {
 
 interface BlurFadeProps extends MotionProps {
   children: React.ReactNode
+  id?: string
   className?: string
   variant?: {
     hidden: { y: number }
