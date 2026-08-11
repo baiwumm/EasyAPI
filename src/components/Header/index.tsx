@@ -5,39 +5,40 @@
  * @LastEditTime: 2026-07-07 16:21:45
  * @Description: 顶部导航
  */
-"use client"
-import { AbbrApi, HouseFill } from '@gravity-ui/icons';
-import { Button, Tooltip } from '@heroui/react';
-import Image from 'next/image';
-import Link from "next/link";
-import { type FC, type ReactNode } from 'react';
+'use client'
+import { AbbrApi, HouseFill } from '@gravity-ui/icons'
+import { Button, Tooltip } from '@heroui/react'
+import Image from 'next/image'
+import Link from 'next/link'
 
-import ThemeSwitcher from '@/components/ThemeSwitcher';
-import TimeAndLunar from '@/components/TimeAndLunar';
-import UserAvatar from '@/components/UserAvatar';
-import pkg from '#/package.json';
+import ThemeSwitcher from '@/components/ThemeSwitcher'
+import TimeAndLunar from '@/components/TimeAndLunar'
+import UserAvatar from '@/components/UserAvatar'
+import pkg from '#/package.json'
 
-type Social = {
-  name: string;
-  url: string;
-  icon: ReactNode;
+import type { FC, ReactNode } from 'react'
+
+interface Social {
+  name: string
+  url: string
+  icon: ReactNode
 }
 
 const socials: Social[] = [
   {
-    name: "文档",
+    name: '文档',
     url: 'https://api-docs.baiwumm.com/',
-    icon: <AbbrApi />
-  }
+    icon: <AbbrApi />,
+  },
 ]
 
 const Header: FC = () => {
   return (
-    <header className="sticky top-0 p-4 z-20 backdrop-blur-sm container mx-auto flex justify-between items-center" id="header">
+    <header id="header" className="sticky top-0 p-4 z-20 backdrop-blur-sm container mx-auto flex justify-between items-center">
       {/* 左侧 Logo */}
       <Link href="/">
         <div className="w-30 h-8 relative justify-self-start">
-          <Image src="/logo.png" fill alt="Logo" />
+          <Image alt="Logo" fill src="/logo.png" />
         </div>
       </Link>
       <TimeAndLunar />
@@ -46,8 +47,8 @@ const Header: FC = () => {
         <ThemeSwitcher />
         {socials.map(({ name, url, icon }) => (
           <Tooltip key={name} delay={0}>
-            <Link href={url} aria-label={name} target="_blank">
-              <Button variant="ghost" isIconOnly size='sm'>
+            <Link aria-label={name} href={url} target="_blank">
+              <Button size="sm" variant="ghost" isIconOnly>
                 {icon}
               </Button>
             </Link>
@@ -58,8 +59,8 @@ const Header: FC = () => {
           </Tooltip>
         ))}
         <Tooltip>
-          <Link href={pkg.author.url} aria-label="主页" target="_blank">
-            <Button variant="ghost" isIconOnly size='sm'>
+          <Link aria-label="主页" href={pkg.author.url} target="_blank">
+            <Button size="sm" variant="ghost" isIconOnly>
               <HouseFill />
             </Button>
           </Link>
@@ -71,7 +72,7 @@ const Header: FC = () => {
         {/* 登录用户信息 */}
         <UserAvatar />
       </div>
-    </header >
+    </header>
   )
 }
-export default Header;
+export default Header

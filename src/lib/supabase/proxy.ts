@@ -1,5 +1,7 @@
 import { createServerClient } from '@supabase/ssr'
-import { type NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
+
+import type { NextRequest } from 'next/server'
 
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
@@ -22,14 +24,14 @@ export async function updateSession(request: NextRequest) {
           cookiesToSet.forEach(({ name, value, options }) => supabaseResponse.cookies.set(name, value, options))
         },
       },
-    }
+    },
   )
 
-  const path = request.nextUrl.pathname;
+  const path = request.nextUrl.pathname
 
   if (path.startsWith('/api')) {
     // 去掉 /api 前缀，并且去掉查询参数
-    const reqPath = path.replace(/^\/api/, '').split('?')[0];
+    const reqPath = path.replace(/^\/api/, '').split('?')[0]
     // 先查 ea_apis 表，看有没有 path 匹配当前请求
     const { data } = await supabase
       .from('ea_apis')
@@ -43,7 +45,7 @@ export async function updateSession(request: NextRequest) {
       const increment = Math.floor(Math.random() * 10) + 1
       await supabase.rpc('increment_call_count', {
         row_id: data.id,
-        inc: increment
+        inc: increment,
       })
     }
     return supabaseResponse

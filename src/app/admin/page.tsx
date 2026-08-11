@@ -5,15 +5,16 @@
  * @LastEditTime: 2026-02-26 18:06:14
  * @Description: 管理后台
  */
-import { Folder, Globe } from "@gravity-ui/icons";
-import { Tabs } from "@heroui/react";
-import type { Metadata } from "next";
-import { type FC } from 'react';
+import { Folder, Globe } from '@gravity-ui/icons'
+import { Tabs } from '@heroui/react'
+
+import { ADMIN_TABS } from '@/enums'
 
 import Apis from './components/apis'
 import Categorys from './components/categorys'
 
-import { ADMIN_TABS } from '@/enums';
+import type { Metadata } from 'next'
+import type { FC } from 'react'
 
 export const metadata: Metadata = {
   title: '后台管理',
@@ -45,4 +46,4 @@ const Admin: FC = () => {
     </Tabs>
   )
 }
-export default Admin;
+export default Admin

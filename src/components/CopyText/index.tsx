@@ -8,11 +8,13 @@
 'use client'
 import { Check, CircleXmark, Copy } from '@gravity-ui/icons'
 import { Button, toast } from '@heroui/react'
-import { type FC, useCallback, useRef, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 
-import { useCopy } from '@/hooks/use-copy';
+import { useCopy } from '@/hooks/use-copy'
 
-type CopyTextProps = {
+import type { FC } from 'react'
+
+interface CopyTextProps {
   content: string
   timeout?: number
 }
@@ -21,7 +23,7 @@ const CopyText: FC<CopyTextProps> = ({
   content = '',
   timeout = 3000,
 }) => {
-  const { copy, isSupported } = useCopy();
+  const { copy, isSupported } = useCopy()
   const [copied, setCopied] = useState(false)
   const timerRef = useRef<NodeJS.Timeout | null>(null)
 
@@ -37,7 +39,8 @@ const CopyText: FC<CopyTextProps> = ({
 
   const handleCopy = useCallback(async () => {
     // 已复制状态时不重复执行
-    if (copied) return
+    if (copied)
+      return
 
     // 无内容
     if (!content) {
@@ -61,7 +64,8 @@ const CopyText: FC<CopyTextProps> = ({
       setCopied(true)
 
       resetState()
-    } catch {
+    }
+    catch {
       toast.danger('复制失败，请手动复制!', {
         indicator: <CircleXmark />,
       })
@@ -72,8 +76,8 @@ const CopyText: FC<CopyTextProps> = ({
     <Button
       size="sm"
       variant="tertiary"
-      onPress={handleCopy}
       isDisabled={copied}
+      onPress={handleCopy}
     >
       {copied ? <Check /> : <Copy />}
       {copied ? '已复制' : '复制'}

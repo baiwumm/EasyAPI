@@ -1,22 +1,26 @@
 'use client'
-import { Chip, type ChipProps, Input, toast } from '@heroui/react';
-import { type ZxcvbnResult } from '@zxcvbn-ts/core';
-import { type FC, useState } from 'react';
+import { Chip, Input, toast } from '@heroui/react'
+import { useState } from 'react'
 
-import JsonContent, { type GetColumnsFn } from '@/components/JsonContent';
+import JsonContent from '@/components/JsonContent'
+
+import type { GetColumnsFn } from '@/components/JsonContent'
+import type { ChipProps } from '@heroui/react'
+import type { ZxcvbnResult } from '@zxcvbn-ts/core'
+import type { FC } from 'react'
 
 const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
-  const [password, setPassword] = useState('abc123456');
+  const [password, setPassword] = useState('abc123456')
 
   // 请求数据
   const onRefresh = () => {
     if (!password?.trim()) {
-      toast.danger("参数 password 必填");
-      return false;
+      toast.danger('参数 password 必填')
+      return false
     }
     if (password.length > 128) {
-      toast.danger("参数 password 长度不能超过 128 个字符");
-      return false;
+      toast.danger('参数 password 长度不能超过 128 个字符')
+      return false
     }
     return true
   }
@@ -28,24 +32,24 @@ const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
       guesses,
       crackTimesDisplay,
       feedback,
-    } = data || {};
+    } = data || {}
 
-    const scoreMap = ['非常弱', '弱', '一般', '强', '非常强'];
+    const scoreMap = ['非常弱', '弱', '一般', '强', '非常强']
 
     const scoreColor: ChipProps['color'][] = [
       'danger',
       'danger',
       'warning',
       'warning',
-      'success'
-    ];
+      'success',
+    ]
 
     return [
       { label: '密码', children: <Chip>{password || '--'}</Chip> },
 
       {
         label: '密码强度',
-        children: <Chip variant="soft" color={scoreColor[score]}>{score !== undefined ? scoreMap[score] : '--'}</Chip>,
+        children: <Chip color={scoreColor[score]} variant="soft">{score !== undefined ? scoreMap[score] : '--'}</Chip>,
       },
 
       {
@@ -72,12 +76,12 @@ const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
         label: '改进建议',
         children: feedback?.suggestions?.join('；') || '密码强度较好',
       },
-    ];
-  };
+    ]
+  }
   return (
-    <JsonContent title={title} searchText='检测' params={{ password }} onRefresh={onRefresh} getColumns={getColumns}>
-      <Input value={password} onChange={(event) => setPassword(event.target.value)} aria-label="密码" placeholder='请输入密码' className="w-50" />
+    <JsonContent title={title} getColumns={getColumns} params={{ password }} searchText="检测" onRefresh={onRefresh}>
+      <Input aria-label="密码" placeholder="请输入密码" value={password} onChange={event => setPassword(event.target.value)} className="w-50" />
     </JsonContent>
   )
 }
-export default ClientComponent;
+export default ClientComponent

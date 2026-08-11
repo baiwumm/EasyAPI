@@ -1,3 +1,6 @@
+import AlertContent from '@/components/AlertContent'
+import LoadingContent from '@/components/LoadingContent'
+
 /*
  * @Author: 白雾茫茫丶<baiwumm.com>
  * @Date: 2026-03-10 14:46:58
@@ -5,35 +8,32 @@
  * @LastEditTime: 2026-03-10 14:49:28
  * @Description: 请求失败统一处理
  */
-import { type FC, type ReactNode } from 'react';
+import type { FC, ReactNode } from 'react'
 
-import AlertContent from '@/components/AlertContent';
-import LoadingContent from '@/components/LoadingContent';
-
-type RequestContentProps = {
-  children: ReactNode;
-  error: Error | undefined;
-  reFresh: VoidFunction;
-  loading?: boolean;
-  loadingText?: string;
+interface RequestContentProps {
+  children: ReactNode
+  error: Error | undefined
+  reFresh: VoidFunction
+  loading?: boolean
+  loadingText?: string
 }
 
 const RequestContent: FC<RequestContentProps> = ({ children, error, reFresh, loading = false, loadingText }) => {
   if (error) {
     return (
       <AlertContent
-        status="danger"
         title="请求失败"
-        description="服务暂时不可用，请稍后重试。"
         actionText="重新加载"
-        buttonVariant="danger"
         buttonAction={reFresh}
+        buttonVariant="danger"
+        description="服务暂时不可用，请稍后重试。"
+        status="danger"
       />
     )
   }
   if (loading) {
     return <LoadingContent text={loadingText} />
   }
-  return children;
+  return children
 }
-export default RequestContent;
+export default RequestContent

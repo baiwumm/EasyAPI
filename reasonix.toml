@@ -1,9 +1,10 @@
 [permissions]
-allow = ["Bash(pnpm dev:*)"]
+allow = [ "Bash(pnpm dev:*)" ]
 
 [[plugins]]
-name    = "heroui-react-mcp"
+name = "heroui-react-mcp"
 command = "npx"
-args    = ["-y", "@heroui/react-mcp"]
-
-
+args = [
+  "-y",
+  "@heroui/react-mcp"
+]

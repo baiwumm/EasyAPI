@@ -1,28 +1,30 @@
 'use client'
-import { fakerZH_CN as faker } from "@faker-js/faker";
-import { Avatar, ListBox, NumberField, Select } from '@heroui/react';
-import { type FC, useState } from 'react';
+import { fakerZH_CN as faker } from '@faker-js/faker'
+import { Avatar, ListBox, NumberField, Select } from '@heroui/react'
+import { useState } from 'react'
 
-import RefreshButton from '@/components/RefreshButton';
-import { AVATAR_STYLES } from '@/enums';
+import RefreshButton from '@/components/RefreshButton'
+import { AVATAR_STYLES } from '@/enums'
 
-type Style = typeof AVATAR_STYLES.valueType;
+import type { FC } from 'react'
+
+type Style = typeof AVATAR_STYLES.valueType
 
 function generateUsers(length = 5) {
   return Array.from({ length }).map(() => ({
     name: faker.person.fullName(),
-  }));
+  }))
 }
 
 const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
-  const [style, setStyle] = useState<Style>(AVATAR_STYLES.RANDOM);
-  const [users, setUsers] = useState(generateUsers);
-  const [count, setCount] = useState(5); // 生成的数量
-  const [size, setSize] = useState(128); // 生成的大小
+  const [style, setStyle] = useState<Style>(AVATAR_STYLES.RANDOM)
+  const [users, setUsers] = useState(generateUsers)
+  const [count, setCount] = useState(5) // 生成的数量
+  const [size, setSize] = useState(128) // 生成的大小
 
   const regenerate = () => {
-    setUsers(generateUsers(count));
-  };
+    setUsers(generateUsers(count))
+  }
   return (
     <div className="flex-1 flex flex-col justify-between gap-4">
       {/* 头部区域 */}
@@ -53,11 +55,11 @@ const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
       <div className="flex justify-center shrink-0">
         <div className="flex items-center gap-2 flex-wrap">
           <Select
-            className="w-50"
-            placeholder="头像风格"
             aria-label="头像风格"
+            placeholder="头像风格"
             value={style}
-            onChange={(value) => setStyle(value as Style)}
+            onChange={value => setStyle(value as Style)}
+            className="w-50"
           >
             <Select.Trigger>
               <Select.Value />
@@ -78,24 +80,24 @@ const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
               </ListBox>
             </Select.Popover>
           </Select>
-          <NumberField minValue={1} maxValue={50} value={count} onChange={setCount} aria-label="生成的数量">
+          <NumberField aria-label="生成的数量" maxValue={50} minValue={1} value={count} onChange={setCount}>
             <NumberField.Group>
               <NumberField.DecrementButton />
               <NumberField.Input className="w-20" />
               <NumberField.IncrementButton />
             </NumberField.Group>
           </NumberField>
-          <NumberField minValue={16} maxValue={512} value={size} onChange={setSize} aria-label="生成的大小">
+          <NumberField aria-label="生成的大小" maxValue={512} minValue={16} value={size} onChange={setSize}>
             <NumberField.Group>
               <NumberField.DecrementButton />
               <NumberField.Input className="w-20" />
               <NumberField.IncrementButton />
             </NumberField.Group>
           </NumberField>
-          <RefreshButton text='重新生成' onPress={regenerate} />
+          <RefreshButton text="重新生成" onPress={regenerate} />
         </div>
       </div>
     </div>
   )
 }
-export default ClientComponent;
+export default ClientComponent

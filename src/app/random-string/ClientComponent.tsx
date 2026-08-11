@@ -1,33 +1,44 @@
 'use client'
-import { Copy } from '@gravity-ui/icons';
-import { Chip, Description, Input, Label, ListBox, NumberField, Select, TextField } from '@heroui/react';
-import { useRequest } from 'ahooks';
-import { type Options } from 'crypto-random-string'
-import { usePathname } from 'next/navigation';
-import { type FC, useMemo, useState } from 'react';
+import { Copy } from '@gravity-ui/icons'
+import {
+  Chip,
+  Description,
+  Input,
+  Label,
+  ListBox,
+  NumberField,
+  Select,
+  TextField,
+} from '@heroui/react'
+import { useRequest } from 'ahooks'
+import { usePathname } from 'next/navigation'
+import { useMemo, useState } from 'react'
 
-import RefreshButton from '@/components/RefreshButton';
-import RequestContent from '@/components/RequestContent';
-import { RANDOM_STRING_TYPES } from '@/enums';
-import { useCopy } from '@/hooks/use-copy';
-import { get } from '@/lib/utils';
-import { getApiData } from '@/services/common';
+import RefreshButton from '@/components/RefreshButton'
+import RequestContent from '@/components/RequestContent'
+import { RANDOM_STRING_TYPES } from '@/enums'
+import { useCopy } from '@/hooks/use-copy'
+import { get } from '@/lib/utils'
+import { getApiData } from '@/services/common'
+
+import type { Options } from 'crypto-random-string'
+import type { FC } from 'react'
 
 const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
-  const pathname = usePathname();
-  const { copy } = useCopy();
-  const [type, setType] = useState<Options['type']>(RANDOM_STRING_TYPES.ALPHANUMERIC);
-  const [length, setLength] = useState(16); // 字符串长度
-  const [count, setCount] = useState(10); // 生成的数量
-  const [characters, setCharacters] = useState(''); // 自定义字符集
+  const pathname = usePathname()
+  const { copy } = useCopy()
+  const [type, setType] = useState<Options['type']>(RANDOM_STRING_TYPES.ALPHANUMERIC)
+  const [length, setLength] = useState(16) // 字符串长度
+  const [count, setCount] = useState(10) // 生成的数量
+  const [characters, setCharacters] = useState('') // 自定义字符集
 
   // 参数处理
-  const params = useMemo(() => ({ type, length, count, characters }), [type, length, count, characters]);
+  const params = useMemo(() => ({ type, length, count, characters }), [type, length, count, characters])
 
   // 请求数据
   const { data = [], loading, error, run } = useRequest(
-    async () => get(await getApiData(pathname, params), 'data', [])
-  );
+    async () => get(await getApiData(pathname, params), 'data', []),
+  )
   return (
     <div className="flex-1 flex flex-col justify-between gap-4">
       {/* 头部区域 */}
@@ -36,14 +47,14 @@ const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
       </div>
       {/* 中间区域 */}
       <div className="flex-1 flex justify-center items-center">
-        <RequestContent error={error} reFresh={run} loading={loading} loadingText='正在生成...'>
+        <RequestContent error={error} loading={loading} loadingText="正在生成..." reFresh={run}>
           <div className="flex justify-center items-center flex-wrap gap-2">
-            {data.map((v) => (
+            {data.map(v => (
               <Chip
                 key={v}
-                size='lg'
-                color='accent'
-                variant='soft'
+                color="accent"
+                size="lg"
+                variant="soft"
                 onClick={() => copy(v)}
                 className="cursor-pointer"
               >
@@ -58,11 +69,11 @@ const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
       <div className="flex justify-center shrink-0">
         <div className="flex items-end gap-2 flex-wrap">
           <Select
-            className="w-60"
+            aria-label="类型组合"
             placeholder="请选择类型"
             value={type}
-            onChange={(val) => setType(val as Options['type'])}
-            aria-label="类型组合"
+            onChange={val => setType(val as Options['type'])}
+            className="w-60"
           >
             <Select.Trigger>
               <Select.Value />
@@ -82,7 +93,7 @@ const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
               </ListBox>
             </Select.Popover>
           </Select>
-          <NumberField minValue={1} maxValue={100} value={length} onChange={setLength} aria-label="字符串长度">
+          <NumberField aria-label="字符串长度" maxValue={100} minValue={1} value={length} onChange={setLength}>
             <Description>字符串长度</Description>
             <NumberField.Group>
               <NumberField.DecrementButton />
@@ -90,7 +101,7 @@ const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
               <NumberField.IncrementButton />
             </NumberField.Group>
           </NumberField>
-          <NumberField minValue={1} maxValue={50} value={count} onChange={setCount} aria-label="生成的数量">
+          <NumberField aria-label="生成的数量" maxValue={50} minValue={1} value={count} onChange={setCount}>
             <Description>生成的数量</Description>
             <NumberField.Group>
               <NumberField.DecrementButton />
@@ -103,13 +114,13 @@ const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
             <Input
               aria-label="自定义字符集"
               maxLength={65536}
-              className="w-50"
               placeholder="自定义字符集"
               value={characters}
-              onChange={(event) => setCharacters(event.target.value)}
+              onChange={event => setCharacters(event.target.value)}
+              className="w-50"
             />
           </TextField>
-          <RefreshButton text='生成' loading={loading} onPress={run} />
+          <RefreshButton loading={loading} text="生成" onPress={run} />
         </div>
       </div>
     </div>

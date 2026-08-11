@@ -1,3 +1,5 @@
+import { updateSession } from '@/lib/supabase/proxy'
+
 /*
  * @Author: 白雾茫茫丶<baiwumm.com>
  * @Date: 2026-01-22 16:24:30
@@ -5,9 +7,7 @@
  * @LastEditTime: 2026-02-27 14:42:15
  * @Description: 代理层
  */
-import { NextRequest } from 'next/server'
-
-import { updateSession } from "@/lib/supabase/proxy"
+import type { NextRequest } from 'next/server'
 
 export default async function proxy(request: NextRequest) {
   return await updateSession(request)

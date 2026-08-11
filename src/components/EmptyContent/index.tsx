@@ -5,9 +5,10 @@
  * @LastEditTime: 2026-03-05 15:30:13
  * @Description: 空数据
  */
-import { Tray } from '@gravity-ui/icons';
-import { Description } from "@heroui/react";
-import { type FC } from 'react';
+import { Tray } from '@gravity-ui/icons'
+import { Description } from '@heroui/react'
+
+import type { FC } from 'react'
 
 const EmptyContent: FC = () => {
   return (
@@ -17,4 +18,4 @@ const EmptyContent: FC = () => {
     </div>
   )
 }
-export default EmptyContent;
+export default EmptyContent

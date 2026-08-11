@@ -1,42 +1,44 @@
 'use client'
-import { Chip, ListBox, Select, Table } from '@heroui/react';
-import { useRequest } from 'ahooks';
-import dayjs from 'dayjs';
-import { usePathname } from 'next/navigation';
-import { type FC, useMemo, useState } from 'react';
+import { Chip, ListBox, Select, Table } from '@heroui/react'
+import { useRequest } from 'ahooks'
+import dayjs from 'dayjs'
+import { usePathname } from 'next/navigation'
+import { useMemo, useState } from 'react'
 
-import EmptyContent from '@/components/EmptyContent';
-import RefreshButton from '@/components/RefreshButton';
-import RequestContent from '@/components/RequestContent';
-import TableLoading from '@/components/TableLoading';
-import { get } from '@/lib/utils';
-import { getApiData } from '@/services/common';
+import EmptyContent from '@/components/EmptyContent'
+import RefreshButton from '@/components/RefreshButton'
+import RequestContent from '@/components/RequestContent'
+import TableLoading from '@/components/TableLoading'
+import { get } from '@/lib/utils'
+import { getApiData } from '@/services/common'
 
-const currentYear = dayjs().year();
-const startYear = 2002;
+import type { FC } from 'react'
+
+const currentYear = dayjs().year()
+const startYear = 2002
 
 const yearOptions = Array.from(
   { length: currentYear - startYear + 1 },
   (_, i) => {
-    const year = currentYear - i;
+    const year = currentYear - i
     return {
       value: year,
       label: `${year}年`,
-    };
-  }
-);
+    }
+  },
+)
 
 const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
-  const pathname = usePathname();
-  const [year, setYear] = useState(currentYear);
+  const pathname = usePathname()
+  const [year, setYear] = useState(currentYear)
 
   // 参数处理
-  const params = useMemo(() => ({ year }), [year]);
+  const params = useMemo(() => ({ year }), [year])
 
   // 请求数据
   const { data = [], loading, error, run } = useRequest(
     async () => get(await getApiData(pathname, params), 'data', []),
-  );
+  )
   return (
     <div className="flex-1 flex flex-col justify-between gap-4">
       {/* 头部区域 */}
@@ -59,26 +61,32 @@ const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
                     <Table.Column>调休日期</Table.Column>
                   </Table.Header>
                   <Table.Body renderEmptyState={() => <EmptyContent />}>
-                    {data?.length ? data.map(({ name, start, end, length, balance, distance, work = [] }, index) => (
-                      <Table.Row key={index}>
-                        <Table.Cell>
-                          <Chip color='accent' variant='soft'>{name}</Chip>
-                        </Table.Cell>
-                        <Table.Cell>{`${start} ~ ${end}`}</Table.Cell>
-                        <Table.Cell>{`${length}天`}</Table.Cell>
-                        <Table.Cell>{`${balance}天`}</Table.Cell>
-                        <Table.Cell>{distance === 0 ? `太好了，今天是${name}!` : distance < 0 ? `已过去${Math.abs(distance)}天` : `还有${distance}天`}</Table.Cell>
-                        <Table.Cell>{work.length ? (
-                          <div className="flex items-center gap-1 flex-wrap">
-                            {work.map(v => (
-                              <Chip key={v} variant='soft'>{v}</Chip>
-                            ))}
-                          </div>
-                        ) : (
-                          <Chip color='warning' variant='soft'>不调休</Chip>
-                        )}</Table.Cell>
-                      </Table.Row>
-                    )) : []}
+                    {data?.length
+                      ? data.map(({ name, start, end, length, balance, distance, work = [] }, index) => (
+                          <Table.Row key={index}>
+                            <Table.Cell>
+                              <Chip color="accent" variant="soft">{name}</Chip>
+                            </Table.Cell>
+                            <Table.Cell>{`${start} ~ ${end}`}</Table.Cell>
+                            <Table.Cell>{`${length}天`}</Table.Cell>
+                            <Table.Cell>{`${balance}天`}</Table.Cell>
+                            <Table.Cell>{distance === 0 ? `太好了，今天是${name}!` : distance < 0 ? `已过去${Math.abs(distance)}天` : `还有${distance}天`}</Table.Cell>
+                            <Table.Cell>
+                              {work.length
+                                ? (
+                                    <div className="flex items-center gap-1 flex-wrap">
+                                      {work.map(v => (
+                                        <Chip key={v} variant="soft">{v}</Chip>
+                                      ))}
+                                    </div>
+                                  )
+                                : (
+                                    <Chip color="warning" variant="soft">不调休</Chip>
+                                  )}
+                            </Table.Cell>
+                          </Table.Row>
+                        ))
+                      : []}
                   </Table.Body>
                 </Table.Content>
               </Table.ScrollContainer>
@@ -91,11 +99,11 @@ const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
       <div className="flex justify-center shrink-0">
         <div className="flex items-center gap-2 flex-wrap">
           <Select
-            className="w-50"
-            placeholder="请选择年份"
             aria-label="年份"
+            placeholder="请选择年份"
             value={year}
-            onChange={(value) => setYear(value as number)}
+            onChange={value => setYear(value as number)}
+            className="w-50"
           >
             <Select.Trigger>
               <Select.Value />

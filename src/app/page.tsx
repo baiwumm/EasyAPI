@@ -5,52 +5,52 @@
  * @LastEditTime: 2026-07-15 17:23:32
  * @Description: 首页
  */
-"use client";
-import { DatabaseFill, Plus } from '@gravity-ui/icons';
-import { Button, Typography } from "@heroui/react";
-import { useRequest } from 'ahooks';
-import { motion } from 'motion/react';
-import { useRouter } from 'next/navigation';
+'use client'
+import { DatabaseFill, Plus } from '@gravity-ui/icons'
+import { Button, Typography } from '@heroui/react'
+import { useRequest } from 'ahooks'
+import { motion } from 'motion/react'
+import { useRouter } from 'next/navigation'
 
-import AlertContent from '@/components/AlertContent';
-import ApiCard from '@/components/ApiCard';
-import BlurFade from '@/components/BlurFade';
+import AlertContent from '@/components/AlertContent'
+import ApiCard from '@/components/ApiCard'
+import BlurFade from '@/components/BlurFade'
 import ErrorContent from '@/components/ErrorContent'
 import SkeletonContent from '@/components/SkeletonContent'
-import { get } from '@/lib/utils';
-import { getCategorysList } from '@/services/categorys';
+import { get } from '@/lib/utils'
+import { getCategorysList } from '@/services/categorys'
 
-const MotionApiCard = motion.create(ApiCard);
+const MotionApiCard = motion.create(ApiCard)
 
 export default function Home() {
-  const router = useRouter();
+  const router = useRouter()
 
   const { data = [], loading, error, run } = useRequest(
-    async (params) =>
+    async params =>
       get(await getCategorysList(params), 'data.list', []),
     {
       defaultParams: [{ pageIndex: 0, pageSize: 999 }],
-    }
-  );
+    },
+  )
 
   const reload = () => {
-    run({ pageIndex: 0, pageSize: 999 });
-  };
+    run({ pageIndex: 0, pageSize: 999 })
+  }
 
   const goAdmin = () => {
-    router.push('/admin');
-  };
+    router.push('/admin')
+  }
 
   if (loading) {
     return (
       <SkeletonContent />
-    );
+    )
   }
 
   if (error) {
     return (
       <ErrorContent refresh={reload} />
-    );
+    )
   }
 
   if (!data.length) {
@@ -70,48 +70,49 @@ export default function Home() {
           </div>
         </div>
       </div>
-    );
+    )
   }
 
   return (
     <div className="space-y-6">
       {data.map(({ id, name, apis }: App.Category, index) => {
         return (
-          <BlurFade key={id} inView delay={index * 0.04} className="space-y-2">
+          <BlurFade key={id} delay={index * 0.04} inView className="space-y-2">
             <h1 className="text-lg font-black">{name}</h1>
-            {apis?.length ? (
-              <div className="grid gap-4 grid-cols-[repeat(auto-fill,minmax(20rem,1fr))]">
-                {apis.map((item, idx) => (
-                  <MotionApiCard
-                    key={item.id}
-                    variants={{
-                      hidden: { y: 20, opacity: 0, filter: 'blur(6px)' },
-                      visible: { y: 0, opacity: 1, filter: 'none' }
-                    }}
-                    transition={{
-                      delay: 0.04 * idx,
-                      duration: 0.4,
-                      ease: "easeOut"
-                    }}
-                    data={item}
-                  />
-                ))}
-              </div>
-            ) : (
-              <div className="flex justify-center p-4">
-                <AlertContent
-                  status="accent"
-                  title="暂无接口数据"
-                  description="该分类还没有任何接口，请前往后台进行添加。"
-                  actionText="添加接口"
-                  buttonAction={goAdmin}
-                />
-              </div>
-            )}
+            {apis?.length
+              ? (
+                  <div className="grid gap-4 grid-cols-[repeat(auto-fill,minmax(20rem,1fr))]">
+                    {apis.map((item, idx) => (
+                      <MotionApiCard
+                        key={item.id}
+                        data={item}
+                        transition={{
+                          delay: 0.04 * idx,
+                          duration: 0.4,
+                          ease: 'easeOut',
+                        }}
+                        variants={{
+                          hidden: { y: 20, opacity: 0, filter: 'blur(6px)' },
+                          visible: { y: 0, opacity: 1, filter: 'none' },
+                        }}
+                      />
+                    ))}
+                  </div>
+                )
+              : (
+                  <div className="flex justify-center p-4">
+                    <AlertContent
+                      title="暂无接口数据"
+                      actionText="添加接口"
+                      buttonAction={goAdmin}
+                      description="该分类还没有任何接口，请前往后台进行添加。"
+                      status="accent"
+                    />
+                  </div>
+                )}
           </BlurFade>
-        );
+        )
       })}
     </div>
-  );
+  )
 }
-

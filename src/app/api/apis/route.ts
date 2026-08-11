@@ -1,3 +1,9 @@
+import { NextResponse } from 'next/server'
+
+import { RESPONSE } from '@/enums'
+import { getSupabaseServerClient } from '@/lib/supabase/server'
+import { catchError, responseMessage } from '@/lib/utils'
+
 /*
  * @Author: 白雾茫茫丶<baiwumm.com>
  * @Date: 2026-01-23 16:08:45
@@ -5,11 +11,7 @@
  * @LastEditTime: 2026-03-12 15:40:59
  * @Description: 接口列表模块
  */
-import { NextRequest, NextResponse } from 'next/server'
-
-import { RESPONSE } from '@/enums'
-import { getSupabaseServerClient } from '@/lib/supabase/server'
-import { catchError, responseMessage } from '@/lib/utils'
+import type { NextRequest } from 'next/server'
 
 /**
  * @description: 查询接口列表
@@ -17,27 +19,27 @@ import { catchError, responseMessage } from '@/lib/utils'
  */
 export async function GET(request: NextRequest) {
   try {
-    const supabase = await getSupabaseServerClient();
+    const supabase = await getSupabaseServerClient()
     // 解析 URL 查询参数
-    const searchParams = request.nextUrl.searchParams;
-    const pageIndex = Number(searchParams.get('pageIndex') || '0');
-    const pageSize = Number(searchParams.get('pageSize') || '10');
-    const name = searchParams.get('name');
-    const category_id = searchParams.get('category_id');
+    const searchParams = request.nextUrl.searchParams
+    const pageIndex = Number(searchParams.get('pageIndex') || '0')
+    const pageSize = Number(searchParams.get('pageSize') || '10')
+    const name = searchParams.get('name')
+    const category_id = searchParams.get('category_id')
 
     // 判断参数
     if (
-      Number.isNaN(pageIndex) ||
-      Number.isNaN(pageSize) ||
-      pageIndex < 0 ||
-      pageSize <= 0
+      Number.isNaN(pageIndex)
+      || Number.isNaN(pageSize)
+      || pageIndex < 0
+      || pageSize <= 0
     ) {
       return NextResponse.json(responseMessage(null, '参数错误', RESPONSE.ERROR))
     }
 
     // 计算分页
-    const start = pageIndex * pageSize;
-    const end = start + pageSize - 1;
+    const start = pageIndex * pageSize
+    const end = start + pageSize - 1
 
     // 查询 sql
     let sqlQuery = supabase
@@ -45,16 +47,16 @@ export async function GET(request: NextRequest) {
       .select('*,category:ea_categorys(*)', { count: 'exact' })
       .range(start, end)
       .order('pinned', {
-        ascending: false
+        ascending: false,
       })
       .order('sort', {
-        ascending: false
+        ascending: false,
       })
       .order('is_featured', {
-        ascending: false
+        ascending: false,
       })
       .order('created_at', {
-        ascending: false
+        ascending: false,
       })
 
     // 判断查询参数
@@ -78,9 +80,10 @@ export async function GET(request: NextRequest) {
       total: count,
       page: pageIndex + 1,
       pageSize,
-    }));
-  } catch (err) {
-    return NextResponse.json(catchError(err));
+    }))
+  }
+  catch (err) {
+    return NextResponse.json(catchError(err))
   }
 }
 
@@ -90,25 +93,26 @@ export async function GET(request: NextRequest) {
  */
 export async function POST(request: NextRequest) {
   try {
-    const supabase = await getSupabaseServerClient();
+    const supabase = await getSupabaseServerClient()
     // 解析请求体
-    const body = await request.json(); // 如果是 JSON 数据
+    const body = await request.json() // 如果是 JSON 数据
 
     // 插入数据
-    const { data, error } = await supabase.from('ea_apis').insert(body).select().single();
+    const { data, error } = await supabase.from('ea_apis').insert(body).select().single()
 
     // 如果插入失败
     if (error) {
       // 判断是否违反唯一性约束（PostgreSQL 错误代码 23505）
       if (error.code === '23505') {
-        return NextResponse.json(responseMessage(null, '接口名称已存在！', -1));
+        return NextResponse.json(responseMessage(null, '接口名称已存在！', -1))
       }
 
       // 其他错误
-      return NextResponse.json(responseMessage(null, error.message, RESPONSE.ERROR));
+      return NextResponse.json(responseMessage(null, error.message, RESPONSE.ERROR))
     }
-    return NextResponse.json(responseMessage(data));
-  } catch (err) {
-    return NextResponse.json(catchError(err));
+    return NextResponse.json(responseMessage(data))
+  }
+  catch (err) {
+    return NextResponse.json(catchError(err))
   }
 }

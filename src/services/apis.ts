@@ -5,34 +5,34 @@
  * @LastEditTime: 2026-02-25 14:29:15
  * @Description: 接口列表模块
  */
-import { httpRequest } from '@/lib/request';
+import { httpRequest } from '@/lib/request'
 
-const BASE_URL = '/apis';
-
-/**
- * @description: 获取接口列表
- */
-export const getApisList = (params: App.ApiQueryParams) => {
-  return httpRequest.get<App.PaginatingResponse<App.Api>>(BASE_URL, params);
-};
+const BASE_URL = '/apis'
 
 /**
  * @description: 新增接口
  */
-export const addApi = (params: App.ApiSaveParams) => {
-  return httpRequest.post<App.Api>(BASE_URL, params);
-};
-
-/**
- * @description: 更新接口
- */
-export const updateApi = ({ id, ...params }: App.ApiSaveParams) => {
-  return httpRequest.put<App.Api>(`${BASE_URL}/${id}`, params);
-};
+export function addApi(params: App.ApiSaveParams) {
+  return httpRequest.post<App.Api>(BASE_URL, params)
+}
 
 /**
  * @description: 删除接口
  */
-export const delApi = (id: string) => {
-  return httpRequest.delete<App.Api>(`${BASE_URL}/${id}`);
-};
+export function delApi(id: string) {
+  return httpRequest.delete<App.Api>(`${BASE_URL}/${id}`)
+}
+
+/**
+ * @description: 获取接口列表
+ */
+export function getApisList(params: App.ApiQueryParams) {
+  return httpRequest.get<App.PaginatingResponse<App.Api>>(BASE_URL, params)
+}
+
+/**
+ * @description: 更新接口
+ */
+export function updateApi({ id, ...params }: App.ApiSaveParams) {
+  return httpRequest.put<App.Api>(`${BASE_URL}/${id}`, params)
+}

@@ -5,11 +5,12 @@
  * @LastEditTime: 2026-03-09 16:19:25
  * @Description: Loading
  */
-import { Description, Spinner } from "@heroui/react";
-import { type FC } from 'react';
+import { Description, Spinner } from '@heroui/react'
 
-type LoadingContentProps = {
-  text?: string;
+import type { FC } from 'react'
+
+interface LoadingContentProps {
+  text?: string
 }
 
 const LoadingContent: FC<LoadingContentProps> = ({ text = '加载中...' }) => {
@@ -20,4 +21,4 @@ const LoadingContent: FC<LoadingContentProps> = ({ text = '加载中...' }) => {
     </div>
   )
 }
-export default LoadingContent;
+export default LoadingContent

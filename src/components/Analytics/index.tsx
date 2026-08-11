@@ -5,28 +5,32 @@
  * @LastEditTime: 2026-07-02 11:06:13
  * @Description: 统计代码
  */
-import { GoogleAnalytics } from '@next/third-parties/google';
-import Script from 'next/script';
+import { GoogleAnalytics } from '@next/third-parties/google'
+import Script from 'next/script'
 
 /**
  * @description: 谷歌统计
  */
-export const GoogleUtilities = () => {
-  return process.env.NEXT_PUBLIC_GOOGLE_ID && process.env.NODE_ENV === 'production' ? (
-    <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GOOGLE_ID} />
-  ) : null;
-};
+export function GoogleUtilities() {
+  return process.env.NEXT_PUBLIC_GOOGLE_ID && process.env.NODE_ENV === 'production'
+    ? (
+        <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GOOGLE_ID} />
+      )
+    : null
+}
 
 /**
  * @description: 微软统计
  */
-export const MicrosoftClarity = () => {
-  return process.env.NEXT_PUBLIC_CLARITY_ID && process.env.NODE_ENV === 'production' ? (
-    <Script
-      id="microsoft-clarity"
-      dangerouslySetInnerHTML={{
-        __html: `(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,"clarity","script","${process.env.NEXT_PUBLIC_CLARITY_ID}");`,
-      }}
-    />
-  ) : null;
-};
+export function MicrosoftClarity() {
+  return process.env.NEXT_PUBLIC_CLARITY_ID && process.env.NODE_ENV === 'production'
+    ? (
+        <Script
+          id="microsoft-clarity"
+          dangerouslySetInnerHTML={{
+            __html: `(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,"clarity","script","${process.env.NEXT_PUBLIC_CLARITY_ID}");`,
+          }}
+        />
+      )
+    : null
+}

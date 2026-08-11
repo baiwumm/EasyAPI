@@ -1,42 +1,44 @@
 'use client'
-import { Input, Table, toast } from '@heroui/react';
-import { useRequest } from 'ahooks';
-import { usePathname } from 'next/navigation';
-import { type FC, useMemo, useState } from 'react';
+import { Input, Table, toast } from '@heroui/react'
+import { useRequest } from 'ahooks'
+import { usePathname } from 'next/navigation'
+import { useMemo, useState } from 'react'
 
-import EmptyContent from '@/components/EmptyContent';
-import RefreshButton from '@/components/RefreshButton';
-import RequestContent from '@/components/RequestContent';
-import TableLoading from '@/components/TableLoading';
-import { get } from '@/lib/utils';
-import { getApiData } from '@/services/common';
+import EmptyContent from '@/components/EmptyContent'
+import RefreshButton from '@/components/RefreshButton'
+import RequestContent from '@/components/RequestContent'
+import TableLoading from '@/components/TableLoading'
+import { get } from '@/lib/utils'
+import { getApiData } from '@/services/common'
 
-type DataType = {
-  englishName: string;
-  name: string;
-  countryCode: string;
-  phoneCode: string;
+import type { FC } from 'react'
+
+interface DataType {
+  englishName: string
+  name: string
+  countryCode: string
+  phoneCode: string
 }
 
 const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
-  const pathname = usePathname();
-  const [keyword, setKeyword] = useState('中国');
+  const pathname = usePathname()
+  const [keyword, setKeyword] = useState('中国')
 
   // 参数处理
-  const params = useMemo(() => ({ keyword }), [keyword]);
+  const params = useMemo(() => ({ keyword }), [keyword])
 
   // 请求数据
   const { data = [], loading, error, run } = useRequest(
-    async () => get(await getApiData(pathname, params), 'data', [])
-  );
+    async () => get(await getApiData(pathname, params), 'data', []),
+  )
 
   // 请求数据
   const reFresh = () => {
     if (!keyword.trim()) {
-      toast.danger("参数 keyword 必填");
-      return;
+      toast.danger('参数 keyword 必填')
+      return
     }
-    run();
+    run()
   }
 
   // 列定义
@@ -44,7 +46,7 @@ const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
     { label: '国家（中文）', value: 'englishName' },
     { label: '国家（英文）', value: 'name' },
     { label: 'ISO国家代码', value: 'countryCode' },
-    { label: '国际电话区号', value: 'phoneCode' }
+    { label: '国际电话区号', value: 'phoneCode' },
   ]
   return (
     <div className="flex-1 flex flex-col justify-between gap-4">
@@ -65,13 +67,15 @@ const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
                     ))}
                   </Table.Header>
                   <Table.Body renderEmptyState={() => <EmptyContent />}>
-                    {data?.length ? data.map((v, index) => (
-                      <Table.Row key={index}>
-                        {columns.map(({ value }) => (
-                          <Table.Cell key={value}>{get(v, value, '--')}</Table.Cell>
-                        ))}
-                      </Table.Row>
-                    )) : []}
+                    {data?.length
+                      ? data.map((v, index) => (
+                          <Table.Row key={index}>
+                            {columns.map(({ value }) => (
+                              <Table.Cell key={value}>{get(v, value, '--')}</Table.Cell>
+                            ))}
+                          </Table.Row>
+                        ))
+                      : []}
                   </Table.Body>
                 </Table.Content>
               </Table.ScrollContainer>
@@ -86,10 +90,10 @@ const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
           <Input
             aria-label={title}
             maxLength={50}
-            className="w-50"
             placeholder="请输入关键字查询"
             value={keyword}
-            onChange={(event) => setKeyword(event.target.value)}
+            onChange={event => setKeyword(event.target.value)}
+            className="w-50"
           />
           <RefreshButton loading={loading} onPress={reFresh} />
         </div>
@@ -97,4 +101,4 @@ const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
     </div>
   )
 }
-export default ClientComponent;
+export default ClientComponent

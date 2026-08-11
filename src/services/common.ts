@@ -1,8 +1,8 @@
-import { httpRequest } from '@/lib/request';
+import { httpRequest } from '@/lib/request'
 
 /**
  * @description: 获取接口数据
  */
-export const getApiData = (path: string, params?: Record<string, any>) => {
-  return httpRequest.get<App.IResponse>(path, params);
-};
+export function getApiData(path: string, params?: Record<string, any>) {
+  return httpRequest.get<App.IResponse>(path, params)
+}

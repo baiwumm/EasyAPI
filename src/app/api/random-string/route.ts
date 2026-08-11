@@ -5,11 +5,14 @@
  * @LastEditTime: 2026-03-13 14:39:30
  * @Description: 随机字符串
  */
-import cryptoRandomString, { type Options } from 'crypto-random-string'
-import { NextRequest, NextResponse } from 'next/server'
+import cryptoRandomString from 'crypto-random-string'
+import { NextResponse } from 'next/server'
 
 import { RANDOM_STRING_TYPES, RESPONSE } from '@/enums'
 import { catchError, responseMessage } from '@/lib/utils'
+
+import type { Options } from 'crypto-random-string'
+import type { NextRequest } from 'next/server'
 
 export async function GET(request: NextRequest) {
   try {
@@ -18,19 +21,19 @@ export async function GET(request: NextRequest) {
 
     const length = Math.min(
       Math.max(parseInt(searchParams.get('length') || '16'), 1),
-      100
+      100,
     )
 
     const count = Math.min(
       Math.max(parseInt(searchParams.get('count') || '1'), 1),
-      50
+      50,
     )
 
     const type = (searchParams.get('type') || RANDOM_STRING_TYPES.ALPHANUMERIC) as Options['type']
     const characters = searchParams.get('characters')
 
     // 官方支持的 type 列表
-    const validTypes: Options['type'][] = RANDOM_STRING_TYPES.values;
+    const validTypes: Options['type'][] = RANDOM_STRING_TYPES.values
 
     // 参数校验
     if (!characters && !validTypes.includes(type)) {
@@ -38,8 +41,8 @@ export async function GET(request: NextRequest) {
         responseMessage(
           null,
           `type 参数无效，可选值：${validTypes.join('、')}`,
-          RESPONSE.ERROR
-        )
+          RESPONSE.ERROR,
+        ),
       )
     }
 
@@ -49,13 +52,14 @@ export async function GET(request: NextRequest) {
         length,
         ...(characters
           ? { characters }
-          : { type })
+          : { type }),
       })
 
     const result = Array.from({ length: count }, generate)
 
     return NextResponse.json(responseMessage(result))
-  } catch (err) {
-    return NextResponse.json(catchError(err));
+  }
+  catch (err) {
+    return NextResponse.json(catchError(err))
   }
 }

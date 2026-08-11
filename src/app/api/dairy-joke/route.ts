@@ -1,3 +1,9 @@
+import { NextResponse } from 'next/server'
+
+import { RESPONSE } from '@/enums'
+import { getSupabaseServerClient } from '@/lib/supabase/server'
+import { catchError, responseMessage } from '@/lib/utils'
+
 /*
  * @Author: 白雾茫茫丶<baiwumm.com>
  * @Date: 2026-02-28 10:23:47
@@ -5,21 +11,17 @@
  * @LastEditTime: 2026-03-12 15:47:39
  * @Description: 每日笑话
  */
-import { NextRequest, NextResponse } from 'next/server'
-
-import { RESPONSE } from '@/enums'
-import { getSupabaseServerClient } from '@/lib/supabase/server'
-import { catchError, responseMessage } from '@/lib/utils'
+import type { NextRequest } from 'next/server'
 
 export async function GET(request: NextRequest) {
   try {
-    const supabase = await getSupabaseServerClient();
+    const supabase = await getSupabaseServerClient()
     // 解析 URL 查询参数
-    const searchParams = request.nextUrl.searchParams;
+    const searchParams = request.nextUrl.searchParams
     const format = searchParams.get('format')
 
     // 调用接口
-    const { data, error } = await supabase.rpc('get_random_dairy_joke');
+    const { data, error } = await supabase.rpc('get_random_dairy_joke')
 
     // 执行失败
     if (error) {
@@ -35,8 +37,9 @@ export async function GET(request: NextRequest) {
       })
     }
 
-    return NextResponse.json(responseMessage(data));
-  } catch (err) {
-    return NextResponse.json(catchError(err));
+    return NextResponse.json(responseMessage(data))
+  }
+  catch (err) {
+    return NextResponse.json(catchError(err))
   }
 }

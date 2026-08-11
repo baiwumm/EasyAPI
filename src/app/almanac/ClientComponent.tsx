@@ -1,54 +1,58 @@
 'use client'
-import { Calendar, Chip, DateField, DatePicker, type DateValue, Table } from '@heroui/react';
-import { getLocalTimeZone, today } from "@internationalized/date";
-import { useRequest } from 'ahooks';
-import { usePathname } from 'next/navigation';
-import { type FC, useMemo, useState } from 'react';
+import { Calendar, Chip, DateField, DatePicker, Table } from '@heroui/react'
+import { getLocalTimeZone, today } from '@internationalized/date'
+import { useRequest } from 'ahooks'
+import { usePathname } from 'next/navigation'
+import { useMemo, useState } from 'react'
 
-import EmptyContent from '@/components/EmptyContent';
-import RefreshButton from '@/components/RefreshButton';
-import RequestContent from '@/components/RequestContent';
-import TableLoading from '@/components/TableLoading';
-import { get } from '@/lib/utils';
-import { getApiData } from '@/services/common';
+import EmptyContent from '@/components/EmptyContent'
+import RefreshButton from '@/components/RefreshButton'
+import RequestContent from '@/components/RequestContent'
+import TableLoading from '@/components/TableLoading'
+import { get } from '@/lib/utils'
+import { getApiData } from '@/services/common'
 
-type DataType = {
-  date: string;
-  hours: string;
-  hour: string;
-  yi: string;
-  ji: string;
-  chong: string;
-  sha: string;
-  nayin: string;
-  jiuxing: string;
+import type { DateValue } from '@heroui/react'
+import type { FC } from 'react'
+
+interface DataType {
+  date: string
+  hours: string
+  hour: string
+  yi: string
+  ji: string
+  chong: string
+  sha: string
+  nayin: string
+  jiuxing: string
 }
 
 const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
-  const pathname = usePathname();
-  const [date, setDate] = useState<DateValue | null>(today(getLocalTimeZone()));
+  const pathname = usePathname()
+  const [date, setDate] = useState<DateValue | null>(() => today(getLocalTimeZone()))
 
   // 参数处理
   const params = useMemo(() => ({
-    date: date?.toString() ?? ''
-  }), [date]);
+    date: date?.toString() ?? '',
+  }), [date])
 
   // 请求数据
   const { data = [], loading, error, run } = useRequest(
-    async () => get(await getApiData(pathname, params), 'data', []));
+    async () => get(await getApiData(pathname, params), 'data', []),
+  )
 
   // 列定义
-  const columns: { label: string, value: keyof DataType; className?: string }[] = [
+  const columns: { label: string, value: keyof DataType, className?: string }[] = [
     { label: '日期', value: 'date' },
-    { label: '时段', value: 'hours', className: "w-40" },
-    { label: '时辰', value: 'hour', className: "w-20" },
+    { label: '时段', value: 'hours', className: 'w-40' },
+    { label: '时辰', value: 'hour', className: 'w-20' },
     { label: '宜', value: 'yi' },
     { label: '忌', value: 'ji' },
     { label: '冲', value: 'chong' },
     { label: '煞', value: 'sha' },
     { label: '纳音', value: 'nayin' },
-    { label: '九星', value: 'jiuxing' }
-  ];
+    { label: '九星', value: 'jiuxing' },
+  ]
   return (
     <div className="flex-1 flex flex-col justify-between gap-4">
       {/* 头部区域 */}
@@ -68,17 +72,21 @@ const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
                     ))}
                   </Table.Header>
                   <Table.Body renderEmptyState={() => <EmptyContent />}>
-                    {data?.length ? data.map((v, index) => (
-                      <Table.Row key={index}>
-                        {columns.map(({ value, className }) => value === 'date' ? (
-                          <Table.Cell key={value} className="w-35">
-                            <Chip color='accent' variant='soft'>{get(v, 'date', '--')}</Chip>
-                          </Table.Cell>
-                        ) : (
-                          <Table.Cell key={value} className={className || "min-w-30"}>{get(v, value, '--')}</Table.Cell>
-                        ))}
-                      </Table.Row>
-                    )) : []}
+                    {data?.length
+                      ? data.map((v, index) => (
+                          <Table.Row key={index}>
+                            {columns.map(({ value, className }) => value === 'date'
+                              ? (
+                                  <Table.Cell key={value} className="w-35">
+                                    <Chip color="accent" variant="soft">{get(v, 'date', '--')}</Chip>
+                                  </Table.Cell>
+                                )
+                              : (
+                                  <Table.Cell key={value} className={className || 'min-w-30'}>{get(v, value, '--')}</Table.Cell>
+                                ))}
+                          </Table.Row>
+                        ))
+                      : []}
                   </Table.Body>
                 </Table.Content>
               </Table.ScrollContainer>
@@ -90,9 +98,9 @@ const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
       {/* 底部区域 */}
       <div className="flex justify-center shrink-0">
         <div className="flex items-center gap-2 flex-wrap">
-          <DatePicker className="w-70" name="date" value={date} onChange={setDate} aria-label={title}>
+          <DatePicker aria-label={title} name="date" value={date} onChange={setDate} className="w-70">
             <DateField.Group fullWidth>
-              <DateField.Input>{(segment) => <DateField.Segment segment={segment} />}</DateField.Input>
+              <DateField.Input>{segment => <DateField.Segment segment={segment} />}</DateField.Input>
               <DateField.Suffix>
                 <DatePicker.Trigger>
                   <DatePicker.TriggerIndicator />
@@ -111,9 +119,9 @@ const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
                 </Calendar.Header>
                 <Calendar.Grid>
                   <Calendar.GridHeader>
-                    {(day) => <Calendar.HeaderCell>{day}</Calendar.HeaderCell>}
+                    {day => <Calendar.HeaderCell>{day}</Calendar.HeaderCell>}
                   </Calendar.GridHeader>
-                  <Calendar.GridBody>{(date) => <Calendar.Cell date={date} />}</Calendar.GridBody>
+                  <Calendar.GridBody>{date => <Calendar.Cell date={date} />}</Calendar.GridBody>
                 </Calendar.Grid>
                 <Calendar.YearPickerGrid>
                   <Calendar.YearPickerGridBody>
@@ -129,4 +137,4 @@ const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
     </div>
   )
 }
-export default ClientComponent;
+export default ClientComponent

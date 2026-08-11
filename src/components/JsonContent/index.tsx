@@ -1,47 +1,48 @@
 'use client'
-import { Table } from '@heroui/react';
-import { useRequest } from 'ahooks';
-import { usePathname } from 'next/navigation';
-import { type ReactNode } from 'react';
+import { Table } from '@heroui/react'
+import { useRequest } from 'ahooks'
+import { usePathname } from 'next/navigation'
 
-import CopyText from '@/components/CopyText';
-import EmptyContent from '@/components/EmptyContent';
-import RefreshButton from '@/components/RefreshButton';
-import RequestContent from '@/components/RequestContent';
-import TableLoading from '@/components/TableLoading';
-import { get } from '@/lib/utils';
-import { getApiData } from '@/services/common';
+import CopyText from '@/components/CopyText'
+import EmptyContent from '@/components/EmptyContent'
+import RefreshButton from '@/components/RefreshButton'
+import RequestContent from '@/components/RequestContent'
+import TableLoading from '@/components/TableLoading'
+import { get } from '@/lib/utils'
+import { getApiData } from '@/services/common'
 
-export type Column = {
-  label: string;
-  children: ReactNode;
+import type { ReactNode } from 'react'
+
+export interface Column {
+  label: string
+  children: ReactNode
 }
 
-export type GetColumnsFn<T> = (data: T) => Column[];
+export type GetColumnsFn<T> = (data: T) => Column[]
 
-type JsonContentProps<T> = {
-  title: string;
-  children: ReactNode;
-  params: Record<string, any>;
-  onRefresh: () => boolean;
-  searchText?: string;
-  getColumns: GetColumnsFn<T>;
+interface JsonContentProps<T> {
+  title: string
+  children: ReactNode
+  params: Record<string, any>
+  onRefresh: () => boolean
+  searchText?: string
+  getColumns: GetColumnsFn<T>
 }
 
 function JsonContent<T>({ title, children, params = {}, onRefresh, searchText = '查询', getColumns }: JsonContentProps<T>) {
-  const pathname = usePathname();
+  const pathname = usePathname()
 
   // 请求数据
   const { data, loading, error, run } = useRequest<T, (typeof params)[]>(
     async () =>
       get(await getApiData(pathname, params), 'data'),
-  );
+  )
 
   // 请求数据
   const reload = () => {
-    const flag = onRefresh();
+    const flag = onRefresh()
     if (flag) {
-      run();
+      run()
     }
   }
   return (
@@ -80,11 +81,11 @@ function JsonContent<T>({ title, children, params = {}, onRefresh, searchText = 
       <div className="flex justify-center shrink-0">
         <div className="flex items-center gap-2 flex-wrap">
           {children}
-          <RefreshButton text={searchText} loading={loading} onPress={reload} />
+          <RefreshButton loading={loading} text={searchText} onPress={reload} />
           <CopyText content={Object.keys(data || {}).length > 0 ? JSON.stringify(data || {}, null, 2) : ''} />
         </div>
       </div>
     </div>
   )
 }
-export default JsonContent;
+export default JsonContent

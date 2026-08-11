@@ -1,3 +1,9 @@
+import { NextResponse } from 'next/server'
+
+import { RESPONSE } from '@/enums'
+import { getSupabaseServerClient } from '@/lib/supabase/server'
+import { catchError, responseMessage } from '@/lib/utils'
+
 /*
  * @Author: 白雾茫茫丶<baiwumm.com>
  * @Date: 2026-02-27 09:47:30
@@ -5,17 +11,13 @@
  * @LastEditTime: 2026-03-12 15:48:49
  * @Description: 每日一言
  */
-import { NextRequest, NextResponse } from 'next/server'
-
-import { RESPONSE } from '@/enums'
-import { getSupabaseServerClient } from '@/lib/supabase/server'
-import { catchError, responseMessage } from '@/lib/utils'
+import type { NextRequest } from 'next/server'
 
 export async function GET(request: NextRequest) {
   try {
-    const supabase = await getSupabaseServerClient();
+    const supabase = await getSupabaseServerClient()
     // 解析 URL 查询参数
-    const searchParams = request.nextUrl.searchParams;
+    const searchParams = request.nextUrl.searchParams
     // 参数处理
     const types = searchParams.get('type')
       ? searchParams.get('type')!.split(',')
@@ -52,8 +54,9 @@ export async function GET(request: NextRequest) {
       })
     }
 
-    return NextResponse.json(responseMessage(data));
-  } catch (err) {
-    return NextResponse.json(catchError(err));
+    return NextResponse.json(responseMessage(data))
+  }
+  catch (err) {
+    return NextResponse.json(catchError(err))
   }
 }

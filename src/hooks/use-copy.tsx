@@ -17,9 +17,9 @@ export function useCopy() {
     }
 
     return (
-      'clipboard' in navigator &&
-      'writeText' in navigator.clipboard &&
-      window.isSecureContext
+      'clipboard' in navigator
+      && 'writeText' in navigator.clipboard
+      && window.isSecureContext
     )
   }, [])
 
@@ -48,7 +48,8 @@ export function useCopy() {
       })
 
       return true
-    } catch {
+    }
+    catch {
       toast.danger('复制失败，请手动复制!', {
         indicator: <CircleXmark />,
       })

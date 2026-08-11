@@ -1,46 +1,49 @@
 'use client'
-import { ListBox, NumberField, Select } from '@heroui/react';
-import { useRequest } from 'ahooks';
-import Image from "next/image";
-import { usePathname } from 'next/navigation';
-import { type FC, useState } from 'react';
+import { ListBox, NumberField, Select } from '@heroui/react'
+import { useRequest } from 'ahooks'
+import Image from 'next/image'
+import { usePathname } from 'next/navigation'
+import { useState } from 'react'
 
-import RefreshButton from '@/components/RefreshButton';
-import RequestContent from '@/components/RequestContent';
-import { PERSON_SEXS, PERSON_SIZES } from '@/enums';
-import { useCopy } from '@/hooks/use-copy';
-import { get } from '@/lib/utils';
-import { getApiData } from '@/services/common';
+import RefreshButton from '@/components/RefreshButton'
+import RequestContent from '@/components/RequestContent'
+import { PERSON_SEXS, PERSON_SIZES } from '@/enums'
+import { useCopy } from '@/hooks/use-copy'
+import { get } from '@/lib/utils'
+import { getApiData } from '@/services/common'
 
-type PersonSex = typeof PERSON_SEXS.valueType;
-type PersonSize = typeof PERSON_SIZES.valueType;
+import type { FC } from 'react'
+
+type PersonSex = typeof PERSON_SEXS.valueType
+type PersonSize = typeof PERSON_SIZES.valueType
 
 const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
-  const { copy } = useCopy();
-  const pathname = usePathname();
+  const { copy } = useCopy()
+  const pathname = usePathname()
 
-  const [count, setCount] = useState(5);
-  const [sex, setSex] = useState<PersonSex>(PERSON_SEXS.GENERIC);
-  const [size, setSize] = useState<PersonSize>(PERSON_SIZES.SIZE_128);
+  const [count, setCount] = useState(5)
+  const [sex, setSex] = useState<PersonSex>(PERSON_SEXS.GENERIC)
+  const [size, setSize] = useState<PersonSize>(PERSON_SIZES.SIZE_128)
 
   // 实际请求参数
   const [params, setParams] = useState({
     count,
     sex,
-    size
-  });
+    size,
+  })
 
   const { data = [], loading, error, run } = useRequest(
-    async (params) => get(await getApiData(pathname, params), 'data', []), {
-    defaultParams: [params]
-  }
-  );
+    async params => get(await getApiData(pathname, params), 'data', []),
+    {
+      defaultParams: [params],
+    },
+  )
 
   const handleGenerate = () => {
-    const newParams = { count, sex, size };
-    setParams(newParams);
-    run(newParams);
-  };
+    const newParams = { count, sex, size }
+    setParams(newParams)
+    run(newParams)
+  }
 
   return (
     <div className="flex-1 flex flex-col justify-between gap-4">
@@ -51,18 +54,18 @@ const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
 
       {/* 中间 */}
       <div className="flex-1 flex justify-center items-center">
-        <RequestContent error={error} reFresh={handleGenerate} loading={loading} loadingText="正在生成...">
+        <RequestContent error={error} loading={loading} loadingText="正在生成..." reFresh={handleGenerate}>
           <div className="flex items-center gap-4 flex-wrap">
-            {data.map((url) => (
+            {data.map(url => (
               <Image
                 key={url}
-                src={url}
                 alt={title}
-                width={params.size}
                 height={params.size}
-                className="rounded-xl cursor-pointer"
-                loading='eager'
+                loading="eager"
+                src={url}
+                width={params.size}
                 onClick={() => copy(url)}
+                className="rounded-xl cursor-pointer"
               />
             ))}
           </div>
@@ -72,7 +75,7 @@ const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
       {/* 底部 */}
       <div className="flex justify-center shrink-0">
         <div className="flex items-center gap-2 flex-wrap">
-          <Select className="w-50" placeholder="性别" aria-label="性别" value={sex} onChange={(value) => setSex(value as PersonSex)}>
+          <Select aria-label="性别" placeholder="性别" value={sex} onChange={value => setSex(value as PersonSex)} className="w-50">
             <Select.Trigger>
               <Select.Value />
               <Select.Indicator />
@@ -88,7 +91,7 @@ const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
               </ListBox>
             </Select.Popover>
           </Select>
-          <Select className="w-50" placeholder="头像大小" aria-label="头像大小" value={size} onChange={(value) => setSize(value as PersonSize)}>
+          <Select aria-label="头像大小" placeholder="头像大小" value={size} onChange={value => setSize(value as PersonSize)} className="w-50">
             <Select.Trigger>
               <Select.Value />
               <Select.Indicator />
@@ -104,7 +107,7 @@ const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
               </ListBox>
             </Select.Popover>
           </Select>
-          <NumberField minValue={1} maxValue={50} value={count} onChange={setCount} aria-label='生成的数量'>
+          <NumberField aria-label="生成的数量" maxValue={50} minValue={1} value={count} onChange={setCount}>
             <NumberField.Group>
               <NumberField.DecrementButton />
               <NumberField.Input className="w-20" />
@@ -116,6 +119,6 @@ const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
         </div>
       </div>
     </div>
-  );
-};
-export default ClientComponent;
+  )
+}
+export default ClientComponent

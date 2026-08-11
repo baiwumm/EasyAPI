@@ -5,14 +5,16 @@
  * @LastEditTime: 2026-01-29 14:49:04
  * @Description: 删除弹窗
  */
-"use client";
-import { AlertDialog, Button, Spinner, type UseOverlayStateReturn } from "@heroui/react";
-import { type FC } from 'react';
+'use client'
+import { AlertDialog, Button, Spinner } from '@heroui/react'
 
-type DeleteDialogProps = {
-  state: UseOverlayStateReturn;
-  loading: boolean;
-  handleDelConfirm: VoidFunction;
+import type { UseOverlayStateReturn } from '@heroui/react'
+import type { FC } from 'react'
+
+interface DeleteDialogProps {
+  state: UseOverlayStateReturn
+  loading: boolean
+  handleDelConfirm: VoidFunction
 }
 
 const DeleteDialog: FC<DeleteDialogProps> = ({ state, loading = false, handleDelConfirm }) => {
@@ -27,17 +29,19 @@ const DeleteDialog: FC<DeleteDialogProps> = ({ state, loading = false, handleDel
           </AlertDialog.Header>
           <AlertDialog.Body>
             <p>
-              删除后，该接口及其关联的数据将被<strong>永久移除</strong>，且无法恢复。
+              删除后，该接口及其关联的数据将被
+              <strong>永久移除</strong>
+              ，且无法恢复。
               请确认当前操作不会影响正在使用的业务或历史数据。
             </p>
           </AlertDialog.Body>
           <AlertDialog.Footer>
-            <Button slot="close" variant="tertiary" isDisabled={loading}>取消</Button>
+            <Button variant="tertiary" isDisabled={loading} slot="close">取消</Button>
             <Button variant="danger" isPending={loading} onPress={handleDelConfirm}>
               {({ isPending }) => (
                 <>
                   {isPending ? <Spinner color="current" size="sm" /> : null}
-                  {isPending ? "正在删除..." : "确认删除"}
+                  {isPending ? '正在删除...' : '确认删除'}
                 </>
               )}
             </Button>
@@ -47,4 +51,4 @@ const DeleteDialog: FC<DeleteDialogProps> = ({ state, loading = false, handleDel
     </AlertDialog.Backdrop>
   )
 }
-export default DeleteDialog;
+export default DeleteDialog

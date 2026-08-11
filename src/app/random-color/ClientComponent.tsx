@@ -1,39 +1,41 @@
 'use client'
-import { ColorSwatch, ListBox, NumberField, Select } from '@heroui/react';
-import { useRequest } from 'ahooks';
-import { usePathname } from 'next/navigation';
-import { type FC, useMemo, useState } from 'react';
-import tinycolor from "tinycolor2";
+import { ColorSwatch, ListBox, NumberField, Select } from '@heroui/react'
+import { useRequest } from 'ahooks'
+import { usePathname } from 'next/navigation'
+import { useMemo, useState } from 'react'
+import tinycolor from 'tinycolor2'
 
-import RefreshButton from '@/components/RefreshButton';
-import RequestContent from '@/components/RequestContent';
-import { RANDOM_COLOR_FORMATS } from '@/enums';
-import { useCopy } from '@/hooks/use-copy';
-import { get } from '@/lib/utils';
-import { getApiData } from '@/services/common';
+import RefreshButton from '@/components/RefreshButton'
+import RequestContent from '@/components/RequestContent'
+import { RANDOM_COLOR_FORMATS } from '@/enums'
+import { useCopy } from '@/hooks/use-copy'
+import { get } from '@/lib/utils'
+import { getApiData } from '@/services/common'
 
-type Format = typeof RANDOM_COLOR_FORMATS.valueType;
+import type { FC } from 'react'
 
 type Color = string | {
-  hex: string;
-  rgb: string;
-  hsl: string;
-  hsv: string;
-};
+  hex: string
+  rgb: string
+  hsl: string
+  hsv: string
+}
+
+type Format = typeof RANDOM_COLOR_FORMATS.valueType
 
 const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
-  const pathname = usePathname();
-  const { copy } = useCopy();
-  const [format, setFormat] = useState<Format>(RANDOM_COLOR_FORMATS.ALL); // 颜色格式
-  const [count, setCount] = useState(10); // 生成的数量
+  const pathname = usePathname()
+  const { copy } = useCopy()
+  const [format, setFormat] = useState<Format>(RANDOM_COLOR_FORMATS.ALL) // 颜色格式
+  const [count, setCount] = useState(10) // 生成的数量
 
   // 参数处理
-  const params = useMemo(() => ({ format, count }), [format, count]);
+  const params = useMemo(() => ({ format, count }), [format, count])
 
   // 请求数据
   const { data = [], loading, error, run } = useRequest(
-    async () => get(await getApiData(pathname, params), 'data', [])
-  );
+    async () => get(await getApiData(pathname, params), 'data', []),
+  )
   return (
     <div className="flex-1 flex flex-col justify-between gap-4">
       {/* 头部区域 */}
@@ -42,11 +44,11 @@ const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
       </div>
       {/* 中间区域 */}
       <div className="flex-1 flex justify-center items-center">
-        <RequestContent error={error} reFresh={run} loading={loading} loadingText='正在生成...'>
+        <RequestContent error={error} loading={loading} loadingText="正在生成..." reFresh={run}>
           <div className="flex justify-center items-center flex-wrap gap-2">
             {data.map((v: Color) => {
-              const rawColor = typeof v === 'string' ? v : v.hex;
-              const displayColor = tinycolor(rawColor).toHexString();
+              const rawColor = typeof v === 'string' ? v : v.hex
+              const displayColor = tinycolor(rawColor).toHexString()
               return (
                 <ColorSwatch
                   key={displayColor}
@@ -67,11 +69,11 @@ const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
       <div className="flex justify-center shrink-0">
         <div className="flex items-center gap-2 flex-wrap">
           <Select
-            className="w-50"
+            aria-label="颜色格式"
             placeholder="请选择颜色格式"
             value={format}
-            onChange={(value) => setFormat(value as Format)}
-            aria-label="颜色格式"
+            onChange={value => setFormat(value as Format)}
+            className="w-50"
           >
             <Select.Trigger>
               <Select.Value />
@@ -88,14 +90,14 @@ const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
               </ListBox>
             </Select.Popover>
           </Select>
-          <NumberField minValue={1} maxValue={50} value={count} onChange={setCount} aria-label="生成的数量">
+          <NumberField aria-label="生成的数量" maxValue={50} minValue={1} value={count} onChange={setCount}>
             <NumberField.Group>
               <NumberField.DecrementButton />
               <NumberField.Input className="w-20" />
               <NumberField.IncrementButton />
             </NumberField.Group>
           </NumberField>
-          <RefreshButton text='生成' loading={loading} onPress={run} />
+          <RefreshButton loading={loading} text="生成" onPress={run} />
         </div>
       </div>
     </div>
