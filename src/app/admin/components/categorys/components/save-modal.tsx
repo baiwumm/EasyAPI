@@ -17,7 +17,7 @@ import {
 } from '@heroui/react'
 
 import { RESPONSE } from '@/enums'
-import { useRequest } from '@/hooks/use-request'
+import { useSwrMutation } from '@/hooks/use-swr'
 import { addCategory, updateCategory } from '@/services/categorys'
 
 import type { UseOverlayStateReturn } from '@heroui/react'
@@ -32,20 +32,23 @@ interface SaveModalProps {
 const SaveModal: FC<SaveModalProps> = ({ state, initialValues, handleRefresh }) => {
   const actionText = initialValues ? '编辑' : '新增'
 
-  // 保存表单
-  const { loading, run } = useRequest(initialValues?.id ? updateCategory : addCategory, {
-    manual: true,
-    onSuccess: ({ code }) => {
-      if (code === RESPONSE.SUCCESS) {
-        state.close()
-        toast.success('提交成功', {
-          timeout: 2000,
-          indicator: <CircleCheckFill />,
-        })
-        handleRefresh?.()
-      }
+  // 保存表单（新增/编辑复用，按 initialValues 选择 service）
+  const { loading, trigger } = useSwrMutation(
+    '/categorys:save',
+    (data: App.CategorySaveParams) => (initialValues?.id ? updateCategory(data) : addCategory(data)),
+    {
+      onSuccess: ({ code }) => {
+        if (code === RESPONSE.SUCCESS) {
+          state.close()
+          toast.success('提交成功', {
+            timeout: 2000,
+            indicator: <CircleCheckFill />,
+          })
+          handleRefresh?.()
+        }
+      },
     },
-  })
+  )
 
   // 表单提交
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -58,7 +61,7 @@ const SaveModal: FC<SaveModalProps> = ({ state, initialValues, handleRefresh }) 
       sort: Number(formData.get('sort')),
       id: initialValues?.id,
     }
-    run(data)
+    trigger(data)
   }
 
   return (

@@ -7,7 +7,7 @@ import EmptyContent from '@/components/EmptyContent'
 import RefreshButton from '@/components/RefreshButton'
 import RequestContent from '@/components/RequestContent'
 import TableLoading from '@/components/TableLoading'
-import { useRequest } from '@/hooks/use-request'
+import { useSwrQuery } from '@/hooks/use-swr'
 import { get } from '@/lib/utils'
 import { getApiData } from '@/services/common'
 
@@ -32,8 +32,9 @@ interface JsonContentProps<T> {
 function JsonContent<T>({ title, children, params = {}, onRefresh, searchText = '查询', getColumns }: JsonContentProps<T>) {
   const pathname = usePathname()
 
-  // 请求数据
-  const { data, loading, error, run } = useRequest<T, (typeof params)[]>(
+  // 请求数据（key 固定为路由，参数走闭包；点击刷新用 mutate）
+  const { data, loading, error, mutate } = useSwrQuery<T>(
+    pathname,
     async () =>
       get(await getApiData(pathname, params), 'data'),
   )
@@ -42,7 +43,7 @@ function JsonContent<T>({ title, children, params = {}, onRefresh, searchText = 
   const reload = () => {
     const flag = onRefresh()
     if (flag) {
-      run()
+      mutate()
     }
   }
   return (

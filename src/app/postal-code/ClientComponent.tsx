@@ -17,7 +17,7 @@ import RefreshButton from '@/components/RefreshButton'
 import RequestContent from '@/components/RequestContent'
 import TableLoading from '@/components/TableLoading'
 import { POSTALCODE_TYPES } from '@/enums'
-import { useRequest } from '@/hooks/use-request'
+import { useSwrQuery } from '@/hooks/use-swr'
 import { get } from '@/lib/utils'
 import { getApiData } from '@/services/common'
 
@@ -41,12 +41,10 @@ const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
   // 实际请求参数
   const [params, setParams] = useState({ keyword, type })
 
-  // 请求数据
-  const { data, loading, error, run } = useRequest<PostalCode | PostalCode[], { keyword: string, type: number }[]>(
-    async params => get(await getApiData(pathname, params), 'data'),
-    {
-      defaultParams: [params],
-    },
+  // 请求数据：key 含已提交参数，点击后 params 变化自动请求
+  const { data, loading, error, mutate } = useSwrQuery<PostalCode | PostalCode[]>(
+    [pathname, params],
+    async () => get(await getApiData(pathname, params), 'data'),
   )
 
   // 请求数据
@@ -57,7 +55,10 @@ const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
     }
     const newParams = { keyword, type }
     setParams(newParams)
-    run(newParams)
+    // 参数没变时 key 不变，SWR 不会发请求 → 手动刷新
+    if (JSON.stringify(newParams) === JSON.stringify(params)) {
+      mutate()
+    }
   }
 
   // 列定义

@@ -18,7 +18,7 @@ import RefreshButton from '@/components/RefreshButton'
 import RequestContent from '@/components/RequestContent'
 import { RANDOM_STRING_TYPES } from '@/enums'
 import { useCopy } from '@/hooks/use-copy'
-import { useRequest } from '@/hooks/use-request'
+import { useSwrQuery } from '@/hooks/use-swr'
 import { get } from '@/lib/utils'
 import { getApiData } from '@/services/common'
 
@@ -37,7 +37,8 @@ const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
   const params = useMemo(() => ({ type, length, count, characters }), [type, length, count, characters])
 
   // 请求数据
-  const { data = [], loading, error, run } = useRequest(
+  const { data = [], loading, error, mutate } = useSwrQuery(
+    pathname,
     async () => get(await getApiData(pathname, params), 'data', []),
   )
   return (
@@ -48,7 +49,7 @@ const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
       </div>
       {/* 中间区域 */}
       <div className="flex-1 flex justify-center items-center">
-        <RequestContent error={error} loading={loading} loadingText="正在生成..." reFresh={run}>
+        <RequestContent error={error} loading={loading} loadingText="正在生成..." reFresh={mutate}>
           <div className="flex justify-center items-center flex-wrap gap-2">
             {data.map(v => (
               <Chip
@@ -121,7 +122,7 @@ const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
               className="w-50"
             />
           </TextField>
-          <RefreshButton loading={loading} text="生成" onPress={run} />
+          <RefreshButton loading={loading} text="生成" onPress={() => mutate()} />
         </div>
       </div>
     </div>

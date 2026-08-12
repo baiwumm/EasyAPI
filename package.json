@@ -65,6 +65,7 @@
     "react-aria-components": "1.20.0",
     "react-dom": "19.2.3",
     "sharp": "^0.35.3",
+    "swr": "^2.5.0",
     "tinycolor2": "^1.6.0",
     "uicolors-generator": "^1.2.4",
     "xmldom": "^0.6.0"

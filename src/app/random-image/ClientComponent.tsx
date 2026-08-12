@@ -7,7 +7,7 @@ import { useState } from 'react'
 import RefreshButton from '@/components/RefreshButton'
 import RequestContent from '@/components/RequestContent'
 import { useCopy } from '@/hooks/use-copy'
-import { useRequest } from '@/hooks/use-request'
+import { useSwrQuery } from '@/hooks/use-swr'
 import { get } from '@/lib/utils'
 import { getApiData } from '@/services/common'
 
@@ -27,17 +27,19 @@ const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
     height: size,
   })
 
-  const { data = [], loading, error, run } = useRequest(
-    async params => get(await getApiData(pathname, params), 'data', []),
-    {
-      defaultParams: [params],
-    },
+  // 请求数据：key 含已提交参数，点击后 params 变化自动请求
+  const { data = [], loading, error, mutate } = useSwrQuery(
+    [pathname, params],
+    async () => get(await getApiData(pathname, params), 'data', []),
   )
 
   const handleGenerate = () => {
     const newParams = { count, width: size, height: size }
     setParams(newParams)
-    run(newParams)
+    // 参数没变时 key 不变，SWR 不会发请求 → 手动刷新
+    if (JSON.stringify(newParams) === JSON.stringify(params)) {
+      mutate()
+    }
   }
 
   return (

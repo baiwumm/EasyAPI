@@ -31,7 +31,8 @@ export const fetchHomeData = cache(async (): Promise<App.Category[]> => {
     throw new Error(error.message)
   }
 
-  const list = data ?? []
+  // supabase 行类型未覆盖 Columns 全字段，按业务类型断言（只取页面用到的列）
+  const list = (data ?? []) as App.Category[]
 
   list.forEach((category: App.Category) => {
     // 接口排序（原地排序，与 /api/categorys 保持一致）：置顶 → sort 降序 → 推荐 → 创建时间降序

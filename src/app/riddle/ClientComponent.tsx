@@ -8,7 +8,7 @@ import CopyText from '@/components/CopyText'
 import RefreshButton from '@/components/RefreshButton'
 import RequestContent from '@/components/RequestContent'
 import TypingAnimation from '@/components/TypingAnimation'
-import { useRequest } from '@/hooks/use-request'
+import { useSwrQuery } from '@/hooks/use-swr'
 import { get } from '@/lib/utils'
 import { getApiData } from '@/services/common'
 
@@ -18,7 +18,8 @@ const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
   const pathname = usePathname()
 
   // 请求数据
-  const { data = {}, loading, error, run } = useRequest(
+  const { data = {}, loading, error, mutate } = useSwrQuery(
+    pathname,
     async () =>
       get(await getApiData(pathname), 'data', {}),
   )
@@ -34,7 +35,7 @@ const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
       </div>
       {/* 中间区域 */}
       <div className="flex-1 flex justify-center items-center">
-        <RequestContent error={error} loading={loading} loadingText="灵感正在路上..." reFresh={run}>
+        <RequestContent error={error} loading={loading} loadingText="灵感正在路上..." reFresh={mutate}>
           <div className="relative max-w-[85%] min-w-[20%]">
             <QuoteOpen className="size-14! absolute -top-10 -left-10 text-muted" />
             <TypingAnimation
@@ -50,7 +51,7 @@ const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
       {/* 底部区域 */}
       <div className="flex justify-center shrink-0">
         <div className="flex items-center gap-2">
-          <RefreshButton loading={loading} text="换一句" onPress={run} />
+          <RefreshButton loading={loading} text="换一句" onPress={() => mutate()} />
           <CopyText content={formContent} />
         </div>
       </div>

@@ -9,6 +9,8 @@ export default antfu({
   ignores: [
     // Reasonix 工具内部状态目录，不参与 lint
     '.reasonix/**',
+    // 迁移文档中的示例代码不参与 lint
+    'docs/**',
   ],
   rules: {
     // 允许使用全局 process（Node.js 环境）

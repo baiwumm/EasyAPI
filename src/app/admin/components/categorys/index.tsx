@@ -16,7 +16,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import DataTablePagination from '@/components/DataTablePagination'
 import { RESPONSE } from '@/enums'
-import { useRequest } from '@/hooks/use-request'
+import { useSwrMutation, useSwrQuery } from '@/hooks/use-swr'
 import { get } from '@/lib/utils'
 import { delCategory, getCategorysList } from '@/services/categorys'
 
@@ -51,11 +51,12 @@ const Categorys: FC = () => {
   // 编辑数据
   const [editData, setEditData] = useState<App.Category | null>(null)
 
-  // 请求分类列表
-  const { data, loading, run } = useRequest(async params => get(await getCategorysList(params), 'data', {}), {
-    manual: true,
-    defaultParams: [searchParams],
-  })
+  // 请求分类列表：key 含搜索/分页参数，变化自动请求
+  const { data, loading, mutate } = useSwrQuery(
+    ['/categorys', searchParams],
+    async () => get(await getCategorysList(searchParams), 'data', {}),
+    { keepPreviousData: true }, // 翻页保留旧数据，不闪空
+  )
   const total = get(data, 'total', 0)
   const categorysList = get(data, 'list', [])
 
@@ -63,6 +64,10 @@ const Categorys: FC = () => {
   const handleSearch = () => {
     setQuery({ name })
     setPagination(p => (p.pageIndex === 0 ? p : { ...p, pageIndex: 0 }))
+    // 搜索词与分页都没变时 key 不变，SWR 不会发请求 → 手动刷新
+    if (name === query.name && pagination.pageIndex === 0) {
+      mutate()
+    }
   }
 
   // 重置
@@ -70,6 +75,10 @@ const Categorys: FC = () => {
     setName('')
     setQuery({ name: '' })
     setPagination({ pageIndex: 0, pageSize: 10 })
+    // 重置后 key 未变（已是空查询 + 第一页）时手动刷新
+    if (query.name === '' && pagination.pageIndex === 0) {
+      mutate()
+    }
   }
 
   // 编辑回调
@@ -79,8 +88,7 @@ const Categorys: FC = () => {
   }, [saveModalState])
 
   // 删除分类
-  const { loading: delLoading, run: fetchDelCategory } = useRequest(delCategory, {
-    manual: true,
+  const { loading: delLoading, trigger: fetchDelCategory } = useSwrMutation('/categorys:delete', delCategory, {
     onSuccess: ({ code }) => {
       if (code === RESPONSE.SUCCESS) {
         delDialogState.close()
@@ -88,7 +96,7 @@ const Categorys: FC = () => {
           timeout: 2000,
           indicator: <CircleCheckFill />,
         })
-        handleSearch()
+        handleSearch() // 参数未变时内部走 mutate()，列表必然刷新
       }
     },
   })
@@ -140,10 +148,7 @@ const Categorys: FC = () => {
     },
   })
 
-  // 查询/分页/重置统一由 searchParams 驱动，保证只发一次请求
-  useEffect(() => {
-    run(searchParams)
-  }, [run, searchParams])
+  // 分页变化由 key 驱动自动请求，无需手动 run
 
   useEffect(() => {
     if (!saveModalState.isOpen) {

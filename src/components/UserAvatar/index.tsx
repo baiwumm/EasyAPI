@@ -22,9 +22,10 @@ import {
   useOverlayState,
 } from '@heroui/react'
 import { useState } from 'react'
+import { useSWRConfig } from 'swr'
 
-import { useRequest } from '@/hooks/use-request'
 import { useSupabaseUser } from '@/hooks/use-supabase-user'
+import { useSwrQuery } from '@/hooks/use-swr'
 import { getSupabaseBrowserClient } from '@/lib/supabase/client'
 import { get } from '@/lib/utils'
 import { getApiData } from '@/services/common'
@@ -34,10 +35,13 @@ import type { FC, Key } from 'react'
 const UserAvatar: FC = () => {
   const supabase = getSupabaseBrowserClient()
   const router = useRouter()
+  // 登出时清除 /auth/me 缓存（见迁移文档踩坑 13）
+  const { mutate } = useSWRConfig()
   // 获取登录用户信息
   const { user, loading } = useSupabaseUser()
   // 查询当前用户是否为管理员（登录 + 邮箱白名单），非管理员不显示后台入口
-  const { data: adminInfo } = useRequest<{ isAdmin: boolean, email: string | null } | null>(
+  const { data: adminInfo } = useSwrQuery<{ isAdmin: boolean, email: string | null } | null>(
+    '/auth/me',
     async () => get(await getApiData('/auth/me'), 'data', null),
   )
   const isAdmin = adminInfo?.isAdmin === true
@@ -73,6 +77,8 @@ const UserAvatar: FC = () => {
       // 登出
       await supabase.auth.signOut().then(() => {
         alertState.close()
+        // 清除 /auth/me 缓存，避免切换账号后展示旧会话权限
+        mutate('/auth/me', null)
         // 返回首页
         router.push('/login')
       })

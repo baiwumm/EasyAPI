@@ -8,7 +8,7 @@ import RefreshButton from '@/components/RefreshButton'
 import RequestContent from '@/components/RequestContent'
 import { PERSON_SEXS, PERSON_SIZES } from '@/enums'
 import { useCopy } from '@/hooks/use-copy'
-import { useRequest } from '@/hooks/use-request'
+import { useSwrQuery } from '@/hooks/use-swr'
 import { get } from '@/lib/utils'
 import { getApiData } from '@/services/common'
 
@@ -25,16 +25,22 @@ const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
   const [sex, setSex] = useState<PersonSex>(PERSON_SEXS.GENERIC)
   const [size, setSize] = useState<PersonSize>(PERSON_SIZES.SIZE_128)
 
-  const { data = [], loading, error, run } = useRequest(
-    async params => get(await getApiData(pathname, params), 'data', []),
-    {
-      defaultParams: [{ count, sex, size }],
-    },
+  // 已提交的请求参数：点击"重新生成"才更新，输入变化不触发请求
+  const [query, setQuery] = useState({ count, sex, size })
+
+  // 请求数据：key 含已提交参数，点击后 query 变化自动请求
+  const { data = [], loading, error, mutate } = useSwrQuery(
+    [pathname, query],
+    async () => get(await getApiData(pathname, query), 'data', []),
   )
 
   const handleGenerate = () => {
-    // 事件处理器中直接传参，无需维护可派生的 params state
-    run({ count, sex, size })
+    const next = { count, sex, size }
+    setQuery(next)
+    // 参数没变时 key 不变，SWR 不会发请求 → 手动刷新
+    if (JSON.stringify(next) === JSON.stringify(query)) {
+      mutate()
+    }
   }
 
   return (

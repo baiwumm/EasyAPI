@@ -20,7 +20,7 @@ import {
 } from '@heroui/react'
 
 import { REQUEST_METHODS, RESPONSE } from '@/enums'
-import { useRequest } from '@/hooks/use-request'
+import { useSwrMutation } from '@/hooks/use-swr'
 import { get } from '@/lib/utils'
 import { addApi, updateApi } from '@/services/apis'
 
@@ -47,20 +47,23 @@ const SaveModal: FC<SaveModalProps> = ({
 }) => {
   const actionText = initialValues ? '编辑' : '新增'
 
-  // 保存表单
-  const { loading, run } = useRequest(initialValues?.id ? updateApi : addApi, {
-    manual: true,
-    onSuccess: ({ code }) => {
-      if (code === RESPONSE.SUCCESS) {
-        state.close()
-        toast.success('提交成功', {
-          timeout: 2000,
-          indicator: <CircleCheckFill />,
-        })
-        handleRefresh?.()
-      }
+  // 保存表单（新增/编辑复用，按 initialValues 选择 service）
+  const { loading, trigger } = useSwrMutation(
+    '/apis:save',
+    (data: App.ApiSaveParams) => (initialValues?.id ? updateApi(data) : addApi(data)),
+    {
+      onSuccess: ({ code }) => {
+        if (code === RESPONSE.SUCCESS) {
+          state.close()
+          toast.success('提交成功', {
+            timeout: 2000,
+            indicator: <CircleCheckFill />,
+          })
+          handleRefresh?.()
+        }
+      },
     },
-  })
+  )
 
   // 表单提交
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -86,7 +89,7 @@ const SaveModal: FC<SaveModalProps> = ({
       is_featured: formData.has('is_featured'),
     }
 
-    run(data)
+    trigger(data)
   }
 
   return (

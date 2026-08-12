@@ -7,7 +7,7 @@ import EmptyContent from '@/components/EmptyContent'
 import RefreshButton from '@/components/RefreshButton'
 import RequestContent from '@/components/RequestContent'
 import TableLoading from '@/components/TableLoading'
-import { useRequest } from '@/hooks/use-request'
+import { useSwrQuery } from '@/hooks/use-swr'
 import { get } from '@/lib/utils'
 import { getApiData } from '@/services/common'
 
@@ -28,7 +28,8 @@ const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
   const params = useMemo(() => ({ keyword }), [keyword])
 
   // 请求数据
-  const { data = [], loading, error, run } = useRequest(
+  const { data = [], loading, error, mutate } = useSwrQuery(
+    pathname,
     async () => get(await getApiData(pathname, params), 'data', []),
   )
 
@@ -38,7 +39,7 @@ const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
       toast.danger('参数 keyword 必填')
       return
     }
-    run()
+    mutate()
   }
 
   // 列定义
@@ -56,7 +57,7 @@ const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
       </div>
       {/* 中间区域 */}
       <div className="relative flex-1 flex justify-center items-center">
-        <RequestContent error={error} reFresh={run}>
+        <RequestContent error={error} reFresh={mutate}>
           <div className="flex justify-center items-center">
             <Table>
               <Table.ScrollContainer className="max-h-150 overflow-y-auto">

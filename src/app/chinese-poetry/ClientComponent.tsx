@@ -8,7 +8,7 @@ import AlertContent from '@/components/AlertContent'
 import RefreshButton from '@/components/RefreshButton'
 import RequestContent from '@/components/RequestContent'
 import TypingAnimation from '@/components/TypingAnimation'
-import { useRequest } from '@/hooks/use-request'
+import { useSwrQuery } from '@/hooks/use-swr'
 import { get } from '@/lib/utils'
 import { getApiData } from '@/services/common'
 
@@ -23,15 +23,18 @@ const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
   const params = useMemo(() => ({ author }), [author])
 
   // 请求数据
-  const { data = {}, loading, error, run } = useRequest(
+  // 请求数据（key 固定为路由，参数走闭包；点击刷新用 mutate）
+  const { data = {}, loading, error, mutate } = useSwrQuery(
+    pathname,
     async () =>
       get(await getApiData(pathname, params), 'data.[0]', {}),
-    {
-      onBefore: () => {
-        setShowFormContent(false)
-      },
-    },
   )
+
+  // 刷新入口：原 onBefore 的 UI 重置逻辑在请求前执行
+  const handleRefresh = () => {
+    setShowFormContent(false)
+    mutate()
+  }
 
   // 右下角来源信息
   const formContent = useMemo(() => {
@@ -53,13 +56,13 @@ const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
       </div>
       {/* 中间区域 */}
       <div className="flex-1 flex justify-center items-center">
-        <RequestContent error={error} loading={loading} loadingText="灵感正在路上..." reFresh={run}>
+        <RequestContent error={error} loading={loading} loadingText="灵感正在路上..." reFresh={handleRefresh}>
           {!get(data, 'paragraphs', [])?.length
             ? (
                 <AlertContent
                   title="暂无诗词数据，请重新输入作者名称。"
                   actionText="重新加载"
-                  buttonAction={run}
+                  buttonAction={handleRefresh}
                   buttonVariant="danger"
                   description=""
                   status="danger"
@@ -96,7 +99,7 @@ const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
       <div className="flex justify-center shrink-0">
         <div className="flex items-center gap-2">
           <Input aria-label="作者" placeholder="请输入诗词作者" value={author} onChange={event => setAuthor(event.target.value)} className="w-64" />
-          <RefreshButton loading={loading} text="吟诗一首" onPress={run} />
+          <RefreshButton loading={loading} text="吟诗一首" onPress={handleRefresh} />
         </div>
       </div>
     </div>

@@ -16,7 +16,7 @@ import { useEffect, useMemo, useState } from 'react'
 import RefreshButton from '@/components/RefreshButton'
 import RequestContent from '@/components/RequestContent'
 import { BARCODE_FORMATS, BARCODE_TYPES, RESPONSE } from '@/enums'
-import { useRequest } from '@/hooks/use-request'
+import { useSwrMutation } from '@/hooks/use-swr'
 import { isSuccess } from '@/lib/utils'
 
 import type { FC } from 'react'
@@ -36,7 +36,8 @@ const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
   const params = useMemo(() => ({ type, format, text }), [type, format, text])
 
   // 请求数据
-  const { loading, error, run } = useRequest(
+  const { loading, error, trigger } = useSwrMutation(
+    `${pathname}:generate`, // mutation key 加后缀，避免与其他查询 key 冲突
     async () => {
       const { type, format, text } = params
 
@@ -93,13 +94,19 @@ const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
     },
   )
 
+  // 挂载自动生成一次（等价原自动模式）
+  useEffect(() => {
+    trigger()
+    // eslint-disable-next-line react/exhaustive-deps -- 仅挂载时生成一次，后续由 reFresh 显式触发
+  }, [])
+
   // 请求数据
   const reFresh = () => {
     if (!text?.trim()) {
       toast.danger('参数 text 必填')
       return
     }
-    run()
+    trigger()
   }
 
   // 下载图片
