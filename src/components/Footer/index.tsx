@@ -38,8 +38,8 @@ const Footer: FC = () => {
   return (
     <footer id="footer" className="mx-auto w-full container! px-6 py-4 grid grid-cols-1 sm:grid-cols-3 items-center gap-2">
       <div className="flex items-center justify-center gap-3 justify-self-center sm:justify-self-start">
-        <div className="w-18 h-6 relative">
-          <Image alt="Logo" fill src="/logo.svg" />
+        <div className="w-[90px] h-6 relative">
+          <Image alt="Logo" fill src="/logo.png" />
         </div>
         <Separator orientation="vertical" className="h-4 self-center" />
         <Chip color="success" size="sm" variant="soft" className="px-2 py-0.5 text-[10px]">
