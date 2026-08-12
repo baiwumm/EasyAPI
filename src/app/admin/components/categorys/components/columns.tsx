@@ -75,7 +75,6 @@ export function getColumns({
 
     columnHelper.accessor('sort', {
       header: '排序',
-      enableSorting: true,
       cell: ({ getValue }) => (
         <Chip color="warning" variant="soft">
           {getValue()}
@@ -85,7 +84,6 @@ export function getColumns({
 
     columnHelper.accessor('created_at', {
       header: '创建时间',
-      enableSorting: true,
       cell: ({ getValue }) => (
         <span className="text-muted text-xs">
           {dayjs(getValue()).format('YYYY-MM-DD HH:mm')}

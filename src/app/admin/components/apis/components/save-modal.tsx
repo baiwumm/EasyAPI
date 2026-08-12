@@ -18,7 +18,6 @@ import {
   toast,
 
 } from '@heroui/react'
-import { useEffect, useRef } from 'react'
 
 import { REQUEST_METHODS, RESPONSE } from '@/enums'
 import { useRequest } from '@/hooks/use-request'
@@ -46,8 +45,6 @@ const SaveModal: FC<SaveModalProps> = ({
   handleRefresh,
   categorysList = [],
 }) => {
-  // 表单实例
-  const formRef = useRef<HTMLFormElement>(null)
   const actionText = initialValues ? '编辑' : '新增'
 
   // 保存表单
@@ -92,11 +89,6 @@ const SaveModal: FC<SaveModalProps> = ({
     run(data)
   }
 
-  useEffect(() => {
-    if (!state.isOpen && formRef.current) {
-      formRef.current.reset()
-    }
-  }, [state.isOpen])
   return (
     <Modal.Backdrop isDismissable={false} isKeyboardDismissDisabled isOpen={state.isOpen} onOpenChange={state.setOpen}>
       <Modal.Container placement="auto">
@@ -110,7 +102,7 @@ const SaveModal: FC<SaveModalProps> = ({
           </Modal.Header>
           <Modal.Body className="py-4 px-1">
             <Surface variant="default">
-              <Form ref={formRef} id="category-form" onSubmit={onSubmit} className="flex flex-col gap-4">
+              <Form id="api-form" onSubmit={onSubmit} className="flex flex-col gap-4">
                 <Select
                   aria-label="所属分类"
                   name="category_id"
@@ -215,7 +207,7 @@ const SaveModal: FC<SaveModalProps> = ({
                   </Select.Popover>
                   <FieldError />
                 </Select>
-                <TextField name="desc" defaultValue={initialValues?.desc ?? ''} maxLength={500}>
+                <TextField name="desc" defaultValue={initialValues?.desc ?? ''} maxLength={200}>
                   <Label>接口描述</Label>
                   <TextArea
                     aria-label="接口描述"
@@ -266,7 +258,7 @@ const SaveModal: FC<SaveModalProps> = ({
             <Button variant="outline" isDisabled={loading} slot="close">
               取消
             </Button>
-            <Button type="submit" isPending={loading} form="category-form">
+            <Button type="submit" isPending={loading} form="api-form">
               {({ isPending }) => (
                 <>
                   {isPending ? <Spinner color="current" size="sm" /> : null}

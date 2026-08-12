@@ -15,7 +15,6 @@ import {
   toast,
 
 } from '@heroui/react'
-import { useEffect, useRef } from 'react'
 
 import { RESPONSE } from '@/enums'
 import { useRequest } from '@/hooks/use-request'
@@ -31,8 +30,6 @@ interface SaveModalProps {
 }
 
 const SaveModal: FC<SaveModalProps> = ({ state, initialValues, handleRefresh }) => {
-  // 表单实例
-  const formRef = useRef<HTMLFormElement>(null)
   const actionText = initialValues ? '编辑' : '新增'
 
   // 保存表单
@@ -64,11 +61,6 @@ const SaveModal: FC<SaveModalProps> = ({ state, initialValues, handleRefresh }) 
     run(data)
   }
 
-  useEffect(() => {
-    if (!state.isOpen && formRef.current) {
-      formRef.current.reset()
-    }
-  }, [state.isOpen])
   return (
     <Modal.Backdrop isOpen={state.isOpen} onOpenChange={state.setOpen}>
       <Modal.Container placement="auto">
@@ -82,7 +74,7 @@ const SaveModal: FC<SaveModalProps> = ({ state, initialValues, handleRefresh }) 
           </Modal.Header>
           <Modal.Body className="py-4 px-1">
             <Surface variant="default">
-              <Form ref={formRef} id="category-form" onSubmit={onSubmit} className="flex flex-col gap-4">
+              <Form id="category-form" onSubmit={onSubmit} className="flex flex-col gap-4">
                 <TextField
                   name="name"
                   isRequired

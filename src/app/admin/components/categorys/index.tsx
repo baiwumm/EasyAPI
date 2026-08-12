@@ -10,11 +10,7 @@ import { CircleCheckFill, CircleXmarkFill } from '@gravity-ui/icons'
 import { Card, toast, useOverlayState } from '@heroui/react'
 import {
   getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
   useReactTable,
-
 } from '@tanstack/react-table'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
@@ -30,26 +26,19 @@ import DeleteDialog from './components/delete-dialog'
 import HeaderContent from './components/header-content'
 import SaveModal from './components/save-modal'
 
-import type { PaginationState, SortingState, VisibilityState } from '@tanstack/react-table'
+import type { PaginationState, VisibilityState } from '@tanstack/react-table'
 import type { FC } from 'react'
 
-// 初始参数
-const InitialParams: App.CategoryQueryParams = {
-  pageIndex: 0,
-  pageSize: 10,
-  name: '',
-}
-
 const Categorys: FC = () => {
-  // 搜索参数
+  // 搜索参数（输入框值）
   const [name, setName] = useState('')
+  // 已提交的查询条件：只有点击查询/重置时才更新，输入框变化不触发请求
+  const [query, setQuery] = useState<Pick<App.CategoryQueryParams, 'name'>>({ name: '' })
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 10 })
   const searchParams = useMemo<App.CategoryQueryParams>(
-    () => ({ name, ...pagination }),
-    [name, pagination],
+    () => ({ ...query, ...pagination }),
+    [query, pagination],
   )
-  // 排序
-  const [sorting, setSorting] = useState<SortingState>([])
   // 受控列
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
     desc: false,
@@ -70,16 +59,17 @@ const Categorys: FC = () => {
   const total = get(data, 'total', 0)
   const categorysList = get(data, 'list', [])
 
-  // 发起请求
+  // 发起请求（搜索时回到第一页，避免停留在超出新结果范围的页码）
   const handleSearch = () => {
-    run(searchParams)
+    setQuery({ name })
+    setPagination(p => (p.pageIndex === 0 ? p : { ...p, pageIndex: 0 }))
   }
 
   // 重置
   const handleReset = () => {
     setName('')
+    setQuery({ name: '' })
     setPagination({ pageIndex: 0, pageSize: 10 })
-    run(InitialParams)
   }
 
   // 编辑回调
@@ -123,10 +113,12 @@ const Categorys: FC = () => {
     }
   }
 
-  // 列配置项
+  // 列配置项（依赖原始值，避免每次响应都重建列定义）
+  const page = get(data, 'page', 0)
+  const pageSize = get(data, 'pageSize', 0)
   const columns = useMemo(
-    () => getColumns({ handleEdit, handleDel, page: get(data, 'page', 0), pageSize: get(data, 'pageSize', 0) }),
-    [handleEdit, handleDel, data],
+    () => getColumns({ handleEdit, handleDel, page, pageSize }),
+    [handleEdit, handleDel, page, pageSize],
   )
 
   // 表格实例
@@ -137,25 +129,21 @@ const Categorys: FC = () => {
     getRowId: (row: App.Category) => row.id,
     state: {
       pagination,
-      sorting,
       columnVisibility,
     },
     onPaginationChange: setPagination,
     manualPagination: true,
-    onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
     defaultColumn: {
       enableSorting: false, // 默认全部不能排序
     },
   })
 
+  // 查询/分页/重置统一由 searchParams 驱动，保证只发一次请求
   useEffect(() => {
     run(searchParams)
-  }, [run, searchParams.pageIndex, searchParams.pageSize])
+  }, [run, searchParams])
 
   useEffect(() => {
     if (!saveModalState.isOpen) {
