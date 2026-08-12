@@ -1,5 +1,19 @@
 # Changelog
 
+## [2.8.1](https://github.com/baiwumm/EasyAPI/compare/2.8.0...2.8.1) (2026-08-12)
+
+### ✨ Features | 新功能
+
+* **admin:** 非管理员隐藏后台入口，参考 better-nav 做法 ([6ae1912](https://github.com/baiwumm/EasyAPI/commit/6ae1912d094d5f127890791d3b0544e5cc8b572d))
+
+### 🎫 Chores | 其他更新
+
+* **heroui:** 同步 HeroUI 依赖补丁并补充 AGENTS.md ([05c7c98](https://github.com/baiwumm/EasyAPI/commit/05c7c980b0e8e198864b4d9eb8d2724f90cd5c59))
+
+### ♻ Code Refactoring | 代码重构
+
+* 将自实现 useRequest 迁移到 SWR ([0e24c61](https://github.com/baiwumm/EasyAPI/commit/0e24c61c13eaf208b37372439ba5e7ddf84e1503))
+
 ## [2.8.0](https://github.com/baiwumm/EasyAPI/compare/2.7.5...2.8.0) (2026-08-12)
 
 ### ✨ Features | 新功能
