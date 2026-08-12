@@ -37,10 +37,10 @@ const Admin: FC = () => {
           </Tabs.Tab>
         </Tabs.List>
       </Tabs.ListContainer>
-      <Tabs.Panel id={ADMIN_TABS.CATEGOTYS} shouldForceMount>
+      <Tabs.Panel id={ADMIN_TABS.CATEGOTYS}>
         <Categorys />
       </Tabs.Panel>
-      <Tabs.Panel id={ADMIN_TABS.APIS} shouldForceMount>
+      <Tabs.Panel id={ADMIN_TABS.APIS}>
         <Apis />
       </Tabs.Panel>
     </Tabs>
