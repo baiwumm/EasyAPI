@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 
 import { RESPONSE } from '@/enums'
-import { getSupabaseServerClient, requireUser } from '@/lib/supabase/server'
+import { getSupabaseServerClient, requireAdmin } from '@/lib/supabase/server'
 import { catchError, responseMessage } from '@/lib/utils'
 
 /*
@@ -105,10 +105,10 @@ export async function GET(request: NextRequest) {
  */
 export async function POST(request: NextRequest) {
   try {
-    // 校验登录态
-    const user = await requireUser()
+    // 校验管理员（登录 + 邮箱白名单）
+    const user = await requireAdmin()
     if (!user) {
-      return NextResponse.json(responseMessage(null, '未登录', RESPONSE.ERROR), { status: 401 })
+      return NextResponse.json(responseMessage(null, '未登录或无权限', RESPONSE.ERROR), { status: 401 })
     }
 
     const supabase = await getSupabaseServerClient()

@@ -26,6 +26,25 @@ export const getSupabaseServerClient = cache(async () => {
 })
 
 /**
+ * @description: 校验管理员：登录 + 邮箱白名单（ADMIN_EMAILS，逗号分隔），
+ * 不满足任一条件返回 null（后台写操作接口鉴权用）
+ */
+export async function requireAdmin() {
+  const user = await requireUser()
+  if (!user?.email) {
+    return null
+  }
+  const adminEmails = (process.env.ADMIN_EMAILS || '')
+    .split(',')
+    .map(email => email.trim().toLowerCase())
+    .filter(Boolean)
+  if (!adminEmails.includes(user.email.toLowerCase())) {
+    return null
+  }
+  return user
+}
+
+/**
  * @description: 校验登录态，未登录返回 null（写操作接口鉴权用）
  */
 export async function requireUser() {

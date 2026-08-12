@@ -62,14 +62,23 @@ export async function updateSession(request: NextRequest) {
 
   const { data } = await supabase.auth.getClaims()
 
-  const user = data?.claims
+  const claims = data?.claims
 
-  // 已登录访问登录页码，跳转至管理页面
-  if (user && path.startsWith('/login')) {
-    return NextResponse.redirect(new URL('/admin', request.url))
+  // 管理员白名单（与 lib/supabase/server.ts 的 requireAdmin 保持一致）
+  const adminEmails = (process.env.ADMIN_EMAILS || '')
+    .split(',')
+    .map(email => email.trim().toLowerCase())
+    .filter(Boolean)
+  const email = typeof claims?.email === 'string' ? claims.email.toLowerCase() : ''
+  const isAdmin = !!(email && adminEmails.includes(email))
+
+  // 已登录访问登录页：管理员跳转管理页面，其他用户回首页
+  if (claims && path.startsWith('/login')) {
+    return NextResponse.redirect(new URL(isAdmin ? '/admin' : '/', request.url))
   }
 
-  if (!user && path.startsWith('/admin')) {
+  // 未登录或非白名单邮箱访问管理页面，一律跳转登录页
+  if ((!claims || !isAdmin) && path.startsWith('/admin')) {
     const url = request.nextUrl.clone()
     url.pathname = '/login'
     return NextResponse.redirect(url)
