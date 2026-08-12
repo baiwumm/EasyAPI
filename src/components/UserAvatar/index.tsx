@@ -23,8 +23,11 @@ import {
 } from '@heroui/react'
 import { useState } from 'react'
 
+import { useRequest } from '@/hooks/use-request'
 import { useSupabaseUser } from '@/hooks/use-supabase-user'
 import { getSupabaseBrowserClient } from '@/lib/supabase/client'
+import { get } from '@/lib/utils'
+import { getApiData } from '@/services/common'
 
 import type { FC, Key } from 'react'
 
@@ -33,6 +36,11 @@ const UserAvatar: FC = () => {
   const router = useRouter()
   // 获取登录用户信息
   const { user, loading } = useSupabaseUser()
+  // 查询当前用户是否为管理员（登录 + 邮箱白名单），非管理员不显示后台入口
+  const { data: adminInfo } = useRequest<{ isAdmin: boolean, email: string | null } | null>(
+    async () => get(await getApiData('/auth/me'), 'data', null),
+  )
+  const isAdmin = adminInfo?.isAdmin === true
   // 注销 Loading
   const [logoutLoading, setLogoutLoading] = useState(false)
   // 退出确认弹窗
@@ -110,10 +118,14 @@ const UserAvatar: FC = () => {
                 </div>
                 <Separator />
                 <Dropdown.Menu onAction={onClickMenu} className="font-normal">
-                  <Dropdown.Item id="admin" textValue="Admin">
-                    <GearDot className="size-4 shrink-0 text-muted" />
-                    <Label>管理后台</Label>
-                  </Dropdown.Item>
+                  {isAdmin
+                    ? (
+                        <Dropdown.Item id="admin" textValue="Admin">
+                          <GearDot className="size-4 shrink-0 text-muted" />
+                          <Label>管理后台</Label>
+                        </Dropdown.Item>
+                      )
+                    : null}
                   <Dropdown.Item id="logout" variant="danger" textValue="Logout">
                     <ArrowRightFromSquare className="size-4 shrink-0 text-danger" />
                     <Label>退出登录</Label>
