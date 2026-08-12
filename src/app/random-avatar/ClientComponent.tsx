@@ -1,5 +1,5 @@
 'use client'
-import { Avatar, ListBox, NumberField, Select } from '@heroui/react'
+import { Avatar, ListBox, NumberField, Select, Typography } from '@heroui/react'
 import { useState } from 'react'
 
 import RefreshButton from '@/components/RefreshButton'
@@ -84,7 +84,7 @@ const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
     <div className="flex-1 flex flex-col justify-between gap-4">
       {/* 头部区域 */}
       <div className="shrink-0">
-        <h1 className="text-2xl font-black">{title}</h1>
+        <Typography type="h1" className="text-2xl font-black tracking-normal">{title}</Typography>
       </div>
       {/* 中间区域 */}
       <div className="flex-1 flex justify-center items-center">

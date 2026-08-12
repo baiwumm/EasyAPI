@@ -6,7 +6,7 @@
  * @Description: 删除弹窗
  */
 'use client'
-import { AlertDialog, Button, Spinner } from '@heroui/react'
+import { AlertDialog, Button, Spinner, Typography } from '@heroui/react'
 
 import type { UseOverlayStateReturn } from '@heroui/react'
 import type { FC } from 'react'
@@ -28,12 +28,12 @@ const DeleteDialog: FC<DeleteDialogProps> = ({ state, loading = false, handleDel
             <AlertDialog.Heading>确认删除该分类？</AlertDialog.Heading>
           </AlertDialog.Header>
           <AlertDialog.Body>
-            <p>
+            <Typography type="body-sm" color="muted">
               删除后，该分类及其关联的数据将被
               <strong>永久移除</strong>
               ，且无法恢复。
               请确认当前操作不会影响正在使用的业务或历史数据。
-            </p>
+            </Typography>
           </AlertDialog.Body>
           <AlertDialog.Footer>
             <Button variant="tertiary" isDisabled={loading} slot="close">取消</Button>

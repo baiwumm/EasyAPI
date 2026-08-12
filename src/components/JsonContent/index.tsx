@@ -1,5 +1,5 @@
 'use client'
-import { Table } from '@heroui/react'
+import { Table, Typography } from '@heroui/react'
 import { usePathname } from 'next/navigation'
 
 import CopyText from '@/components/CopyText'
@@ -49,7 +49,7 @@ function JsonContent<T>({ title, children, params = {}, onRefresh, searchText = 
     <div className="flex-1 flex flex-col justify-between gap-4">
       {/* 头部区域 */}
       <div className="shrink-0">
-        <h1 className="text-2xl font-black">{title}</h1>
+        <Typography type="h1" className="text-2xl font-black tracking-normal">{title}</Typography>
       </div>
       {/* 中间区域 */}
       <div className="flex-1 flex justify-center items-center">

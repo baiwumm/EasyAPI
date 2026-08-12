@@ -1,3 +1,4 @@
+import { Typography } from '@heroui/react'
 import Image from 'next/image'
 
 import CopyText from '@/components/CopyText'
@@ -26,7 +27,7 @@ export default async function BingWallpaper() {
 
   return (
     <div className="flex-1 flex flex-col justify-between gap-4">
-      <h1 className="text-2xl font-black shrink-0">bind 每日壁纸</h1>
+      <Typography type="h1" className="text-2xl font-black shrink-0 tracking-normal">bind 每日壁纸</Typography>
       <div className="relative flex-1 w-full h-full">
         <Image alt={wallpaper.title} fill src={getUrl(wallpaper.url)} className="object-cover rounded-2xl" />
       </div>

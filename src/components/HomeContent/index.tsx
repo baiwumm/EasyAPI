@@ -52,8 +52,8 @@ export default function HomeContent({ data }: HomeContentProps) {
             <div className="bg-default text-foreground p-4 rounded-full">
               <DatabaseFill className="size-5" />
             </div>
-            <Typography type="h5">一切安静如常 🕊️</Typography>
-            <Typography type="body-sm">当前还没有任何分类，请前往后台进行添加。</Typography>
+            <Typography type="h5" align="center">一切安静如常 🕊️</Typography>
+            <Typography type="body-sm" align="center">当前还没有任何分类，请前往后台进行添加。</Typography>
             <Button size="sm" variant="primary" onPress={goAdmin}>
               <Plus />
               添加分类

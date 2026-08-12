@@ -1,6 +1,6 @@
 'use client'
 import { QuoteOpen } from '@gravity-ui/icons'
-import { Tag, TagGroup } from '@heroui/react'
+import { Tag, TagGroup, Typography } from '@heroui/react'
 import { usePathname } from 'next/navigation'
 import { useCallback, useMemo, useState } from 'react'
 
@@ -66,7 +66,7 @@ const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
       {/* 头部区域 */}
       <div className="shrink-0">
         <div className="grid grid-cols-1 sm:grid-cols-3 items-center gap-2">
-          <h1 className="text-2xl font-black justify-self-start">{title}</h1>
+          <Typography type="h1" className="text-2xl font-black justify-self-start tracking-normal">{title}</Typography>
           <div className="justify-self-start lg:justify-self-center">
             <TagGroup aria-label="筛选类型" size="sm" selectionMode="multiple" onSelectionChange={keys => setSelected(keys)}>
               <TagGroup.List className="lg:flex-nowrap min-w-0 sm:min-w-max">

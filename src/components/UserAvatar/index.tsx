@@ -18,6 +18,7 @@ import {
   Separator,
   Spinner,
   Tooltip,
+  Typography,
   useOverlayState,
 } from '@heroui/react'
 import { useState } from 'react'
@@ -101,7 +102,7 @@ const UserAvatar: FC = () => {
                     </Avatar.Fallback>
                   </Avatar>
                   <div className="flex flex-col space-y-1 min-w-0">
-                    <p className="font-black">{name}</p>
+                    <Typography type="body-sm" className="font-black">{name}</Typography>
                     <Description className="truncate">
                       {user?.email}
                     </Description>
