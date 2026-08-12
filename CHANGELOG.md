@@ -1,5 +1,43 @@
 # Changelog
 
+## [2.8.0](https://github.com/baiwumm/EasyAPI/compare/2.7.5...2.8.0) (2026-08-12)
+
+### ✨ Features | 新功能
+
+* **branding:** 登录页隐藏注册入口并统一站点 Logo 为 logo.png ([5fb693a](https://github.com/baiwumm/EasyAPI/commit/5fb693a70e247b6a628e53c9f10f22b0cc151a80))
+* **branding:** 更新站点图标，统一应用名为 EasyApi 并同步 better-nav 字体与 OG 图 ([3f4d26b](https://github.com/baiwumm/EasyAPI/commit/3f4d26bd25f8e7cf1d6be26b77ff6d1f66e0d9ef))
+* **home:** 首页对齐 better-nav，改用服务端取数并新增锚点指示器 ([a27ac64](https://github.com/baiwumm/EasyAPI/commit/a27ac64545f088b48a685a7a6f067fad6da1b99a))
+* **security:** 后台增加管理员邮箱白名单鉴权与数据库 RLS 兜底 ([3ecfd65](https://github.com/baiwumm/EasyAPI/commit/3ecfd65979b8662d29b71751e56319e0e784bdd4))
+* **transition:** 路由转场改为方向感知滑动，与 better-nav 一致 ([bce2aa9](https://github.com/baiwumm/EasyAPI/commit/bce2aa99299d2f6652968d16b217797db6f55510))
+
+### 🐛 Bug Fixes | Bug 修复
+
+* **admin:** 移除 Tabs.Panel 的 shouldForceMount 导致两个面板同时显示 ([da8ad2e](https://github.com/baiwumm/EasyAPI/commit/da8ad2edfd9374d88dbd557ca65d443a36f0ef22))
+* **admin:** 优化 CRUD 逻辑，修复搜索页码、假排序与表单 id 问题 ([426313b](https://github.com/baiwumm/EasyAPI/commit/426313bab6ef05ca2b443da0f58e557fb756ec17))
+* **loading:** 恢复 hydration 前全屏加载遮罩，隐藏水合等待期 ([6417532](https://github.com/baiwumm/EasyAPI/commit/6417532eb08d699971c96eddc7b2f7e31b126359))
+
+### 🎫 Chores | 其他更新
+
+* **branding:** 更新站点 logo 并移除 favicon.png，忽略 .impeccable 审查产物 ([bdd5b17](https://github.com/baiwumm/EasyAPI/commit/bdd5b175046f8ad91d68823438b607d966c6355a))
+* **config:** 添加 HeroUI MCP server 配置 ([084f6f4](https://github.com/baiwumm/EasyAPI/commit/084f6f4186daf8473ac9df6531adab82aa9c8ccf))
+* **deps:** 升级 HeroUI 3.2.4、Next.js 16.3.0 及协同依赖 ([141360c](https://github.com/baiwumm/EasyAPI/commit/141360c063dab34fa2e63c1afd282865353f3461))
+* **eslint:** 迁移 @antfu/eslint-config 并修复全部 lint 问题 ([e25dfdc](https://github.com/baiwumm/EasyAPI/commit/e25dfdcd8359187e747bd46b333804ca42e08551))
+* **eslint:** 升级 eslint 至 v10 并同步 @antfu/eslint-config ([caea527](https://github.com/baiwumm/EasyAPI/commit/caea52721156e2b78d9579059092aa4f5251feb9))
+
+### 📝 Documentation | 文档
+
+* **readme:** 对齐 better-nav 风格重写 README，同步更新演示截图 ([8fafb41](https://github.com/baiwumm/EasyAPI/commit/8fafb410a3f6b25dc9761420f7a84c98bff7c903))
+
+### ♻ Code Refactoring | 代码重构
+
+* **back-top:** 优化回到顶部动画与交互 ([193d429](https://github.com/baiwumm/EasyAPI/commit/193d4297a2c891dcb3a57dfb17a013e60e7f417d))
+* **dependencies:** 移除 ahooks 和 axios 依赖 ([8297e89](https://github.com/baiwumm/EasyAPI/commit/8297e899420c1965a9d4c8b10134a97983212df1))
+* **hooks:** 进度条改用 useProgress，与 better-nav 一致 ([e384e12](https://github.com/baiwumm/EasyAPI/commit/e384e12c8b45d13ae9283360c4e18538bd88aef7))
+* **layout:** 移除 useAvailableHeight，改用 flex 布局，与 better-nav 一致 ([911e8be](https://github.com/baiwumm/EasyAPI/commit/911e8be4478a073b76b4f6d03ccdab6d1b31cae0))
+* **perf:** 性能与安全最佳实践优化 ([1758900](https://github.com/baiwumm/EasyAPI/commit/1758900cee96ece172f047ac388364005936de3a))
+* **theme-switcher:** 主题切换改用模糊圆扩散动画，与 better-nav 一致 ([378ad8d](https://github.com/baiwumm/EasyAPI/commit/378ad8d79c1667f6e87e751e299f0a31ab9d0428))
+* **typography:** 文本元素平替为 HeroUI Typography 并修复居中 ([670d886](https://github.com/baiwumm/EasyAPI/commit/670d886b7ef9d4ddef203317426f264ac80053af))
+
 ## [2.7.5](https://github.com/baiwumm/EasyAPI/compare/2.7.4...2.7.5) (2026-07-22)
 
 ### ⚡ Performance Improvements | 性能优化
