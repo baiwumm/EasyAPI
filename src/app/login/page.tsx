@@ -1,4 +1,6 @@
-import ClientComponent from './ClientComponent'
+import type { Metadata } from "next";
+
+import ClientComponent from "./ClientComponent";
 
 /*
  * @Author: 白雾茫茫丶<baiwumm.com>
@@ -7,12 +9,11 @@ import ClientComponent from './ClientComponent'
  * @LastEditTime: 2026-02-27 09:25:29
  * @Description: 登录页
  */
-import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: '用户登录',
-}
+  title: "用户登录",
+};
 
 export default function Login() {
-  return <ClientComponent />
+  return <ClientComponent />;
 }

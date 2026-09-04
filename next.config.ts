@@ -1,4 +1,4 @@
-import type { NextConfig } from 'next'
+import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   typescript: {
@@ -9,8 +9,8 @@ const nextConfig: NextConfig = {
   },
   experimental: {
     // @heroui/react 是巨型 barrel，按需映射子路径避免全量解析
-    optimizePackageImports: ['@heroui/react'],
+    optimizePackageImports: ["@heroui/react"],
   },
-}
+};
 
-export default nextConfig
+export default nextConfig;

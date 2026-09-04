@@ -1,5 +1,8 @@
-'use client'
-import { ArrowDownToSquare, CircleXmarkFill } from '@gravity-ui/icons'
+"use client";
+import type { FC } from "react";
+import type { ClientComponentProps } from "@/typings";
+
+import { ArrowDownToSquare, CircleXmarkFill } from "@gravity-ui/icons";
 import {
   Button,
   Description,
@@ -8,176 +11,185 @@ import {
   Select,
   toast,
   Typography,
-} from '@heroui/react'
-import Image from 'next/image'
-import { usePathname } from 'next/navigation'
-import { useEffect, useMemo, useState } from 'react'
+} from "@heroui/react";
+import Image from "next/image";
+import { usePathname } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
 
-import RefreshButton from '@/components/RefreshButton'
-import RequestContent from '@/components/RequestContent'
-import { BARCODE_FORMATS, BARCODE_TYPES, RESPONSE } from '@/enums'
-import { useSwrMutation } from '@/hooks/use-swr'
-import { isSuccess } from '@/lib/utils'
+import RefreshButton from "@/components/RefreshButton";
+import RequestContent from "@/components/RequestContent";
+import { BARCODE_FORMATS, BARCODE_TYPES, RESPONSE } from "@/enums";
+import { useSwrMutation } from "@/hooks/use-swr";
+import { isSuccess } from "@/lib/utils";
 
-import type { FC } from 'react'
-import type { ClientComponentProps } from '@/typings'
-
-type BarcodeFormats = typeof BARCODE_FORMATS.valueType
-type BarCodeTypes = typeof BARCODE_TYPES.valueType
+type BarcodeFormats = typeof BARCODE_FORMATS.valueType;
+type BarCodeTypes = typeof BARCODE_TYPES.valueType;
 
 const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
-  const pathname = usePathname()
-  const [text, setText] = useState(process.env.NEXT_PUBLIC_APP_NAME!) // 图形码内容
-  const [type, setType] = useState<BarCodeTypes>(BARCODE_TYPES.SVG) // 生成格式
-  const [format, setFormat] = useState<BarcodeFormats>(BARCODE_FORMATS.CODE128) // 条形码格式
-  const [imgSrc, setImgSrc] = useState('')
-  const [downloadUrl, setDownloadUrl] = useState('')
+  const pathname = usePathname();
+  const [text, setText] = useState(process.env.NEXT_PUBLIC_APP_NAME!); // 图形码内容
+  const [type, setType] = useState<BarCodeTypes>(BARCODE_TYPES.SVG); // 生成格式
+  const [format, setFormat] = useState<BarcodeFormats>(BARCODE_FORMATS.CODE128); // 条形码格式
+  const [imgSrc, setImgSrc] = useState("");
+  const [downloadUrl, setDownloadUrl] = useState("");
 
   // 参数处理
-  const params = useMemo(() => ({ type, format, text }), [type, format, text])
+  const params = useMemo(() => ({ type, format, text }), [type, format, text]);
 
   // 请求数据
   const { loading, error, trigger } = useSwrMutation(
     `${pathname}:generate`, // mutation key 加后缀，避免与其他查询 key 冲突
     async () => {
-      const { type, format, text } = params
+      const { type, format, text } = params;
 
       // 构造查询参数
-      const searchParams = new URLSearchParams()
-      searchParams.set('format', format)
-      searchParams.set('type', type)
-      searchParams.set('text', text)
+      const searchParams = new URLSearchParams();
 
-      const url = `/api/${pathname}?${searchParams.toString()}`
+      searchParams.set("format", format);
+      searchParams.set("type", type);
+      searchParams.set("text", text);
 
-      const res = await fetch(url)
+      const url = `/api/${pathname}?${searchParams.toString()}`;
 
-      const contentType = res.headers.get('content-type') || ''
+      const res = await fetch(url);
+
+      const contentType = res.headers.get("content-type") || "";
 
       // 如果是 JSON，说明是错误信息
-      if (contentType.includes('application/json')) {
-        const { code, msg } = await res.json()
+      if (contentType.includes("application/json")) {
+        const { code, msg } = await res.json();
+
         if (!isSuccess(code)) {
           toast.danger(msg || RESPONSE.label(RESPONSE.ERROR), {
             indicator: <CircleXmarkFill />,
             timeout: 3000,
-          })
+          });
         }
-        return null
+
+        return null;
       }
 
       if (!res.ok) {
-        throw new Error('Network response was not ok')
+        throw new Error("Network response was not ok");
       }
 
       // 根据 type 决定如何读取响应
-      if (type === 'svg') {
-        const svgText = await res.text()
+      if (type === "svg") {
+        const svgText = await res.text();
+
         // 转为 data URL 以便 img 标签显示
-        return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svgText)}`
-      }
-      else {
+        return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svgText)}`;
+      } else {
         // type === 'png' 或其他二进制格式
-        const blob = await res.blob()
-        return URL.createObjectURL(blob)
+        const blob = await res.blob();
+
+        return URL.createObjectURL(blob);
       }
     },
     {
       onSuccess: (res) => {
         if (res) {
-          if (downloadUrl?.startsWith('blob:')) {
-            URL.revokeObjectURL(downloadUrl)
+          if (downloadUrl?.startsWith("blob:")) {
+            URL.revokeObjectURL(downloadUrl);
           }
-          setImgSrc(res)
-          setDownloadUrl(res) // 用于下载
+          setImgSrc(res);
+          setDownloadUrl(res); // 用于下载
         }
       },
     },
-  )
+  );
 
   // 挂载自动生成一次（等价原自动模式）
   useEffect(() => {
-    trigger()
-    // eslint-disable-next-line react/exhaustive-deps -- 仅挂载时生成一次，后续由 reFresh 显式触发
-  }, [])
+    trigger();
+  }, []);
 
   // 请求数据
   const reFresh = () => {
     if (!text?.trim()) {
-      toast.danger('参数 text 必填')
-      return
+      toast.danger("参数 text 必填");
+
+      return;
     }
-    trigger()
-  }
+    trigger();
+  };
 
   // 下载图片
   const downloadImage = () => {
-    if (!downloadUrl || !type)
-      return
-    toast.success('正在下载中...')
-    const link = document.createElement('a')
-    link.href = downloadUrl
-    link.download = `barcode.${type}`
-    document.body.appendChild(link)
-    link.click()
-    document.body.removeChild(link)
-  }
+    if (!downloadUrl || !type) return;
+    toast.success("正在下载中...");
+    const link = document.createElement("a");
+
+    link.href = downloadUrl;
+    link.download = `barcode.${type}`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   //  format 配置
 
-  const formatRaw = useMemo(() => BARCODE_FORMATS.raw(format), [format])
+  const formatRaw = useMemo(() => BARCODE_FORMATS.raw(format), [format]);
 
   useEffect(() => {
     return () => {
-      if (imgSrc && imgSrc.startsWith('blob:')) {
-        URL.revokeObjectURL(imgSrc)
+      if (imgSrc && imgSrc.startsWith("blob:")) {
+        URL.revokeObjectURL(imgSrc);
       }
-    }
-  }, [imgSrc])
+    };
+  }, [imgSrc]);
+
   return (
     <div className="flex-1 flex flex-col justify-between gap-4">
       {/* 头部区域 */}
       <div className="shrink-0">
-        <Typography type="h1" className="text-2xl font-black tracking-normal">{title}</Typography>
+        <Typography className="text-2xl font-black tracking-normal" type="h1">
+          {title}
+        </Typography>
       </div>
       {/* 中间区域 */}
       <div className="flex-1 flex justify-center items-center">
-        <RequestContent error={error} loading={loading} loadingText="正在生成..." reFresh={reFresh}>
+        <RequestContent
+          error={error}
+          loading={loading}
+          loadingText="正在生成..."
+          reFresh={reFresh}
+        >
           <div className="flex justify-center items-center">
             <div className="relative flex flex-col gap-2 items-center min-h-60">
-              {imgSrc
-                ? (
-                    <>
-                      <Image
-                        alt={text || '条形码'}
-                        height={592}
-                        src={imgSrc}
-                        unoptimized
-                        width={1108}
-                        className="max-w-125 h-auto"
-                      />
-                      <Description className="text-danger">{formatRaw.description}</Description>
-                      {formatRaw.hint && (
-                        <Description className="text-danger">
-                          提示:
-                          {formatRaw.hint}
-                        </Description>
-                      )}
-                      {formatRaw.charset && (
-                        <Description className="text-danger">
-                          允许字符:
-                          {formatRaw.charset}
-                        </Description>
-                      )}
-                      {formatRaw.example && (
-                        <Description className="text-danger">
-                          示例:
-                          {formatRaw.example}
-                        </Description>
-                      )}
-                    </>
-                  )
-                : null}
+              {imgSrc ? (
+                <>
+                  <Image
+                    unoptimized
+                    alt={text || "条形码"}
+                    className="max-w-125 h-auto"
+                    height={592}
+                    src={imgSrc}
+                    width={1108}
+                  />
+                  <Description className="text-danger">
+                    {formatRaw.description}
+                  </Description>
+                  {formatRaw.hint && (
+                    <Description className="text-danger">
+                      提示:
+                      {formatRaw.hint}
+                    </Description>
+                  )}
+                  {formatRaw.charset && (
+                    <Description className="text-danger">
+                      允许字符:
+                      {formatRaw.charset}
+                    </Description>
+                  )}
+                  {formatRaw.example && (
+                    <Description className="text-danger">
+                      示例:
+                      {formatRaw.example}
+                    </Description>
+                  )}
+                </>
+              ) : null}
             </div>
           </div>
         </RequestContent>
@@ -187,10 +199,10 @@ const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
         <div className="flex items-center gap-2 flex-wrap">
           <Select
             aria-label="条形码格式"
+            className="w-50"
             placeholder="条形码格式"
             value={format}
-            onChange={value => setFormat(value as BarcodeFormats)}
-            className="w-50"
+            onChange={(value) => setFormat(value as BarcodeFormats)}
           >
             <Select.Trigger>
               <Select.Value />
@@ -199,11 +211,7 @@ const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
             <Select.Popover>
               <ListBox className="max-h-60 overflow-y-scroll">
                 {BARCODE_FORMATS.items.map(({ value, label }) => (
-                  <ListBox.Item
-                    key={value}
-                    id={value}
-                    textValue={label}
-                  >
+                  <ListBox.Item key={value} id={value} textValue={label}>
                     {label}
                     <ListBox.ItemIndicator />
                   </ListBox.Item>
@@ -213,10 +221,10 @@ const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
           </Select>
           <Select
             aria-label="生成格式"
+            className="w-50"
             placeholder="请选择生成格式"
             value={type}
-            onChange={value => setType(value as BarCodeTypes)}
-            className="w-50"
+            onChange={(value) => setType(value as BarCodeTypes)}
           >
             <Select.Trigger>
               <Select.Value />
@@ -225,11 +233,7 @@ const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
             <Select.Popover>
               <ListBox className="max-h-60 overflow-y-scroll">
                 {BARCODE_TYPES.items.map(({ value, label }) => (
-                  <ListBox.Item
-                    key={value}
-                    id={value}
-                    textValue={label}
-                  >
+                  <ListBox.Item key={value} id={value} textValue={label}>
                     {label}
                     <ListBox.ItemIndicator />
                   </ListBox.Item>
@@ -237,15 +241,27 @@ const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
               </ListBox>
             </Select.Popover>
           </Select>
-          <Input aria-label="二维码内容" placeholder="二维码内容" value={text} onChange={event => setText(event.target.value)} className="w-50" />
+          <Input
+            aria-label="二维码内容"
+            className="w-50"
+            placeholder="二维码内容"
+            value={text}
+            onChange={(event) => setText(event.target.value)}
+          />
           <RefreshButton loading={loading} text="生成" onPress={reFresh} />
-          <Button size="sm" variant="tertiary" isDisabled={!downloadUrl || loading} onPress={downloadImage}>
+          <Button
+            isDisabled={!downloadUrl || loading}
+            size="sm"
+            variant="tertiary"
+            onPress={downloadImage}
+          >
             <ArrowDownToSquare />
             下载
           </Button>
         </div>
       </div>
     </div>
-  )
-}
-export default ClientComponent
+  );
+};
+
+export default ClientComponent;

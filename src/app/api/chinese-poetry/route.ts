@@ -1,8 +1,10 @@
-import { NextResponse } from 'next/server'
+import type { NextRequest } from "next/server";
 
-import { RESPONSE } from '@/enums'
-import { getSupabaseServerClient } from '@/lib/supabase/server'
-import { catchError, responseMessage } from '@/lib/utils'
+import { NextResponse } from "next/server";
+
+import { RESPONSE } from "@/enums";
+import { getSupabaseServerClient } from "@/lib/supabase/server";
+import { catchError, responseMessage } from "@/lib/utils";
 
 /*
  * @Author: 白雾茫茫丶<baiwumm.com>
@@ -11,27 +13,28 @@ import { catchError, responseMessage } from '@/lib/utils'
  * @LastEditTime: 2026-03-12 15:44:08
  * @Description: 飞花令
  */
-import type { NextRequest } from 'next/server'
 
 export async function GET(request: NextRequest) {
   try {
-    const supabase = await getSupabaseServerClient()
+    const supabase = await getSupabaseServerClient();
     // 解析 URL 查询参数
-    const searchParams = request.nextUrl.searchParams
-    const author = searchParams.get('author')
+    const searchParams = request.nextUrl.searchParams;
+    const author = searchParams.get("author");
 
     // 调用接口
-    const { data, error } = await supabase
-      .rpc('get_random_chinese_poetry', { author_param: author })
+    const { data, error } = await supabase.rpc("get_random_chinese_poetry", {
+      author_param: author,
+    });
 
     // 执行失败
     if (error) {
-      return NextResponse.json(responseMessage(null, error.message, RESPONSE.ERROR))
+      return NextResponse.json(
+        responseMessage(null, error.message, RESPONSE.ERROR),
+      );
     }
 
-    return NextResponse.json(responseMessage(data))
-  }
-  catch (err) {
-    return NextResponse.json(catchError(err))
+    return NextResponse.json(responseMessage(data));
+  } catch (err) {
+    return NextResponse.json(catchError(err));
   }
 }

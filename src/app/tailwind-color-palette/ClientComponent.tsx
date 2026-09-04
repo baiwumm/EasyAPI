@@ -1,5 +1,8 @@
-'use client'
-import { Shuffle } from '@gravity-ui/icons'
+"use client";
+import type { FC } from "react";
+import type { ClientComponentProps } from "@/typings";
+
+import { Shuffle } from "@gravity-ui/icons";
 import {
   Button,
   ColorArea,
@@ -11,73 +14,88 @@ import {
   Label,
   parseColor,
   Typography,
-} from '@heroui/react'
-import { usePathname } from 'next/navigation'
-import { useMemo, useState } from 'react'
-import tinycolor from 'tinycolor2'
+} from "@heroui/react";
+import { usePathname } from "next/navigation";
+import { useMemo, useState } from "react";
+import tinycolor from "tinycolor2";
 
-import CopyText from '@/components/CopyText'
-import RefreshButton from '@/components/RefreshButton'
-import RequestContent from '@/components/RequestContent'
-import { useCopy } from '@/hooks/use-copy'
-import { useSwrQuery } from '@/hooks/use-swr'
-import { get } from '@/lib/utils'
-import { getApiData } from '@/services/common'
+import CopyText from "@/components/CopyText";
+import RefreshButton from "@/components/RefreshButton";
+import RequestContent from "@/components/RequestContent";
+import { useCopy } from "@/hooks/use-copy";
+import { useSwrQuery } from "@/hooks/use-swr";
+import { get } from "@/lib/utils";
+import { getApiData } from "@/services/common";
 
-import type { FC } from 'react'
-import type { ClientComponentProps } from '@/typings'
-
-const colorPresets = ['#ef4444', '#f97316', '#eab308', '#22c55e', '#06b6d4', '#3b82f6', '#8b5cf6', '#ec4899', '#f43f5e']
+const colorPresets = [
+  "#ef4444",
+  "#f97316",
+  "#eab308",
+  "#22c55e",
+  "#06b6d4",
+  "#3b82f6",
+  "#8b5cf6",
+  "#ec4899",
+  "#f43f5e",
+];
 
 // 随机颜色
 function getRandomColor() {
-  const color = tinycolor.random()
-  return parseColor(color.toHexString())
+  const color = tinycolor.random();
+
+  return parseColor(color.toHexString());
 }
 
 const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
-  const pathname = usePathname()
-  const { copy } = useCopy()
-  const [color, setColor] = useState(getRandomColor)
+  const pathname = usePathname();
+  const { copy } = useCopy();
+  const [color, setColor] = useState(getRandomColor);
 
   // 参数处理
-  const params = useMemo(() => ({ color }), [color])
+  const params = useMemo(() => ({ color }), [color]);
 
   // 请求数据
-  const { data, loading, error, mutate } = useSwrQuery(
-    pathname,
-    async () => get(await getApiData(pathname, params), 'data.palette', {}),
-  )
+  const { data, loading, error, mutate } = useSwrQuery(pathname, async () =>
+    get(await getApiData(pathname, params), "data.palette", {}),
+  );
 
   const shuffleColor = () => {
-    setColor(getRandomColor())
-  }
+    setColor(getRandomColor());
+  };
 
   return (
     <div className="flex-1 flex flex-col justify-between gap-4">
       {/* 头部区域 */}
       <div className="shrink-0">
-        <Typography type="h1" className="text-2xl font-black tracking-normal">{title}</Typography>
+        <Typography className="text-2xl font-black tracking-normal" type="h1">
+          {title}
+        </Typography>
       </div>
       {/* 中间区域 */}
       <div className="flex-1 flex justify-center items-center">
-        <RequestContent error={error} loading={loading} loadingText="正在生成..." reFresh={mutate}>
+        <RequestContent
+          error={error}
+          loading={loading}
+          loadingText="正在生成..."
+          reFresh={mutate}
+        >
           <div className="flex justify-center items-center flex-wrap gap-2">
-            {Object.keys(data as Record<string, string> || {}).map((key) => {
-              const color = (data || {})[key as keyof typeof data]
+            {Object.keys((data as Record<string, string>) || {}).map((key) => {
+              const color = (data || {})[key as keyof typeof data];
+
               return (
                 <ColorSwatch
                   key={key}
                   aria-label={color}
+                  className="cursor-pointer"
                   color={color}
                   size="xl"
-                  onClick={() => copy(color)}
-                  className="cursor-pointer"
                   style={() => ({
                     boxShadow: `0 0 20px 2px ${color}`,
                   })}
+                  onClick={() => copy(color)}
                 />
-              )
+              );
             })}
           </div>
         </RequestContent>
@@ -88,11 +106,11 @@ const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
           <ColorPicker value={color} onChange={setColor}>
             <ColorPicker.Trigger>
               <ColorSwatch size="lg" />
-              <Label>{color.toString('hex')}</Label>
+              <Label>{color.toString("hex")}</Label>
             </ColorPicker.Trigger>
             <ColorPicker.Popover className="gap-2">
-              <ColorSwatchPicker size="xs" className="justify-center pt-2">
-                {colorPresets.map(preset => (
+              <ColorSwatchPicker className="justify-center pt-2" size="xs">
+                {colorPresets.map((preset) => (
                   <ColorSwatchPicker.Item key={preset} color={preset}>
                     <ColorSwatchPicker.Swatch />
                   </ColorSwatchPicker.Item>
@@ -100,24 +118,29 @@ const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
               </ColorSwatchPicker>
               <ColorArea
                 aria-label="Color area"
+                className="max-w-full"
                 colorSpace="hsb"
                 xChannel="saturation"
                 yChannel="brightness"
-                className="max-w-full"
               >
                 <ColorArea.Thumb />
               </ColorArea>
               <div className="flex items-center gap-2 px-1">
-                <ColorSlider aria-label="Hue slider" channel="hue" colorSpace="hsb" className="flex-1">
+                <ColorSlider
+                  aria-label="Hue slider"
+                  channel="hue"
+                  className="flex-1"
+                  colorSpace="hsb"
+                >
                   <ColorSlider.Track>
                     <ColorSlider.Thumb />
                   </ColorSlider.Track>
                 </ColorSlider>
                 <Button
+                  isIconOnly
                   aria-label="Shuffle color"
                   size="sm"
                   variant="tertiary"
-                  isIconOnly
                   onPress={shuffleColor}
                 >
                   <Shuffle />
@@ -133,11 +156,16 @@ const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
               </ColorField>
             </ColorPicker.Popover>
           </ColorPicker>
-          <RefreshButton loading={loading} text="生成" onPress={() => mutate()} />
+          <RefreshButton
+            loading={loading}
+            text="生成"
+            onPress={() => mutate()}
+          />
           <CopyText content={JSON.stringify(data, null, 2)} />
         </div>
       </div>
     </div>
-  )
-}
-export default ClientComponent
+  );
+};
+
+export default ClientComponent;

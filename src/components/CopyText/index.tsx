@@ -5,84 +5,81 @@
  * @LastEditTime: 2026-07-21 15:42:08
  * @Description: 复制文案
  */
-'use client'
-import { Check, CircleXmark, Copy } from '@gravity-ui/icons'
-import { Button, toast } from '@heroui/react'
-import { useCallback, useRef, useState } from 'react'
+"use client";
+import type { FC } from "react";
 
-import { useCopy } from '@/hooks/use-copy'
+import { Check, CircleXmark, Copy } from "@gravity-ui/icons";
+import { Button, toast } from "@heroui/react";
+import { useCallback, useRef, useState } from "react";
 
-import type { FC } from 'react'
+import { useCopy } from "@/hooks/use-copy";
 
 interface CopyTextProps {
-  content: string
-  timeout?: number
+  content: string;
+  timeout?: number;
 }
 
-const CopyText: FC<CopyTextProps> = ({
-  content = '',
-  timeout = 3000,
-}) => {
-  const { copy, isSupported } = useCopy()
-  const [copied, setCopied] = useState(false)
-  const timerRef = useRef<NodeJS.Timeout | null>(null)
+const CopyText: FC<CopyTextProps> = ({ content = "", timeout = 3000 }) => {
+  const { copy, isSupported } = useCopy();
+  const [copied, setCopied] = useState(false);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   const resetState = useCallback(() => {
     if (timerRef.current) {
-      clearTimeout(timerRef.current)
+      clearTimeout(timerRef.current);
     }
 
     timerRef.current = setTimeout(() => {
-      setCopied(false)
-    }, timeout)
-  }, [timeout])
+      setCopied(false);
+    }, timeout);
+  }, [timeout]);
 
   const handleCopy = useCallback(async () => {
     // 已复制状态时不重复执行
-    if (copied)
-      return
+    if (copied) return;
 
     // 无内容
     if (!content) {
-      toast.danger('复制失败，缺少内容!', {
+      toast.danger("复制失败，缺少内容!", {
         indicator: <CircleXmark />,
-      })
-      return
+      });
+
+      return;
     }
 
     // 浏览器不支持
     if (!isSupported) {
-      toast.danger('复制失败，当前浏览器不支持！', {
+      toast.danger("复制失败，当前浏览器不支持！", {
         indicator: <CircleXmark />,
-      })
-      return
+      });
+
+      return;
     }
 
     try {
-      await copy(content)
+      await copy(content);
 
-      setCopied(true)
+      setCopied(true);
 
-      resetState()
-    }
-    catch {
-      toast.danger('复制失败，请手动复制!', {
+      resetState();
+    } catch {
+      toast.danger("复制失败，请手动复制!", {
         indicator: <CircleXmark />,
-      })
+      });
     }
-  }, [content, copied, isSupported, resetState, copy])
+  }, [content, copied, isSupported, resetState, copy]);
 
   return (
     <Button
+      isDisabled={copied}
       size="sm"
       variant="tertiary"
-      isDisabled={copied}
       onPress={handleCopy}
     >
       {copied ? <Check /> : <Copy />}
-      {copied ? '已复制' : '复制'}
+      {copied ? "已复制" : "复制"}
     </Button>
-  )
-}
+  );
+};
 
-export default CopyText
+export default CopyText;

@@ -1,7 +1,9 @@
-import { NextResponse } from 'next/server'
-import * as emoji from 'node-emoji'
+import type { NextRequest } from "next/server";
 
-import { catchError, responseMessage } from '@/lib/utils'
+import { NextResponse } from "next/server";
+import * as emoji from "node-emoji";
+
+import { catchError, responseMessage } from "@/lib/utils";
 
 /*
  * @Author: 白雾茫茫丶<baiwumm.com>
@@ -10,23 +12,21 @@ import { catchError, responseMessage } from '@/lib/utils'
  * @LastEditTime: 2026-03-12 15:53:21
  * @Description: 随机 emoji
  */
-import type { NextRequest } from 'next/server'
 
 export async function GET(request: NextRequest) {
   try {
     // 解析 URL 查询参数
-    const searchParams = request.nextUrl.searchParams
+    const searchParams = request.nextUrl.searchParams;
 
     const count = Math.min(
-      Math.max(parseInt(searchParams.get('count') || '1'), 1),
+      Math.max(parseInt(searchParams.get("count") || "1"), 1),
       50,
-    )
+    );
 
-    const result = Array.from({ length: count }, () => emoji.random())
+    const result = Array.from({ length: count }, () => emoji.random());
 
-    return NextResponse.json(responseMessage(result))
-  }
-  catch (err) {
-    return NextResponse.json(catchError(err))
+    return NextResponse.json(responseMessage(result));
+  } catch (err) {
+    return NextResponse.json(catchError(err));
   }
 }

@@ -1,4 +1,6 @@
-import { updateSession } from '@/lib/supabase/proxy'
+import type { NextRequest } from "next/server";
+
+import { updateSession } from "@/lib/supabase/proxy";
 
 /*
  * @Author: 白雾茫茫丶<baiwumm.com>
@@ -7,10 +9,9 @@ import { updateSession } from '@/lib/supabase/proxy'
  * @LastEditTime: 2026-02-27 14:42:15
  * @Description: 代理层
  */
-import type { NextRequest } from 'next/server'
 
 export default async function proxy(request: NextRequest) {
-  return await updateSession(request)
+  return await updateSession(request);
 }
 
 // 配置匹配的路由
@@ -22,6 +23,6 @@ export const config = {
      * - 静态资源 (如 .css, .png)
      * - API 路由 (可选，但通常不需要保护)
      */
-    '/((?!_next|[^?]*\\.(?:html?|css|js|json|xml|txt|md|png|jpg|jpeg|gif|webp|avif|ico|bmp|svg|tiff|tif|mp4|webm|ogg|mp3|wav|flac|aac|woff|woff2|eot|ttf|otf|webmanifest)$).*)',
+    "/((?!_next|[^?]*\\.(?:html?|css|js|json|xml|txt|md|png|jpg|jpeg|gif|webp|avif|ico|bmp|svg|tiff|tif|mp4|webm|ogg|mp3|wav|flac|aac|woff|woff2|eot|ttf|otf|webmanifest)$).*)",
   ],
-}
+};

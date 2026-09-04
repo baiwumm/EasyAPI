@@ -1,15 +1,15 @@
-'use client'
-import { useProgress } from '@bprogress/next'
-import { useEffect } from 'react'
-import useSWR from 'swr'
-import useSWRMutation from 'swr/mutation'
+"use client";
+import type { Key, SWRConfiguration } from "swr";
+import type { SWRMutationConfiguration } from "swr/mutation";
 
-import type { Key, SWRConfiguration } from 'swr'
-import type { SWRMutationConfiguration } from 'swr/mutation'
+import { useProgress } from "@bprogress/next";
+import { useEffect } from "react";
+import useSWR from "swr";
+import useSWRMutation from "swr/mutation";
 
 // 模块级进度计数：全局进度条是共享资源，多个 hook 实例并发时
 // 只有第一个请求 start、最后一个完成 stop（与原 use-request.ts 语义一致）
-let progressCount = 0
+let progressCount = 0;
 
 /**
  * 写操作 hook：平替原 useRequest(manual: true) 的 run
@@ -26,13 +26,14 @@ export function useSwrMutation<T = unknown, A = unknown>(
     key,
     (_key, { arg }) => service(arg),
     { throwOnError: false, ...options },
-  )
-  useProgressSync(result.isMutating)
+  );
+
+  useProgressSync(result.isMutating);
 
   return {
     ...result,
     loading: result.isMutating,
-  }
+  };
 }
 
 /**
@@ -45,29 +46,28 @@ export function useSwrQuery<T = unknown>(
   fetcher: (key?: Key) => Promise<T>,
   options?: SWRConfiguration<T>,
 ) {
-  const result = useSWR<T>(key, fetcher, options)
-  useProgressSync(result.isValidating)
+  const result = useSWR<T>(key, fetcher, options);
+
+  useProgressSync(result.isValidating);
 
   return {
     ...result,
     loading: result.isLoading || result.isValidating,
-  }
+  };
 }
 
 /** 进度条同步：active 为 true 期间持有进度条，多个实例并发互不打断 */
 function useProgressSync(active: boolean) {
-  const { start, stop } = useProgress()
+  const { start, stop } = useProgress();
 
   useEffect(() => {
-    if (!active)
-      return
-    if (progressCount === 0)
-      start()
-    progressCount++
+    if (!active) return;
+    if (progressCount === 0) start();
+    progressCount++;
+
     return () => {
-      progressCount = Math.max(0, progressCount - 1)
-      if (progressCount === 0)
-        stop()
-    }
-  }, [active, start, stop])
+      progressCount = Math.max(0, progressCount - 1);
+      if (progressCount === 0) stop();
+    };
+  }, [active, start, stop]);
 }

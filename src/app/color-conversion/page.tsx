@@ -1,4 +1,6 @@
-import ClientComponent from './ClientComponent'
+import type { Metadata } from "next";
+
+import ClientComponent from "./ClientComponent";
 
 /*
  * @Author: 白雾茫茫丶<baiwumm.com>
@@ -7,12 +9,11 @@ import ClientComponent from './ClientComponent'
  * @LastEditTime: 2026-03-03 13:48:25
  * @Description: 颜色转换
  */
-import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: '颜色转换',
-}
+  title: "颜色转换",
+};
 
 export default function ColorConversion() {
-  return <ClientComponent title="颜色转换" />
+  return <ClientComponent title="颜色转换" />;
 }

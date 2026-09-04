@@ -5,20 +5,21 @@
  * @LastEditTime: 2026-03-09 16:19:25
  * @Description: Loading
  */
-import { Description, Spinner } from '@heroui/react'
+import type { FC } from "react";
 
-import type { FC } from 'react'
+import { Description, Spinner } from "@heroui/react";
 
 interface LoadingContentProps {
-  text?: string
+  text?: string;
 }
 
-const LoadingContent: FC<LoadingContentProps> = ({ text = '加载中...' }) => {
+const LoadingContent: FC<LoadingContentProps> = ({ text = "加载中..." }) => {
   return (
     <div className="flex flex-col items-center gap-2">
       <Spinner />
       <Description className="font-black">{text}</Description>
     </div>
-  )
-}
-export default LoadingContent
+  );
+};
+
+export default LoadingContent;

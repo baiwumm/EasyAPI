@@ -1,4 +1,6 @@
-import ClientComponent from './ClientComponent'
+import type { Metadata } from "next";
+
+import ClientComponent from "./ClientComponent";
 
 /*
  * @Author: 白雾茫茫丶<baiwumm.com>
@@ -7,12 +9,11 @@ import ClientComponent from './ClientComponent'
  * @LastEditTime: 2026-02-28 15:15:43
  * @Description: 歇后语
  */
-import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: '歇后语',
-}
+  title: "歇后语",
+};
 
 export default function Riddle() {
-  return <ClientComponent title="歇后语" />
+  return <ClientComponent title="歇后语" />;
 }

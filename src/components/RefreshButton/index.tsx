@@ -5,28 +5,42 @@
  * @LastEditTime: 2026-03-09 17:40:58
  * @Description: 查询按钮
  */
-import { ArrowsRotateLeft } from '@gravity-ui/icons'
-import { Button, Spinner } from '@heroui/react'
+import type { ButtonProps } from "@heroui/react";
+import type { FC } from "react";
 
-import type { ButtonProps } from '@heroui/react'
-import type { FC } from 'react'
+import { ArrowsRotateLeft } from "@gravity-ui/icons";
+import { Button, Spinner } from "@heroui/react";
 
 interface RefreshButtonProps {
-  text?: string
-  loading?: boolean
-  onPress?: ButtonProps['onPress']
+  text?: string;
+  loading?: boolean;
+  onPress?: ButtonProps["onPress"];
 }
 
-const RefreshButton: FC<RefreshButtonProps> = ({ text = '查询', loading = false, onPress }) => {
+const RefreshButton: FC<RefreshButtonProps> = ({
+  text = "查询",
+  loading = false,
+  onPress,
+}) => {
   return (
-    <Button size="sm" isPending={loading} onPress={onPress} className="bg-accent-soft text-accent hover:bg-accent-soft-hover">
+    <Button
+      className="bg-accent-soft text-accent hover:bg-accent-soft-hover"
+      isPending={loading}
+      size="sm"
+      onPress={onPress}
+    >
       {({ isPending }) => (
         <>
-          {isPending ? <Spinner color="current" size="sm" /> : <ArrowsRotateLeft />}
+          {isPending ? (
+            <Spinner color="current" size="sm" />
+          ) : (
+            <ArrowsRotateLeft />
+          )}
           {text}
         </>
       )}
     </Button>
-  )
-}
-export default RefreshButton
+  );
+};
+
+export default RefreshButton;

@@ -1,56 +1,65 @@
-'use client'
-import { Table, Typography } from '@heroui/react'
-import { usePathname } from 'next/navigation'
+"use client";
+import type { ReactNode } from "react";
 
-import CopyText from '@/components/CopyText'
-import EmptyContent from '@/components/EmptyContent'
-import RefreshButton from '@/components/RefreshButton'
-import RequestContent from '@/components/RequestContent'
-import TableLoading from '@/components/TableLoading'
-import { useSwrQuery } from '@/hooks/use-swr'
-import { get } from '@/lib/utils'
-import { getApiData } from '@/services/common'
+import { Table, Typography } from "@heroui/react";
+import { usePathname } from "next/navigation";
 
-import type { ReactNode } from 'react'
+import CopyText from "@/components/CopyText";
+import EmptyContent from "@/components/EmptyContent";
+import RefreshButton from "@/components/RefreshButton";
+import RequestContent from "@/components/RequestContent";
+import TableLoading from "@/components/TableLoading";
+import { useSwrQuery } from "@/hooks/use-swr";
+import { get } from "@/lib/utils";
+import { getApiData } from "@/services/common";
 
 export interface Column {
-  label: string
-  children: ReactNode
+  label: string;
+  children: ReactNode;
 }
 
-export type GetColumnsFn<T> = (data: T) => Column[]
+export type GetColumnsFn<T> = (data: T) => Column[];
 
 interface JsonContentProps<T> {
-  title: string
-  children: ReactNode
-  params: Record<string, any>
-  onRefresh: () => boolean
-  searchText?: string
-  getColumns: GetColumnsFn<T>
+  title: string;
+  children: ReactNode;
+  params: Record<string, any>;
+  onRefresh: () => boolean;
+  searchText?: string;
+  getColumns: GetColumnsFn<T>;
 }
 
-function JsonContent<T>({ title, children, params = {}, onRefresh, searchText = '查询', getColumns }: JsonContentProps<T>) {
-  const pathname = usePathname()
+function JsonContent<T>({
+  title,
+  children,
+  params = {},
+  onRefresh,
+  searchText = "查询",
+  getColumns,
+}: JsonContentProps<T>) {
+  const pathname = usePathname();
 
   // 请求数据（key 固定为路由，参数走闭包；点击刷新用 mutate）
-  const { data, loading, error, mutate } = useSwrQuery<T>(
-    pathname,
-    async () =>
-      get(await getApiData(pathname, params), 'data'),
-  )
+  const { data, loading, error, mutate } = useSwrQuery<T>(pathname, async () =>
+    get(await getApiData(pathname, params), "data"),
+  );
 
   // 请求数据
   const reload = () => {
-    const flag = onRefresh()
+    const flag = onRefresh();
+
     if (flag) {
-      mutate()
+      mutate();
     }
-  }
+  };
+
   return (
     <div className="flex-1 flex flex-col justify-between gap-4">
       {/* 头部区域 */}
       <div className="shrink-0">
-        <Typography type="h1" className="text-2xl font-black tracking-normal">{title}</Typography>
+        <Typography className="text-2xl font-black tracking-normal" type="h1">
+          {title}
+        </Typography>
       </div>
       {/* 中间区域 */}
       <div className="flex-1 flex justify-center items-center">
@@ -64,12 +73,14 @@ function JsonContent<T>({ title, children, params = {}, onRefresh, searchText = 
                     <Table.Column>值</Table.Column>
                   </Table.Header>
                   <Table.Body renderEmptyState={() => <EmptyContent />}>
-                    {(data ? getColumns(data) : []).map(({ label, children }, index) => (
-                      <Table.Row key={index}>
-                        <Table.Cell>{label}</Table.Cell>
-                        <Table.Cell>{children}</Table.Cell>
-                      </Table.Row>
-                    ))}
+                    {(data ? getColumns(data) : []).map(
+                      ({ label, children }, index) => (
+                        <Table.Row key={index}>
+                          <Table.Cell>{label}</Table.Cell>
+                          <Table.Cell>{children}</Table.Cell>
+                        </Table.Row>
+                      ),
+                    )}
                   </Table.Body>
                 </Table.Content>
               </Table.ScrollContainer>
@@ -83,10 +94,16 @@ function JsonContent<T>({ title, children, params = {}, onRefresh, searchText = 
         <div className="flex items-center gap-2 flex-wrap">
           {children}
           <RefreshButton loading={loading} text={searchText} onPress={reload} />
-          <CopyText content={Object.keys(data || {}).length > 0 ? JSON.stringify(data || {}, null, 2) : ''} />
+          <CopyText
+            content={
+              Object.keys(data || {}).length > 0
+                ? JSON.stringify(data || {}, null, 2)
+                : ""
+            }
+          />
         </div>
       </div>
     </div>
-  )
+  );
 }
-export default JsonContent
+export default JsonContent;

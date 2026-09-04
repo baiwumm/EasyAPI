@@ -5,17 +5,17 @@
  * @LastEditTime: 2026-07-22 18:17:46
  * @Description: 全局 Loading（hydration 完成前显示全屏遮罩，隐藏水合等待期，数据就绪后一次性呈现）
  */
-'use client'
-import { Description, Spinner, useIsHydrated } from '@heroui/react'
+"use client";
+import type { FC, ReactNode } from "react";
 
-import type { FC, ReactNode } from 'react'
+import { Description, Spinner, useIsHydrated } from "@heroui/react";
 
 interface FullLoadingProps {
-  children: ReactNode
+  children: ReactNode;
 }
 
 const FullLoading: FC<FullLoadingProps> = ({ children }) => {
-  const hydrated = useIsHydrated()
+  const hydrated = useIsHydrated();
 
   // 判断组件是否挂载
   if (!hydrated) {
@@ -26,8 +26,10 @@ const FullLoading: FC<FullLoadingProps> = ({ children }) => {
           <Description className="font-black">加载中,请稍后...</Description>
         </div>
       </div>
-    )
+    );
   }
-  return children
-}
-export default FullLoading
+
+  return children;
+};
+
+export default FullLoading;

@@ -1,5 +1,9 @@
-'use client'
-import { Copy } from '@gravity-ui/icons'
+"use client";
+import type { Options } from "crypto-random-string";
+import type { FC } from "react";
+import type { ClientComponentProps } from "@/typings";
+
+import { Copy } from "@gravity-ui/icons";
 import {
   Chip,
   Description,
@@ -10,56 +14,69 @@ import {
   Select,
   TextField,
   Typography,
-} from '@heroui/react'
-import { usePathname } from 'next/navigation'
-import { useMemo, useState } from 'react'
+} from "@heroui/react";
+import { usePathname } from "next/navigation";
+import { useMemo, useState } from "react";
 
-import RefreshButton from '@/components/RefreshButton'
-import RequestContent from '@/components/RequestContent'
-import { RANDOM_STRING_TYPES } from '@/enums'
-import { useCopy } from '@/hooks/use-copy'
-import { useSwrQuery } from '@/hooks/use-swr'
-import { get } from '@/lib/utils'
-import { getApiData } from '@/services/common'
-
-import type { Options } from 'crypto-random-string'
-import type { FC } from 'react'
-import type { ClientComponentProps } from '@/typings'
+import RefreshButton from "@/components/RefreshButton";
+import RequestContent from "@/components/RequestContent";
+import { RANDOM_STRING_TYPES } from "@/enums";
+import { useCopy } from "@/hooks/use-copy";
+import { useSwrQuery } from "@/hooks/use-swr";
+import { get } from "@/lib/utils";
+import { getApiData } from "@/services/common";
 
 const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
-  const pathname = usePathname()
-  const { copy } = useCopy()
-  const [type, setType] = useState<Options['type']>(RANDOM_STRING_TYPES.ALPHANUMERIC)
-  const [length, setLength] = useState(16) // 字符串长度
-  const [count, setCount] = useState(10) // 生成的数量
-  const [characters, setCharacters] = useState('') // 自定义字符集
+  const pathname = usePathname();
+  const { copy } = useCopy();
+  const [type, setType] = useState<Options["type"]>(
+    RANDOM_STRING_TYPES.ALPHANUMERIC,
+  );
+  const [length, setLength] = useState(16); // 字符串长度
+  const [count, setCount] = useState(10); // 生成的数量
+  const [characters, setCharacters] = useState(""); // 自定义字符集
 
   // 参数处理
-  const params = useMemo(() => ({ type, length, count, characters }), [type, length, count, characters])
+  const params = useMemo(
+    () => ({ type, length, count, characters }),
+    [type, length, count, characters],
+  );
 
   // 请求数据
-  const { data = [], loading, error, mutate } = useSwrQuery(
-    pathname,
-    async () => get(await getApiData(pathname, params), 'data', []),
-  )
+  const {
+    data = [],
+    loading,
+    error,
+    mutate,
+  } = useSwrQuery(pathname, async () =>
+    get(await getApiData(pathname, params), "data", []),
+  );
+
   return (
     <div className="flex-1 flex flex-col justify-between gap-4">
       {/* 头部区域 */}
       <div className="shrink-0">
-        <Typography type="h1" className="text-2xl font-black tracking-normal">{title}</Typography>
+        <Typography className="text-2xl font-black tracking-normal" type="h1">
+          {title}
+        </Typography>
       </div>
       {/* 中间区域 */}
       <div className="flex-1 flex justify-center items-center">
-        <RequestContent error={error} loading={loading} loadingText="正在生成..." reFresh={mutate}>
+        <RequestContent
+          error={error}
+          loading={loading}
+          loadingText="正在生成..."
+          reFresh={mutate}
+        >
           <div className="flex justify-center items-center flex-wrap gap-2">
-            {data.map(v => (
+            {data.map((v) => (
               <Chip
                 key={v}
+                className="cursor-pointer"
                 color="accent"
                 size="lg"
                 variant="soft"
                 onClick={() => copy(v)}
-                className="cursor-pointer"
               >
                 <Copy />
                 <Chip.Label>{v}</Chip.Label>
@@ -73,10 +90,10 @@ const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
         <div className="flex items-end gap-2 flex-wrap">
           <Select
             aria-label="类型组合"
+            className="w-60"
             placeholder="请选择类型"
             value={type}
-            onChange={val => setType(val as Options['type'])}
-            className="w-60"
+            onChange={(val) => setType(val as Options["type"])}
           >
             <Select.Trigger>
               <Select.Value />
@@ -96,7 +113,13 @@ const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
               </ListBox>
             </Select.Popover>
           </Select>
-          <NumberField aria-label="字符串长度" maxValue={100} minValue={1} value={length} onChange={setLength}>
+          <NumberField
+            aria-label="字符串长度"
+            maxValue={100}
+            minValue={1}
+            value={length}
+            onChange={setLength}
+          >
             <Description>字符串长度</Description>
             <NumberField.Group>
               <NumberField.DecrementButton />
@@ -104,7 +127,13 @@ const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
               <NumberField.IncrementButton />
             </NumberField.Group>
           </NumberField>
-          <NumberField aria-label="生成的数量" maxValue={50} minValue={1} value={count} onChange={setCount}>
+          <NumberField
+            aria-label="生成的数量"
+            maxValue={50}
+            minValue={1}
+            value={count}
+            onChange={setCount}
+          >
             <Description>生成的数量</Description>
             <NumberField.Group>
               <NumberField.DecrementButton />
@@ -116,17 +145,22 @@ const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
             <Description>会忽略 type</Description>
             <Input
               aria-label="自定义字符集"
+              className="w-50"
               maxLength={65536}
               placeholder="自定义字符集"
               value={characters}
-              onChange={event => setCharacters(event.target.value)}
-              className="w-50"
+              onChange={(event) => setCharacters(event.target.value)}
             />
           </TextField>
-          <RefreshButton loading={loading} text="生成" onPress={() => mutate()} />
+          <RefreshButton
+            loading={loading}
+            text="生成"
+            onPress={() => mutate()}
+          />
         </div>
       </div>
     </div>
-  )
-}
-export default ClientComponent
+  );
+};
+
+export default ClientComponent;

@@ -5,40 +5,44 @@
  * @LastEditTime: 2026-02-26 18:06:14
  * @Description: 管理后台
  */
-import { Folder, Globe } from '@gravity-ui/icons'
-import { Tabs } from '@heroui/react'
-import { redirect } from 'next/navigation'
+import type { Metadata } from "next";
+import type { FC } from "react";
 
-import { ADMIN_TABS } from '@/enums'
-import { requireAdmin } from '@/lib/supabase/server'
+import { Folder, Globe } from "@gravity-ui/icons";
+import { Tabs } from "@heroui/react";
+import { redirect } from "next/navigation";
 
-import Apis from './components/apis'
-import Categorys from './components/categorys'
+import Apis from "./components/apis";
+import Categorys from "./components/categorys";
 
-import type { Metadata } from 'next'
-import type { FC } from 'react'
+import { ADMIN_TABS } from "@/enums";
+import { requireAdmin } from "@/lib/supabase/server";
 
 export const metadata: Metadata = {
-  title: '后台管理',
-}
+  title: "后台管理",
+};
 
 const Admin: FC = async () => {
   // 服务端校验管理员（登录 + 邮箱白名单），未通过跳登录页
-  const admin = await requireAdmin()
+  const admin = await requireAdmin();
+
   if (!admin) {
-    redirect('/login')
+    redirect("/login");
   }
 
   return (
     <Tabs>
       <Tabs.ListContainer>
         <Tabs.List aria-label="后台管理">
-          <Tabs.Tab id={ADMIN_TABS.CATEGOTYS} className="flex items-center gap-1">
+          <Tabs.Tab
+            className="flex items-center gap-1"
+            id={ADMIN_TABS.CATEGOTYS}
+          >
             <Folder />
             {ADMIN_TABS.label(ADMIN_TABS.CATEGOTYS)}
             <Tabs.Indicator />
           </Tabs.Tab>
-          <Tabs.Tab id={ADMIN_TABS.APIS} className="flex items-center gap-1">
+          <Tabs.Tab className="flex items-center gap-1" id={ADMIN_TABS.APIS}>
             <Globe />
             {ADMIN_TABS.label(ADMIN_TABS.APIS)}
             <Tabs.Indicator />
@@ -52,6 +56,7 @@ const Admin: FC = async () => {
         <Apis />
       </Tabs.Panel>
     </Tabs>
-  )
-}
-export default Admin
+  );
+};
+
+export default Admin;

@@ -1,51 +1,59 @@
-'use client'
-import { Chip, ListBox, Select, Table, Typography } from '@heroui/react'
-import dayjs from 'dayjs'
-import { usePathname } from 'next/navigation'
-import { useMemo, useState } from 'react'
+"use client";
+import type { FC } from "react";
+import type { ClientComponentProps } from "@/typings";
 
-import EmptyContent from '@/components/EmptyContent'
-import RefreshButton from '@/components/RefreshButton'
-import RequestContent from '@/components/RequestContent'
-import TableLoading from '@/components/TableLoading'
-import { useSwrQuery } from '@/hooks/use-swr'
-import { get } from '@/lib/utils'
-import { getApiData } from '@/services/common'
+import { Chip, ListBox, Select, Table, Typography } from "@heroui/react";
+import dayjs from "dayjs";
+import { usePathname } from "next/navigation";
+import { useMemo, useState } from "react";
 
-import type { FC } from 'react'
-import type { ClientComponentProps } from '@/typings'
+import EmptyContent from "@/components/EmptyContent";
+import RefreshButton from "@/components/RefreshButton";
+import RequestContent from "@/components/RequestContent";
+import TableLoading from "@/components/TableLoading";
+import { useSwrQuery } from "@/hooks/use-swr";
+import { get } from "@/lib/utils";
+import { getApiData } from "@/services/common";
 
-const currentYear = dayjs().year()
-const startYear = 1990
+const currentYear = dayjs().year();
+const startYear = 1990;
 
 const yearOptions = Array.from(
   { length: currentYear - startYear + 1 },
   (_, i) => {
-    const year = currentYear - i
+    const year = currentYear - i;
+
     return {
       value: year,
       label: `${year}年`,
-    }
+    };
   },
-)
+);
 
 const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
-  const pathname = usePathname()
-  const [year, setYear] = useState(currentYear)
+  const pathname = usePathname();
+  const [year, setYear] = useState(currentYear);
 
   // 参数处理
-  const params = useMemo(() => ({ year }), [year])
+  const params = useMemo(() => ({ year }), [year]);
 
   // 请求数据
-  const { data = [], loading, error, mutate } = useSwrQuery(
-    pathname,
-    async () => get(await getApiData(pathname, params), 'data', []),
-  )
+  const {
+    data = [],
+    loading,
+    error,
+    mutate,
+  } = useSwrQuery(pathname, async () =>
+    get(await getApiData(pathname, params), "data", []),
+  );
+
   return (
     <div className="flex-1 flex flex-col justify-between gap-4">
       {/* 头部区域 */}
       <div className="shrink-0">
-        <Typography type="h1" className="text-2xl font-black tracking-normal">{title}</Typography>
+        <Typography className="text-2xl font-black tracking-normal" type="h1">
+          {title}
+        </Typography>
       </div>
       {/* 中间区域 */}
       <div className="relative flex-1 flex justify-center items-center">
@@ -63,7 +71,9 @@ const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
                       ? data.map(({ name, date }, index) => (
                           <Table.Row key={index}>
                             <Table.Cell>
-                              <Chip color="accent" variant="soft">{name}</Chip>
+                              <Chip color="accent" variant="soft">
+                                {name}
+                              </Chip>
                             </Table.Cell>
                             <Table.Cell>{date}</Table.Cell>
                           </Table.Row>
@@ -82,10 +92,10 @@ const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
         <div className="flex items-center gap-2 flex-wrap">
           <Select
             aria-label="年份"
+            className="w-50"
             placeholder="请选择年份"
             value={year}
-            onChange={value => setYear(value as number)}
-            className="w-50"
+            onChange={(value) => setYear(value as number)}
           >
             <Select.Trigger>
               <Select.Value />
@@ -106,6 +116,7 @@ const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
         </div>
       </div>
     </div>
-  )
-}
-export default ClientComponent
+  );
+};
+
+export default ClientComponent;

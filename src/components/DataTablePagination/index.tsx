@@ -5,46 +5,48 @@
  * @LastEditTime: 2026-03-05 16:07:35
  * @Description: 渲染分页
  */
-import { Description, ListBox, Pagination, Select } from '@heroui/react'
+import type { AppTable } from "@/typings/table-types";
 
-import type { AppTable } from '@/typings/table-types'
+import { Description, ListBox, Pagination, Select } from "@heroui/react";
 
 interface DataTablePaginationProps<TData> {
-  table: AppTable<TData>
-  total: number
+  table: AppTable<TData>;
+  total: number;
 }
 
-function DataTablePagination<TData>({ table, total = 0 }: DataTablePaginationProps<TData>) {
+function DataTablePagination<TData>({
+  table,
+  total = 0,
+}: DataTablePaginationProps<TData>) {
   // 渲染中间分页
-  const { pageIndex } = table.state.pagination
-  const pageCount = table.getPageCount()
+  const { pageIndex } = table.state.pagination;
+  const pageCount = table.getPageCount();
 
   function getPageNumbers(pageIndex: number, pageCount: number, delta = 2) {
-    const pages: (number | '...')[] = []
+    const pages: (number | "...")[] = [];
 
-    const start = Math.max(0, pageIndex - delta)
-    const end = Math.min(pageCount - 1, pageIndex + delta)
+    const start = Math.max(0, pageIndex - delta);
+    const end = Math.min(pageCount - 1, pageIndex + delta);
 
     if (start > 0) {
-      pages.push(0)
-      if (start > 1)
-        pages.push('...')
+      pages.push(0);
+      if (start > 1) pages.push("...");
     }
 
     for (let i = start; i <= end; i++) {
-      pages.push(i)
+      pages.push(i);
     }
 
     if (end < pageCount - 1) {
-      if (end < pageCount - 2)
-        pages.push('...')
-      pages.push(pageCount - 1)
+      if (end < pageCount - 2) pages.push("...");
+      pages.push(pageCount - 1);
     }
 
-    return pages
+    return pages;
   }
 
-  const pages = getPageNumbers(pageIndex, pageCount)
+  const pages = getPageNumbers(pageIndex, pageCount);
+
   return (
     <div className="w-full grid grid-cols-3 items-center">
       {/* 条数 */}
@@ -52,11 +54,11 @@ function DataTablePagination<TData>({ table, total = 0 }: DataTablePaginationPro
         <span>每页条数:</span>
         <Select
           aria-label="分页选择框"
-          variant="secondary"
+          className="w-30"
           placeholder="请选择"
           value={table.state.pagination.pageSize}
-          onChange={key => table.setPageSize(Number(key))}
-          className="w-30"
+          variant="secondary"
+          onChange={(key) => table.setPageSize(Number(key))}
         >
           <Select.Trigger className="items-center">
             <Select.Value className="text-xs text-muted" />
@@ -65,15 +67,19 @@ function DataTablePagination<TData>({ table, total = 0 }: DataTablePaginationPro
           <Select.Popover>
             <ListBox>
               {[5, 10, 20, 50].map((size) => {
-                const id = `${size}`
+                const id = `${size}`;
+
                 return (
-                  <ListBox.Item key={id} id={size} textValue={id} className="text-xs text-muted">
-                    {size}
-                    {' '}
-                    条/页
+                  <ListBox.Item
+                    key={id}
+                    className="text-xs text-muted"
+                    id={size}
+                    textValue={id}
+                  >
+                    {size} 条/页
                     <ListBox.ItemIndicator />
                   </ListBox.Item>
-                )
+                );
               })}
             </ListBox>
           </Select.Popover>
@@ -83,40 +89,42 @@ function DataTablePagination<TData>({ table, total = 0 }: DataTablePaginationPro
         <Pagination size="sm">
           <Pagination.Content>
             <Pagination.Item>
-              <Pagination.Previous isDisabled={!table.getCanPreviousPage()} onPress={() => table.previousPage()}>
+              <Pagination.Previous
+                isDisabled={!table.getCanPreviousPage()}
+                onPress={() => table.previousPage()}
+              >
                 <Pagination.PreviousIcon />
               </Pagination.Previous>
             </Pagination.Item>
             {pages.map((p, i) =>
-              p === '...'
-                ? (
-                    <Pagination.Item key={`ellipsis-${i}`}>
-                      <Pagination.Ellipsis />
-                    </Pagination.Item>
-                  )
-                : (
-                    <Pagination.Item key={p}>
-                      <Pagination.Link isActive={p === pageIndex} onPress={() => table.setPageIndex(p)}>
-                        {p + 1}
-                      </Pagination.Link>
-                    </Pagination.Item>
-                  ),
+              p === "..." ? (
+                <Pagination.Item key={`ellipsis-${i}`}>
+                  <Pagination.Ellipsis />
+                </Pagination.Item>
+              ) : (
+                <Pagination.Item key={p}>
+                  <Pagination.Link
+                    isActive={p === pageIndex}
+                    onPress={() => table.setPageIndex(p)}
+                  >
+                    {p + 1}
+                  </Pagination.Link>
+                </Pagination.Item>
+              ),
             )}
             <Pagination.Item>
-              <Pagination.Next isDisabled={!table.getCanNextPage()} onPress={() => table.nextPage()}>
+              <Pagination.Next
+                isDisabled={!table.getCanNextPage()}
+                onPress={() => table.nextPage()}
+              >
                 <Pagination.NextIcon />
               </Pagination.Next>
             </Pagination.Item>
           </Pagination.Content>
         </Pagination>
       </div>
-      <Description className="justify-self-end">
-        共
-        {total}
-        {' '}
-        条数据
-      </Description>
+      <Description className="justify-self-end">共{total} 条数据</Description>
     </div>
-  )
+  );
 }
-export default DataTablePagination
+export default DataTablePagination;

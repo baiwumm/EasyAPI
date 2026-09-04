@@ -1,60 +1,68 @@
-'use client'
-import { Input, Table, toast, Typography } from '@heroui/react'
-import { usePathname } from 'next/navigation'
-import { useMemo, useState } from 'react'
+"use client";
+import type { FC } from "react";
+import type { ClientComponentProps } from "@/typings";
 
-import EmptyContent from '@/components/EmptyContent'
-import RefreshButton from '@/components/RefreshButton'
-import RequestContent from '@/components/RequestContent'
-import TableLoading from '@/components/TableLoading'
-import { useSwrQuery } from '@/hooks/use-swr'
-import { get } from '@/lib/utils'
-import { getApiData } from '@/services/common'
+import { Input, Table, toast, Typography } from "@heroui/react";
+import { usePathname } from "next/navigation";
+import { useMemo, useState } from "react";
 
-import type { FC } from 'react'
-import type { ClientComponentProps } from '@/typings'
+import EmptyContent from "@/components/EmptyContent";
+import RefreshButton from "@/components/RefreshButton";
+import RequestContent from "@/components/RequestContent";
+import TableLoading from "@/components/TableLoading";
+import { useSwrQuery } from "@/hooks/use-swr";
+import { get } from "@/lib/utils";
+import { getApiData } from "@/services/common";
 
 interface DataType {
-  province: string
-  city: string
-  code: string[]
-  prefix: string
+  province: string;
+  city: string;
+  code: string[];
+  prefix: string;
 }
 
 const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
-  const pathname = usePathname()
-  const [keyword, setKeyword] = useState('粤')
+  const pathname = usePathname();
+  const [keyword, setKeyword] = useState("粤");
 
   // 参数处理
-  const params = useMemo(() => ({ keyword }), [keyword])
+  const params = useMemo(() => ({ keyword }), [keyword]);
 
   // 请求数据
-  const { data = [], loading, error, mutate } = useSwrQuery(
-    pathname,
-    async () => get(await getApiData(pathname, params), 'data', []),
-  )
+  const {
+    data = [],
+    loading,
+    error,
+    mutate,
+  } = useSwrQuery(pathname, async () =>
+    get(await getApiData(pathname, params), "data", []),
+  );
 
   // 请求数据
   const reFresh = () => {
     if (!keyword.trim()) {
-      toast.danger('参数 keyword 必填')
-      return
+      toast.danger("参数 keyword 必填");
+
+      return;
     }
-    mutate()
-  }
+    mutate();
+  };
 
   // 列定义
-  const columns: { label: string, value: keyof DataType }[] = [
-    { label: '省份', value: 'province' },
-    { label: '城市', value: 'city' },
-    { label: '省份车牌简称', value: 'code' },
-    { label: '电车牌号前缀号', value: 'prefix' },
-  ]
+  const columns: { label: string; value: keyof DataType }[] = [
+    { label: "省份", value: "province" },
+    { label: "城市", value: "city" },
+    { label: "省份车牌简称", value: "code" },
+    { label: "电车牌号前缀号", value: "prefix" },
+  ];
+
   return (
     <div className="flex-1 flex flex-col justify-between gap-4">
       {/* 头部区域 */}
       <div className="shrink-0">
-        <Typography type="h1" className="text-2xl font-black tracking-normal">{title}</Typography>
+        <Typography className="text-2xl font-black tracking-normal" type="h1">
+          {title}
+        </Typography>
       </div>
       {/* 中间区域 */}
       <div className="relative flex-1 flex justify-center items-center">
@@ -65,7 +73,12 @@ const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
                 <Table.Content aria-label={title} className="min-w-150">
                   <Table.Header className="sticky top-0 z-10 bg-surface-secondary">
                     {columns.map(({ label, value }) => (
-                      <Table.Column key={value} isRowHeader={value === 'province'}>{label}</Table.Column>
+                      <Table.Column
+                        key={value}
+                        isRowHeader={value === "province"}
+                      >
+                        {label}
+                      </Table.Column>
                     ))}
                   </Table.Header>
                   <Table.Body renderEmptyState={() => <EmptyContent />}>
@@ -73,7 +86,9 @@ const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
                       ? data.map((v, index) => (
                           <Table.Row key={index}>
                             {columns.map(({ value }) => (
-                              <Table.Cell key={value}>{get(v, value, '--')}</Table.Cell>
+                              <Table.Cell key={value}>
+                                {get(v, value, "--")}
+                              </Table.Cell>
                             ))}
                           </Table.Row>
                         ))
@@ -91,16 +106,17 @@ const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
         <div className="flex items-center gap-2 flex-wrap">
           <Input
             aria-label="关键字"
+            className="w-50"
             maxLength={50}
             placeholder="输入关键字，如粤A、广州市"
             value={keyword}
-            onChange={event => setKeyword(event.target.value)}
-            className="w-50"
+            onChange={(event) => setKeyword(event.target.value)}
           />
           <RefreshButton loading={loading} onPress={reFresh} />
         </div>
       </div>
     </div>
-  )
-}
-export default ClientComponent
+  );
+};
+
+export default ClientComponent;

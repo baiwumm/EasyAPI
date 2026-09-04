@@ -5,43 +5,52 @@
  * @LastEditTime: 2026-07-22 18:20:32
  * @Description: 上下文提供者
  */
-'use client'
-import { AppProgressProvider as ProgressProvider } from '@bprogress/next'
-import dynamic from 'next/dynamic'
-import { useEffect, ViewTransition } from 'react'
-import { SWRConfig } from 'swr'
+"use client";
+import type { FC, PropsWithChildren } from "react";
 
-import Header from '@/components/Header'
-import { swrConfig } from '@/lib/swr'
+import { AppProgressProvider as ProgressProvider } from "@bprogress/next";
+import dynamic from "next/dynamic";
+import { useEffect, ViewTransition } from "react";
+import { SWRConfig } from "swr";
 
-import type { FC, PropsWithChildren } from 'react'
+import Header from "@/components/Header";
+import { swrConfig } from "@/lib/swr";
 
 /** 返回顶部按钮：纯交互增强，首屏不需要，拆为独立 chunk 客户端懒加载 */
-const BackTop = dynamic(() => import('@/components/BackTop'), { ssr: false })
+const BackTop = dynamic(() => import("@/components/BackTop"), { ssr: false });
 
 /** 后退方向标记保留时间，动画结束后清除，避免影响后续前进导航 */
-const NAV_DIR_RESET_DELAY = 1000
+const NAV_DIR_RESET_DELAY = 1000;
 
 const Providers: FC<PropsWithChildren> = ({ children }) => {
   // 浏览器前进/后退会触发 popstate，此时标记「后退」让路由转场反向滑动；
   // 普通链接跳转（pushState）不触发 popstate，默认按「前进」处理
   useEffect(() => {
-    const root = document.documentElement
-    let timer: number | undefined
+    const root = document.documentElement;
+    let timer: number | undefined;
     const markBackward = () => {
-      root.dataset.navDir = 'backward'
-      window.clearTimeout(timer)
-      timer = window.setTimeout(() => delete root.dataset.navDir, NAV_DIR_RESET_DELAY)
-    }
-    window.addEventListener('popstate', markBackward)
+      root.dataset.navDir = "backward";
+      window.clearTimeout(timer);
+      timer = window.setTimeout(
+        () => delete root.dataset.navDir,
+        NAV_DIR_RESET_DELAY,
+      );
+    };
+
+    window.addEventListener("popstate", markBackward);
+
     return () => {
-      window.removeEventListener('popstate', markBackward)
-      window.clearTimeout(timer)
-    }
-  }, [])
+      window.removeEventListener("popstate", markBackward);
+      window.clearTimeout(timer);
+    };
+  }, []);
 
   return (
-    <ProgressProvider color="var(--accent)" options={{ showSpinner: true }} shallowRouting>
+    <ProgressProvider
+      shallowRouting
+      color="var(--accent)"
+      options={{ showSpinner: true }}
+    >
       <SWRConfig value={swrConfig}>
         {/* 顶部 */}
         <Header />
@@ -54,6 +63,7 @@ const Providers: FC<PropsWithChildren> = ({ children }) => {
         <BackTop />
       </SWRConfig>
     </ProgressProvider>
-  )
-}
-export default Providers
+  );
+};
+
+export default Providers;

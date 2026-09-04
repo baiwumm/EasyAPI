@@ -1,5 +1,8 @@
-'use client'
-import { ArrowDownToSquare } from '@gravity-ui/icons'
+"use client";
+import type { FC } from "react";
+import type { ClientComponentProps } from "@/typings";
+
+import { ArrowDownToSquare } from "@gravity-ui/icons";
 import {
   Button,
   Input,
@@ -8,127 +11,140 @@ import {
   Select,
   toast,
   Typography,
-} from '@heroui/react'
-import Image from 'next/image'
-import { usePathname } from 'next/navigation'
-import { useEffect, useMemo, useState } from 'react'
+} from "@heroui/react";
+import Image from "next/image";
+import { usePathname } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
 
-import RefreshButton from '@/components/RefreshButton'
-import RequestContent from '@/components/RequestContent'
-import { QRCODE_FORMATS } from '@/enums'
-import { useSwrMutation } from '@/hooks/use-swr'
+import RefreshButton from "@/components/RefreshButton";
+import RequestContent from "@/components/RequestContent";
+import { QRCODE_FORMATS } from "@/enums";
+import { useSwrMutation } from "@/hooks/use-swr";
 
-import type { FC } from 'react'
-import type { ClientComponentProps } from '@/typings'
-
-type Format = typeof QRCODE_FORMATS.valueType
+type Format = typeof QRCODE_FORMATS.valueType;
 
 const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
-  const pathname = usePathname()
-  const [format, setFormat] = useState<Format>(QRCODE_FORMATS.PNG) // 生成格式
-  const [size, setSize] = useState(256) // 二维码大小
-  const [text, setText] = useState(process.env.NEXT_PUBLIC_APP_NAME!)
-  const [imgSrc, setImgSrc] = useState('')
-  const [downloadUrl, setDownloadUrl] = useState('')
+  const pathname = usePathname();
+  const [format, setFormat] = useState<Format>(QRCODE_FORMATS.PNG); // 生成格式
+  const [size, setSize] = useState(256); // 二维码大小
+  const [text, setText] = useState(process.env.NEXT_PUBLIC_APP_NAME!);
+  const [imgSrc, setImgSrc] = useState("");
+  const [downloadUrl, setDownloadUrl] = useState("");
 
   // 参数处理
-  const params = useMemo(() => ({ format, size, text }), [format, size, text])
+  const params = useMemo(() => ({ format, size, text }), [format, size, text]);
 
   // 请求数据：mutation 语义（挂载自动生成一次 + 点击触发），onSuccess 写图片 state
   const { loading, error, trigger } = useSwrMutation(
     `${pathname}:generate`, // mutation key 加后缀，避免与其他查询 key 冲突
     async () => {
-      const { format, size, text } = params
+      const { format, size, text } = params;
 
       // 构造查询参数
-      const searchParams = new URLSearchParams()
-      searchParams.set('format', String(format))
-      searchParams.set('size', String(size))
-      searchParams.set('text', text)
+      const searchParams = new URLSearchParams();
 
-      const url = `/api/${pathname}?${searchParams.toString()}`
+      searchParams.set("format", String(format));
+      searchParams.set("size", String(size));
+      searchParams.set("text", text);
 
-      const res = await fetch(url)
+      const url = `/api/${pathname}?${searchParams.toString()}`;
+
+      const res = await fetch(url);
 
       if (!res.ok) {
-        throw new Error('Network response was not ok')
+        throw new Error("Network response was not ok");
       }
 
       // 根据 format 决定如何读取响应
       if (format === QRCODE_FORMATS.DATAURL) {
-        const json = await res.json()
-        return json.data // 直接返回 data 字符串
-      }
-      else if (format === QRCODE_FORMATS.SVG) {
-        const svgText = await res.text()
+        const json = await res.json();
+
+        return json.data; // 直接返回 data 字符串
+      } else if (format === QRCODE_FORMATS.SVG) {
+        const svgText = await res.text();
+
         // 转为 data URL 以便 img 标签显示
-        return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svgText)}`
-      }
-      else {
+        return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svgText)}`;
+      } else {
         // format === 'png' 或其他二进制格式
-        const blob = await res.blob()
-        return URL.createObjectURL(blob)
+        const blob = await res.blob();
+
+        return URL.createObjectURL(blob);
       }
     },
     {
       onSuccess: (imgUrl) => {
-        setImgSrc(imgUrl)
-        setDownloadUrl(imgUrl) // 用于下载
+        setImgSrc(imgUrl);
+        setDownloadUrl(imgUrl); // 用于下载
       },
     },
-  )
+  );
 
   // 挂载自动生成一次（等价原自动模式）
   useEffect(() => {
-    trigger()
-    // eslint-disable-next-line react/exhaustive-deps -- 仅挂载时生成一次，后续由 reFresh 显式触发
-  }, [])
+    trigger();
+  }, []);
 
   // 请求数据
   const reFresh = () => {
-    setImgSrc('')
+    setImgSrc("");
     if (!text?.trim()) {
-      toast.danger('参数 text 必填')
-      return
+      toast.danger("参数 text 必填");
+
+      return;
     }
     if (text.length > 2000) {
-      toast.danger('参数 text 长度不能超过 2000 个字符')
-      return
+      toast.danger("参数 text 长度不能超过 2000 个字符");
+
+      return;
     }
-    trigger()
-  }
+    trigger();
+  };
 
   // 下载图片
   const downloadImage = () => {
-    if (!downloadUrl || !format)
-      return
-    toast.success('正在下载中...')
-    const link = document.createElement('a')
-    link.href = downloadUrl
-    link.download = `qrcode.${format === 'dataurl' ? 'png' : format}`
-    document.body.appendChild(link)
-    link.click()
-    document.body.removeChild(link)
-  }
+    if (!downloadUrl || !format) return;
+    toast.success("正在下载中...");
+    const link = document.createElement("a");
+
+    link.href = downloadUrl;
+    link.download = `qrcode.${format === "dataurl" ? "png" : format}`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   useEffect(() => {
     return () => {
-      if (imgSrc && imgSrc.startsWith('blob:')) {
-        URL.revokeObjectURL(imgSrc)
+      if (imgSrc && imgSrc.startsWith("blob:")) {
+        URL.revokeObjectURL(imgSrc);
       }
-    }
-  }, [imgSrc])
+    };
+  }, [imgSrc]);
+
   return (
     <div className="flex-1 flex flex-col justify-between gap-4">
       {/* 头部区域 */}
       <div className="shrink-0">
-        <Typography type="h1" className="text-2xl font-black tracking-normal">{title}</Typography>
+        <Typography className="text-2xl font-black tracking-normal" type="h1">
+          {title}
+        </Typography>
       </div>
       {/* 中间区域 */}
       <div className="flex-1 flex justify-center items-center">
-        <RequestContent error={error} loading={loading} loadingText="正在生成..." reFresh={reFresh}>
+        <RequestContent
+          error={error}
+          loading={loading}
+          loadingText="正在生成..."
+          reFresh={reFresh}
+        >
           <div className="flex justify-center items-center">
-            <Image alt={text || '二维码'} height={size} src={imgSrc} width={size} />
+            <Image
+              alt={text || "二维码"}
+              height={size}
+              src={imgSrc}
+              width={size}
+            />
           </div>
         </RequestContent>
       </div>
@@ -137,10 +153,10 @@ const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
         <div className="flex items-center gap-2 flex-wrap">
           <Select
             aria-label="生成格式"
+            className="w-50"
             placeholder="请选择生成格式"
             value={format}
-            onChange={value => setFormat(value as Format)}
-            className="w-50"
+            onChange={(value) => setFormat(value as Format)}
           >
             <Select.Trigger>
               <Select.Value />
@@ -157,22 +173,40 @@ const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
               </ListBox>
             </Select.Popover>
           </Select>
-          <NumberField aria-label="二维码大小" maxValue={1000} minValue={64} value={size} onChange={setSize}>
+          <NumberField
+            aria-label="二维码大小"
+            maxValue={1000}
+            minValue={64}
+            value={size}
+            onChange={setSize}
+          >
             <NumberField.Group>
               <NumberField.DecrementButton />
               <NumberField.Input className="w-20" />
               <NumberField.IncrementButton />
             </NumberField.Group>
           </NumberField>
-          <Input aria-label="二维码内容" placeholder="二维码内容" value={text} onChange={event => setText(event.target.value)} className="w-50" />
+          <Input
+            aria-label="二维码内容"
+            className="w-50"
+            placeholder="二维码内容"
+            value={text}
+            onChange={(event) => setText(event.target.value)}
+          />
           <RefreshButton loading={loading} text="生成" onPress={reFresh} />
-          <Button size="sm" variant="tertiary" isDisabled={!downloadUrl || loading} onPress={downloadImage}>
+          <Button
+            isDisabled={!downloadUrl || loading}
+            size="sm"
+            variant="tertiary"
+            onPress={downloadImage}
+          >
             <ArrowDownToSquare />
             下载
           </Button>
         </div>
       </div>
     </div>
-  )
-}
-export default ClientComponent
+  );
+};
+
+export default ClientComponent;

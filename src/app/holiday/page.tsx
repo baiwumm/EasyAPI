@@ -1,4 +1,6 @@
-import ClientComponent from './ClientComponent'
+import type { Metadata } from "next";
+
+import ClientComponent from "./ClientComponent";
 
 /*
  * @Author: 白雾茫茫丶<baiwumm.com>
@@ -7,12 +9,11 @@ import ClientComponent from './ClientComponent'
  * @LastEditTime: 2026-03-04 16:02:36
  * @Description: 法定节假日
  */
-import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: '法定节假日',
-}
+  title: "法定节假日",
+};
 
 export default function Holiday() {
-  return <ClientComponent title="法定节假日" />
+  return <ClientComponent title="法定节假日" />;
 }

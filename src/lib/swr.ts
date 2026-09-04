@@ -1,4 +1,4 @@
-import type { SWRConfiguration } from 'swr'
+import type { SWRConfiguration } from "swr";
 
 /**
  * 全局 SWR 配置：平替原 useRequest 行为
@@ -11,4 +11,4 @@ export const swrConfig: SWRConfiguration = {
   revalidateOnFocus: false,
   revalidateOnReconnect: false,
   shouldRetryOnError: false,
-}
+};

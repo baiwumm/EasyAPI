@@ -5,46 +5,48 @@
  * @LastEditTime: 2026-03-13 14:47:40
  * @Description: 随机用户
  */
-import { fakerZH_CN as faker } from '@faker-js/faker'
-import { NextResponse } from 'next/server'
+import type { NextRequest } from "next/server";
 
-import { RANDOM_USER_GENDER } from '@/enums'
-import { catchError, responseMessage } from '@/lib/utils'
+import { fakerZH_CN as faker } from "@faker-js/faker";
+import { NextResponse } from "next/server";
 
-import type { NextRequest } from 'next/server'
+import { RANDOM_USER_GENDER } from "@/enums";
+import { catchError, responseMessage } from "@/lib/utils";
 
 export async function GET(request: NextRequest) {
   try {
     // 解析 URL 查询参数
-    const { searchParams } = new URL(request.url)
+    const { searchParams } = new URL(request.url);
 
-    const count = Math.min(Number(searchParams.get('count')) || 1, 20)
-    const gender = searchParams.get('gender')
+    const count = Math.min(Number(searchParams.get("count")) || 1, 20);
+    const gender = searchParams.get("gender");
 
-    const users = Array.from({ length: count }, () => createUser(gender))
+    const users = Array.from({ length: count }, () => createUser(gender));
 
-    return NextResponse.json(responseMessage(users))
-  }
-  catch (err) {
-    return NextResponse.json(catchError(err))
+    return NextResponse.json(responseMessage(users));
+  } catch (err) {
+    return NextResponse.json(catchError(err));
   }
 }
 
 function createUser(gender: string | null) {
-  const sex
-    = gender === RANDOM_USER_GENDER.MALE || gender === RANDOM_USER_GENDER.FEMALE
+  const sex =
+    gender === RANDOM_USER_GENDER.MALE || gender === RANDOM_USER_GENDER.FEMALE
       ? gender
-      : faker.helpers.arrayElement([RANDOM_USER_GENDER.MALE, RANDOM_USER_GENDER.FEMALE])
+      : faker.helpers.arrayElement([
+          RANDOM_USER_GENDER.MALE,
+          RANDOM_USER_GENDER.FEMALE,
+        ]);
 
   return {
     id: faker.string.uuid(),
     name: faker.person.fullName({ sex }),
-    gender: RANDOM_USER_GENDER.label(sex) || '未知',
+    gender: RANDOM_USER_GENDER.label(sex) || "未知",
     username: faker.internet.username(),
     phone: `1${faker.string.numeric(10)}`,
     email: faker.internet.email(),
     avatar: faker.image.avatar(),
-    birthday: faker.date.birthdate().toISOString().split('T')[0],
+    birthday: faker.date.birthdate().toISOString().split("T")[0],
     address: {
       province: faker.location.state(),
       city: faker.location.city(),
@@ -56,5 +58,5 @@ function createUser(gender: string | null) {
     website: faker.internet.url(),
     ip: faker.internet.ipv4(),
     createdAt: faker.date.recent(),
-  }
+  };
 }

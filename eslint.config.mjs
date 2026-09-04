@@ -37,6 +37,7 @@ export default defineConfig([globalIgnores([
     "**/coverage",
     "**/.next",
     "**/build",
+    "**/.heroui-docs/**",
     "!**/.commitlintrc.cjs",
     "!**/.lintstagedrc.cjs",
     "!**/jest.config.js",

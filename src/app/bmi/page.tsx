@@ -1,4 +1,6 @@
-import ClientComponent from './ClientComponent'
+import type { Metadata } from "next";
+
+import ClientComponent from "./ClientComponent";
 
 /*
  * @Author: 白雾茫茫丶<baiwumm.com>
@@ -7,12 +9,11 @@ import ClientComponent from './ClientComponent'
  * @LastEditTime: 2026-03-04 18:03:18
  * @Description: BMI 计算器
  */
-import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'BMI 计算器',
-}
+  title: "BMI 计算器",
+};
 
 export default function Bmi() {
-  return <ClientComponent title="BMI 计算器" />
+  return <ClientComponent title="BMI 计算器" />;
 }

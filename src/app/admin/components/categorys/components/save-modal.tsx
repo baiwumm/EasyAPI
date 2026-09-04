@@ -1,5 +1,9 @@
-'use client'
-import { CircleCheckFill, Folder } from '@gravity-ui/icons'
+"use client";
+import type { UseOverlayStateReturn } from "@heroui/react";
+import type { Category, CategorySaveParams } from "@/typings";
+import type { FC, FormEvent } from "react";
+
+import { CircleCheckFill, Folder } from "@gravity-ui/icons";
 import {
   Button,
   FieldError,
@@ -13,57 +17,58 @@ import {
   TextArea,
   TextField,
   toast,
+} from "@heroui/react";
 
-} from '@heroui/react'
-
-import { RESPONSE } from '@/enums'
-import { useSwrMutation } from '@/hooks/use-swr'
-import { addCategory, updateCategory } from '@/services/categorys'
-
-import type { UseOverlayStateReturn } from '@heroui/react'
-import type { Category, CategorySaveParams } from '@/typings'
-import type { FC, FormEvent } from 'react'
+import { RESPONSE } from "@/enums";
+import { useSwrMutation } from "@/hooks/use-swr";
+import { addCategory, updateCategory } from "@/services/categorys";
 
 interface SaveModalProps {
-  state: UseOverlayStateReturn
-  initialValues: Category | null
-  handleRefresh: VoidFunction
+  state: UseOverlayStateReturn;
+  initialValues: Category | null;
+  handleRefresh: VoidFunction;
 }
 
-const SaveModal: FC<SaveModalProps> = ({ state, initialValues, handleRefresh }) => {
-  const actionText = initialValues ? '编辑' : '新增'
+const SaveModal: FC<SaveModalProps> = ({
+  state,
+  initialValues,
+  handleRefresh,
+}) => {
+  const actionText = initialValues ? "编辑" : "新增";
 
   // 保存表单（新增/编辑复用，按 initialValues 选择 service）
   const { loading, trigger } = useSwrMutation(
-    '/categorys:save',
-    (data: CategorySaveParams) => (initialValues?.id ? updateCategory(data) : addCategory(data)),
+    "/categorys:save",
+    (data: CategorySaveParams) =>
+      initialValues?.id ? updateCategory(data) : addCategory(data),
     {
       onSuccess: ({ code }) => {
         if (code === RESPONSE.SUCCESS) {
-          state.close()
-          toast.success('提交成功', {
+          state.close();
+          toast.success("提交成功", {
             timeout: 2000,
             indicator: <CircleCheckFill />,
-          })
-          handleRefresh?.()
+          });
+          handleRefresh?.();
         }
       },
     },
-  )
+  );
 
   // 表单提交
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    const formData = new FormData(e.currentTarget)
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
 
     const data: CategorySaveParams = {
-      name: formData.get('name') as string,
-      desc: formData.get('desc') as string,
-      sort: Number(formData.get('sort')),
+      name: formData.get("name") as string,
+      desc: formData.get("desc") as string,
+      sort: Number(formData.get("sort")),
       id: initialValues?.id,
-    }
-    trigger(data)
-  }
+    };
+
+    trigger(data);
+  };
 
   return (
     <Modal.Backdrop isOpen={state.isOpen} onOpenChange={state.setOpen}>
@@ -78,45 +83,62 @@ const SaveModal: FC<SaveModalProps> = ({ state, initialValues, handleRefresh }) 
           </Modal.Header>
           <Modal.Body className="py-4 px-1">
             <Surface variant="default">
-              <Form id="category-form" onSubmit={onSubmit} className="flex flex-col gap-4">
+              <Form
+                className="flex flex-col gap-4"
+                id="category-form"
+                onSubmit={onSubmit}
+              >
                 <TextField
-                  name="name"
                   isRequired
-                  defaultValue={initialValues?.name ?? ''}
+                  defaultValue={initialValues?.name ?? ""}
                   maxLength={100}
                   minLength={1}
+                  name="name"
                   validate={(value) => {
                     if (!value) {
-                      return '请输入分类名称'
+                      return "请输入分类名称";
                     }
-                    return null
+
+                    return null;
                   }}
                 >
                   <Label>分类名称</Label>
-                  <Input aria-label="分类名称" variant="secondary" fullWidth placeholder="请输入分类名称" />
+                  <Input
+                    fullWidth
+                    aria-label="分类名称"
+                    placeholder="请输入分类名称"
+                    variant="secondary"
+                  />
                   <FieldError />
                 </TextField>
                 <TextField
-                  name="desc"
-                  defaultValue={initialValues?.desc ?? ''}
+                  defaultValue={initialValues?.desc ?? ""}
                   maxLength={200}
+                  name="desc"
                 >
                   <Label>分类描述</Label>
-                  <TextArea aria-label="分类描述" variant="secondary" fullWidth placeholder="请输入分类描述" rows={4} />
+                  <TextArea
+                    fullWidth
+                    aria-label="分类描述"
+                    placeholder="请输入分类描述"
+                    rows={4}
+                    variant="secondary"
+                  />
                 </TextField>
                 <NumberField
-                  name="sort"
-                  variant="secondary"
                   isRequired
                   defaultValue={initialValues?.sort ?? 1}
                   maxValue={99}
                   minValue={1}
+                  name="sort"
                   validate={(value) => {
                     if (!value) {
-                      return '请输入排序'
+                      return "请输入排序";
                     }
-                    return null
+
+                    return null;
                   }}
+                  variant="secondary"
                 >
                   <Label>排序</Label>
                   <NumberField.Group>
@@ -129,14 +151,14 @@ const SaveModal: FC<SaveModalProps> = ({ state, initialValues, handleRefresh }) 
             </Surface>
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="outline" isDisabled={loading} slot="close">
+            <Button isDisabled={loading} slot="close" variant="outline">
               取消
             </Button>
-            <Button type="submit" isPending={loading} form="category-form">
+            <Button form="category-form" isPending={loading} type="submit">
               {({ isPending }) => (
                 <>
                   {isPending ? <Spinner color="current" size="sm" /> : null}
-                  {isPending ? '正在提交...' : '确定'}
+                  {isPending ? "正在提交..." : "确定"}
                 </>
               )}
             </Button>
@@ -144,6 +166,7 @@ const SaveModal: FC<SaveModalProps> = ({ state, initialValues, handleRefresh }) 
         </Modal.Dialog>
       </Modal.Container>
     </Modal.Backdrop>
-  )
-}
-export default SaveModal
+  );
+};
+
+export default SaveModal;

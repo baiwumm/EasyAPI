@@ -1,8 +1,10 @@
-import { NextResponse } from 'next/server'
-import tinycolor from 'tinycolor2'
+import type { NextRequest } from "next/server";
 
-import { RESPONSE } from '@/enums'
-import { catchError, responseMessage } from '@/lib/utils'
+import { NextResponse } from "next/server";
+import tinycolor from "tinycolor2";
+
+import { RESPONSE } from "@/enums";
+import { catchError, responseMessage } from "@/lib/utils";
 
 /*
  * @Author: 白雾茫茫丶<baiwumm.com>
@@ -11,19 +13,20 @@ import { catchError, responseMessage } from '@/lib/utils'
  * @LastEditTime: 2026-03-12 15:47:06
  * @Description: 颜色转换
  */
-import type { NextRequest } from 'next/server'
 
 export async function GET(request: NextRequest) {
   try {
     // 解析 URL 查询参数
-    const searchParams = request.nextUrl.searchParams
+    const searchParams = request.nextUrl.searchParams;
     // 参数处理
-    const c = searchParams.get('color') || '' // 需要转换的颜色，支持hex、rgb、hsl、hsv格式
-    const color = tinycolor(c)
+    const c = searchParams.get("color") || ""; // 需要转换的颜色，支持hex、rgb、hsl、hsv格式
+    const color = tinycolor(c);
 
     // 参数校验
     if (!color || !color.isValid()) {
-      return NextResponse.json(responseMessage(null, '参数 color 不合法', RESPONSE.ERROR))
+      return NextResponse.json(
+        responseMessage(null, "参数 color 不合法", RESPONSE.ERROR),
+      );
     }
 
     const result = {
@@ -31,11 +34,10 @@ export async function GET(request: NextRequest) {
       rgb: color.toRgbString(),
       hsl: color.toHslString(),
       hsv: color.toHsvString(),
-    }
+    };
 
-    return NextResponse.json(responseMessage(result))
-  }
-  catch (err) {
-    return NextResponse.json(catchError(err))
+    return NextResponse.json(responseMessage(result));
+  } catch (err) {
+    return NextResponse.json(catchError(err));
   }
 }

@@ -5,43 +5,46 @@
  * @LastEditTime: 2026-07-07 16:21:45
  * @Description: 顶部导航
  */
-'use client'
-import { AbbrApi, HouseFill } from '@gravity-ui/icons'
-import { Button, Tooltip } from '@heroui/react'
-import dynamic from 'next/dynamic'
-import Image from 'next/image'
-import Link from 'next/link'
+"use client";
+import type { FC, ReactNode } from "react";
 
-import ThemeSwitcher from '@/components/ThemeSwitcher'
-import TimeAndLunar from '@/components/TimeAndLunar'
-import pkg from '#/package.json'
+import { AbbrApi, HouseFill } from "@gravity-ui/icons";
+import { Button, Tooltip } from "@heroui/react";
+import dynamic from "next/dynamic";
+import Image from "next/image";
+import Link from "next/link";
 
-import type { FC, ReactNode } from 'react'
+import ThemeSwitcher from "@/components/ThemeSwitcher";
+import TimeAndLunar from "@/components/TimeAndLunar";
+import pkg from "#/package.json";
 
 /** 用户头像：依赖 supabase-js，拆为独立 chunk 按需加载 */
-const UserAvatar = dynamic(() => import('@/components/UserAvatar'))
+const UserAvatar = dynamic(() => import("@/components/UserAvatar"));
 
 interface Social {
-  name: string
-  url: string
-  icon: ReactNode
+  name: string;
+  url: string;
+  icon: ReactNode;
 }
 
 const socials: Social[] = [
   {
-    name: '文档',
-    url: 'https://api-docs.baiwumm.com/',
+    name: "文档",
+    url: "https://api-docs.baiwumm.com/",
     icon: <AbbrApi />,
   },
-]
+];
 
 const Header: FC = () => {
   return (
-    <header id="header" className="sticky top-0 p-4 z-20 backdrop-blur-sm container mx-auto flex justify-between items-center">
+    <header
+      className="sticky top-0 p-4 z-20 backdrop-blur-sm container mx-auto flex justify-between items-center"
+      id="header"
+    >
       {/* 左侧 Logo */}
       <Link href="/">
         <div className="w-30 h-8 relative justify-self-start">
-          <Image alt="Logo" fill src="/logo.png" />
+          <Image fill alt="Logo" src="/logo.png" />
         </div>
       </Link>
       <TimeAndLunar />
@@ -51,7 +54,7 @@ const Header: FC = () => {
         {socials.map(({ name, url, icon }) => (
           <Tooltip key={name} delay={0}>
             <Link aria-label={name} href={url} target="_blank">
-              <Button size="sm" variant="ghost" isIconOnly>
+              <Button isIconOnly size="sm" variant="ghost">
                 {icon}
               </Button>
             </Link>
@@ -63,7 +66,7 @@ const Header: FC = () => {
         ))}
         <Tooltip>
           <Link aria-label="主页" href={pkg.author.url} target="_blank">
-            <Button size="sm" variant="ghost" isIconOnly>
+            <Button isIconOnly size="sm" variant="ghost">
               <HouseFill />
             </Button>
           </Link>
@@ -76,6 +79,7 @@ const Header: FC = () => {
         <UserAvatar />
       </div>
     </header>
-  )
-}
-export default Header
+  );
+};
+
+export default Header;

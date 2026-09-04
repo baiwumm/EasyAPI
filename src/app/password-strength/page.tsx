@@ -1,4 +1,6 @@
-import ClientComponent from './ClientComponent'
+import type { Metadata } from "next";
+
+import ClientComponent from "./ClientComponent";
 
 /*
  * @Author: 白雾茫茫丶<baiwumm.com>
@@ -7,12 +9,11 @@ import ClientComponent from './ClientComponent'
  * @LastEditTime: 2026-03-13 09:59:29
  * @Description: 密码强度检测
  */
-import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: '密码强度检测',
-}
+  title: "密码强度检测",
+};
 
 export default function PasswordStrength() {
-  return <ClientComponent title="密码强度检测" />
+  return <ClientComponent title="密码强度检测" />;
 }

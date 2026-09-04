@@ -5,12 +5,12 @@
  * @LastEditTime: 2026-03-09 16:00:08
  * @Description: 路由加载 Loading
  */
-import LoadingContent from '@/components/LoadingContent'
+import LoadingContent from "@/components/LoadingContent";
 
 export default function Loading() {
   return (
     <div className="flex-1 flex justify-center items-center">
       <LoadingContent />
     </div>
-  )
+  );
 }

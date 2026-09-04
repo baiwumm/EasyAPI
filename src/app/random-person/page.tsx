@@ -1,4 +1,6 @@
-import ClientComponent from './ClientComponent'
+import type { Metadata } from "next";
+
+import ClientComponent from "./ClientComponent";
 
 /*
  * @Author: 白雾茫茫丶<baiwumm.com>
@@ -7,12 +9,11 @@ import ClientComponent from './ClientComponent'
  * @LastEditTime: 2026-03-13 13:45:01
  * @Description: 随机人物
  */
-import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: '随机人物',
-}
+  title: "随机人物",
+};
 
 export default function RandomPerson() {
-  return <ClientComponent title="随机人物" />
+  return <ClientComponent title="随机人物" />;
 }

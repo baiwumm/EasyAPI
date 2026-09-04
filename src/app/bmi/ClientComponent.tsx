@@ -1,54 +1,74 @@
-'use client'
-import { cn, NumberField, Typography } from '@heroui/react'
-import { usePathname } from 'next/navigation'
-import { useMemo, useState } from 'react'
+"use client";
+import type { FC } from "react";
+import type { ClientComponentProps } from "@/typings";
 
-import RefreshButton from '@/components/RefreshButton'
-import RequestContent from '@/components/RequestContent'
-import { useSwrQuery } from '@/hooks/use-swr'
-import { get } from '@/lib/utils'
-import { getApiData } from '@/services/common'
+import { cn, NumberField, Typography } from "@heroui/react";
+import { usePathname } from "next/navigation";
+import { useMemo, useState } from "react";
 
-import type { FC } from 'react'
-import type { ClientComponentProps } from '@/typings'
+import RefreshButton from "@/components/RefreshButton";
+import RequestContent from "@/components/RequestContent";
+import { useSwrQuery } from "@/hooks/use-swr";
+import { get } from "@/lib/utils";
+import { getApiData } from "@/services/common";
 
 const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
-  const pathname = usePathname()
-  const [height, setHeight] = useState(168) // 身高
-  const [weight, setWeight] = useState(60) // 体重
+  const pathname = usePathname();
+  const [height, setHeight] = useState(168); // 身高
+  const [weight, setWeight] = useState(60); // 体重
 
   // 参数处理
-  const params = useMemo(() => ({
-    height,
-    weight,
-  }), [height, weight])
+  const params = useMemo(
+    () => ({
+      height,
+      weight,
+    }),
+    [height, weight],
+  );
 
   // 请求数据
-  const { data = {}, loading, error, mutate } = useSwrQuery(
-    pathname,
-    async () => get(await getApiData(pathname, params), 'data', {}),
-  )
+  const {
+    data = {},
+    loading,
+    error,
+    mutate,
+  } = useSwrQuery(pathname, async () =>
+    get(await getApiData(pathname, params), "data", {}),
+  );
 
   // 计算 bmi 是否正常
   const isNormal = useMemo(() => {
-    const bmi = get(data, 'bmi', 0)
-    return bmi >= 18.5 && bmi <= 23.9
-  }, [data])
+    const bmi = get(data, "bmi", 0);
+
+    return bmi >= 18.5 && bmi <= 23.9;
+  }, [data]);
+
   return (
     <div className="flex-1 flex flex-col justify-between gap-4">
       {/* 头部区域 */}
       <div className="shrink-0">
-        <Typography type="h1" className="text-2xl font-black tracking-normal">{title}</Typography>
+        <Typography className="text-2xl font-black tracking-normal" type="h1">
+          {title}
+        </Typography>
       </div>
       {/* 中间区域 */}
       <div className="flex-1 flex justify-center items-center">
-        <RequestContent error={error} loading={loading} loadingText="正在计算..." reFresh={mutate}>
+        <RequestContent
+          error={error}
+          loading={loading}
+          loadingText="正在计算..."
+          reFresh={mutate}
+        >
           <div className="flex justify-center items-center flex-wrap gap-2">
             <div className="flex gap-2 items-center">
               <span>您的 BMI 是：</span>
-              <span className={cn(isNormal ? 'text-accent' : 'text-danger')}>{get(data, 'bmi', '--')}</span>
+              <span className={cn(isNormal ? "text-accent" : "text-danger")}>
+                {get(data, "bmi", "--")}
+              </span>
               <span>身体状态:</span>
-              <span className={cn(isNormal ? 'text-accent' : 'text-danger')}>{get(data, 'status', '')}</span>
+              <span className={cn(isNormal ? "text-accent" : "text-danger")}>
+                {get(data, "status", "")}
+              </span>
             </div>
           </div>
         </RequestContent>
@@ -59,9 +79,9 @@ const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
           <NumberField
             aria-label="身高"
             formatOptions={{
-              style: 'unit',
-              unit: 'centimeter',
-              unitDisplay: 'narrow',
+              style: "unit",
+              unit: "centimeter",
+              unitDisplay: "narrow",
             }}
             maxValue={1000}
             minValue={1}
@@ -77,9 +97,9 @@ const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
           <NumberField
             aria-label="体重"
             formatOptions={{
-              style: 'unit',
-              unit: 'kilogram',
-              unitDisplay: 'long',
+              style: "unit",
+              unit: "kilogram",
+              unitDisplay: "long",
             }}
             maxValue={500}
             minValue={1}
@@ -92,10 +112,15 @@ const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
               <NumberField.IncrementButton />
             </NumberField.Group>
           </NumberField>
-          <RefreshButton loading={loading} text="计算" onPress={() => mutate()} />
+          <RefreshButton
+            loading={loading}
+            text="计算"
+            onPress={() => mutate()}
+          />
         </div>
       </div>
     </div>
-  )
-}
-export default ClientComponent
+  );
+};
+
+export default ClientComponent;
