@@ -56,16 +56,105 @@ supabase/rls.sql          # 数据库 RLS 策略
 - 类型定义集中放在 `src/typings/global.d.ts` 的 `App` namespace 中，页面内部类型就近声明。
 - 中文注释、目录命名使用 kebab-case，组件文件命名为 `index.tsx`。
 
+## 代码规范与质量门禁
+
+### Lint 规则
+
+项目使用 ESLint + Prettier 进行代码格式化：
+
+```bash
+pnpm lint          # 检查代码
+pnpm lint:fix      # 自动修复
+```
+
+**必须遵守的规则：**
+- 使用 `unused-imports` 插件移除未使用的导入
+- 导入顺序：type > builtin > object > external > internal > parent > sibling > index
+- 组件属性排序：callbacksLast > shorthandFirst > reservedFirst
+- 自闭合组件标签：`<Component />` 而非 `<Component></Component>`
+- `return` 语句前必须空一行
+- 禁止 `console` 输出（warn 级别）
+
+### TypeScript 规范
+
+- 所有组件和工具函数必须使用 TypeScript
+- 未使用的变量以 `_` 前缀命名（如 `_unused`）
+- 优先使用 `AppTableFeatures`、`AppColumnDef` 等项目统一类型
+
+### Git 提交规范
+
+使用 Conventional Commits 格式：
+
+```
+feat: 新功能
+fix: 修复
+docs: 文档更新
+style: 代码格式（不影响逻辑）
+refactor: 重构
+test: 测试
+chore: 构建/工具变动
+```
+
 ## HeroUI 文档查询
 
-- **Skill**：项目级 skill `heroui-react`（`.reasonix/skills/heroui-react/`），含脚本可拉取官方文档：
+- **Skill**：项目级 skill `heroui-react`（`.agents/skills/heroui-react/`），含脚本可拉取官方文档：
   ```bash
-  node .reasonix/skills/heroui-react/scripts/list_components.mjs
-  node .reasonix/skills/heroui-react/scripts/get_component_docs.mjs Button
-  node .reasonix/skills/heroui-react/scripts/get_theme.mjs
+  node .agents/skills/heroui-react/scripts/list_components.mjs
+  node .agents/skills/heroui-react/scripts/get_component_docs.mjs Button
+  node .agents/skills/heroui-react/scripts/get_theme.mjs
   ```
 - **MCP**：`heroui-react-mcp`（reasonix.toml 已配置），工具 `list_components` / `get_component_docs` / `get_component_source_styles` / `get_theme_variables` 等。
 - **直接文档**：`https://heroui.com/docs/react/components/{component-name}.mdx`，指南：`https://heroui.com/docs/react/getting-started/{topic}.mdx`。
+
+## AI 使用约束（强制规范）
+
+本项目已集成 `@vercel/react-best-practices`（ESLint 插件）和 `HeroUI` 组件库。
+
+### 禁止修改的文件
+
+- `src/lib/supabase/*.ts` — Supabase 客户端配置，涉及认证安全
+- `src/typings/global.d.ts` — TanStack Table 类型定义
+- `eslint.config.mjs` — ESLint 配置，修改可能导致 CI 失败
+- `next.config.ts` — Next.js 配置，影响构建行为
+
+### 必须遵守的约束
+
+1. **UI 组件必须使用 HeroUI**：禁止引入其他 UI 库（如 Ant Design、Material UI）
+2. **数据获取使用 SWR**：客户端数据获取必须通过 SWR
+3. **样式必须使用 Tailwind CSS**：禁止内联样式或 CSS-in-JS
+4. **Supabase 操作必须经过 RLS**：任何数据库操作必须遵循 Row Level Security 策略
+5. **组件文件使用 `index.tsx` 命名**：每个组件目录下统一使用 `index.tsx` 作为入口
+
+### AI 代码生成守则
+
+1. **性能第一**：严格遵守 Vercel React 官方性能优化指南（使用 memo、useCallback、避免匿名函数 props）
+2. **组件优先**：所有 UI 元素必须基于 HeroUI 组件构建，严禁使用纯 div+CSS 模拟 HeroUI 已有功能（如 Modal、Dropdown）
+3. **自检机制**：生成代码后，AI 必须主动检查是否违反上述两条规则，如有违反需重写
+4. **异常处理**：若规则库之间存在冲突（例如 HeroUI 某个组件用法与 Vercel 建议相悖），AI 需主动提问并等待人工裁决，不得擅自决定
+5. **代码生成与重构必须遵循 `vercel-react-best-practices` Skill**：该 Skill 已安装于 `.agents/skills/vercel-react-best-practices`，是所有代码产出（新建组件/页面、数据获取、重构、性能优化）的硬性性能与正确性规范
+
+### 推荐使用的工具库
+
+| 库 | 用途 | 文档位置 |
+|----|------|----------|
+| HeroUI | UI 组件 | `.agents/skills/heroui-react` |
+| SWR | 数据获取 | 项目内置 |
+| TanStack Table | 表格 | `src/typings/global.d.ts` |
+| Motion | 动画 | 已安装 |
+
+## 部署说明
+
+推荐部署到 Vercel：
+
+1. Fork 本项目
+2. 在 Vercel 中导入仓库
+3. 配置环境变量
+4. 点击 Deploy
+
+## 相关链接
+
+- 在线预览：https://api.baiwumm.com/
+- GitHub：https://github.com/baiwumm/EasyAPI
 
 ## Notes
 
