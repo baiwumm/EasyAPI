@@ -8,7 +8,7 @@ import { ThemeProvider } from 'next-themes'
 import { GoogleUtilities, MicrosoftClarity } from '@/components/Analytics'
 import Footer from '@/components/Footer'
 import FullLoading from '@/components/FullLoading'
-import MapleMonoFont from '@/components/MapleMonoFont'
+
 import pkg from '#/package.json'
 
 import Provider from './Provider'
@@ -73,8 +73,6 @@ export default function RootLayout({
         <Analytics />
       </head>
       <body className="bg-background text-foreground flex min-h-screen flex-col">
-        {/* 远程字体非阻塞加载（水合后注入，避免阻塞首屏渲染） */}
-        <MapleMonoFont />
         <ThemeProvider attribute="class" enableSystem={false}>
           <MotionConfig reducedMotion="user">
             <FullLoading>
