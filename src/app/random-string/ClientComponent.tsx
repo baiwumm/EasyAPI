@@ -24,8 +24,9 @@ import { getApiData } from '@/services/common'
 
 import type { Options } from 'crypto-random-string'
 import type { FC } from 'react'
+import type { ClientComponentProps } from '@/typings'
 
-const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
+const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
   const pathname = usePathname()
   const { copy } = useCopy()
   const [type, setType] = useState<Options['type']>(RANDOM_STRING_TYPES.ALPHANUMERIC)

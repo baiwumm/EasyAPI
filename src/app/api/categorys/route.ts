@@ -4,13 +4,7 @@ import { RESPONSE } from '@/enums'
 import { getSupabaseServerClient, requireAdmin } from '@/lib/supabase/server'
 import { catchError, responseMessage } from '@/lib/utils'
 
-/*
- * @Author: 白雾茫茫丶<baiwumm.com>
- * @Date: 2026-01-23 16:08:45
- * @LastEditors: 白雾茫茫丶<baiwumm.com>
- * @LastEditTime: 2026-03-12 15:42:47
- * @Description: 接口分类模块
- */
+import type { Category } from '@/typings'
 import type { NextRequest } from 'next/server'
 
 /**
@@ -67,7 +61,7 @@ export async function GET(request: NextRequest) {
     }
 
     if (data) {
-      data.forEach((category: App.Category) => {
+      data.forEach((category: Category) => {
         category?.apis.sort((a, b) => {
           // 2. 再按 pinned 降序 (true 排在前面)
           if (a.pinned !== b.pinned)

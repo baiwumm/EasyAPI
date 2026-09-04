@@ -6,6 +6,7 @@ import RefreshButton from '@/components/RefreshButton'
 import { AVATAR_STYLES } from '@/enums'
 
 import type { FC } from 'react'
+import type { ClientComponentProps } from '@/typings'
 
 type Style = typeof AVATAR_STYLES.valueType
 
@@ -71,7 +72,7 @@ function generateUsers(length = 5) {
   }))
 }
 
-const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
+const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
   const [style, setStyle] = useState<Style>(AVATAR_STYLES.RANDOM)
   const [users, setUsers] = useState(generateUsers)
   const [count, setCount] = useState(5) // 生成的数量

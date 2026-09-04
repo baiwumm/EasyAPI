@@ -10,8 +10,9 @@ import { get } from '@/lib/utils'
 import { getApiData } from '@/services/common'
 
 import type { FC } from 'react'
+import type { ClientComponentProps } from '@/typings'
 
-const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
+const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
   const pathname = usePathname()
   const [height, setHeight] = useState(168) // 身高
   const [weight, setWeight] = useState(60) // 体重

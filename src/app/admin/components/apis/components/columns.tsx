@@ -5,12 +5,13 @@ import { createColumnHelper } from '@tanstack/react-table'
 import dayjs from 'dayjs'
 
 import type { AppTableFeatures } from '@/typings/table-types'
+import type { Api } from '@/typings'
 
-const columnHelper = createColumnHelper<AppTableFeatures, App.Api>()
+const columnHelper = createColumnHelper<AppTableFeatures, Api>()
 
 interface ColumnsProps {
-  handleEdit: (row: App.Api) => void
-  handleDel: (row: App.Api) => void
+  handleEdit: (row: Api) => void
+  handleDel: (row: Api) => void
   page: number
   pageSize: number
 }

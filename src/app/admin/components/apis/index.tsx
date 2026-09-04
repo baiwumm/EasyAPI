@@ -28,6 +28,7 @@ import SaveModal from './components/save-modal'
 
 import type { AppTableFeatures } from '@/typings/table-types'
 import { appTableFeatures } from '@/typings/table-types'
+import type { Api, ApiQueryParams, Category } from '@/typings'
 import type { RowPaginationState, VisibilityState } from '@tanstack/react-table'
 import type { FC } from 'react'
 
@@ -36,9 +37,9 @@ const Apis: FC = () => {
   const [name, setName] = useState('')
   const [categoryId, setCategoryId] = useState('')
   // 已提交的查询条件：只有点击查询/重置时才更新，输入框变化不触发请求
-  const [query, setQuery] = useState<Pick<App.ApiQueryParams, 'name' | 'category_id'>>({ name: '', category_id: '' })
+  const [query, setQuery] = useState<Pick<ApiQueryParams, 'name' | 'category_id'>>({ name: '', category_id: '' })
   const [pagination, setPagination] = useState<RowPaginationState>({ pageIndex: 0, pageSize: 10 })
-  const searchParams = useMemo<App.ApiQueryParams>(
+  const searchParams = useMemo<ApiQueryParams>(
     () => ({ ...query, ...pagination }),
     [query, pagination],
   )
@@ -55,12 +56,12 @@ const Apis: FC = () => {
   // 删除弹窗
   const delDialogState = useOverlayState()
   // 编辑数据
-  const [editData, setEditData] = useState<App.Api | null>(null)
+  const [editData, setEditData] = useState<Api | null>(null)
 
   // 请求分类列表
   const { data: categorysList } = useSwrQuery(
     '/categorys:list', // 固定 key + 独立前缀，避免与列表查询 key 互相覆盖缓存
-    async () => get<App.Category[]>(await getCategorysList({ pageIndex: 0, pageSize: 999 }), 'data.list', []),
+    async () => get<Category[]>(await getCategorysList({ pageIndex: 0, pageSize: 999 }), 'data.list', []),
   )
 
   // 请求接口列表：key 含搜索/分页参数，变化自动请求
@@ -94,7 +95,7 @@ const Apis: FC = () => {
   }
 
   // 编辑回调
-  const handleEdit = useCallback((row: App.Api) => {
+  const handleEdit = useCallback((row: Api) => {
     setEditData(row)
     saveModalState.open()
   }, [saveModalState])
@@ -114,7 +115,7 @@ const Apis: FC = () => {
   })
 
   // 删除回调
-  const handleDel = useCallback((row: App.Api) => {
+  const handleDel = useCallback((row: Api) => {
     setEditData(row)
     delDialogState.open()
   }, [delDialogState])
@@ -140,7 +141,7 @@ const Apis: FC = () => {
     data: get(data, 'list', []),
     columns,
     pageCount: Math.ceil((total || 0) / searchParams.pageSize),
-    getRowId: (row: App.Api) => row.id,
+    getRowId: (row: Api) => row.id,
     state: {
       pagination,
       columnVisibility,

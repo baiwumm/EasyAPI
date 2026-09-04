@@ -6,12 +6,13 @@ import { createColumnHelper } from '@tanstack/react-table'
 import dayjs from 'dayjs'
 
 import type { AppTableFeatures } from '@/typings/table-types'
+import type { Category } from '@/typings'
 
-const columnHelper = createColumnHelper<AppTableFeatures, App.Category>()
+const columnHelper = createColumnHelper<AppTableFeatures, Category>()
 
 interface ColumnsProps {
-  handleEdit: (row: App.Category) => void
-  handleDel: (row: App.Category) => void
+  handleEdit: (row: Category) => void
+  handleDel: (row: Category) => void
   page: number
   pageSize: number
 }

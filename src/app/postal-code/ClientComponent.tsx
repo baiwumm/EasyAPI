@@ -22,6 +22,7 @@ import { get } from '@/lib/utils'
 import { getApiData } from '@/services/common'
 
 import type { FC } from 'react'
+import type { ClientComponentProps } from '@/typings'
 
 interface PostalCode {
   province: string
@@ -33,7 +34,7 @@ interface PostalCode {
 
 type Type = typeof POSTALCODE_TYPES.valueType
 
-const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
+const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
   const pathname = usePathname()
   const [type, setType] = useState<Type>(POSTALCODE_TYPES.CODE_TO_AREA)
   const [keyword, setKeyword] = useState('524200')

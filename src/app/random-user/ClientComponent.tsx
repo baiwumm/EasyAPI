@@ -22,10 +22,11 @@ import { get } from '@/lib/utils'
 import { getApiData } from '@/services/common'
 
 import type { FC } from 'react'
+import type { ClientComponentProps } from '@/typings'
 
 type Gender = typeof RANDOM_USER_GENDER.valueType
 
-const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
+const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
   const pathname = usePathname()
   const [count, setCount] = useState(5)
   const [gender, setGender] = useState<Gender>(RANDOM_USER_GENDER.GENERIC)

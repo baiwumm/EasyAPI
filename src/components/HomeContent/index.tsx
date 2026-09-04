@@ -15,6 +15,7 @@ import ApiCard from '@/components/ApiCard'
 import BlurFade from '@/components/BlurFade'
 import CategoryIndicator from '@/components/CategoryIndicator'
 
+import type { Category } from '@/typings'
 import type { Variants } from 'motion/react'
 
 // 卡片级出场动画：y + opacity 逐卡 stagger 淡入（blur 由 BlurFade 区块层负责，避免重复开销）
@@ -32,7 +33,7 @@ const cardGridVariants: Variants = {
 const cardTransition = { duration: 0.4, ease: 'easeOut' } as const
 
 interface HomeContentProps {
-  data: App.Category[]
+  data: Category[]
 }
 
 export default function HomeContent({ data }: HomeContentProps) {

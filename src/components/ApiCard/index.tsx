@@ -12,10 +12,11 @@ import dayjs from 'dayjs'
 import Link from 'next/link'
 import { memo } from 'react'
 
+import type { Api } from '@/typings'
 import type { FC } from 'react'
 
 interface ApiCardProps {
-  data: App.Api
+  data: Api
 }
 
 // 模块级常量：避免每次重渲染创建新的 Intl 实例

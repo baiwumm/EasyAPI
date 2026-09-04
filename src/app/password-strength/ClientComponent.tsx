@@ -8,8 +8,9 @@ import type { GetColumnsFn } from '@/components/JsonContent'
 import type { ChipProps } from '@heroui/react'
 import type { ZxcvbnResult } from '@zxcvbn-ts/core'
 import type { FC } from 'react'
+import type { ClientComponentProps } from '@/typings'
 
-const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
+const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
   const [password, setPassword] = useState('abc123456')
 
   // 请求数据

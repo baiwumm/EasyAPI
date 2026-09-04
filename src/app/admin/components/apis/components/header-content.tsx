@@ -20,11 +20,12 @@ import ColumnsVisibility from '@/components/ColumnsVisibility'
 
 import type { useOverlayState } from '@heroui/react'
 import type { AppTable } from '@/typings/table-types'
+import type { Api, Category } from '@/typings'
 import type { Dispatch, FC, KeyboardEvent, SetStateAction } from 'react'
 
 interface HeaderContentProps {
-  table: AppTable<App.Api>
-  categorysList: App.Category[]
+  table: AppTable<Api>
+  categorysList: Category[]
   name: string
   categoryId: string
   setName: Dispatch<SetStateAction<string>>

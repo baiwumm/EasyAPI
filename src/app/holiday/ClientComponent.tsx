@@ -13,6 +13,7 @@ import { get } from '@/lib/utils'
 import { getApiData } from '@/services/common'
 
 import type { FC } from 'react'
+import type { ClientComponentProps } from '@/typings'
 
 const currentYear = dayjs().year()
 const startYear = 2002
@@ -28,7 +29,7 @@ const yearOptions = Array.from(
   },
 )
 
-const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
+const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
   const pathname = usePathname()
   const [year, setYear] = useState(currentYear)
 

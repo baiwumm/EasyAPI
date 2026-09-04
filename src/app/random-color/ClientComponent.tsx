@@ -13,6 +13,7 @@ import { get } from '@/lib/utils'
 import { getApiData } from '@/services/common'
 
 import type { FC } from 'react'
+import type { ClientComponentProps } from '@/typings'
 
 type Color = string | {
   hex: string
@@ -23,7 +24,7 @@ type Color = string | {
 
 type Format = typeof RANDOM_COLOR_FORMATS.valueType
 
-const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
+const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
   const pathname = usePathname()
   const { copy } = useCopy()
   const [format, setFormat] = useState<Format>(RANDOM_COLOR_FORMATS.ALL) // 颜色格式

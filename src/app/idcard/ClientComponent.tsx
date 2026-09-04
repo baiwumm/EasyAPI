@@ -8,8 +8,9 @@ import JsonContent from '@/components/JsonContent'
 
 import type { GetColumnsFn } from '@/components/JsonContent'
 import type { FC } from 'react'
+import type { ClientComponentProps } from '@/typings'
 
-const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
+const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
   const [id, setId] = useState('510101199502152091')
 
   // 请求数据

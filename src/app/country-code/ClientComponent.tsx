@@ -12,6 +12,7 @@ import { get } from '@/lib/utils'
 import { getApiData } from '@/services/common'
 
 import type { FC } from 'react'
+import type { ClientComponentProps } from '@/typings'
 
 interface DataType {
   englishName: string
@@ -20,7 +21,7 @@ interface DataType {
   phoneCode: string
 }
 
-const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
+const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
   const pathname = usePathname()
   const [keyword, setKeyword] = useState('中国')
 

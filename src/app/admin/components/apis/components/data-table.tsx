@@ -14,10 +14,11 @@ import TableLoading from '@/components/TableLoading'
 import { ADMIN_TABS } from '@/enums'
 
 import type { AppTable } from '@/typings/table-types'
+import type { Api } from '@/typings'
 import type { FC } from 'react'
 
 interface DataTableProps {
-  table: AppTable<App.Api>
+  table: AppTable<Api>
   loading: boolean
 }
 

@@ -2,10 +2,12 @@ import dayjs from 'dayjs'
 
 import { RESPONSE } from '@/enums'
 
+import type { IResponse } from '@/typings'
+
 /**
  * @description: 统一返回体
  */
-export function responseMessage(data: unknown, msg: string = RESPONSE.label(RESPONSE.SUCCESS), code: number = RESPONSE.SUCCESS): App.IResponse {
+export function responseMessage(data: unknown, msg: string = RESPONSE.label(RESPONSE.SUCCESS), code: number = RESPONSE.SUCCESS): IResponse {
   return { data, msg, code, timestamp: dayjs().valueOf() }
 }
 
@@ -17,7 +19,7 @@ export const isSuccess = (code?: number): boolean => code === RESPONSE.SUCCESS
 /**
  * @description: 统一处理 catch 错误
  */
-export function catchError(err: unknown): App.IResponse {
+export function catchError(err: unknown): IResponse {
   let message = '未知错误'
 
   if (err instanceof Error) {

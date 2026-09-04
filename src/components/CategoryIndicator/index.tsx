@@ -7,8 +7,10 @@
 import { cn, Tooltip } from '@heroui/react'
 import { useEffect, useRef, useState } from 'react'
 
+import type { Category } from '@/typings'
+
 interface CategoryIndicatorProps {
-  categories: App.Category[]
+  categories: Category[]
 }
 
 /** hover 离开后恢复横线状态的延迟（与 Tooltip closeDelay 保持一致） */

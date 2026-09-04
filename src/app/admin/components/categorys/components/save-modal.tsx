@@ -21,11 +21,12 @@ import { useSwrMutation } from '@/hooks/use-swr'
 import { addCategory, updateCategory } from '@/services/categorys'
 
 import type { UseOverlayStateReturn } from '@heroui/react'
+import type { Category, CategorySaveParams } from '@/typings'
 import type { FC, FormEvent } from 'react'
 
 interface SaveModalProps {
   state: UseOverlayStateReturn
-  initialValues: App.Category | null
+  initialValues: Category | null
   handleRefresh: VoidFunction
 }
 
@@ -35,7 +36,7 @@ const SaveModal: FC<SaveModalProps> = ({ state, initialValues, handleRefresh }) 
   // 保存表单（新增/编辑复用，按 initialValues 选择 service）
   const { loading, trigger } = useSwrMutation(
     '/categorys:save',
-    (data: App.CategorySaveParams) => (initialValues?.id ? updateCategory(data) : addCategory(data)),
+    (data: CategorySaveParams) => (initialValues?.id ? updateCategory(data) : addCategory(data)),
     {
       onSuccess: ({ code }) => {
         if (code === RESPONSE.SUCCESS) {
@@ -55,7 +56,7 @@ const SaveModal: FC<SaveModalProps> = ({ state, initialValues, handleRefresh }) 
     e.preventDefault()
     const formData = new FormData(e.currentTarget)
 
-    const data: App.CategorySaveParams = {
+    const data: CategorySaveParams = {
       name: formData.get('name') as string,
       desc: formData.get('desc') as string,
       sort: Number(formData.get('sort')),

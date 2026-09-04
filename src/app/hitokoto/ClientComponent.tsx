@@ -14,6 +14,7 @@ import { getApiData } from '@/services/common'
 
 import type { Key } from '@heroui/react'
 import type { FC } from 'react'
+import type { ClientComponentProps } from '@/typings'
 
 const typesOptions = [
   { value: 'a', label: '动画' },
@@ -30,7 +31,7 @@ const typesOptions = [
   { value: 'l', label: '抖机灵' },
 ]
 
-const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
+const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
   const pathname = usePathname()
   const [selected, setSelected] = useState<Iterable<Key>>(() => new Set([]))
   const [showFormContent, setShowFormContent] = useState(false)

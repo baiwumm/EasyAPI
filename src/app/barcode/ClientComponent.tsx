@@ -20,11 +20,12 @@ import { useSwrMutation } from '@/hooks/use-swr'
 import { isSuccess } from '@/lib/utils'
 
 import type { FC } from 'react'
+import type { ClientComponentProps } from '@/typings'
 
 type BarcodeFormats = typeof BARCODE_FORMATS.valueType
 type BarCodeTypes = typeof BARCODE_TYPES.valueType
 
-const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
+const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
   const pathname = usePathname()
   const [text, setText] = useState(process.env.NEXT_PUBLIC_APP_NAME!) // 图形码内容
   const [type, setType] = useState<BarCodeTypes>(BARCODE_TYPES.SVG) // 生成格式

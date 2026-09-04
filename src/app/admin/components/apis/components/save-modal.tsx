@@ -25,6 +25,7 @@ import { get } from '@/lib/utils'
 import { addApi, updateApi } from '@/services/apis'
 
 import type { UseOverlayStateReturn } from '@heroui/react'
+import type { Api, ApiSaveParams, Category } from '@/typings'
 import type { FC, FormEvent } from 'react'
 
 const SwitchOptions: { name: string, label: string }[] = [
@@ -34,9 +35,9 @@ const SwitchOptions: { name: string, label: string }[] = [
 
 interface SaveModalProps {
   state: UseOverlayStateReturn
-  initialValues: App.Api | null
+  initialValues: Api | null
   handleRefresh: VoidFunction
-  categorysList: App.Category[]
+  categorysList: Category[]
 }
 
 const SaveModal: FC<SaveModalProps> = ({
@@ -50,7 +51,7 @@ const SaveModal: FC<SaveModalProps> = ({
   // 保存表单（新增/编辑复用，按 initialValues 选择 service）
   const { loading, trigger } = useSwrMutation(
     '/apis:save',
-    (data: App.ApiSaveParams) => (initialValues?.id ? updateApi(data) : addApi(data)),
+    (data: ApiSaveParams) => (initialValues?.id ? updateApi(data) : addApi(data)),
     {
       onSuccess: ({ code }) => {
         if (code === RESPONSE.SUCCESS) {
@@ -70,7 +71,7 @@ const SaveModal: FC<SaveModalProps> = ({
     e.preventDefault()
     const formData = new FormData(e.currentTarget)
 
-    const data: App.ApiSaveParams = {
+    const data: ApiSaveParams = {
       id: initialValues?.id,
 
       // string

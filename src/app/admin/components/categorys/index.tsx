@@ -27,6 +27,7 @@ import SaveModal from './components/save-modal'
 
 import type { AppTableFeatures } from '@/typings/table-types'
 import { appTableFeatures } from '@/typings/table-types'
+import type { Category, CategoryQueryParams } from '@/typings'
 import type { RowPaginationState, VisibilityState } from '@tanstack/react-table'
 import type { FC } from 'react'
 
@@ -34,9 +35,9 @@ const Categorys: FC = () => {
   // 搜索参数（输入框值）
   const [name, setName] = useState('')
   // 已提交的查询条件：只有点击查询/重置时才更新，输入框变化不触发请求
-  const [query, setQuery] = useState<Pick<App.CategoryQueryParams, 'name'>>({ name: '' })
+  const [query, setQuery] = useState<Pick<CategoryQueryParams, 'name'>>({ name: '' })
   const [pagination, setPagination] = useState<RowPaginationState>({ pageIndex: 0, pageSize: 10 })
-  const searchParams = useMemo<App.CategoryQueryParams>(
+  const searchParams = useMemo<CategoryQueryParams>(
     () => ({ ...query, ...pagination }),
     [query, pagination],
   )
@@ -50,7 +51,7 @@ const Categorys: FC = () => {
   // 删除弹窗
   const delDialogState = useOverlayState()
   // 编辑数据
-  const [editData, setEditData] = useState<App.Category | null>(null)
+  const [editData, setEditData] = useState<Category | null>(null)
 
   // 请求分类列表：key 含搜索/分页参数，变化自动请求
   const { data, loading, mutate } = useSwrQuery(
@@ -83,7 +84,7 @@ const Categorys: FC = () => {
   }
 
   // 编辑回调
-  const handleEdit = useCallback((row: App.Category) => {
+  const handleEdit = useCallback((row: Category) => {
     setEditData(row)
     saveModalState.open()
   }, [saveModalState])
@@ -103,7 +104,7 @@ const Categorys: FC = () => {
   })
 
   // 删除回调
-  const handleDel = useCallback((row: App.Category) => {
+  const handleDel = useCallback((row: Category) => {
     if (row?.apis?.length) {
       toast.danger('该分类下存在关联接口，无法直接删除.', {
         indicator: <CircleXmarkFill />,
@@ -136,7 +137,7 @@ const Categorys: FC = () => {
     data: categorysList,
     columns,
     pageCount: Math.ceil((total || 0) / searchParams.pageSize),
-    getRowId: (row: App.Category) => row.id,
+    getRowId: (row: Category) => row.id,
     state: {
       pagination,
       columnVisibility,

@@ -7,32 +7,34 @@
  */
 import { httpRequest } from '@/lib/request'
 
+import type { Api, ApiQueryParams, ApiSaveParams, PaginatingResponse } from '@/typings'
+
 const BASE_URL = '/apis'
 
 /**
  * @description: 新增接口
  */
-export function addApi(params: App.ApiSaveParams) {
-  return httpRequest.post<App.Api>(BASE_URL, params)
+export function addApi(params: ApiSaveParams) {
+  return httpRequest.post<Api>(BASE_URL, params)
 }
 
 /**
  * @description: 删除接口
  */
 export function delApi(id: string) {
-  return httpRequest.delete<App.Api>(`${BASE_URL}/${id}`)
+  return httpRequest.delete<Api>(`${BASE_URL}/${id}`)
 }
 
 /**
  * @description: 获取接口列表
  */
-export function getApisList(params: App.ApiQueryParams) {
-  return httpRequest.get<App.PaginatingResponse<App.Api>>(BASE_URL, params)
+export function getApisList(params: ApiQueryParams) {
+  return httpRequest.get<PaginatingResponse<Api>>(BASE_URL, params)
 }
 
 /**
  * @description: 更新接口
  */
-export function updateApi({ id, ...params }: App.ApiSaveParams) {
-  return httpRequest.put<App.Api>(`${BASE_URL}/${id}`, params)
+export function updateApi({ id, ...params }: ApiSaveParams) {
+  return httpRequest.put<Api>(`${BASE_URL}/${id}`, params)
 }

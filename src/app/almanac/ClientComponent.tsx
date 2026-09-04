@@ -21,6 +21,7 @@ import { getApiData } from '@/services/common'
 
 import type { DateValue } from '@heroui/react'
 import type { FC } from 'react'
+import type { ClientComponentProps } from '@/typings'
 
 interface DataType {
   date: string
@@ -47,7 +48,7 @@ const columns: { label: string, value: keyof DataType, className?: string }[] = 
   { label: '九星', value: 'jiuxing' },
 ]
 
-const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
+const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
   const pathname = usePathname()
   const [date, setDate] = useState<DateValue | null>(() => today(getLocalTimeZone()))
 

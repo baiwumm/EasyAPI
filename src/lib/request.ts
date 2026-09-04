@@ -9,7 +9,9 @@ import { createElement } from 'react'
 import { RESPONSE } from '@/enums'
 import { isSuccess } from '@/lib/utils'
 
-type ApiResponse<T = unknown> = App.IResponse<T>
+import type { IResponse } from '@/typings'
+
+type ApiResponse<T = unknown> = IResponse<T>
 
 interface HttpRequestConfig {
   /** 查询参数（GET 拼接到 URL） */

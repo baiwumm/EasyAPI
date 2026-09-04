@@ -7,32 +7,34 @@
  */
 import { httpRequest } from '@/lib/request'
 
+import type { Category, CategoryQueryParams, CategorySaveParams, PaginatingResponse } from '@/typings'
+
 const BASE_URL = '/categorys'
 
 /**
  * @description: 新增分类
  */
-export function addCategory(params: App.CategorySaveParams) {
-  return httpRequest.post<App.Category>(BASE_URL, params)
+export function addCategory(params: CategorySaveParams) {
+  return httpRequest.post<Category>(BASE_URL, params)
 }
 
 /**
  * @description: 删除分类
  */
 export function delCategory(id: string) {
-  return httpRequest.delete<App.Category>(`${BASE_URL}/${id}`)
+  return httpRequest.delete<Category>(`${BASE_URL}/${id}`)
 }
 
 /**
  * @description: 获取网站分类列表
  */
-export function getCategorysList(params: App.CategoryQueryParams) {
-  return httpRequest.get<App.PaginatingResponse<App.Category>>(BASE_URL, params)
+export function getCategorysList(params: CategoryQueryParams) {
+  return httpRequest.get<PaginatingResponse<Category>>(BASE_URL, params)
 }
 
 /**
  * @description: 更新分类
  */
-export function updateCategory({ id, ...params }: App.CategorySaveParams) {
-  return httpRequest.put<App.Category>(`${BASE_URL}/${id}`, params)
+export function updateCategory({ id, ...params }: CategorySaveParams) {
+  return httpRequest.put<Category>(`${BASE_URL}/${id}`, params)
 }

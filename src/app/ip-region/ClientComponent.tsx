@@ -6,6 +6,7 @@ import JsonContent from '@/components/JsonContent'
 
 import type { GetColumnsFn } from '@/components/JsonContent'
 import type { FC } from 'react'
+import type { ClientComponentProps } from '@/typings'
 
 interface DataType {
   query: string
@@ -17,7 +18,7 @@ interface DataType {
   lon: number
 }
 
-const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
+const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
   const [ip, setIp] = useState('')
 
   const getColumns: GetColumnsFn<DataType> = (data) => {

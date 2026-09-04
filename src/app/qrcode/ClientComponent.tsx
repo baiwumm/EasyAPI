@@ -19,10 +19,11 @@ import { QRCODE_FORMATS } from '@/enums'
 import { useSwrMutation } from '@/hooks/use-swr'
 
 import type { FC } from 'react'
+import type { ClientComponentProps } from '@/typings'
 
 type Format = typeof QRCODE_FORMATS.valueType
 
-const ClientComponent: FC<App.ClientComponentProps> = ({ title }) => {
+const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
   const pathname = usePathname()
   const [format, setFormat] = useState<Format>(QRCODE_FORMATS.PNG) // 生成格式
   const [size, setSize] = useState(256) // 二维码大小
