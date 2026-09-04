@@ -19,11 +19,11 @@ import {
 import ColumnsVisibility from '@/components/ColumnsVisibility'
 
 import type { useOverlayState } from '@heroui/react'
-import type { Table } from '@tanstack/react-table'
+import type { AppTable } from '@/typings/table-types'
 import type { Dispatch, FC, KeyboardEvent, SetStateAction } from 'react'
 
 interface HeaderContentProps {
-  table: Table<App.Api>
+  table: AppTable<App.Api>
   categorysList: App.Category[]
   name: string
   categoryId: string

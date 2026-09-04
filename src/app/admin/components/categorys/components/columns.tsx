@@ -5,7 +5,9 @@ import { Button, Chip, Tooltip } from '@heroui/react'
 import { createColumnHelper } from '@tanstack/react-table'
 import dayjs from 'dayjs'
 
-const columnHelper = createColumnHelper<App.Category>()
+import type { AppTableFeatures } from '@/typings/table-types'
+
+const columnHelper = createColumnHelper<AppTableFeatures, App.Category>()
 
 interface ColumnsProps {
   handleEdit: (row: App.Category) => void

@@ -62,7 +62,7 @@ declare namespace App {
   }
 
   // 分页参数
-  type PaginatingParams = import('@tanstack/react-table').PaginationState
+  type PaginatingParams = import('@tanstack/react-table').RowPaginationState
 
   /** @description: 分页响应体 */
   type PaginatingResponse<T = unknown> = {

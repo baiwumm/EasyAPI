@@ -13,11 +13,11 @@ import EmptyContent from '@/components/EmptyContent'
 import TableLoading from '@/components/TableLoading'
 import { ADMIN_TABS } from '@/enums'
 
-import type { Table as TableInstance } from '@tanstack/react-table'
+import type { AppTable } from '@/typings/table-types'
 import type { FC } from 'react'
 
 interface DataTableProps {
-  table: TableInstance<App.Category>
+  table: AppTable<App.Category>
   loading: boolean
 }
 

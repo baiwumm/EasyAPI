@@ -9,9 +9,9 @@ import { Sliders } from '@gravity-ui/icons'
 import { Button, Dropdown, Label } from '@heroui/react'
 
 import type { Selection } from '@heroui/react'
-import type { Table } from '@tanstack/react-table'
+import type { AppTable } from '@/typings/table-types'
 
-function ColumnsVisibility<TData>({ table }: { table: Table<TData> }) {
+function ColumnsVisibility<TData>({ table }: { table: AppTable<TData> }) {
   const columns = table.getAllLeafColumns().filter(column => column.getCanHide())
 
   const selectedKeys = new Set(

@@ -9,8 +9,7 @@
 import { CircleCheckFill, CircleXmarkFill } from '@gravity-ui/icons'
 import { Card, toast, useOverlayState } from '@heroui/react'
 import {
-  getCoreRowModel,
-  useReactTable,
+  useTable,
 } from '@tanstack/react-table'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
@@ -26,7 +25,9 @@ import DeleteDialog from './components/delete-dialog'
 import HeaderContent from './components/header-content'
 import SaveModal from './components/save-modal'
 
-import type { PaginationState, VisibilityState } from '@tanstack/react-table'
+import type { AppTableFeatures } from '@/typings/table-types'
+import { appTableFeatures } from '@/typings/table-types'
+import type { RowPaginationState, VisibilityState } from '@tanstack/react-table'
 import type { FC } from 'react'
 
 const Categorys: FC = () => {
@@ -34,7 +35,7 @@ const Categorys: FC = () => {
   const [name, setName] = useState('')
   // 已提交的查询条件：只有点击查询/重置时才更新，输入框变化不触发请求
   const [query, setQuery] = useState<Pick<App.CategoryQueryParams, 'name'>>({ name: '' })
-  const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 10 })
+  const [pagination, setPagination] = useState<RowPaginationState>({ pageIndex: 0, pageSize: 10 })
   const searchParams = useMemo<App.CategoryQueryParams>(
     () => ({ ...query, ...pagination }),
     [query, pagination],
@@ -130,7 +131,8 @@ const Categorys: FC = () => {
   )
 
   // 表格实例
-  const table = useReactTable({
+  const table = useTable({
+    features: appTableFeatures as AppTableFeatures,
     data: categorysList,
     columns,
     pageCount: Math.ceil((total || 0) / searchParams.pageSize),
@@ -141,7 +143,6 @@ const Categorys: FC = () => {
     },
     onPaginationChange: setPagination,
     manualPagination: true,
-    getCoreRowModel: getCoreRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
     defaultColumn: {
       enableSorting: false, // 默认全部不能排序

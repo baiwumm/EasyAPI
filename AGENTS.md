@@ -70,3 +70,17 @@ supabase/rls.sql          # 数据库 RLS 策略
 ## Notes
 
 <!-- 快速补充区：新约定、踩坑记录放这里 -->
+
+## Pending Upgrades
+
+以下包待评估升级（major 变更，需专项评估）：
+
+| 包名 | 当前版本 | 最新版本 | 说明 |
+|---|---|---|---|
+| `@dicebear/core` | ^9.4.0 | 10.7.0 | v9→v10 API 变更，其他 dicebear 包仍为 9.4.2，需等统一版本 |
+| `@zxcvbn-ts/core` | ^3.0.4 | 4.2.0 | 密码强度检测库 v3→v4 API 变化 |
+| `@zxcvbn-ts/language-common` | ^3.0.4 | 4.1.3 | 同上 |
+| `@zxcvbn-ts/language-zh` | 4.0.0-beta.3 | 4.1.1 | 从 beta 升级到正式版 |
+| `crypto-random-string` | ^5.0.0 | 6.0.0 | ESM-only v5→v6 |
+| `typescript` | ^5 | 7.0.2 | TS 5→7 跨度极大，风险极高 |
+| `@types/node` | ^20 | 26.4.1 | Node 类型定义 v20→v26 |

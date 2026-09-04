@@ -12,11 +12,11 @@ import { Button, Card, SearchField, Spinner } from '@heroui/react'
 import ColumnsVisibility from '@/components/ColumnsVisibility'
 
 import type { useOverlayState } from '@heroui/react'
-import type { Table } from '@tanstack/react-table'
+import type { AppTable } from '@/typings/table-types'
 import type { Dispatch, FC, KeyboardEvent, SetStateAction } from 'react'
 
 interface HeaderContentProps {
-  table: Table<App.Category>
+  table: AppTable<App.Category>
   name: string
   setName: Dispatch<SetStateAction<string>>
   loading: boolean
