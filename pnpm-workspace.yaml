@@ -1,9 +1,11 @@
 shellEmulator: true
 
-trustPolicy: no-downgrade
+trustPolicy: ignore
 
 packages:
   - .
 ignoredBuiltDependencies:
   - sharp
   - unrs-resolver
+minimumReleaseAgeExclude:
+  - '@eslint/compat@2.1.1'
