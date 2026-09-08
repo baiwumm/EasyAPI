@@ -183,7 +183,7 @@ const UserAvatar: FC = () => {
         isIconOnly
         size="sm"
         variant="ghost"
-        onClick={() => router.push("/login")}
+        onPress={() => router.push("/login")}
       >
         <Person />
       </Button>

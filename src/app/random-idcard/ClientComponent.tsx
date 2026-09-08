@@ -56,7 +56,7 @@ const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
                 color="accent"
                 size="lg"
                 variant="soft"
-                onClick={() => copy(v)}
+                onPress={() => copy(v)}
               >
                 <Copy />
                 <Chip.Label>{v}</Chip.Label>
