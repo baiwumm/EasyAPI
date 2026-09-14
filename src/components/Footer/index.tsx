@@ -54,7 +54,7 @@ const Footer: FC = () => {
           <div
             className={cn(
               "relative flex size-2 shrink-0 rounded-full bg-success",
-              "before:absolute before:inset-0 before:animate-ping before:rounded-full before:bg-inherit",
+              "before:absolute before:inset-0 before:animate-ping before:rounded-full before:bg-inherit motion-reduce:before:animate-none",
               "after:absolute after:inset-0.5 after:rounded-full after:bg-inherit",
             )}
             data-slot="status-indicator"

@@ -165,7 +165,8 @@ export function useBlurCircleTheme(props: UseBlurCircleThemeProps = {}) {
       });
     });
 
-    await transition.ready;
+    // 用户切换标签页等场景会打断视图过渡使 ready reject，容错避免 unhandled rejection
+    await transition.ready.catch(() => undefined);
 
     // 平滑清理样式 - 修复闪烁的核心
     setTimeout(() => {
