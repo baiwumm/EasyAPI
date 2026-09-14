@@ -34,30 +34,33 @@ export async function updateSession(request: NextRequest) {
   const path = request.nextUrl.pathname;
 
   if (path.startsWith("/api")) {
-    // 去掉 /api 前缀，并且去掉查询参数
-    const reqPath = path.replace(/^\/api/, "").split("?")[0];
-    // 先查 ea_apis 表，看有没有 path 匹配当前请求
-    const { data } = await supabase
-      .from("ea_apis")
-      .select("id, path")
-      .eq("path", reqPath)
-      .limit(1)
-      .single();
+    // 仅统计对外只读调用：管理端 CRUD 的 POST/PUT/DELETE 不计数
+    if (request.method === "GET") {
+      // 去掉 /api 前缀，并且去掉查询参数
+      const reqPath = path.replace(/^\/api/, "").split("?")[0];
+      // head:true 不返回行数据，只确认 path 是否存在，减轻查询负担
+      const { data } = await supabase
+        .from("ea_apis")
+        .select("id", { count: "exact", head: true })
+        .eq("path", reqPath)
+        .limit(1)
+        .maybeSingle();
 
-    if (data) {
-      // 调用 RPC 函数随机增加 call_count 1~10
-      const increment = Math.floor(Math.random() * 10) + 1;
+      if (data) {
+        // 调用 RPC 函数随机增加 call_count 1~10
+        const increment = Math.floor(Math.random() * 10) + 1;
 
-      // 计数失败不能静默（如 RLS 拦截 SECURITY INVOKER 的 RPC），至少留痕
-      const { error: rpcError } = await supabase.rpc("increment_call_count", {
-        row_id: data.id,
-        inc: increment,
-      });
-
-      if (rpcError) {
-        // 服务端运维日志（中间件无上报通道），定向豁免 no-console
-        // eslint-disable-next-line no-console
-        console.error("increment_call_count failed:", rpcError.message);
+        // 计数不阻塞响应（Node 运行时下返回后仍会执行）；
+        // 失败不能静默（如 RLS 拦截 SECURITY INVOKER 的 RPC），至少留痕
+        void supabase
+          .rpc("increment_call_count", { row_id: data.id, inc: increment })
+          .then(({ error: rpcError }) => {
+            if (rpcError) {
+              // 服务端运维日志（中间件无上报通道），定向豁免 no-console
+              // eslint-disable-next-line no-console
+              console.error("increment_call_count failed:", rpcError.message);
+            }
+          });
       }
     }
 
