@@ -63,7 +63,8 @@ export async function GET(request: NextRequest) {
         return val.toString().padStart(2, "0");
       };
       const row = {
-        date: `${solarYear}-${solarMonth}-${solarInstance.getDay()}`,
+        // 输出补零保持 YYYY-MM-DD，与入参格式契约一致（此前输出形如 2026-3-4）
+        date: `${solarYear}-${formatTwoDigit(solarMonth)}-${formatTwoDigit(solarInstance.getDay())}`,
         hours: `${formatTwoDigit(i + 1)}:00-${formatTwoDigit(middleHour)}:59`,
         hour: `${LunarUtil.convertTime(`${formatTwoDigit(middleHour)}:00`)}时`, // 时辰
         yi: lunarInstance.getTimeYi().join(" "), // 时宜
