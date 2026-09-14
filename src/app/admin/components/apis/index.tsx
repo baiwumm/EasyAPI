@@ -53,8 +53,6 @@ const Apis: FC = () => {
   const [columnVisibility, setColumnVisibility] =
     useState<ColumnVisibilityState>({
       desc: false,
-      vpn: false,
-      commonlyUsed: false,
       updated_at: false,
     });
 

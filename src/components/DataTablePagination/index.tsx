@@ -59,7 +59,16 @@ function DataTablePagination<TData extends RowData>({
           placeholder="请选择"
           value={table.state.pagination.pageSize}
           variant="secondary"
-          onChange={(key) => table.setPageSize(Number(key))}
+          onChange={(key) => {
+            // 切换每页条数后回到第一页，避免滞留越界页
+            const size = Number(key);
+
+            table.setPagination((prev) => ({
+              ...prev,
+              pageIndex: 0,
+              pageSize: size,
+            }));
+          }}
         >
           <Select.Trigger className="items-center">
             <Select.Value className="text-xs text-muted" />

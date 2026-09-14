@@ -15,7 +15,6 @@ export const RESPONSE = Enum({
 export const THEME_MODE = Enum({
   LIGHT: { value: "light", label: "亮色模式" },
   DARK: { value: "dark", label: "暗黑模式" },
-  SYSTEM: { value: "system", label: "跟随系统" },
 });
 
 /**

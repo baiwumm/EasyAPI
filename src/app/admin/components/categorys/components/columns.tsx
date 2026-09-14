@@ -26,6 +26,7 @@ export function getColumns({
   return [
     columnHelper.display({
       id: "index",
+      enableHiding: false, // 序号/操作为功能性列，隐藏后模块失去入口
       header: "序号",
       cell: ({ row }) => <Chip>{(page - 1) * pageSize + row.index + 1}</Chip>,
     }),
@@ -100,6 +101,7 @@ export function getColumns({
 
     columnHelper.display({
       id: "actions",
+      enableHiding: false, // 序号/操作为功能性列，隐藏后模块失去入口
       header: "操作",
       cell: ({ row }) => (
         <div className="flex items-center justify-center min-w-25">
