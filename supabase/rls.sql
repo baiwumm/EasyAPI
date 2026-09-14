@@ -67,8 +67,9 @@ CREATE POLICY "ea_categorys_admin_write"
   USING (auth.jwt() ->> 'email' IN ('me@baiwumm.com', 'baiwumm@foxmail.com', '843348394@qq.com'))
   WITH CHECK (auth.jwt() ->> 'email' IN ('me@baiwumm.com', 'baiwumm@foxmail.com', '843348394@qq.com'));
 
--- ---------- 3. 补充说明 ----------
--- 若执行 RLS 后发现接口调用计数（call_count）不再增长，
--- 说明 increment_call_count 函数以调用者身份执行被 RLS 拦截，
--- 在 SQL Editor 中执行下面这条语句改为以函数属主身份执行：
---   ALTER FUNCTION public.increment_call_count SECURITY DEFINER;
+-- ---------- 3. 接口调用计数 ----------
+-- increment_call_count 由中间件以匿名调用者身份触发（页面/接口计数），
+-- 必须改为函数属主身份执行，否则被上面的 RLS 写策略拦截、计数静默失效；
+-- SECURITY DEFINER 必须固定 search_path，防止 search_path 劫持提权
+ALTER FUNCTION public.increment_call_count SECURITY DEFINER;
+ALTER FUNCTION public.increment_call_count SET search_path = public;

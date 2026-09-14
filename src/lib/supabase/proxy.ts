@@ -48,10 +48,17 @@ export async function updateSession(request: NextRequest) {
       // 调用 RPC 函数随机增加 call_count 1~10
       const increment = Math.floor(Math.random() * 10) + 1;
 
-      await supabase.rpc("increment_call_count", {
+      // 计数失败不能静默（如 RLS 拦截 SECURITY INVOKER 的 RPC），至少留痕
+      const { error: rpcError } = await supabase.rpc("increment_call_count", {
         row_id: data.id,
         inc: increment,
       });
+
+      if (rpcError) {
+        // 服务端运维日志（中间件无上报通道），定向豁免 no-console
+        // eslint-disable-next-line no-console
+        console.error("increment_call_count failed:", rpcError.message);
+      }
     }
 
     return supabaseResponse;
