@@ -111,7 +111,14 @@ const Categorys: FC = () => {
             timeout: 2000,
             indicator: <CircleCheckFill />,
           });
-          handleSearch(); // 参数未变时内部走 mutate()，列表必然刷新
+          // 删除的是当前页最后一条时先回退一页，避免滞留在越界空页
+          const list = get(data, "list", []) as Category[];
+
+          if (list.length <= 1 && pagination.pageIndex > 0) {
+            setPagination((p) => ({ ...p, pageIndex: p.pageIndex - 1 }));
+          } else {
+            handleSearch(); // 参数未变时内部走 mutate()，列表必然刷新
+          }
         }
       },
     },
