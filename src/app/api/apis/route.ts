@@ -28,11 +28,13 @@ export async function GET(request: NextRequest) {
     const category_id = searchParams.get("category_id");
 
     // 判断参数（同步校验前置，通过后才创建客户端）
+    // pageSize 上限 1000：接口为公开路由，无上限可一次拉全表刷穿 Supabase 配额
     if (
       Number.isNaN(pageIndex) ||
       Number.isNaN(pageSize) ||
       pageIndex < 0 ||
-      pageSize <= 0
+      pageSize <= 0 ||
+      pageSize > 1000
     ) {
       return NextResponse.json(
         responseMessage(null, "参数错误", RESPONSE.ERROR),
