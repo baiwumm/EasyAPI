@@ -48,10 +48,10 @@ const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
     mutate();
   };
 
-  // 列定义
+  // 列定义（实测 DB：name 存中文、englishName 存英文）
   const columns: { label: string; value: keyof DataType }[] = [
-    { label: "国家（中文）", value: "englishName" },
-    { label: "国家（英文）", value: "name" },
+    { label: "国家（中文）", value: "name" },
+    { label: "国家（英文）", value: "englishName" },
     { label: "ISO国家代码", value: "countryCode" },
     { label: "国际电话区号", value: "phoneCode" },
   ];
@@ -75,7 +75,7 @@ const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
                     {columns.map(({ label, value }) => (
                       <Table.Column
                         key={value}
-                        isRowHeader={value === "englishName"}
+                        isRowHeader={value === "name"}
                       >
                         {label}
                       </Table.Column>
