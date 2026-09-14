@@ -9,6 +9,7 @@ import { useState } from "react";
 
 import RefreshButton from "@/components/RefreshButton";
 import RequestContent from "@/components/RequestContent";
+import { useCommittedParams } from "@/hooks/use-committed-params";
 import { useCopy } from "@/hooks/use-copy";
 import { useSwrQuery } from "@/hooks/use-swr";
 import { get } from "@/lib/utils";
@@ -21,8 +22,8 @@ const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
   const [count, setCount] = useState(5);
   const [size, setSize] = useState(128);
 
-  // 实际请求参数
-  const [params, setParams] = useState({
+  // 实际请求参数（已提交模式：点击重新生成才更新，变化自动重查）
+  const { params, commit } = useCommittedParams({
     count,
     width: size,
     height: size,
@@ -39,11 +40,8 @@ const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
   );
 
   const handleGenerate = () => {
-    const newParams = { count, width: size, height: size };
-
-    setParams(newParams);
     // 参数没变时 key 不变，SWR 不会发请求 → 手动刷新
-    if (JSON.stringify(newParams) === JSON.stringify(params)) {
+    if (!commit({ count, width: size, height: size })) {
       mutate();
     }
   };

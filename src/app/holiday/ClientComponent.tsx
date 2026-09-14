@@ -12,23 +12,12 @@ import RefreshButton from "@/components/RefreshButton";
 import RequestContent from "@/components/RequestContent";
 import TableLoading from "@/components/TableLoading";
 import { useSwrQuery } from "@/hooks/use-swr";
-import { get } from "@/lib/utils";
+import { buildYearOptions, get } from "@/lib/utils";
 import { getApiData } from "@/services/common";
 
 const currentYear = dayjs().year();
-const startYear = 2002;
 
-const yearOptions = Array.from(
-  { length: currentYear - startYear + 1 },
-  (_, i) => {
-    const year = currentYear - i;
-
-    return {
-      value: year,
-      label: `${year}年`,
-    };
-  },
-);
+const yearOptions = buildYearOptions(2002, currentYear);
 
 const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
   const pathname = usePathname();

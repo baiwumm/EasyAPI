@@ -2,10 +2,9 @@
 import type { FC } from "react";
 import type { ClientComponentProps } from "@/typings";
 
-import { Copy, Shuffle } from "@gravity-ui/icons";
+import { Shuffle } from "@gravity-ui/icons";
 import {
   Button,
-  Chip,
   ColorArea,
   ColorField,
   ColorPicker,
@@ -20,9 +19,9 @@ import { usePathname } from "next/navigation";
 import { useMemo, useState } from "react";
 import tinycolor from "tinycolor2";
 
+import CopyChip from "@/components/CopyChip";
 import RefreshButton from "@/components/RefreshButton";
 import RequestContent from "@/components/RequestContent";
-import { useCopy } from "@/hooks/use-copy";
 import { useSwrQuery } from "@/hooks/use-swr";
 import { get } from "@/lib/utils";
 import { getApiData } from "@/services/common";
@@ -55,7 +54,6 @@ function getRandomColor() {
 
 const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
   const pathname = usePathname();
-  const { copy } = useCopy();
   // 初始值固定，避免 SSR/CSR 各随机一次导致 hydration mismatch；点击"随机"再洗牌
   const [color, setColor] = useState(() => parseColor("#3b82f6"));
 
@@ -92,17 +90,7 @@ const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
             {Object.keys((data as DataType) || {}).map((key) => {
               const color = (data || {})[key as keyof typeof data];
 
-              return (
-                <Chip
-                  key={key}
-                  className="cursor-pointer"
-                  size="lg"
-                  onClick={() => copy(color)}
-                >
-                  <Copy />
-                  <Chip.Label>{color}</Chip.Label>
-                </Chip>
-              );
+              return <CopyChip key={key} value={color} />;
             })}
           </div>
         </RequestContent>

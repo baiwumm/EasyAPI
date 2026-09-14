@@ -142,6 +142,22 @@ export function parseBoundedInt(
 }
 
 /**
+ * @description: 生成倒序年份选项（当前年 → startYear），供 holiday/solar-term 等下拉使用
+ */
+export function buildYearOptions(startYear: number, currentYear?: number) {
+  const endYear = currentYear ?? dayjs().year();
+
+  return Array.from(
+    { length: Math.max(endYear - startYear + 1, 0) },
+    (_, i) => {
+      const year = endYear - i;
+
+      return { value: year, label: `${year}年` };
+    },
+  );
+}
+
+/**
  * 解析 bind 每日图片
  */
 

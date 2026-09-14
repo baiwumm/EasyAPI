@@ -10,6 +10,7 @@ import { useState } from "react";
 import RefreshButton from "@/components/RefreshButton";
 import RequestContent from "@/components/RequestContent";
 import { PERSON_SEXS, PERSON_SIZES } from "@/enums";
+import { useCommittedParams } from "@/hooks/use-committed-params";
 import { useCopy } from "@/hooks/use-copy";
 import { useSwrQuery } from "@/hooks/use-swr";
 import { get } from "@/lib/utils";
@@ -27,7 +28,7 @@ const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
   const [size, setSize] = useState<PersonSize>(PERSON_SIZES.SIZE_128);
 
   // 已提交的请求参数：点击"重新生成"才更新，输入变化不触发请求
-  const [query, setQuery] = useState({ count, sex, size });
+  const { params: query, commit } = useCommittedParams({ count, sex, size });
 
   // 请求数据：key 含已提交参数，点击后 query 变化自动请求
   const {
@@ -40,11 +41,8 @@ const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
   );
 
   const handleGenerate = () => {
-    const next = { count, sex, size };
-
-    setQuery(next);
     // 参数没变时 key 不变，SWR 不会发请求 → 手动刷新
-    if (JSON.stringify(next) === JSON.stringify(query)) {
+    if (!commit({ count, sex, size })) {
       mutate();
     }
   };

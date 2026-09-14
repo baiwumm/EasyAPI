@@ -2,15 +2,7 @@
 import type { FC } from "react";
 import type { ClientComponentProps } from "@/typings";
 
-import {
-  Chip,
-  Input,
-  ListBox,
-  Select,
-  Table,
-  toast,
-  Typography,
-} from "@heroui/react";
+import { Chip, Input, ListBox, Select, Table, Typography } from "@heroui/react";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 
@@ -20,6 +12,8 @@ import RefreshButton from "@/components/RefreshButton";
 import RequestContent from "@/components/RequestContent";
 import TableLoading from "@/components/TableLoading";
 import { POSTALCODE_TYPES } from "@/enums";
+import { useCommittedParams } from "@/hooks/use-committed-params";
+import { useRequireParam } from "@/hooks/use-require-param";
 import { useSwrQuery } from "@/hooks/use-swr";
 import { get } from "@/lib/utils";
 import { getApiData } from "@/services/common";
@@ -38,9 +32,10 @@ const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
   const pathname = usePathname();
   const [type, setType] = useState<Type>(POSTALCODE_TYPES.CODE_TO_AREA);
   const [keyword, setKeyword] = useState("524200");
+  const requireParam = useRequireParam();
 
-  // 实际请求参数
-  const [params, setParams] = useState({ keyword, type });
+  // 实际请求参数（已提交模式：点击查询才更新，变化自动重查）
+  const { params, commit } = useCommittedParams({ keyword, type });
 
   // 请求数据：key 含已提交参数，点击后 params 变化自动请求
   const { data, loading, error, mutate } = useSwrQuery<
@@ -51,16 +46,11 @@ const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
 
   // 请求数据
   const reload = () => {
-    if (!keyword?.trim()) {
-      toast.danger("参数 keyword 必填");
-
+    if (!requireParam(keyword, "keyword")) {
       return;
     }
-    const newParams = { keyword, type };
-
-    setParams(newParams);
     // 参数没变时 key 不变，SWR 不会发请求 → 手动刷新
-    if (JSON.stringify(newParams) === JSON.stringify(params)) {
+    if (!commit({ keyword, type })) {
       mutate();
     }
   };

@@ -3,9 +3,7 @@ import type { Options } from "crypto-random-string";
 import type { FC } from "react";
 import type { ClientComponentProps } from "@/typings";
 
-import { Copy } from "@gravity-ui/icons";
 import {
-  Chip,
   Description,
   Input,
   Label,
@@ -18,17 +16,16 @@ import {
 import { usePathname } from "next/navigation";
 import { useMemo, useState } from "react";
 
+import CopyChip from "@/components/CopyChip";
 import RefreshButton from "@/components/RefreshButton";
 import RequestContent from "@/components/RequestContent";
 import { RANDOM_STRING_TYPES } from "@/enums";
-import { useCopy } from "@/hooks/use-copy";
 import { useSwrQuery } from "@/hooks/use-swr";
 import { get } from "@/lib/utils";
 import { getApiData } from "@/services/common";
 
 const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
   const pathname = usePathname();
-  const { copy } = useCopy();
   const [type, setType] = useState<Options["type"]>(
     RANDOM_STRING_TYPES.ALPHANUMERIC,
   );
@@ -71,17 +68,7 @@ const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
         >
           <div className="flex justify-center items-center flex-wrap gap-2">
             {data.map((v) => (
-              <Chip
-                key={v}
-                className="cursor-pointer"
-                color="accent"
-                size="lg"
-                variant="soft"
-                onClick={() => copy(v)}
-              >
-                <Copy />
-                <Chip.Label>{v}</Chip.Label>
-              </Chip>
+              <CopyChip key={v} value={v} />
             ))}
           </div>
         </RequestContent>
