@@ -21,6 +21,7 @@ const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
   // 请求数据
   const {
     data = {},
+    isLoading,
     loading,
     error,
     mutate,
@@ -44,7 +45,7 @@ const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
       <div className="flex-1 flex justify-center items-center">
         <RequestContent
           error={error}
-          loading={loading}
+          loading={isLoading}
           loadingText="灵感正在路上..."
           reFresh={mutate}
         >

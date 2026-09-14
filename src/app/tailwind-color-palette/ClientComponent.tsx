@@ -56,8 +56,9 @@ const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
   const params = useMemo(() => ({ color }), [color]);
 
   // 请求数据
-  const { data, loading, error, mutate } = useSwrQuery(pathname, async () =>
-    get(await getApiData(pathname, params), "data.palette", {}),
+  const { data, isLoading, loading, error, mutate } = useSwrQuery(
+    pathname,
+    async () => get(await getApiData(pathname, params), "data.palette", {}),
   );
 
   const shuffleColor = () => {
@@ -76,7 +77,7 @@ const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
       <div className="flex-1 flex justify-center items-center">
         <RequestContent
           error={error}
-          loading={loading}
+          loading={isLoading}
           loadingText="正在生成..."
           reFresh={mutate}
         >

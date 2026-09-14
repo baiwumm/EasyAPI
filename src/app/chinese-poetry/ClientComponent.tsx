@@ -27,6 +27,7 @@ const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
   // 请求数据（key 固定为路由，参数走闭包；点击刷新用 mutate）
   const {
     data = {},
+    isLoading,
     loading,
     error,
     mutate,
@@ -68,7 +69,7 @@ const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
       <div className="flex-1 flex justify-center items-center">
         <RequestContent
           error={error}
-          loading={loading}
+          loading={isLoading}
           loadingText="灵感正在路上..."
           reFresh={handleRefresh}
         >

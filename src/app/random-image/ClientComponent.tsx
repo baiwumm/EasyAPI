@@ -31,6 +31,7 @@ const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
   // 请求数据：key 含已提交参数，点击后 params 变化自动请求
   const {
     data = [],
+    isLoading,
     loading,
     error,
     mutate,
@@ -61,7 +62,7 @@ const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
       <div className="flex-1 flex justify-center items-center">
         <RequestContent
           error={error}
-          loading={loading}
+          loading={isLoading}
           loadingText="正在生成..."
           reFresh={handleGenerate}
         >
