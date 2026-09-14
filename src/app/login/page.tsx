@@ -12,6 +12,7 @@ import ClientComponent from "./ClientComponent";
 
 export const metadata: Metadata = {
   title: "用户登录",
+  robots: { index: false, follow: false },
 };
 
 export default function Login() {

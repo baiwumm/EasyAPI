@@ -95,9 +95,18 @@ const ClientComponent: FC = () => {
 
     toast.promise(authPromise, {
       loading: "登录中...",
-      success: () => {
+      success: async () => {
         setEmailLoading(false);
-        router.refresh();
+        // 显式跳转：不再仅依赖中间件对 /login 的间接重定向
+        try {
+          const res = await fetch("/api/auth/me");
+          const { data } = await res.json();
+
+          await router.replace(data?.isAdmin ? "/admin" : "/");
+          router.refresh();
+        } catch {
+          router.replace("/");
+        }
 
         return "登录成功，欢迎回来！";
       },
@@ -166,6 +175,7 @@ const ClientComponent: FC = () => {
           <Form className="flex flex-col gap-4" onSubmit={onSubmit}>
             <TextField
               isRequired
+              autoComplete="email"
               name="email"
               type="email"
               validate={(value) => {
@@ -190,13 +200,14 @@ const ClientComponent: FC = () => {
             </TextField>
             <TextField
               isRequired
-              maxLength={12}
+              autoComplete="current-password"
+              maxLength={72}
               minLength={6}
               name="password"
               type="password"
               validate={(value) => {
-                if (value.length < 6 || value.length > 12) {
-                  return "请输入长度为6-12的字符串.";
+                if (value.length < 6) {
+                  return "密码长度至少为 6 位";
                 }
                 if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/.test(value)) {
                   return "密码必须包含大小写字母和数字";
@@ -231,7 +242,7 @@ const ClientComponent: FC = () => {
                   </Button>
                 </InputGroup.Suffix>
               </InputGroup>
-              <Description>密码必须包含大小写字母和数字.</Description>
+              <Description>密码至少 6 位，需包含大小写字母和数字.</Description>
               <FieldError />
             </TextField>
             <Button
