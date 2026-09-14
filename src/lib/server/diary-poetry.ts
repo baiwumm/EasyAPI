@@ -60,7 +60,7 @@ async function fetchDiaryPoetry(): Promise<PoetryItem> {
     throw new Error("今日诗词 未返回内容");
   }
 
-  cached = responseBody;
+  cached = responseBody as PoetryItem;
   cachedAt = Date.now();
 
   return cached;
