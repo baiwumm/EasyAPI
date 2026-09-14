@@ -137,8 +137,17 @@ export async function POST(request: NextRequest) {
     if (error) {
       // 判断是否违反唯一性约束（PostgreSQL 错误代码 23505）
       if (error.code === "23505") {
+        // 按约束名区分：path/operation_id 的唯一冲突不再误报"名称已存在"
+        const constraint = (error as { constraint?: string }).constraint ?? "";
+
         return NextResponse.json(
-          responseMessage(null, "接口名称已存在！", RESPONSE.DUPLICATE),
+          responseMessage(
+            null,
+            constraint.includes("name")
+              ? "接口名称已存在！"
+              : "保存失败：数据已存在（唯一性冲突）",
+            RESPONSE.DUPLICATE,
+          ),
         );
       }
 
