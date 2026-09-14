@@ -20,28 +20,13 @@ export function useSupabaseUser() {
   useEffect(() => {
     let mounted = true;
 
-    const initUser = async () => {
-      const {
-        data: { user },
-        error,
-      } = await supabase.auth.getUser();
-
-      if (mounted) {
-        if (error) {
-          setUser(null);
-        } else {
-          setUser(user);
-        }
-        setLoading(false);
-      }
-    };
-
-    initUser();
-
+    // 仅依赖订阅：onAuthStateChange 订阅时必发 INITIAL_SESSION，
+    // 与 getUser() 网络往返重复获取同一会话，省一次请求
     const { data: subscription } = supabase.auth.onAuthStateChange(
       (_event, session) => {
         if (!mounted) return;
         setUser(session?.user ?? null);
+        setLoading(false);
       },
     );
 

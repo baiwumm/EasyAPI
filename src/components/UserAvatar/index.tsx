@@ -23,7 +23,7 @@ import {
   Typography,
   useOverlayState,
 } from "@heroui/react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSWRConfig } from "swr";
 
 import { useSupabaseUser } from "@/hooks/use-supabase-user";
@@ -40,10 +40,11 @@ const UserAvatar: FC = () => {
   // 获取登录用户信息
   const { user, loading } = useSupabaseUser();
   // 查询当前用户是否为管理员（登录 + 邮箱白名单），非管理员不显示后台入口
+  // 匿名访客跳过请求，避免每次进入都打一次 /auth/me → Supabase auth
   const { data: adminInfo } = useSwrQuery<{
     isAdmin: boolean;
     email: string | null;
-  } | null>("/auth/me", async () =>
+  } | null>(user ? "/auth/me" : null, async () =>
     get(await getApiData("/auth/me"), "data", null),
   );
   const isAdmin = adminInfo?.isAdmin === true;
@@ -52,6 +53,17 @@ const UserAvatar: FC = () => {
   // 退出确认弹窗
   const [open, setOpen] = useState(false);
   const alertState = useOverlayState();
+  // 弹窗延迟打开的定时器（卸载时清理）
+  const logoutTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(
+    undefined,
+  );
+
+  useEffect(
+    () => () => {
+      clearTimeout(logoutTimerRef.current);
+    },
+    [],
+  );
   // 用户名称
   const name =
     user?.user_metadata.name ||
@@ -68,7 +80,8 @@ const UserAvatar: FC = () => {
         break;
       case "logout":
         setOpen(false);
-        setTimeout(() => {
+        clearTimeout(logoutTimerRef.current);
+        logoutTimerRef.current = setTimeout(() => {
           alertState.open();
         }, 500);
         break;
