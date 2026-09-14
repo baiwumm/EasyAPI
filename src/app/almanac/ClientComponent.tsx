@@ -13,7 +13,7 @@ import {
 } from "@heroui/react";
 import { getLocalTimeZone, today } from "@internationalized/date";
 import { usePathname } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import EmptyContent from "@/components/EmptyContent";
 import RefreshButton from "@/components/RefreshButton";
@@ -51,9 +51,13 @@ const columns: { label: string; value: keyof DataType; className?: string }[] =
 
 const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
   const pathname = usePathname();
-  const [date, setDate] = useState<DateValue | null>(() =>
-    today(getLocalTimeZone()),
-  );
+  // 初始为 null（两端一致），挂载后再取用户本地时区的"今天"：
+  // 服务端时区与用户时区可能不同天，直接初始化会 hydration mismatch
+  const [date, setDate] = useState<DateValue | null>(null);
+
+  useEffect(() => {
+    setDate(today(getLocalTimeZone()));
+  }, []);
 
   // 参数处理
   const params = useMemo(
