@@ -31,6 +31,13 @@ export async function GET(request: NextRequest) {
       );
     }
 
+    // 数据为空（表空/RPC 无返回）时 text 分支会崩，统一返回业务错误
+    if (!data) {
+      return NextResponse.json(
+        responseMessage(null, "暂无数据", RESPONSE.ERROR),
+      );
+    }
+
     // 返回 text 格式
     if (format === "text") {
       return new NextResponse(data.content, {

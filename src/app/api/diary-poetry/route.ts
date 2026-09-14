@@ -33,6 +33,13 @@ export async function GET(request: NextRequest) {
 
     const responseBody = await response.json();
 
+    // 第三方未返回内容时 text 分支会崩，统一返回业务错误
+    if (!responseBody?.content) {
+      return NextResponse.json(
+        responseMessage(null, "暂无数据", RESPONSE.ERROR),
+      );
+    }
+
     // 返回 text 格式
     if (format === "text") {
       return new NextResponse(responseBody.content, {
