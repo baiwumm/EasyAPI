@@ -11,13 +11,13 @@ import { fakerZH_CN as faker } from "@faker-js/faker";
 import { NextResponse } from "next/server";
 
 import { PERSON_SEXS, PERSON_SIZES, RESPONSE } from "@/enums";
-import { catchError, clamp, responseMessage } from "@/lib/utils";
+import { catchError, parseBoundedInt, responseMessage } from "@/lib/utils";
 
 export async function GET(request: NextRequest) {
   try {
     // 解析 URL 查询参数
     const { searchParams } = new URL(request.url);
-    const count = clamp(parseInt(searchParams.get("count") || "5"), 1, 20);
+    const count = parseBoundedInt(searchParams.get("count"), 5, 1, 20);
     const sex = (searchParams.get("sex") ||
       PERSON_SEXS.GENERIC) as typeof PERSON_SEXS.valueType;
     const size = searchParams.get("size") || PERSON_SIZES.SIZE_128;

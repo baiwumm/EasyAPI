@@ -123,6 +123,25 @@ export const clamp = (
 ): number => Math.min(Math.max(value, min), max);
 
 /**
+ * @description: 解析查询参数为整数并钳制范围
+ * 非数字/NaN 时返回 fallback，而不是让 NaN 在 clamp 中短路成空结果
+ */
+export function parseBoundedInt(
+  value: string | null,
+  fallback: number,
+  min: number,
+  max: number,
+): number {
+  const n = parseInt(value ?? "", 10);
+
+  if (Number.isNaN(n)) {
+    return fallback;
+  }
+
+  return Math.min(Math.max(n, min), max);
+}
+
+/**
  * 解析 bind 每日图片
  */
 

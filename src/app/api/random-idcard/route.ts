@@ -10,7 +10,7 @@ import type { NextRequest } from "next/server";
 import idCard from "idcard";
 import { NextResponse } from "next/server";
 
-import { catchError, responseMessage } from "@/lib/utils";
+import { catchError, parseBoundedInt, responseMessage } from "@/lib/utils";
 
 export async function GET(request: NextRequest) {
   try {
@@ -18,10 +18,7 @@ export async function GET(request: NextRequest) {
     const searchParams = request.nextUrl.searchParams;
 
     // 生成的数量
-    const count = Math.min(
-      Math.max(parseInt(searchParams.get("count") || "1"), 1),
-      50,
-    );
+    const count = parseBoundedInt(searchParams.get("count"), 1, 1, 50);
 
     const result: string[] = [];
 

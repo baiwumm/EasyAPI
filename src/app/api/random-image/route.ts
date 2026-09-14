@@ -10,20 +10,16 @@ import type { NextRequest } from "next/server";
 import { fakerZH_CN as faker } from "@faker-js/faker";
 import { NextResponse } from "next/server";
 
-import { catchError, clamp, responseMessage } from "@/lib/utils";
+import { catchError, parseBoundedInt, responseMessage } from "@/lib/utils";
 
 export async function GET(request: NextRequest) {
   try {
     // 解析 URL 查询参数
     const { searchParams } = new URL(request.url);
 
-    const count = clamp(parseInt(searchParams.get("count") || "5"), 1, 20);
-    const width = clamp(parseInt(searchParams.get("width") || "128"), 16, 1024);
-    const height = clamp(
-      parseInt(searchParams.get("height") || "128"),
-      16,
-      1024,
-    );
+    const count = parseBoundedInt(searchParams.get("count"), 5, 1, 20);
+    const width = parseBoundedInt(searchParams.get("width"), 128, 16, 1024);
+    const height = parseBoundedInt(searchParams.get("height"), 128, 16, 1024);
 
     const images = Array.from({ length: count }, () =>
       faker.image.url({ width, height }),

@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 import tinycolor from "tinycolor2";
 
 import { RANDOM_COLOR_FORMATS, RESPONSE } from "@/enums";
-import { catchError, responseMessage } from "@/lib/utils";
+import { catchError, parseBoundedInt, responseMessage } from "@/lib/utils";
 
 /*
  * @Author: 白雾茫茫丶<baiwumm.com>
@@ -22,10 +22,7 @@ export async function GET(request: NextRequest) {
     const fmt = (searchParams.get("format") ??
       RANDOM_COLOR_FORMATS.ALL) as typeof RANDOM_COLOR_FORMATS.valueType; // format (string): 返回格式，可选值: hex | rgb | hsl | hsv | all（默认）
 
-    const count = Math.min(
-      Math.max(parseInt(searchParams.get("count") || "1"), 1),
-      50,
-    ); // count (number): 要生成颜色的数量，1-50，默认 1
+    const count = parseBoundedInt(searchParams.get("count"), 1, 1, 50); // count (number): 要生成颜色的数量，1-50，默认 1
 
     // 参数校验
     const allowedFormats = RANDOM_COLOR_FORMATS.values;

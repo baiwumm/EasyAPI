@@ -3,7 +3,7 @@ import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import * as emoji from "node-emoji";
 
-import { catchError, responseMessage } from "@/lib/utils";
+import { catchError, parseBoundedInt, responseMessage } from "@/lib/utils";
 
 /*
  * @Author: 白雾茫茫丶<baiwumm.com>
@@ -18,10 +18,7 @@ export async function GET(request: NextRequest) {
     // 解析 URL 查询参数
     const searchParams = request.nextUrl.searchParams;
 
-    const count = Math.min(
-      Math.max(parseInt(searchParams.get("count") || "1"), 1),
-      50,
-    );
+    const count = parseBoundedInt(searchParams.get("count"), 1, 1, 50);
 
     const result = Array.from({ length: count }, () => emoji.random());
 

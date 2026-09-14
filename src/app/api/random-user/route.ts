@@ -11,14 +11,14 @@ import { fakerZH_CN as faker } from "@faker-js/faker";
 import { NextResponse } from "next/server";
 
 import { RANDOM_USER_GENDER } from "@/enums";
-import { catchError, responseMessage } from "@/lib/utils";
+import { catchError, parseBoundedInt, responseMessage } from "@/lib/utils";
 
 export async function GET(request: NextRequest) {
   try {
     // 解析 URL 查询参数
     const { searchParams } = new URL(request.url);
 
-    const count = Math.min(Number(searchParams.get("count")) || 1, 20);
+    const count = parseBoundedInt(searchParams.get("count"), 1, 1, 20);
     const gender = searchParams.get("gender");
 
     const users = Array.from({ length: count }, () => createUser(gender));
