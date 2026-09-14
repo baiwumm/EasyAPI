@@ -72,7 +72,9 @@ function JsonContent<T>({
                     <Table.Column isRowHeader>字段</Table.Column>
                     <Table.Column>值</Table.Column>
                   </Table.Header>
-                  <Table.Body renderEmptyState={() => <EmptyContent />}>
+                  <Table.Body
+                    renderEmptyState={() => (loading ? null : <EmptyContent />)}
+                  >
                     {(data ? getColumns(data) : []).map(
                       ({ label, children }, index) => (
                         <Table.Row key={index}>

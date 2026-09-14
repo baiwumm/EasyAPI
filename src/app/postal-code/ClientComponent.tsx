@@ -102,7 +102,11 @@ const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
                           </Table.Column>
                         ))}
                       </Table.Header>
-                      <Table.Body renderEmptyState={() => <EmptyContent />}>
+                      <Table.Body
+                        renderEmptyState={() =>
+                          loading ? null : <EmptyContent />
+                        }
+                      >
                         {(Array.isArray(data) ? data : []).map(
                           (
                             { postCode, province, city, area, areaCode },
@@ -127,7 +131,11 @@ const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
                         <Table.Column isRowHeader>字段</Table.Column>
                         <Table.Column>值</Table.Column>
                       </Table.Header>
-                      <Table.Body renderEmptyState={() => <EmptyContent />}>
+                      <Table.Body
+                        renderEmptyState={() =>
+                          loading ? null : <EmptyContent />
+                        }
+                      >
                         {columns.map(({ label, value }) => (
                           <Table.Row key={value}>
                             <Table.Cell>{label}</Table.Cell>

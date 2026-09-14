@@ -67,7 +67,9 @@ const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
                     <Table.Column>职位</Table.Column>
                     <Table.Column>生日</Table.Column>
                   </Table.Header>
-                  <Table.Body renderEmptyState={() => <EmptyContent />}>
+                  <Table.Body
+                    renderEmptyState={() => (loading ? null : <EmptyContent />)}
+                  >
                     {data?.length
                       ? data.map(
                           ({

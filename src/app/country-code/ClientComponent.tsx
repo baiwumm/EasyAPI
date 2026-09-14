@@ -78,7 +78,9 @@ const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
                       </Table.Column>
                     ))}
                   </Table.Header>
-                  <Table.Body renderEmptyState={() => <EmptyContent />}>
+                  <Table.Body
+                    renderEmptyState={() => (loading ? null : <EmptyContent />)}
+                  >
                     {data?.length
                       ? data.map((v, index) => (
                           <Table.Row key={index}>

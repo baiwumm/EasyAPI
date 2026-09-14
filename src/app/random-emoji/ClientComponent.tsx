@@ -53,7 +53,9 @@ const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
                     <Table.Column isRowHeader>名称</Table.Column>
                     <Table.Column>表情</Table.Column>
                   </Table.Header>
-                  <Table.Body renderEmptyState={() => <EmptyContent />}>
+                  <Table.Body
+                    renderEmptyState={() => (loading ? null : <EmptyContent />)}
+                  >
                     {data?.length
                       ? data.map(({ name, emoji }, index) => (
                           <Table.Row key={index}>

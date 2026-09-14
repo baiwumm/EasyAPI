@@ -66,7 +66,9 @@ const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
                     <Table.Column isRowHeader>节气名</Table.Column>
                     <Table.Column>时间</Table.Column>
                   </Table.Header>
-                  <Table.Body renderEmptyState={() => <EmptyContent />}>
+                  <Table.Body
+                    renderEmptyState={() => (loading ? null : <EmptyContent />)}
+                  >
                     {data?.length
                       ? data.map(({ name, date }, index) => (
                           <Table.Row key={index}>

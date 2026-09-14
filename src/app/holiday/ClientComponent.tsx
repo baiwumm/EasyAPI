@@ -70,7 +70,9 @@ const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
                     <Table.Column>距离</Table.Column>
                     <Table.Column>调休日期</Table.Column>
                   </Table.Header>
-                  <Table.Body renderEmptyState={() => <EmptyContent />}>
+                  <Table.Body
+                    renderEmptyState={() => (loading ? null : <EmptyContent />)}
+                  >
                     {data?.length
                       ? data.map(
                           (
