@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 
 import { RESPONSE } from "@/enums";
 import { getSupabaseServerClient, requireAdmin } from "@/lib/supabase/server";
+import { parseCategoryBody } from "@/lib/server/write-guard";
 import { catchError, responseMessage } from "@/lib/utils";
 
 /**
@@ -74,13 +75,22 @@ export async function PUT(
     }
 
     const supabase = await getSupabaseServerClient();
-    // 解析请求体
-    const body = await request.json(); // 如果是 JSON 数据
+    // 解析请求体（白名单过滤）
+    const { payload, error: bodyError } = parseCategoryBody(
+      await request.json(),
+      "update",
+    );
+
+    if (bodyError || !payload) {
+      return NextResponse.json(
+        responseMessage(null, bodyError, RESPONSE.ERROR),
+      );
+    }
 
     // 更新分类
     const { data, error } = await supabase
       .from("ea_categorys")
-      .update(body)
+      .update(payload)
       .eq("id", id)
       .select()
       .single();

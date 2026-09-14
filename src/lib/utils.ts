@@ -30,6 +30,24 @@ export function sanitizeLikeKeyword(keyword: string): string {
 }
 
 /**
+ * @description: 按白名单过滤对象字段（管理端写接口防任意列透传）
+ */
+export function pickFields(
+  body: unknown,
+  allowed: readonly string[],
+): Record<string, unknown> {
+  if (typeof body !== "object" || body === null) {
+    return {};
+  }
+
+  return Object.fromEntries(
+    Object.entries(body as Record<string, unknown>).filter(([key]) =>
+      (allowed as readonly string[]).includes(key),
+    ),
+  );
+}
+
+/**
  * @description: 统一处理 catch 错误
  */
 export function catchError(err: unknown): IResponse {

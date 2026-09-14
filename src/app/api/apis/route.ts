@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 
 import { RESPONSE } from "@/enums";
 import { getSupabaseServerClient, requireAdmin } from "@/lib/supabase/server";
+import { parseApiBody } from "@/lib/server/write-guard";
 import { catchError, responseMessage, sanitizeLikeKeyword } from "@/lib/utils";
 
 /*
@@ -113,13 +114,22 @@ export async function POST(request: NextRequest) {
     }
 
     const supabase = await getSupabaseServerClient();
-    // 解析请求体
-    const body = await request.json(); // 如果是 JSON 数据
+    // 解析请求体（白名单过滤 + 必填/枚举校验）
+    const { payload, error: bodyError } = parseApiBody(
+      await request.json(),
+      "create",
+    );
+
+    if (bodyError || !payload) {
+      return NextResponse.json(
+        responseMessage(null, bodyError, RESPONSE.ERROR),
+      );
+    }
 
     // 插入数据
     const { data, error } = await supabase
       .from("ea_apis")
-      .insert(body)
+      .insert(payload)
       .select()
       .single();
 
