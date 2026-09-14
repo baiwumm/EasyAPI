@@ -13,7 +13,7 @@ import { Buffer } from "node:buffer";
 import JsBarcode from "jsbarcode";
 import { NextResponse } from "next/server";
 import sharp from "sharp";
-import { DOMImplementation, XMLSerializer } from "xmldom";
+import { DOMImplementation, XMLSerializer } from "@xmldom/xmldom";
 
 import { BARCODE_FORMATS, BARCODE_TYPES, RESPONSE } from "@/enums";
 import { catchError, clamp, responseMessage } from "@/lib/utils";

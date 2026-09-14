@@ -47,6 +47,7 @@
     "@supabase/supabase-js": "^2.115.0",
     "@tanstack/react-table": "^9.2.4",
     "@vercel/analytics": "^2.0.1",
+    "@xmldom/xmldom": "0.9.8",
     "@zxcvbn-ts/core": "^3.0.4",
     "@zxcvbn-ts/language-common": "^3.0.4",
     "@zxcvbn-ts/language-zh": "4.0.0-beta.3",
@@ -69,8 +70,7 @@
     "sharp": "^0.35.4",
     "swr": "^2.5.1",
     "tinycolor2": "^1.6.0",
-    "uicolors-generator": "^1.2.4",
-    "xmldom": "^0.6.0"
+    "uicolors-generator": "^1.2.4"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^9.5.1",

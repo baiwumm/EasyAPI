@@ -83,6 +83,9 @@ importers:
       '@vercel/analytics':
         specifier: ^2.0.1
         version: 2.0.1(next@16.3.4(@babel/core@7.29.7)(@types/node@20.19.43)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react@19.2.8)
+      '@xmldom/xmldom':
+        specifier: 0.9.8
+        version: 0.9.8
       '@zxcvbn-ts/core':
         specifier: ^3.0.4
         version: 3.0.4
@@ -152,9 +155,6 @@ importers:
       uicolors-generator:
         specifier: ^1.2.4
         version: 1.2.4(chroma-js@3.2.0)
-      xmldom:
-        specifier: ^0.6.0
-        version: 0.6.0
     devDependencies:
       '@antfu/eslint-config':
         specifier: ^9.5.1
@@ -1862,6 +1862,11 @@ packages:
 
   '@vue/shared@3.5.42':
     resolution: {integrity: sha512-2rPxex1jQf4jvl9MOHl6YaXCPcrNqz/FstMOEh3QWY+/OME9nQTvl9WYeCwhW7AFjaR0SnngZGlp/wkR6rkI6g==}
+
+  '@xmldom/xmldom@0.9.8':
+    resolution: {integrity: sha512-p96FSY54r+WJ50FIOsCOjyj/wavs8921hG5+kVMmZgKcvIKxMXHTrjNJvRgWa/zuX3B6t2lijLNFaOyuxUH+2A==}
+    engines: {node: '>=14.6'}
+    deprecated: this version has critical issues, please update to the latest version
 
   '@zxcvbn-ts/core@3.0.4':
     resolution: {integrity: sha512-aQeiT0F09FuJaAqNrxynlAwZ2mW/1MdXakKWNmGM1Qp/VaY6CnB/GfnMS2T8gB2231Esp1/maCWd8vTG4OuShw==}
@@ -4512,10 +4517,6 @@ packages:
     resolution: {integrity: sha512-EvGK8EJ3DhaHfbRlETOWAS5pO9MZITeauHKJyb8wyajUfQUenkIg2MvLDTZ4T/TgIcm3HU0TFBgWWboAZ30UHg==}
     engines: {node: '>=18'}
 
-  xmldom@0.6.0:
-    resolution: {integrity: sha512-iAcin401y58LckRZ0TkI4k0VSM1Qg0KGSc3i8rU+xrxe19A/BN1zHyVSJY7uoutVlaTSzYyk/v5AmkewAP7jtg==}
-    engines: {node: '>=10.0.0'}
-
   y18n@4.0.3:
     resolution: {integrity: sha512-JKhqTOwSrqNA1NY5lSztJ1GrBiUodLMmIZuLiDaMRJ+itFd+ABVE8XBjOvIWL+rSqNDC74LCSFmlb/U4UZ4hJQ==}
 
@@ -6153,6 +6154,8 @@ snapshots:
       '@vue/shared': 3.5.42
 
   '@vue/shared@3.5.42': {}
+
+  '@xmldom/xmldom@0.9.8': {}
 
   '@zxcvbn-ts/core@3.0.4':
     dependencies:
@@ -9298,8 +9301,6 @@ snapshots:
       powershell-utils: 0.1.0
 
   xml-name-validator@5.0.0: {}
-
-  xmldom@0.6.0: {}
 
   y18n@4.0.3: {}
 
