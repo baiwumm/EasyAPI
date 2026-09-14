@@ -71,7 +71,12 @@ const SaveModal: FC<SaveModalProps> = ({
   };
 
   return (
-    <Modal.Backdrop isOpen={state.isOpen} onOpenChange={state.setOpen}>
+    <Modal.Backdrop
+      isKeyboardDismissDisabled
+      isDismissable={false}
+      isOpen={state.isOpen}
+      onOpenChange={state.setOpen}
+    >
       <Modal.Container placement="auto">
         <Modal.Dialog className="sm:max-w-md">
           <Modal.CloseTrigger />
