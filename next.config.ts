@@ -2,7 +2,8 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   typescript: {
-    ignoreBuildErrors: true, // 修复报告完成后由 fix(#43) 评估关闭
+    // 存量类型错误已清零（pnpm typecheck），恢复构建期类型拦截
+    ignoreBuildErrors: false,
   },
   images: {
     unoptimized: true, // 禁用 Vercel 图片优化
