@@ -1,7 +1,7 @@
 "use client";
 import type { ReactNode } from "react";
 
-import { Table, Typography } from "@heroui/react";
+import { Form, Table, Typography } from "@heroui/react";
 import { usePathname } from "next/navigation";
 
 import CopyText from "@/components/CopyText";
@@ -91,10 +91,17 @@ function JsonContent<T>({
           </div>
         </RequestContent>
       </div>
-      {/* 底部区域 */}
+      {/* 底部区域（Form + 隐藏提交按钮：让 children 里的输入框支持回车查询） */}
       <div className="flex justify-center shrink-0">
-        <div className="flex items-center gap-2 flex-wrap">
+        <Form
+          className="flex items-center gap-2 flex-wrap"
+          onSubmit={(event) => {
+            event.preventDefault();
+            reload();
+          }}
+        >
           {children}
+          <button aria-hidden="true" className="hidden" type="submit" />
           <RefreshButton loading={loading} text={searchText} onPress={reload} />
           <CopyText
             content={
@@ -103,7 +110,7 @@ function JsonContent<T>({
                 : ""
             }
           />
-        </div>
+        </Form>
       </div>
     </div>
   );

@@ -113,6 +113,11 @@ const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
             placeholder="输入关键字，如粤A、广州市"
             value={keyword}
             onChange={(event) => setKeyword(event.target.value)}
+            onKeyDown={(event) => {
+              if (event.key === "Enter") {
+                reFresh();
+              }
+            }}
           />
           <RefreshButton loading={loading} onPress={reFresh} />
         </div>

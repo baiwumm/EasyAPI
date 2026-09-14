@@ -151,6 +151,11 @@ const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
               placeholder="自定义字符集"
               value={characters}
               onChange={(event) => setCharacters(event.target.value)}
+              onKeyDown={(event) => {
+                if (event.key === "Enter") {
+                  mutate();
+                }
+              }}
             />
           </TextField>
           <RefreshButton

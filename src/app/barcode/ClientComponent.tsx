@@ -256,6 +256,11 @@ const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
             placeholder="二维码内容"
             value={text}
             onChange={(event) => setText(event.target.value)}
+            onKeyDown={(event) => {
+              if (event.key === "Enter") {
+                reFresh();
+              }
+            }}
           />
           <RefreshButton loading={loading} text="生成" onPress={reFresh} />
           <Button

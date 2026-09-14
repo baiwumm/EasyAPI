@@ -192,6 +192,11 @@ const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
             placeholder="请输入关键字"
             value={keyword}
             onChange={(event) => setKeyword(event.target.value)}
+            onKeyDown={(event) => {
+              if (event.key === "Enter") {
+                reload();
+              }
+            }}
           />
           <RefreshButton loading={loading} text="查询" onPress={reload} />
           <CopyText

@@ -116,6 +116,11 @@ const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
             placeholder="请输入诗词作者"
             value={author}
             onChange={(event) => setAuthor(event.target.value)}
+            onKeyDown={(event) => {
+              if (event.key === "Enter") {
+                handleRefresh();
+              }
+            }}
           />
           <RefreshButton
             loading={loading}
