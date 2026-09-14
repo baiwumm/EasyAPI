@@ -20,7 +20,9 @@ export async function GET(request: NextRequest) {
     const currentYear = dayjs().year();
     const minYear = 2022;
 
-    const rawYear = Number(searchParams.get("year"));
+    // 仅在显式传入 year 时解析（Number(null) === 0 会被 clamp 到 minYear，导致默认返回 2022 年数据）
+    const yearParam = searchParams.get("year");
+    const rawYear = yearParam === null ? currentYear : Number(yearParam);
     const safeYear = Number.isNaN(rawYear) ? currentYear : rawYear;
 
     const year = Math.min(Math.max(safeYear, minYear), currentYear);
