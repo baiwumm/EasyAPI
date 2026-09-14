@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 
 import { RESPONSE } from "@/enums";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
-import { catchError, responseMessage } from "@/lib/utils";
+import { catchError, responseMessage, sanitizeLikeKeyword } from "@/lib/utils";
 
 /*
  * @Author: 白雾茫茫丶<baiwumm.com>
@@ -33,7 +33,9 @@ export async function GET(request: NextRequest) {
     const { data, error } = await supabase
       .from("ea_country_code")
       .select("englishName,name,countryCode,phoneCode")
-      .or(`name.ilike.%${keyword}%,phoneCode.ilike.%${keyword}%`);
+      .or(
+        `name.ilike.%${sanitizeLikeKeyword(keyword)}%,phoneCode.ilike.%${sanitizeLikeKeyword(keyword)}%`,
+      );
 
     if (error) {
       return NextResponse.json(

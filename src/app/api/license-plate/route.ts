@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 
 import { RESPONSE } from "@/enums";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
-import { catchError, responseMessage } from "@/lib/utils";
+import { catchError, responseMessage, sanitizeLikeKeyword } from "@/lib/utils";
 
 /*
  * @Author: 白雾茫茫丶<baiwumm.com>
@@ -34,7 +34,7 @@ export async function GET(request: NextRequest) {
       .from("ea_license_plate")
       .select("province,city,code,prefix")
       .or(
-        `province.ilike.%${keyword}%,city.ilike.%${keyword}%,prefix.ilike.%${keyword}%`,
+        `province.ilike.%${sanitizeLikeKeyword(keyword)}%,city.ilike.%${sanitizeLikeKeyword(keyword)}%,prefix.ilike.%${sanitizeLikeKeyword(keyword)}%`,
       );
 
     if (error) {

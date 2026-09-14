@@ -21,6 +21,15 @@ export function responseMessage(
 export const isSuccess = (code?: number): boolean => code === RESPONSE.SUCCESS;
 
 /**
+ * @description: 清理模糊搜索关键字
+ * - 转义 LIKE 通配符（% _ \），防止通配符注入导致全表扫描
+ * - 移除 PostgREST or() 过滤器语法字符（, ( ) "），防止用户输入改变过滤语义
+ */
+export function sanitizeLikeKeyword(keyword: string): string {
+  return keyword.replace(/[,()"\\]/g, "").replace(/([%_])/g, "\\$1");
+}
+
+/**
  * @description: 统一处理 catch 错误
  */
 export function catchError(err: unknown): IResponse {

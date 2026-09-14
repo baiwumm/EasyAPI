@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 
 import { RESPONSE } from "@/enums";
 import { getSupabaseServerClient, requireAdmin } from "@/lib/supabase/server";
-import { catchError, responseMessage } from "@/lib/utils";
+import { catchError, responseMessage, sanitizeLikeKeyword } from "@/lib/utils";
 
 /*
  * @Author: 白雾茫茫丶<baiwumm.com>
@@ -65,7 +65,7 @@ export async function GET(request: NextRequest) {
 
     // 判断查询参数
     if (name) {
-      sqlQuery = sqlQuery.like("name", `%${name}%`);
+      sqlQuery = sqlQuery.like("name", `%${sanitizeLikeKeyword(name)}%`);
     }
     if (category_id) {
       sqlQuery = sqlQuery.eq("category_id", category_id);

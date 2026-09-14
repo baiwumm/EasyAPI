@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 
 import { POSTALCODE_TYPES, RESPONSE } from "@/enums";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
-import { catchError, responseMessage } from "@/lib/utils";
+import { catchError, responseMessage, sanitizeLikeKeyword } from "@/lib/utils";
 
 /*
  * @Author: 白雾茫茫丶<baiwumm.com>
@@ -68,7 +68,7 @@ export async function GET(request: NextRequest) {
         .from("ea_postal_code")
         .select(selectFields)
         .or(
-          `province.ilike.%${keyword}%,city.ilike.%${keyword}%,area.ilike.%${keyword}%`,
+          `province.ilike.%${sanitizeLikeKeyword(keyword)}%,city.ilike.%${sanitizeLikeKeyword(keyword)}%,area.ilike.%${sanitizeLikeKeyword(keyword)}%`,
         )
         .limit(20);
 

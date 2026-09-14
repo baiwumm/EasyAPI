@@ -5,7 +5,7 @@ import { NextResponse } from "next/server";
 
 import { RESPONSE } from "@/enums";
 import { getSupabaseServerClient, requireAdmin } from "@/lib/supabase/server";
-import { catchError, responseMessage } from "@/lib/utils";
+import { catchError, responseMessage, sanitizeLikeKeyword } from "@/lib/utils";
 
 /**
  * @description: 查询分类列表
@@ -51,7 +51,7 @@ export async function GET(request: NextRequest) {
 
     // 判断查询参数
     if (name) {
-      sqlQuery = sqlQuery.like("name", `%${name}%`);
+      sqlQuery = sqlQuery.like("name", `%${sanitizeLikeKeyword(name)}%`);
     }
 
     // 请求列表
