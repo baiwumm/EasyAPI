@@ -17,34 +17,15 @@ import {
 } from "@heroui/react";
 import { usePathname } from "next/navigation";
 import { useMemo, useState } from "react";
-import tinycolor from "tinycolor2";
 
 import CopyText from "@/components/CopyText";
 import RefreshButton from "@/components/RefreshButton";
 import RequestContent from "@/components/RequestContent";
+import { colorPresets, getRandomColor } from "@/lib/color";
 import { useCopy } from "@/hooks/use-copy";
 import { useSwrQuery } from "@/hooks/use-swr";
 import { get } from "@/lib/utils";
 import { getApiData } from "@/services/common";
-
-const colorPresets = [
-  "#ef4444",
-  "#f97316",
-  "#eab308",
-  "#22c55e",
-  "#06b6d4",
-  "#3b82f6",
-  "#8b5cf6",
-  "#ec4899",
-  "#f43f5e",
-];
-
-// 随机颜色
-function getRandomColor() {
-  const color = tinycolor.random();
-
-  return parseColor(color.toHexString());
-}
 
 const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
   const pathname = usePathname();

@@ -45,7 +45,10 @@ const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
       getColumns={getColumns}
       params={{ ip }}
       title={title}
-      onRefresh={() => true}
+      // 客户端先行校验（与后端 IPv4/IPv6 粗校验一致），错误输入不再等后端 toast
+      onRefresh={() =>
+        !ip.trim() || /^(\d{1,3}\.){3}\d{1,3}$|^[0-9a-fA-F:]{2,45}$/.test(ip)
+      }
     >
       <Input
         aria-label="IP 地址"

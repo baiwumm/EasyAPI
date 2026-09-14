@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import ClientComponent from "./ClientComponent";
+import QuoteWorld from "@/components/QuoteWorld";
 
 /*
  * @Author: 白雾茫茫丶<baiwumm.com>
@@ -15,5 +15,5 @@ export const metadata: Metadata = {
 };
 
 export default function Hitokoto() {
-  return <ClientComponent title="每日一言" />;
+  return <QuoteWorld mode="hitokoto" title="每日一言" />;
 }

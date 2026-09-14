@@ -2,7 +2,7 @@
 import type { FC } from "react";
 import type { ClientComponentProps } from "@/typings";
 
-import { Input, Table, toast, Typography } from "@heroui/react";
+import { Input, Table, Typography } from "@heroui/react";
 import { usePathname } from "next/navigation";
 import { useMemo, useState } from "react";
 
@@ -10,6 +10,7 @@ import EmptyContent from "@/components/EmptyContent";
 import RefreshButton from "@/components/RefreshButton";
 import RequestContent from "@/components/RequestContent";
 import TableLoading from "@/components/TableLoading";
+import { useRequireParam } from "@/hooks/use-require-param";
 import { useSwrQuery } from "@/hooks/use-swr";
 import { get } from "@/lib/utils";
 import { getApiData } from "@/services/common";
@@ -32,6 +33,7 @@ const columns: { label: string; value: keyof DataType }[] = [
 const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
   const pathname = usePathname();
   const [keyword, setKeyword] = useState("粤");
+  const requireParam = useRequireParam();
 
   // 参数处理
   const params = useMemo(() => ({ keyword }), [keyword]);
@@ -48,9 +50,7 @@ const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
 
   // 请求数据
   const reFresh = () => {
-    if (!keyword.trim()) {
-      toast.danger("参数 keyword 必填");
-
+    if (!requireParam(keyword, "keyword")) {
       return;
     }
     mutate();

@@ -12,8 +12,7 @@ import Script from "next/script";
  * 需叠加 VERCEL_ENV 判断；非 Vercel 自托管无 VERCEL_ENV，默认按生产处理
  */
 const IS_PROD =
-  process.env.NODE_ENV === "production" &&
-  process.env.VERCEL_ENV !== "preview";
+  process.env.NODE_ENV === "production" && process.env.VERCEL_ENV !== "preview";
 
 /**
  * @description: 谷歌统计

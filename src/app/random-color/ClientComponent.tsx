@@ -15,6 +15,7 @@ import tinycolor from "tinycolor2";
 
 import RefreshButton from "@/components/RefreshButton";
 import RequestContent from "@/components/RequestContent";
+import StaggerIn from "@/components/StaggerIn";
 import { RANDOM_COLOR_FORMATS } from "@/enums";
 import { useCopy } from "@/hooks/use-copy";
 import { useSwrQuery } from "@/hooks/use-swr";
@@ -68,7 +69,7 @@ const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
           loadingText="正在生成..."
           reFresh={mutate}
         >
-          <div className="flex justify-center items-center flex-wrap gap-2">
+          <StaggerIn className="flex justify-center items-center flex-wrap gap-2">
             {data.map((v: Color, index: number) => {
               const rawColor = typeof v === "string" ? v : v.hex;
               const displayColor = tinycolor(rawColor).toHexString();
@@ -86,7 +87,7 @@ const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
                 />
               );
             })}
-          </div>
+          </StaggerIn>
         </RequestContent>
       </div>
       {/* 底部区域 */}

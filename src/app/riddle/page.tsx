@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import ClientComponent from "./ClientComponent";
+import QuoteWorld from "@/components/QuoteWorld";
 
 /*
  * @Author: 白雾茫茫丶<baiwumm.com>
@@ -15,5 +15,5 @@ export const metadata: Metadata = {
 };
 
 export default function Riddle() {
-  return <ClientComponent title="歇后语" />;
+  return <QuoteWorld mode="riddle" title="歇后语" />;
 }

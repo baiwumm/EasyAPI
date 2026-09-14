@@ -9,6 +9,7 @@ import { useMemo, useState } from "react";
 import CopyChip from "@/components/CopyChip";
 import RefreshButton from "@/components/RefreshButton";
 import RequestContent from "@/components/RequestContent";
+import StaggerIn from "@/components/StaggerIn";
 import { useSwrQuery } from "@/hooks/use-swr";
 import { get } from "@/lib/utils";
 import { getApiData } from "@/services/common";
@@ -47,11 +48,11 @@ const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
           loadingText="正在生成..."
           reFresh={mutate}
         >
-          <div className="flex justify-center items-center flex-wrap gap-2">
+          <StaggerIn className="flex justify-center items-center flex-wrap gap-2">
             {data.map((v) => (
               <CopyChip key={v} value={v} />
             ))}
-          </div>
+          </StaggerIn>
         </RequestContent>
       </div>
       {/* 底部区域 */}
