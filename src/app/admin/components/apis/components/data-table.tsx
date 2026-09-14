@@ -38,7 +38,6 @@ const DataTable: FC<DataTableProps> = ({ table, loading = false }) => {
                     isRowHeader
                     allowsSorting={header.column.getCanSort()}
                     id={header.id}
-                    onPress={header.column.getToggleSortingHandler()}
                   >
                     <div className="flex items-center justify-center gap-2">
                       {flexRender(

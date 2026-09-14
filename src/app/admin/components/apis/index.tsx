@@ -9,8 +9,8 @@
 import type { AppTableFeatures } from "@/typings/table-types";
 import type { Api, ApiQueryParams, Category } from "@/typings";
 import type {
-  RowPaginationState,
-  VisibilityState,
+  ColumnVisibilityState,
+  PaginationState,
 } from "@tanstack/react-table";
 import type { FC } from "react";
 
@@ -41,7 +41,7 @@ const Apis: FC = () => {
   const [query, setQuery] = useState<
     Pick<ApiQueryParams, "name" | "category_id">
   >({ name: "", category_id: "" });
-  const [pagination, setPagination] = useState<RowPaginationState>({
+  const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
   });
@@ -50,12 +50,13 @@ const Apis: FC = () => {
     [query, pagination],
   );
   // 受控列
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
-    desc: false,
-    vpn: false,
-    commonlyUsed: false,
-    updated_at: false,
-  });
+  const [columnVisibility, setColumnVisibility] =
+    useState<ColumnVisibilityState>({
+      desc: false,
+      vpn: false,
+      commonlyUsed: false,
+      updated_at: false,
+    });
 
   // 保存弹窗
   const saveModalState = useOverlayState();

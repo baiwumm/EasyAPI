@@ -1,5 +1,5 @@
 "use client";
-import type { AppTableFeatures } from "@/typings/table-types";
+import type { AppColumnDef, AppTableFeatures } from "@/typings/table-types";
 import type { Api } from "@/typings";
 
 import { Check, PencilToSquare, TrashBin, Xmark } from "@gravity-ui/icons";
@@ -21,7 +21,7 @@ export function getColumns({
   handleDel,
   page = 1,
   pageSize = 10,
-}: ColumnsProps) {
+}: ColumnsProps): AppColumnDef<Api, any>[] {
   const booleanColumns = [
     { key: "pinned", header: "置顶" },
     { key: "is_featured", header: "推荐" },

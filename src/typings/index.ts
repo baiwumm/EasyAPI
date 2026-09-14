@@ -1,4 +1,4 @@
-import type { RowPaginationState } from "@tanstack/react-table";
+import type { PaginationState } from "@tanstack/react-table";
 import type { REQUEST_METHODS } from "@/enums";
 
 /** @description: 公共列 */
@@ -34,7 +34,7 @@ export type Category = Columns & {
 };
 
 /** @description: 分页参数 */
-export type PaginatingParams = RowPaginationState;
+export type PaginatingParams = PaginationState;
 
 /** @description: 接口查询参数 */
 export type ApiQueryParams = PaginatingParams &

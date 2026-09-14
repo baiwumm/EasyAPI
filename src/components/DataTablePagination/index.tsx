@@ -5,16 +5,17 @@
  * @LastEditTime: 2026-03-05 16:07:35
  * @Description: 渲染分页
  */
+import type { RowData } from "@tanstack/react-table";
 import type { AppTable } from "@/typings/table-types";
 
 import { Description, ListBox, Pagination, Select } from "@heroui/react";
 
-interface DataTablePaginationProps<TData> {
+interface DataTablePaginationProps<TData extends RowData> {
   table: AppTable<TData>;
   total: number;
 }
 
-function DataTablePagination<TData>({
+function DataTablePagination<TData extends RowData>({
   table,
   total = 0,
 }: DataTablePaginationProps<TData>) {

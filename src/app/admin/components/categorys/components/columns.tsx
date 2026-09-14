@@ -1,6 +1,6 @@
 "use client";
 
-import type { AppTableFeatures } from "@/typings/table-types";
+import type { AppColumnDef, AppTableFeatures } from "@/typings/table-types";
 import type { Category } from "@/typings";
 
 import { PencilToSquare, TrashBin } from "@gravity-ui/icons";
@@ -22,7 +22,7 @@ export function getColumns({
   handleDel,
   page = 1,
   pageSize = 10,
-}: ColumnsProps) {
+}: ColumnsProps): AppColumnDef<Category, any>[] {
   return [
     columnHelper.display({
       id: "index",

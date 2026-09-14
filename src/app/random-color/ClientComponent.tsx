@@ -81,7 +81,7 @@ const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
                   style={() => ({
                     boxShadow: `0 0 10px 2px ${displayColor}`,
                   })}
-                  onPress={() => copy(rawColor)}
+                  onClick={() => copy(rawColor)}
                 />
               );
             })}

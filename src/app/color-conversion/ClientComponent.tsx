@@ -95,7 +95,7 @@ const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
                   key={key}
                   className="cursor-pointer"
                   size="lg"
-                  onPress={() => copy(color)}
+                  onClick={() => copy(color)}
                 >
                   <Copy />
                   <Chip.Label>{color}</Chip.Label>
