@@ -85,7 +85,10 @@ export async function GET(request: NextRequest) {
           balance: getBalance(start, day),
         };
       }
-      result[name].work = isWork ? [...(result[name]?.work || []), day] : [];
+      // 休息日保留已累积的调休日，不能重置为空（HolidayUtil 按日期升序返回，调休日可能先于假期首日出现）
+      result[name].work = isWork
+        ? [...(result[name]?.work || []), day]
+        : result[name]?.work || [];
     });
 
     return NextResponse.json(responseMessage(Object.values(result)));
