@@ -1,13 +1,5 @@
-/*
- * @Author: 白雾茫茫丶<baiwumm.com>
- * @Date: 2026-01-28 09:01:56
- * @LastEditors: 白雾茫茫丶<baiwumm.com>
- * @LastEditTime: 2026-03-09 16:39:19
- * @Description: 数据表格
- */
+import type { RowData } from "@tanstack/react-table";
 import type { AppTable } from "@/typings/table-types";
-import type { Category } from "@/typings";
-import type { FC } from "react";
 
 import { ChevronUp } from "@gravity-ui/icons";
 import { cn, Table } from "@heroui/react";
@@ -15,19 +7,26 @@ import { flexRender } from "@tanstack/react-table";
 
 import EmptyContent from "@/components/EmptyContent";
 import TableLoading from "@/components/TableLoading";
-import { ADMIN_TABS } from "@/enums";
 
-interface DataTableProps {
-  table: AppTable<Category>;
+interface AdminDataTableProps<TData extends RowData> {
+  table: AppTable<TData>;
   loading: boolean;
+  ariaLabel: string;
 }
 
-const DataTable: FC<DataTableProps> = ({ table, loading = false }) => {
+/**
+ * TanStack 表格渲染壳（admin 通用，batch-4 合并自 apis/categorys 两份逐字符相同的实现）
+ */
+const AdminDataTable = <TData extends RowData>({
+  table,
+  loading = false,
+  ariaLabel,
+}: AdminDataTableProps<TData>) => {
   return (
     <div className="relative">
       <Table>
         <Table.ScrollContainer>
-          <Table.Content aria-label={ADMIN_TABS.label(ADMIN_TABS.CATEGOTYS)}>
+          <Table.Content aria-label={ariaLabel}>
             <Table.Header>
               {table.getHeaderGroups()[0]!.headers.map((header) => {
                 const sortDirection = header.column.getIsSorted();
@@ -79,4 +78,4 @@ const DataTable: FC<DataTableProps> = ({ table, loading = false }) => {
   );
 };
 
-export default DataTable;
+export default AdminDataTable;

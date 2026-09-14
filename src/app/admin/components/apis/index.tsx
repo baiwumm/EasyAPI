@@ -20,11 +20,11 @@ import { useTable } from "@tanstack/react-table";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { getColumns } from "./components/columns";
-import DataTable from "./components/data-table";
-import DeleteDialog from "./components/delete-dialog";
 import HeaderContent from "./components/header-content";
 import SaveModal from "./components/save-modal";
 
+import AdminDataTable from "@/components/AdminDataTable";
+import AdminDeleteDialog from "@/components/AdminDeleteDialog";
 import DataTablePagination from "@/components/DataTablePagination";
 import { RESPONSE } from "@/enums";
 import { useSwrMutation, useSwrQuery } from "@/hooks/use-swr";
@@ -224,7 +224,11 @@ const Apis: FC = () => {
           table={table}
         />
         <Card.Content>
-          <DataTable loading={loading} table={table} />
+          <AdminDataTable
+            ariaLabel="接口列表"
+            loading={loading}
+            table={table}
+          />
         </Card.Content>
         <Card.Footer>
           <DataTablePagination table={table} total={total || 0} />
@@ -238,7 +242,8 @@ const Apis: FC = () => {
         state={saveModalState}
       />
       {/* 删除弹窗 */}
-      <DeleteDialog
+      <AdminDeleteDialog
+        entity="接口"
         handleDelConfirm={handleDelConfirm}
         loading={delLoading}
         state={delDialogState}
