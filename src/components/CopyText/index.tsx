@@ -8,9 +8,9 @@
 "use client";
 import type { FC } from "react";
 
-import { Check, CircleXmark, Copy } from "@gravity-ui/icons";
-import { Button, toast } from "@heroui/react";
-import { useCallback, useRef, useState } from "react";
+import { Check, Copy } from "@gravity-ui/icons";
+import { Button } from "@heroui/react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import { useCopy } from "@/hooks/use-copy";
 
@@ -20,9 +20,19 @@ interface CopyTextProps {
 }
 
 const CopyText: FC<CopyTextProps> = ({ content = "", timeout = 3000 }) => {
-  const { copy, isSupported } = useCopy();
+  const { copy } = useCopy();
   const [copied, setCopied] = useState(false);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+
+  // 卸载时清理悬空定时器
+  useEffect(
+    () => () => {
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+      }
+    },
+    [],
+  );
 
   const resetState = useCallback(() => {
     if (timerRef.current) {
@@ -38,36 +48,15 @@ const CopyText: FC<CopyTextProps> = ({ content = "", timeout = 3000 }) => {
     // 已复制状态时不重复执行
     if (copied) return;
 
-    // 无内容
-    if (!content) {
-      toast.danger("复制失败，缺少内容!", {
-        indicator: <CircleXmark />,
-      });
+    // 无内容 / 浏览器不支持 / 复制失败均由 useCopy 内部统一 toast，此处无需重复兜底
+    const ok = await copy(content);
 
-      return;
-    }
-
-    // 浏览器不支持
-    if (!isSupported) {
-      toast.danger("复制失败，当前浏览器不支持！", {
-        indicator: <CircleXmark />,
-      });
-
-      return;
-    }
-
-    try {
-      await copy(content);
-
+    if (ok) {
       setCopied(true);
 
       resetState();
-    } catch {
-      toast.danger("复制失败，请手动复制!", {
-        indicator: <CircleXmark />,
-      });
     }
-  }, [content, copied, isSupported, resetState, copy]);
+  }, [content, copied, resetState, copy]);
 
   return (
     <Button
