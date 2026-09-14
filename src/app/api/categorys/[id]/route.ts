@@ -31,6 +31,25 @@ export async function DELETE(
 
     const supabase = await getSupabaseServerClient();
 
+    // 服务端引用检查：分类下仍有接口时拒绝删除（不能只依赖前端守卫，
+    // 否则数据陈旧时会产生孤儿接口）
+    const { count, error: countError } = await supabase
+      .from("ea_apis")
+      .select("id", { count: "exact", head: true })
+      .eq("category_id", id);
+
+    if (countError) {
+      return NextResponse.json(
+        responseMessage(null, countError.message, RESPONSE.ERROR),
+      );
+    }
+
+    if ((count ?? 0) > 0) {
+      return NextResponse.json(
+        responseMessage(null, "该分类下存在关联接口，无法删除", RESPONSE.ERROR),
+      );
+    }
+
     // 删除分类
     const { data, error } = await supabase
       .from("ea_categorys")

@@ -66,7 +66,7 @@ export function getColumns({
       },
     }),
 
-    columnHelper.accessor((row) => row.category.name, {
+    columnHelper.accessor((row) => row.category?.name ?? "--", {
       id: "category",
       header: "所属分类",
       cell: ({ getValue }) => (
