@@ -85,9 +85,9 @@ const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
                               distance,
                               work = [],
                             },
-                            index,
+                            _index,
                           ) => (
-                            <Table.Row key={index}>
+                            <Table.Row key={`${name}-${start}`}>
                               <Table.Cell>
                                 <Chip color="accent" variant="soft">
                                   {name}

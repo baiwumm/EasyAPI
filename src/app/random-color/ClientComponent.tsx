@@ -69,13 +69,13 @@ const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
           reFresh={mutate}
         >
           <div className="flex justify-center items-center flex-wrap gap-2">
-            {data.map((v: Color) => {
+            {data.map((v: Color, index: number) => {
               const rawColor = typeof v === "string" ? v : v.hex;
               const displayColor = tinycolor(rawColor).toHexString();
 
               return (
                 <ColorSwatch
-                  key={displayColor}
+                  key={`${displayColor}-${index}`}
                   aria-label={displayColor}
                   className="cursor-pointer"
                   color={displayColor}

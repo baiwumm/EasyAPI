@@ -21,6 +21,14 @@ interface DataType {
   prefix: string;
 }
 
+// 列定义（静态，提升模块级避免每次渲染重建）
+const columns: { label: string; value: keyof DataType }[] = [
+  { label: "省份", value: "province" },
+  { label: "城市", value: "city" },
+  { label: "省份车牌简称", value: "code" },
+  { label: "电车牌号前缀号", value: "prefix" },
+];
+
 const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
   const pathname = usePathname();
   const [keyword, setKeyword] = useState("粤");
@@ -47,14 +55,6 @@ const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
     }
     mutate();
   };
-
-  // 列定义
-  const columns: { label: string; value: keyof DataType }[] = [
-    { label: "省份", value: "province" },
-    { label: "城市", value: "city" },
-    { label: "省份车牌简称", value: "code" },
-    { label: "电车牌号前缀号", value: "prefix" },
-  ];
 
   return (
     <div className="flex-1 flex flex-col justify-between gap-4">

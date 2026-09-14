@@ -57,8 +57,8 @@ const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
                     renderEmptyState={() => (loading ? null : <EmptyContent />)}
                   >
                     {data?.length
-                      ? data.map(({ name, emoji }, index) => (
-                          <Table.Row key={index}>
+                      ? data.map(({ name, emoji }) => (
+                          <Table.Row key={name}>
                             <Table.Cell>
                               <Chip color="accent" variant="soft">
                                 {name}

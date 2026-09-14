@@ -21,6 +21,14 @@ interface DataType {
   phoneCode: string;
 }
 
+// 列定义（静态，提升模块级避免每次渲染重建；实测 DB：name 存中文、englishName 存英文）
+const columns: { label: string; value: keyof DataType }[] = [
+  { label: "国家（中文）", value: "name" },
+  { label: "国家（英文）", value: "englishName" },
+  { label: "ISO国家代码", value: "countryCode" },
+  { label: "国际电话区号", value: "phoneCode" },
+];
+
 const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
   const pathname = usePathname();
   const [keyword, setKeyword] = useState("中国");
@@ -47,14 +55,6 @@ const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
     }
     mutate();
   };
-
-  // 列定义（实测 DB：name 存中文、englishName 存英文）
-  const columns: { label: string; value: keyof DataType }[] = [
-    { label: "国家（中文）", value: "name" },
-    { label: "国家（英文）", value: "englishName" },
-    { label: "ISO国家代码", value: "countryCode" },
-    { label: "国际电话区号", value: "phoneCode" },
-  ];
 
   return (
     <div className="flex-1 flex flex-col justify-between gap-4">
@@ -83,7 +83,7 @@ const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
                   >
                     {data?.length
                       ? data.map((v, index) => (
-                          <Table.Row key={index}>
+                          <Table.Row key={get(v, "countryCode", index)}>
                             {columns.map(({ value }) => (
                               <Table.Cell key={value}>
                                 {get(v, value, "--")}

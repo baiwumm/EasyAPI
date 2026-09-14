@@ -33,7 +33,6 @@ const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
   const {
     data = [],
     isLoading,
-    loading,
     error,
     mutate,
   } = useSwrQuery([pathname, query], async () =>
@@ -74,7 +73,7 @@ const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
                 alt={title}
                 className="rounded-xl cursor-pointer"
                 height={size}
-                loading="eager"
+                loading="lazy"
                 src={url}
                 width={size}
                 onClick={() => copy(url)}
