@@ -48,6 +48,7 @@ export function getBingWallpaper(): Promise<BingWallpaper> {
 async function fetchBingWallpaper(): Promise<BingWallpaper> {
   const response = await fetch(
     "https://www.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1&mkt=zh-CN",
+    { signal: AbortSignal.timeout(5000) },
   );
 
   if (!response.ok) {
