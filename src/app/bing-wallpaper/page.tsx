@@ -12,11 +12,11 @@ import { getUrl } from "@/lib/utils";
  * @Date: 2026-02-28 14:42:52
  * @LastEditors: 白雾茫茫丶<baiwumm.com>
  * @LastEditTime: 2026-07-02 14:11:14
- * @Description: bind 每日壁纸
+ * @Description: Bing 每日壁纸
  */
 
 export const metadata: Metadata = {
-  title: "bind 每日壁纸",
+  title: "Bing 每日壁纸",
 };
 
 // 每日壁纸一天内不变，页面级 ISR 缓存 24 小时
@@ -32,7 +32,7 @@ export default async function BingWallpaper() {
         className="text-2xl font-black shrink-0 tracking-normal"
         type="h1"
       >
-        bind 每日壁纸
+        Bing 每日壁纸
       </Typography>
       <div className="relative flex-1 w-full h-full">
         <Image

@@ -251,9 +251,9 @@ const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
             </Select.Popover>
           </Select>
           <Input
-            aria-label="二维码内容"
+            aria-label="条形码内容"
             className="w-50"
-            placeholder="二维码内容"
+            placeholder="条形码内容"
             value={text}
             onChange={(event) => setText(event.target.value)}
             onKeyDown={(event) => {

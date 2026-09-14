@@ -52,7 +52,7 @@ const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
   // 请求数据
   const reload = () => {
     if (!keyword?.trim()) {
-      toast.danger("参数 keyWord 必填");
+      toast.danger("参数 keyword 必填");
 
       return;
     }
