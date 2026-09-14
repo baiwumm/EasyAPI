@@ -4,7 +4,8 @@ import { NextResponse } from "next/server";
 
 import { RESPONSE } from "@/enums";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
-import { catchError, responseMessage, sanitizeLikeKeyword } from "@/lib/utils";
+import { ilikeOr } from "@/lib/server/api-helpers";
+import { catchError, responseMessage } from "@/lib/utils";
 
 /*
  * @Author: 白雾茫茫丶<baiwumm.com>
@@ -33,9 +34,7 @@ export async function GET(request: NextRequest) {
     const { data, error } = await supabase
       .from("ea_country_code")
       .select("englishName,name,countryCode,phoneCode")
-      .or(
-        `name.ilike.%${sanitizeLikeKeyword(keyword)}%,phoneCode.ilike.%${sanitizeLikeKeyword(keyword)}%`,
-      );
+      .or(ilikeOr(keyword, ["name", "phoneCode"]));
 
     // 数据库错误如实返回（此前与查空混用同一文案，误导排查）
     if (error) {
