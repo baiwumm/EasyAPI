@@ -56,7 +56,8 @@ function getRandomColor() {
 const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
   const pathname = usePathname();
   const { copy } = useCopy();
-  const [color, setColor] = useState(getRandomColor);
+  // 初始值固定，避免 SSR/CSR 各随机一次导致 hydration mismatch；点击"随机"再洗牌
+  const [color, setColor] = useState(() => parseColor("#3b82f6"));
 
   // 参数处理
   const params = useMemo(() => ({ color }), [color]);

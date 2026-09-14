@@ -80,7 +80,10 @@ function generateUsers(length = 5) {
 
 const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
   const [style, setStyle] = useState<Style>(AVATAR_STYLES.RANDOM);
-  const [users, setUsers] = useState(generateUsers);
+  // 初始头像名取名字池前 N 个（确定性），避免 SSR/CSR 各随机一次导致 hydration mismatch；点击"换一批"再随机
+  const [users, setUsers] = useState(() =>
+    NAME_POOL.slice(0, 5).map((name) => ({ name })),
+  );
   const [count, setCount] = useState(5); // 生成的数量
   const [size, setSize] = useState(128); // 生成的大小
 
