@@ -16,9 +16,13 @@ import sharp from "sharp";
 import { DOMImplementation, XMLSerializer } from "xmldom";
 
 import { BARCODE_FORMATS, BARCODE_TYPES, RESPONSE } from "@/enums";
-import { catchError, responseMessage } from "@/lib/utils";
+import { catchError, clamp, responseMessage } from "@/lib/utils";
 
 type BarcodeFormat = (typeof BARCODE_FORMATS.keys)[number];
+
+// 防滥用限制：条形码实际编码容量有限，且 JsBarcode/sharp 的尺寸参数无界会放大内存占用
+const MAX_TEXT_LENGTH = 200;
+const MAX_OPTION_VALUE = 500;
 
 export async function GET(request: NextRequest) {
   try {
@@ -34,11 +38,31 @@ export async function GET(request: NextRequest) {
       );
     }
 
+    if (text.length > MAX_TEXT_LENGTH) {
+      return NextResponse.json(
+        responseMessage(
+          null,
+          `参数 text 长度不能超过 ${MAX_TEXT_LENGTH} 个字符`,
+          RESPONSE.ERROR,
+        ),
+      );
+    }
+
     if (!isValidFormat(format)) {
       return NextResponse.json(
         responseMessage(
           null,
           `format 格式错误，只支持${BARCODE_FORMATS.labels.join("、")}`,
+          RESPONSE.ERROR,
+        ),
+      );
+    }
+
+    if (type !== BARCODE_TYPES.SVG && type !== BARCODE_TYPES.PNG) {
+      return NextResponse.json(
+        responseMessage(
+          null,
+          `type 格式错误，支持 ${BARCODE_TYPES.labels.join("、")}`,
           RESPONSE.ERROR,
         ),
       );
@@ -55,11 +79,13 @@ export async function GET(request: NextRequest) {
       "svg",
     );
 
+    // 任意查询参数转数字后直传 JsBarcode，统一钳制在 0 ~ 500
     const extraOptions = Object.fromEntries(
-      Object.entries(rest).map(([k, v]) => [
-        k,
-        Number.isNaN(Number(v)) ? v : Number(v),
-      ]),
+      Object.entries(rest).map(([k, v]) => {
+        const n = Number(v);
+
+        return [k, Number.isNaN(n) ? v : clamp(n, 0, MAX_OPTION_VALUE)];
+      }),
     );
 
     const options: Options = {
