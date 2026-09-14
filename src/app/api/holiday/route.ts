@@ -91,7 +91,10 @@ export async function GET(request: NextRequest) {
         : result[name]?.work || [];
     });
 
-    return NextResponse.json(responseMessage(Object.values(result)));
+    // 年度节假日数据基本不变，允许缓存一天
+    return NextResponse.json(responseMessage(Object.values(result)), {
+      headers: { "Cache-Control": "public, max-age=86400" },
+    });
   } catch (err) {
     return NextResponse.json(catchError(err));
   }

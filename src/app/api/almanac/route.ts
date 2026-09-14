@@ -80,7 +80,10 @@ export async function GET(request: NextRequest) {
 
     result.unshift(result.pop()); // 将子时提前
 
-    return NextResponse.json(responseMessage(result));
+    // 日期确定则结果恒定，允许缓存一天
+    return NextResponse.json(responseMessage(result), {
+      headers: { "Cache-Control": "public, max-age=86400" },
+    });
   } catch (err) {
     return NextResponse.json(catchError(err));
   }

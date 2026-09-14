@@ -64,7 +64,10 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    return NextResponse.json(responseMessage(result));
+    // 年份确定则结果恒定，允许浏览器/CDN 缓存一天
+    return NextResponse.json(responseMessage(result), {
+      headers: { "Cache-Control": "public, max-age=86400" },
+    });
   } catch (err) {
     return NextResponse.json(catchError(err));
   }

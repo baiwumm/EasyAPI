@@ -88,7 +88,10 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    return NextResponse.json(responseMessage(data));
+    // 字典表基本只读，短缓存 + 后台刷新减轻 Supabase 压力
+    return NextResponse.json(responseMessage(data), {
+      headers: { "Cache-Control": "public, max-age=3600, stale-while-revalidate=86400" },
+    });
   } catch (err) {
     return NextResponse.json(catchError(err));
   }
