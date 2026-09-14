@@ -2,7 +2,7 @@
 import type { FC } from "react";
 import type { ClientComponentProps } from "@/typings";
 
-import { ArrowDownToSquare } from "@gravity-ui/icons";
+import { ArrowDownToSquare, CircleXmarkFill } from "@gravity-ui/icons";
 import {
   Button,
   Input,
@@ -18,8 +18,9 @@ import { useEffect, useMemo, useState } from "react";
 
 import RefreshButton from "@/components/RefreshButton";
 import RequestContent from "@/components/RequestContent";
-import { QRCODE_FORMATS } from "@/enums";
+import { QRCODE_FORMATS, RESPONSE } from "@/enums";
 import { useSwrMutation } from "@/hooks/use-swr";
+import { isSuccess } from "@/lib/utils";
 
 type Format = typeof QRCODE_FORMATS.valueType;
 
@@ -51,31 +52,52 @@ const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
 
       const res = await fetch(url);
 
+      const contentType = res.headers.get("content-type") || "";
+
+      // JSON 响应：dataurl 格式的成功结果或业务错误信息，按 code 区分
+      if (contentType.includes("application/json")) {
+        const { code, msg, data } = await res.json();
+
+        if (format === QRCODE_FORMATS.DATAURL && isSuccess(code)) {
+          return data as string;
+        }
+
+        if (!isSuccess(code)) {
+          toast.danger(msg || RESPONSE.label(RESPONSE.ERROR), {
+            indicator: <CircleXmarkFill />,
+            timeout: 3000,
+          });
+        }
+
+        return null;
+      }
+
       if (!res.ok) {
         throw new Error("Network response was not ok");
       }
 
       // 根据 format 决定如何读取响应
-      if (format === QRCODE_FORMATS.DATAURL) {
-        const json = await res.json();
-
-        return json.data; // 直接返回 data 字符串
-      } else if (format === QRCODE_FORMATS.SVG) {
+      if (format === QRCODE_FORMATS.SVG) {
         const svgText = await res.text();
 
         // 转为 data URL 以便 img 标签显示
         return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svgText)}`;
-      } else {
-        // format === 'png' 或其他二进制格式
-        const blob = await res.blob();
-
-        return URL.createObjectURL(blob);
       }
+
+      // format === 'png' 或其他二进制格式
+      const blob = await res.blob();
+
+      return URL.createObjectURL(blob);
     },
     {
       onSuccess: (imgUrl) => {
-        setImgSrc(imgUrl);
-        setDownloadUrl(imgUrl); // 用于下载
+        if (imgUrl) {
+          if (downloadUrl?.startsWith("blob:")) {
+            URL.revokeObjectURL(downloadUrl);
+          }
+          setImgSrc(imgUrl);
+          setDownloadUrl(imgUrl); // 用于下载
+        }
       },
     },
   );
