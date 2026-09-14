@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 
 import { RESPONSE } from "@/enums";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
-import { catchError, responseMessage } from "@/lib/utils";
+import { catchError, pick, responseMessage } from "@/lib/utils";
 
 /*
  * @Author: 白雾茫茫丶<baiwumm.com>
@@ -47,7 +47,8 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    return NextResponse.json(responseMessage(data));
+    // 只输出 content，不暴露 id/created_at 等内部列（与其他文案路由契约一致）
+    return NextResponse.json(responseMessage(pick(data, ["content"])));
   } catch (err) {
     return NextResponse.json(catchError(err));
   }
