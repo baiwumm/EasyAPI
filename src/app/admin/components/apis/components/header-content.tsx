@@ -2,7 +2,7 @@
  * @Author: 白雾茫茫丶<baiwumm.com>
  * @Date: 2026-02-02 10:19:47
  * @LastEditors: 白雾茫茫丶<baiwumm.com>
- * @LastEditTime: 2026-02-02 11:28:00
+ * @LastEditTime: 2026-09-14 15:08:32
  * @Description: 顶部区域
  */
 "use client";
@@ -83,6 +83,7 @@ const HeaderContent: FC<HeaderContentProps> = ({
         >
           <Select.Trigger>
             <Select.Value />
+            <Select.ClearButton />
             <Select.Indicator />
           </Select.Trigger>
           <Select.Popover>
