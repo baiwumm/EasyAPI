@@ -120,7 +120,7 @@ const Apis: FC = () => {
       setEditData(row);
       saveModalState.open();
     },
-    [saveModalState],
+    [saveModalState.open], // open 引用稳定，聚合对象每次渲染都是新引用
   );
 
   // 删除接口
@@ -154,7 +154,7 @@ const Apis: FC = () => {
       setEditData(row);
       delDialogState.open();
     },
-    [delDialogState],
+    [delDialogState.open], // open 引用稳定，聚合对象每次渲染都是新引用
   );
 
   // 确认删除回调
