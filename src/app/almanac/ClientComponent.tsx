@@ -55,6 +55,8 @@ const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
   // 服务端时区与用户时区可能不同天，直接初始化会 hydration mismatch
   const [date, setDate] = useState<DateValue | null>(null);
 
+  // 时区相关的"今天"只能在客户端确定，挂载期 setState 是有意为之
+  /* eslint-disable-next-line react-hooks/set-state-in-effect */
   useEffect(() => {
     setDate(today(getLocalTimeZone()));
   }, []);
