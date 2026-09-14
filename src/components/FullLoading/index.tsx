@@ -3,7 +3,10 @@
  * @Date: 2025-11-28 14:14:54
  * @LastEditors: 白雾茫茫丶<baiwumm.com>
  * @LastEditTime: 2026-07-22 18:17:46
- * @Description: 全局 Loading（hydration 完成前显示全屏遮罩，隐藏水合等待期，数据就绪后一次性呈现）
+ * @Description: 全局 Loading（hydration 完成前的全屏过渡遮罩）
+ * 注意：children 必须始终渲染。此前水合前会把整棵子树替换为 Splash，
+ * SSR HTML 里只有"加载中"，不执行 JS 的爬虫抓到的是空站，LCP 也被推迟；
+ * 现在内容正常输出到 HTML，遮罩仅作视觉过渡，水合完成后自动移除。
  */
 "use client";
 import type { FC, ReactNode } from "react";
@@ -17,19 +20,19 @@ interface FullLoadingProps {
 const FullLoading: FC<FullLoadingProps> = ({ children }) => {
   const hydrated = useIsHydrated();
 
-  // 判断组件是否挂载
-  if (!hydrated) {
-    return (
-      <div className="fixed inset-0 flex w-screen h-screen justify-center items-center flex-col z-999 overflow-hidden bg-background">
-        <div className="flex flex-col items-center gap-2">
-          <Spinner />
-          <Description className="font-black">加载中,请稍后...</Description>
+  return (
+    <>
+      {children}
+      {!hydrated && (
+        <div className="fixed inset-0 flex w-screen h-screen justify-center items-center flex-col z-999 overflow-hidden bg-background">
+          <div className="flex flex-col items-center gap-2">
+            <Spinner />
+            <Description className="font-black">加载中,请稍后...</Description>
+          </div>
         </div>
-      </div>
-    );
-  }
-
-  return children;
+      )}
+    </>
+  );
 };
 
 export default FullLoading;

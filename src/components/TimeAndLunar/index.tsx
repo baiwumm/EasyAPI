@@ -14,7 +14,9 @@ import { Lunar } from "lunar-typescript";
 import { memo, useEffect, useState } from "react";
 
 const TimeAndLunar: FC = memo(function TimeAndLunar() {
-  const [now, setNow] = useState(() => new Date());
+  // 初始为 null：new Date() 直接初始化会让 SSR 与客户端水合渲染出不同时间；
+  // 挂载后由轮询填充，此前该不匹配被 FullLoading 门控掩盖
+  const [now, setNow] = useState<Date | null>(null);
   const [lunar, setLunar] = useState("");
 
   useEffect(() => {
@@ -54,37 +56,42 @@ const TimeAndLunar: FC = memo(function TimeAndLunar() {
 
   return (
     <div className="justify-self-center hidden sm:flex flex-col gap-1 text-center">
-      {/* 数字流时间 */}
-      <NumberFlowGroup>
-        <div className="flex items-center justify-center text-sm">
-          <NumberFlow format={{ useGrouping: false }} value={d.getFullYear()} />
-          <NumberFlow
-            format={{ minimumIntegerDigits: 2 }}
-            prefix="-"
-            value={d.getMonth() + 1}
-          />
-          <NumberFlow
-            format={{ minimumIntegerDigits: 2 }}
-            prefix="-"
-            value={d.getDate()}
-          />
-          <span className="mx-1"> </span>
-          <NumberFlow
-            format={{ minimumIntegerDigits: 2 }}
-            value={d.getHours()}
-          />
-          <NumberFlow
-            format={{ minimumIntegerDigits: 2 }}
-            prefix=":"
-            value={d.getMinutes()}
-          />
-          <NumberFlow
-            format={{ minimumIntegerDigits: 2 }}
-            prefix=":"
-            value={d.getSeconds()}
-          />
-        </div>
-      </NumberFlowGroup>
+      {/* 数字流时间（挂载后才有值，避免水合不匹配） */}
+      {d && (
+        <NumberFlowGroup>
+          <div className="flex items-center justify-center text-sm">
+            <NumberFlow
+              format={{ useGrouping: false }}
+              value={d.getFullYear()}
+            />
+            <NumberFlow
+              format={{ minimumIntegerDigits: 2 }}
+              prefix="-"
+              value={d.getMonth() + 1}
+            />
+            <NumberFlow
+              format={{ minimumIntegerDigits: 2 }}
+              prefix="-"
+              value={d.getDate()}
+            />
+            <span className="mx-1"> </span>
+            <NumberFlow
+              format={{ minimumIntegerDigits: 2 }}
+              value={d.getHours()}
+            />
+            <NumberFlow
+              format={{ minimumIntegerDigits: 2 }}
+              prefix=":"
+              value={d.getMinutes()}
+            />
+            <NumberFlow
+              format={{ minimumIntegerDigits: 2 }}
+              prefix=":"
+              value={d.getSeconds()}
+            />
+          </div>
+        </NumberFlowGroup>
+      )}
       {/* 农历 */}
       <Description>{lunar || "加载农历中..."}</Description>
     </div>
