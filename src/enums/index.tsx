@@ -5,6 +5,7 @@ import { Enum } from "enum-plus";
  */
 export const RESPONSE = Enum({
   SUCCESS: { value: 200, label: "请求成功" },
+  DUPLICATE: { value: -1, label: "数据已存在" },
   ERROR: { value: 500, label: "请求失败" },
 });
 

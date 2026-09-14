@@ -137,7 +137,9 @@ export async function POST(request: NextRequest) {
     if (error) {
       // 判断是否违反唯一性约束（PostgreSQL 错误代码 23505）
       if (error.code === "23505") {
-        return NextResponse.json(responseMessage(null, "接口名称已存在！", -1));
+        return NextResponse.json(
+          responseMessage(null, "接口名称已存在！", RESPONSE.DUPLICATE),
+        );
       }
 
       // 其他错误
