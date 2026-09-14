@@ -73,10 +73,7 @@ const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
                 <Table.Content aria-label={title} className="min-w-150">
                   <Table.Header className="sticky top-0 z-10 bg-surface-secondary">
                     {columns.map(({ label, value }) => (
-                      <Table.Column
-                        key={value}
-                        isRowHeader={value === "name"}
-                      >
+                      <Table.Column key={value} isRowHeader={value === "name"}>
                         {label}
                       </Table.Column>
                     ))}
