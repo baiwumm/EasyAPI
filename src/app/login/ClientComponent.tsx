@@ -107,10 +107,6 @@ const ClientComponent: FC = () => {
         return `登录失败，请稍后重试：${err.message}`;
       },
     });
-
-    setTimeout(() => {
-      toast.clear();
-    }, 2000);
   };
 
   // 谷歌或者 Github 登录
