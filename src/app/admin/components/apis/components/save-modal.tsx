@@ -90,6 +90,21 @@ const SaveModal: FC<SaveModalProps> = ({
       is_featured: formData.has("is_featured"),
     };
 
+    // 兜底校验：Select 的空值/非法值不直发服务端（避免 FK/枚举原始错误直接暴露）
+    if (
+      !data.category_id ||
+      !data.name ||
+      !data.path ||
+      !REQUEST_METHODS.values.includes(data.method as never)
+    ) {
+      toast.danger("请完整填写表单必填项", {
+        indicator: <CircleXmarkFill />,
+        timeout: 3000,
+      });
+
+      return;
+    }
+
     trigger(data);
   };
 
@@ -122,6 +137,7 @@ const SaveModal: FC<SaveModalProps> = ({
                   defaultValue={initialValues?.category_id ?? ""}
                   name="category_id"
                   placeholder="请选择所属分类"
+                  validate={(value) => (value ? null : "请选择所属分类")}
                   variant="secondary"
                 >
                   <Label>所属分类</Label>
@@ -220,6 +236,11 @@ const SaveModal: FC<SaveModalProps> = ({
                   defaultValue={initialValues?.method ?? ""}
                   name="method"
                   placeholder="请选择请求方式"
+                  validate={(value) =>
+                    value && REQUEST_METHODS.values.includes(value as never)
+                      ? null
+                      : "请选择请求方式"
+                  }
                   variant="secondary"
                 >
                   <Label>请求方式</Label>
