@@ -87,6 +87,19 @@ async function request<T>(
 
     // 网络错误，直接抛出
     if (!response.ok) {
+      // 会话过期：统一提示并跳转登录页（否则后台写操作静默失败，用户误以为提交成功）
+      if (
+        response.status === 401 &&
+        typeof window !== "undefined" &&
+        !window.location.pathname.startsWith("/login")
+      ) {
+        toast.danger("登录已过期，请重新登录", {
+          indicator: createElement(CircleXmarkFill),
+          timeout: 3000,
+        });
+        window.location.assign("/login?expired=1");
+      }
+
       throw new Error(`请求失败 ${response.status}`);
     }
 

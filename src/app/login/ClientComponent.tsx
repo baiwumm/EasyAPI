@@ -25,7 +25,7 @@ import {
   toast,
 } from "@heroui/react";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { OAUTH_PROVIDERS } from "@/enums";
 import { GithubIcon, GoogleIcon } from "@/lib/icons";
@@ -43,6 +43,29 @@ const ClientComponent: FC = () => {
   const [oauthLoading, setOauthLoading] = useState(false);
   // 是否显示密码
   const [showPassword, setShowPassword] = useState(false);
+
+  // 会话过期跳转提示（来自 request.ts 的 401 统一处理），展示后清理查询参数
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+
+    if (!params.get("expired")) {
+      return;
+    }
+
+    toast.danger("登录已过期，请重新登录", {
+      indicator: <CircleXmark />,
+      timeout: 3000,
+    });
+    params.delete("expired");
+
+    const query = params.toString();
+
+    window.history.replaceState(
+      null,
+      "",
+      window.location.pathname + (query ? `?${query}` : ""),
+    );
+  }, []);
 
   // 表单提交
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
