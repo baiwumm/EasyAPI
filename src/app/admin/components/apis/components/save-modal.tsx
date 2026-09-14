@@ -3,7 +3,7 @@ import type { UseOverlayStateReturn } from "@heroui/react";
 import type { Api, ApiSaveParams, Category } from "@/typings";
 import type { FC, FormEvent } from "react";
 
-import { CircleCheckFill, Globe } from "@gravity-ui/icons";
+import { CircleCheckFill, CircleXmarkFill, Globe } from "@gravity-ui/icons";
 import {
   Button,
   Checkbox,
