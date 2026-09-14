@@ -37,9 +37,10 @@ export async function GET(request: NextRequest) {
         `province.ilike.%${sanitizeLikeKeyword(keyword)}%,city.ilike.%${sanitizeLikeKeyword(keyword)}%,prefix.ilike.%${sanitizeLikeKeyword(keyword)}%`,
       );
 
+    // 数据库错误如实返回（此前与查空混用同一文案，误导排查）
     if (error) {
       return NextResponse.json(
-        responseMessage(null, "未找到相关车牌归属地信息", RESPONSE.ERROR),
+        responseMessage(null, error.message, RESPONSE.ERROR),
       );
     }
 
