@@ -91,7 +91,8 @@ const QuoteWorld: FC<QuoteWorldProps> = ({
               className="text-xl sm:text-2xl py-6"
               loop={false}
               pauseDuration={1500}
-              text={get(data, "content", "服务器开小差了...")}
+              // 业务失败时不伪造内容：空文本触发完成回调，界面静默等待重试
+              text={get(data, "content", "")}
               typingSpeed={75}
               onSentenceComplete={onSentenceComplete}
             />

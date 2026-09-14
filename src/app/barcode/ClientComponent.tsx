@@ -87,13 +87,22 @@ const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
       }
     },
     {
+      // 网络异常：清掉旧图，避免把旧结果误读为本次生成成功
+      onError: () => {
+        setImgSrc("");
+        setDownloadUrl("");
+      },
       onSuccess: (res) => {
+        if (downloadUrl?.startsWith("blob:")) {
+          URL.revokeObjectURL(downloadUrl);
+        }
         if (res) {
-          if (downloadUrl?.startsWith("blob:")) {
-            URL.revokeObjectURL(downloadUrl);
-          }
           setImgSrc(res);
           setDownloadUrl(res); // 用于下载
+        } else {
+          // 业务失败：清掉旧图
+          setImgSrc("");
+          setDownloadUrl("");
         }
       },
     },
