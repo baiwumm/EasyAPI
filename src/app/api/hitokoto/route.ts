@@ -14,12 +14,31 @@ import { catchError, responseMessage } from "@/lib/utils";
  * @Description: 每日一言
  */
 
+// 一言官方句子类型白名单（与前端筛选选项一致）
+const ALLOWED_TYPES = new Set([
+  "a",
+  "b",
+  "c",
+  "d",
+  "e",
+  "f",
+  "g",
+  "h",
+  "i",
+  "j",
+  "k",
+  "l",
+]);
+
+// 长度过滤边界：防止传负数/超大值给 RPC
+const MAX_LENGTH = 1000;
+
 export async function GET(request: NextRequest) {
   try {
     // 解析 URL 查询参数
     const searchParams = request.nextUrl.searchParams;
     // 参数处理
-    const types = searchParams.get("type")
+    const typeList = searchParams.get("type")
       ? searchParams.get("type")!.split(",")
       : null;
 
@@ -41,6 +60,42 @@ export async function GET(request: NextRequest) {
       return NextResponse.json(
         responseMessage(null, "minLength/maxLength 必须是数字", RESPONSE.ERROR),
       );
+    }
+
+    if (
+      (minLength !== null && (minLength < 0 || minLength > MAX_LENGTH)) ||
+      (maxLength !== null && (maxLength < 0 || maxLength > MAX_LENGTH))
+    ) {
+      return NextResponse.json(
+        responseMessage(
+          null,
+          `minLength/maxLength 必须在 0 ~ ${MAX_LENGTH} 之间`,
+          RESPONSE.ERROR,
+        ),
+      );
+    }
+
+    if (minLength !== null && maxLength !== null && minLength > maxLength) {
+      return NextResponse.json(
+        responseMessage(null, "minLength 不能大于 maxLength", RESPONSE.ERROR),
+      );
+    }
+
+    // type 白名单校验：未校验的值会直传 RPC
+    let types: string[] | null = null;
+
+    if (typeList) {
+      if (!typeList.every((type) => ALLOWED_TYPES.has(type))) {
+        return NextResponse.json(
+          responseMessage(
+            null,
+            `type 参数不合法，可选值：${[...ALLOWED_TYPES].join("、")}`,
+            RESPONSE.ERROR,
+          ),
+        );
+      }
+
+      types = typeList;
     }
 
     const supabase = await getSupabaseServerClient();
