@@ -91,7 +91,8 @@ export async function GET(request: NextRequest) {
     const options: Options = {
       format,
       ...extraOptions,
-      xmlDocument: document,
+      // @xmldom/xmldom 的 Document 与 lib.dom 的 XMLDocument 类型不同源，运行时结构兼容
+      xmlDocument: document as unknown as XMLDocument,
     };
 
     JsBarcode(svgNode, text, options);
