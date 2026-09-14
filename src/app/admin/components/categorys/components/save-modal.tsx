@@ -18,6 +18,7 @@ import {
   TextField,
   toast,
 } from "@heroui/react";
+import { useSWRConfig } from "swr";
 
 import { RESPONSE } from "@/enums";
 import { useSwrMutation } from "@/hooks/use-swr";
@@ -35,6 +36,7 @@ const SaveModal: FC<SaveModalProps> = ({
   handleRefresh,
 }) => {
   const actionText = initialValues ? "编辑" : "新增";
+  const { mutate: globalMutate } = useSWRConfig();
 
   // 保存表单（新增/编辑复用，按 initialValues 选择 service）
   const { loading, trigger } = useSwrMutation(
@@ -50,6 +52,8 @@ const SaveModal: FC<SaveModalProps> = ({
             indicator: <CircleCheckFill />,
           });
           handleRefresh?.();
+          // 联动刷新 apis tab 的分类下拉缓存（独立 key "/categorys:list"）
+          globalMutate("/categorys:list");
         }
       },
     },
