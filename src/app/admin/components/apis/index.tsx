@@ -104,11 +104,13 @@ const Apis: FC = () => {
     setCategoryId("");
     setQuery({ name: "", category_id: "" });
     setPagination({ pageIndex: 0, pageSize: 10 });
-    // 重置后 key 未变（已是空查询 + 第一页）时手动刷新
+    // 重置后 key 未变（已是空查询 + 第一页 + 默认 pageSize）时手动刷新
+    // 需含 pageSize 判断：pageSize 变化本身会因 key 改变触发请求，再 mutate 会双请求竞态
     if (
       query.name === "" &&
       query.category_id === "" &&
-      pagination.pageIndex === 0
+      pagination.pageIndex === 0 &&
+      pagination.pageSize === 10
     ) {
       mutate();
     }
