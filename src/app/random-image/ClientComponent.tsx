@@ -2,11 +2,11 @@
 import type { FC } from "react";
 import type { ClientComponentProps } from "@/typings";
 
-import { NumberField, Typography } from "@heroui/react";
-import Image from "next/image";
+import { Button, NumberField, Typography } from "@heroui/react";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 
+import GridReveal from "@/components/GridReveal";
 import RefreshButton from "@/components/RefreshButton";
 import RequestContent from "@/components/RequestContent";
 import { useCommittedParams } from "@/hooks/use-committed-params";
@@ -65,16 +65,24 @@ const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
         >
           <div className="flex items-center gap-4 flex-wrap">
             {data.map((url) => (
-              <Image
+              <Button
                 key={url}
-                alt={title}
-                className="rounded-xl cursor-pointer"
-                height={params.height}
-                loading="lazy"
-                src={url}
-                width={params.width}
-                onClick={() => copy(url)}
-              />
+                aria-label={`复制${title}地址`}
+                className="h-auto min-w-0 rounded-xl bg-transparent p-0 shadow-none hover:scale-[1.01] hover:bg-transparent"
+                variant="ghost"
+                onPress={() => {
+                  void copy(url);
+                }}
+              >
+                <GridReveal
+                  alt={title}
+                  aspect={params.width / params.height}
+                  className="rounded-xl"
+                  estimatedDuration={1600}
+                  src={url}
+                  style={{ width: params.width }}
+                />
+              </Button>
             ))}
           </div>
         </RequestContent>
