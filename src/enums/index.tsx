@@ -10,14 +10,6 @@ export const RESPONSE = Enum({
 });
 
 /**
- * @description: 主题模式
- */
-export const THEME_MODE = Enum({
-  LIGHT: { value: "light", label: "亮色模式" },
-  DARK: { value: "dark", label: "暗黑模式" },
-});
-
-/**
  * @description: OAuth Providers
  */
 export const OAUTH_PROVIDERS = Enum({
