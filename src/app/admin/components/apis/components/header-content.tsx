@@ -2,7 +2,7 @@
  * @Author: 白雾茫茫丶<baiwumm.com>
  * @Date: 2026-02-02 10:19:47
  * @LastEditors: 白雾茫茫丶<baiwumm.com>
- * @LastEditTime: 2026-09-14 15:08:32
+ * @LastEditTime: 2026-09-15 16:18:34
  * @Description: 顶部区域
  */
 "use client";
@@ -77,7 +77,7 @@ const HeaderContent: FC<HeaderContentProps> = ({
           aria-label="所属分类"
           className="w-60"
           placeholder="所属分类"
-          value={categoryId}
+          value={categoryId || null}
           variant="secondary"
           onChange={(id) => setCategoryId(id as string)}
         >
