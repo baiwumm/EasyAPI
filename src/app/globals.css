@@ -120,6 +120,16 @@
 }
 
 @layer base {
+  html:has(.app-full-loading),
+  body:has(.app-full-loading) {
+    overflow: hidden;
+    overscroll-behavior: none;
+  }
+
+  body:has(.app-full-loading) {
+    height: 100dvh;
+  }
+
   .bprogress .spinner {
     width:auto !important;
     height:auto !important;
@@ -141,6 +151,12 @@
   * {
     scrollbar-width: thin;
     scrollbar-color: var(--scrollbar) transparent;
+  }
+}
+
+@layer components {
+  .number-field__input {
+    @apply text-center;
   }
 }
 
