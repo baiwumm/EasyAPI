@@ -179,7 +179,11 @@ const QuoteWorld: FC<QuoteWorldProps> = ({
       <div className="flex-1 flex justify-center items-center">
         <RequestContent
           error={error}
-          loading={isLoading}
+          // 必须用替换式 loading（含刷新中）：TypingAnimation 是有状态动画
+          // （loop=false 打完一句状态机即停止），只能靠刷新期间卸载子树、
+          // 新数据到达后重挂载来重新打字。改用 isLoading 保留旧子树会导致
+          // "换一句"请求了新数据但内容不更新
+          loading={loading}
           loadingText="灵感正在路上..."
           reFresh={handleRefresh}
         >
