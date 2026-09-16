@@ -1,5 +1,111 @@
 # Changelog
 
+## [2.9.0](https://github.com/baiwumm/EasyAPI/compare/2.8.1...2.9.0) (2026-09-16)
+
+### ✨ Features | 新功能
+
+* 添加 theme-switch-animation 依赖包 ([745e52c](https://github.com/baiwumm/EasyAPI/commit/745e52cb41cd94cf6aa5ea3153200b76c762150d))
+* 移除heroui-react-mcp插件配置 ([281ffe1](https://github.com/baiwumm/EasyAPI/commit/281ffe1c7f9df0be500af077a94f0fffeaffb981))
+* **docs:** 接入 Scalar 接口文档页并新增手工维护的 OpenAPI 文档 ([478567c](https://github.com/baiwumm/EasyAPI/commit/478567ca517822999fdad9e968f512daae4a60ad))
+* **random-image:** 接入 GridReveal 动效展示 ([55d2bd3](https://github.com/baiwumm/EasyAPI/commit/55d2bd3d30d8374b7b1f485acfdd24d49125bc2f))
+* **theme:** 使用第三方库替换自定义主题切换动画 ([83dd558](https://github.com/baiwumm/EasyAPI/commit/83dd55819e9db78f840d4c880057e92e4b2a9e26))
+
+### 🐛 Bug Fixes | Bug 修复
+
+* **#10:** 公开列表接口 pageSize 上限 1000 ([8d74353](https://github.com/baiwumm/EasyAPI/commit/8d74353d69a4e7339677c7801ae8f2e45416e53c)), references [#10](https://github.com/baiwumm/EasyAPI/issues/10)
+* **#11:** barcode 参数加界，防止超大图形码耗尽内存 ([63ec321](https://github.com/baiwumm/EasyAPI/commit/63ec321979974549216965f695219b99c6e1aba7)), references [#11](https://github.com/baiwumm/EasyAPI/issues/11)
+* **#12:** 管理端写接口请求体白名单校验 ([89519f8](https://github.com/baiwumm/EasyAPI/commit/89519f81e7583b305a52e32734a7b13436585647)), references [#12](https://github.com/baiwumm/EasyAPI/issues/12)
+* **#13:** 401 会话过期统一提示并跳转登录页 ([b45cfe8](https://github.com/baiwumm/EasyAPI/commit/b45cfe8d677696a7ae10d03749f3db5d29402149)), references [#13](https://github.com/baiwumm/EasyAPI/issues/13)
+* **#14:** 删除分类增加服务端引用检查，孤儿数据不再崩表格 ([8b4c023](https://github.com/baiwumm/EasyAPI/commit/8b4c023e0bd161c0611c6a816a08b8645c174704)), references [#14](https://github.com/baiwumm/EasyAPI/issues/14)
+* **#15:** categorys 保存弹窗禁止误关，对齐 apis 弹窗防护 ([50912f1](https://github.com/baiwumm/EasyAPI/commit/50912f12a28f594c33994546cf7a6d390850ffa7)), references [#15](https://github.com/baiwumm/EasyAPI/issues/15)
+* **#16:** FullLoading 不再以 Splash 替换子树，SSR 内容对爬虫可见 ([bdd6a53](https://github.com/baiwumm/EasyAPI/commit/bdd6a538e8e25f57e47f3d20e570cd4bfdf8fcb2)), references [#16](https://github.com/baiwumm/EasyAPI/issues/16)
+* **#17:** 修复 RLS 启用后 call_count 计数静默失效 ([3a5871f](https://github.com/baiwumm/EasyAPI/commit/3a5871fc64d639047c78abe634a716ca8610ed71)), references [#17](https://github.com/baiwumm/EasyAPI/issues/17)
+* **#18:** 新增根级 error.tsx 错误边界 ([3754e45](https://github.com/baiwumm/EasyAPI/commit/3754e45a1e46e6fd897f788892d74292c91ddb8b)), references [#18](https://github.com/baiwumm/EasyAPI/issues/18)
+* **#19:** TypingAnimation 修复 gsap 泄漏、句间停顿失效与空文本崩溃 ([add8111](https://github.com/baiwumm/EasyAPI/commit/add81118699ce6cb2fed4d3ccc72f0daf0f382b2)), references [#19](https://github.com/baiwumm/EasyAPI/issues/19)
+* **#1:** holiday 未传 year 时默认返回当前年份而非 2022 ([6895b40](https://github.com/baiwumm/EasyAPI/commit/6895b404bb5ddcfd34d6be0899dd4d4213c229a0)), references [#1](https://github.com/baiwumm/EasyAPI/issues/1)
+* **#20:** RPC/第三方返回为空时 format=text 不再崩 ([ed06800](https://github.com/baiwumm/EasyAPI/commit/ed06800ab52222ffdceb2d83412de257fd393594)), references [#20](https://github.com/baiwumm/EasyAPI/issues/20)
+* **#21:** 数值参数 NaN 不再静默返回空数组 ([b6f969b](https://github.com/baiwumm/EasyAPI/commit/b6f969b2f667df010fe8e002c196f8d685b9d302)), references [#21](https://github.com/baiwumm/EasyAPI/issues/21)
+* **#22:** country-code/license-plate 数据库错误如实返回 ([e9279cc](https://github.com/baiwumm/EasyAPI/commit/e9279cc96143d7289acb8d7ed94105d94d795e8d)), references [#22](https://github.com/baiwumm/EasyAPI/issues/22)
+* **#23:** dairy-joke/tongue-twister 只输出 content 字段 ([367c6b6](https://github.com/baiwumm/EasyAPI/commit/367c6b6da7a42342142a631ceab1c51df9a69d17)), references [#23](https://github.com/baiwumm/EasyAPI/issues/23)
+* **#24:** 修 response.json() 返回 any 赋值 cached 的类型错误 ([552976a](https://github.com/baiwumm/EasyAPI/commit/552976ae8339e123fdfb23b0bfac44d138c5fc9f)), references [#24](https://github.com/baiwumm/EasyAPI/issues/24)
+* **#24:** diary-poetry 增加模块级缓存与超时降级 ([3c004c0](https://github.com/baiwumm/EasyAPI/commit/3c004c0e3a1afa24e4886135d54b9e71b959103c)), references [#24](https://github.com/baiwumm/EasyAPI/issues/24)
+* **#26:** hitokoto 参数校验补全 ([228ccf1](https://github.com/baiwumm/EasyAPI/commit/228ccf16ccad37c4c5acb797f7738aae9dc41d25)), references [#26](https://github.com/baiwumm/EasyAPI/issues/26)
+* **#27:** 唯一性冲突错误码 -1 收进 RESPONSE.DUPLICATE 枚举 ([cfa9134](https://github.com/baiwumm/EasyAPI/commit/cfa913440385232495f1b33ee7d92454678a1304)), references [#27](https://github.com/baiwumm/EasyAPI/issues/27)
+* **#28:** almanac 输出日期补零，与 YYYY-MM-DD 入参契约一致 ([fb774bf](https://github.com/baiwumm/EasyAPI/commit/fb774bfd4bd43cfdbfac4c142dc81a0925cb1ceb)), references [#28](https://github.com/baiwumm/EasyAPI/issues/28)
+* **#29:** 表格页首屏加载不再闪"暂无数据" ([cec087c](https://github.com/baiwumm/EasyAPI/commit/cec087c7d6880eeb3c919a21c1ee793cfa140708)), references [#29](https://github.com/baiwumm/EasyAPI/issues/29)
+* **#30 回归:** QuoteWorld 恢复替换式 loading，修复换一句不更新内容 ([abb5472](https://github.com/baiwumm/EasyAPI/commit/abb547268710dcfda009e7df9d6cb8e54af6159a)), references [#30](https://github.com/baiwumm/EasyAPI/issues/30) [#30](https://github.com/baiwumm/EasyAPI/issues/30) [#30](https://github.com/baiwumm/EasyAPI/issues/30)
+* **#30:** 替换式页面刷新时不再清空内容闪 Spinner ([3eb0099](https://github.com/baiwumm/EasyAPI/commit/3eb00999cf1a2e1d6c8dd6c1d6068660959bf38b)), references [#30](https://github.com/baiwumm/EasyAPI/issues/30)
+* **#31:** 业务失败后不再残留旧内容误导用户 ([e546dcb](https://github.com/baiwumm/EasyAPI/commit/e546dcb4b0b232ccd6dfeb3e5110a67b08f42f0e)), references [#31](https://github.com/baiwumm/EasyAPI/issues/31)
+* **#32:** 输入页支持回车提交 ([a5e47f4](https://github.com/baiwumm/EasyAPI/commit/a5e47f47ee2f6ea1d1c2b8619543f8525d495c3d)), references [#32](https://github.com/baiwumm/EasyAPI/issues/32)
+* **#33:** 修正三处复制粘贴残留文案 ([9c12ad5](https://github.com/baiwumm/EasyAPI/commit/9c12ad5efd664da104ae59c13b34a3d0a59624af)), references [#33](https://github.com/baiwumm/EasyAPI/issues/33)
+* **#34:** 删除当前页最后一条后回退一页，不再滞留越界空页 ([1a6d839](https://github.com/baiwumm/EasyAPI/commit/1a6d839c4d4399a994f971d94e2a675ae076293b)), references [#34](https://github.com/baiwumm/EasyAPI/issues/34)
+* **#35:** 补 CircleXmarkFill 导入（前一提交门禁失误的修正） ([43e77f7](https://github.com/baiwumm/EasyAPI/commit/43e77f74b674e9b69c8247a0a0e6b375246c7ac7)), references [#35](https://github.com/baiwumm/EasyAPI/issues/35)
+* **#35:** apis 保存弹窗 Select 补校验并加提交兜底 ([7c3d103](https://github.com/baiwumm/EasyAPI/commit/7c3d1036c486cb6ff337c13b8b9a57dee149a4a0)), references [#35](https://github.com/baiwumm/EasyAPI/issues/35)
+* **#36:** useCallback 依赖改为稳定的 open 引用，恢复 columns memo ([98abcf0](https://github.com/baiwumm/EasyAPI/commit/98abcf0978fa78e76e742f8793103cb22157163d)), references [#36](https://github.com/baiwumm/EasyAPI/issues/36)
+* **#37:** 分类保存后联动刷新 apis tab 的分类下拉缓存 ([58466d4](https://github.com/baiwumm/EasyAPI/commit/58466d4ff320915205e26539e180aeed06bb8ccf)), references [#37](https://github.com/baiwumm/EasyAPI/issues/37)
+* **#38:** handleReset 手动刷新条件补 pageSize 判断，消除双请求竞态 ([8eb30c0](https://github.com/baiwumm/EasyAPI/commit/8eb30c0298663966306ed38b228df73b5f09cd16)), references [#38](https://github.com/baiwumm/EasyAPI/issues/38)
+* **#39:** 移除登录页 2 秒后无条件 toast.clear() ([b5eb08c](https://github.com/baiwumm/EasyAPI/commit/b5eb08cbb8d9b8e63eb52dcb089b18b3d45896a4)), references [#39](https://github.com/baiwumm/EasyAPI/issues/39)
+* **#3:** holiday 调休上班日不再被后续休息日清空 ([d716f1c](https://github.com/baiwumm/EasyAPI/commit/d716f1c222c2aaaba9fa93b7e573953a58eb3274)), references [#3](https://github.com/baiwumm/EasyAPI/issues/3)
+* **#40:** 结果图懒加载、稳定行键与列定义提升 ([fefcf74](https://github.com/baiwumm/EasyAPI/commit/fefcf7429f67d278148769c05836528e0a388dd2)), references [#40](https://github.com/baiwumm/EasyAPI/issues/40)
+* **#41:** CopyText 卸载清理定时器并移除死代码 try/catch ([41a9d06](https://github.com/baiwumm/EasyAPI/commit/41a9d06806779129d294944509dc3d9349907b6e)), references [#41](https://github.com/baiwumm/EasyAPI/issues/41)
+* **#42:** 会话获取去重请求，UserAvatar 匿名跳过 /auth/me 并清理定时器 ([5597dcc](https://github.com/baiwumm/EasyAPI/commit/5597dccd02273fcdefd67fe0964997cfdc2ba240)), references [#42](https://github.com/baiwumm/EasyAPI/issues/42)
+* **#43:** 类型错误已清零，恢复构建期类型拦截 ([632a8d2](https://github.com/baiwumm/EasyAPI/commit/632a8d218c1c04447be3d670487f269b56bb8c0a)), references [#43](https://github.com/baiwumm/EasyAPI/issues/43)
+* **#43:** 新增 typecheck 脚本并清零存量类型错误 ([e3f64df](https://github.com/baiwumm/EasyAPI/commit/e3f64df9b0069d38eabae4dea9d93a0bf4ccdb32)), references [#43](https://github.com/baiwumm/EasyAPI/issues/43)
+* **#44:** @gravity-ui/icons 从 devDependencies 移入 dependencies ([1d8cf5c](https://github.com/baiwumm/EasyAPI/commit/1d8cf5cca8096927d0ee451056c4f381d4e3e024)), references [#44](https://github.com/baiwumm/EasyAPI/issues/44)
+* **#45:** 兼容 @xmldom/xmldom Document 类型（运行时结构兼容，显式收窄） ([f01dfd4](https://github.com/baiwumm/EasyAPI/commit/f01dfd459dbd11ae6e4408a0136ada99c98c6e60)), references [#45](https://github.com/baiwumm/EasyAPI/issues/45)
+* **#45:** xmldom@0.6 替换为维护版 @xmldom/xmldom ([2b0ad5b](https://github.com/baiwumm/EasyAPI/commit/2b0ad5b2d6fe588d558a1bb31ceb36bdd0960c84)), references [#45](https://github.com/baiwumm/EasyAPI/issues/45)
+* **#46:** 移除六项零引用依赖 ([8a53fcb](https://github.com/baiwumm/EasyAPI/commit/8a53fcb24cbbe4b4bd1385c884fd22f896a986a7)), references [#46](https://github.com/baiwumm/EasyAPI/issues/46)
+* **#48:** sitemap 收录全部 36 个公开工具页，robots 修正受限路径 ([4ca1e39](https://github.com/baiwumm/EasyAPI/commit/4ca1e39ea7799595bfaad8aaa3caf7b0106c11f5)), references [#48](https://github.com/baiwumm/EasyAPI/issues/48)
+* **#49:** 低频数据路由加 HTTP 缓存，首页 force-dynamic 改 ISR ([6fa86b5](https://github.com/baiwumm/EasyAPI/commit/6fa86b5970aff538f1d87ece37f1a18515d0192b)), references [#49](https://github.com/baiwumm/EasyAPI/issues/49)
+* **#4:** country-code 列标签与字段对应关系修正 ([a732aa6](https://github.com/baiwumm/EasyAPI/commit/a732aa6620e7ada6e3ee2f7c806c8a0931eb4832)), references [#4](https://github.com/baiwumm/EasyAPI/issues/4)
+* **#4:** prettier 格式修正（lint:fix 产物，归属 [#4](https://github.com/baiwumm/EasyAPI/issues/4)） ([e4759cd](https://github.com/baiwumm/EasyAPI/commit/e4759cd426db8726a819a95877b3b40e492bd32e))
+* **#51:** call_count 计数移出响应关键路径并减负 ([9f7568c](https://github.com/baiwumm/EasyAPI/commit/9f7568cf1611b62f57665badcd2761a79ab0c940)), references [#51](https://github.com/baiwumm/EasyAPI/issues/51)
+* **#52:** bing-wallpaper 外部 fetch 补 5s 超时 ([2c9c926](https://github.com/baiwumm/EasyAPI/commit/2c9c926918fb9875090f9a09baebe3d97e6c4d74)), references [#52](https://github.com/baiwumm/EasyAPI/issues/52)
+* **#53:** 数据请求不再触发顶部进度条，与页内 Spinner 二选一 ([0face1d](https://github.com/baiwumm/EasyAPI/commit/0face1d4a870b5ca83e3efd63ba0410bc9850587)), references [#53](https://github.com/baiwumm/EasyAPI/issues/53)
+* **#54:** 动画一致性补齐（reduced-motion 与视图过渡容错） ([c169422](https://github.com/baiwumm/EasyAPI/commit/c169422a1b7b6d0f676c2e8bf2c5f8368e168496)), references [#54](https://github.com/baiwumm/EasyAPI/issues/54)
+* **#55:** 登录页细节完善 ([507cd43](https://github.com/baiwumm/EasyAPI/commit/507cd432e7227b9361eeb5d59f12f5b327d9d68b)), references [#55](https://github.com/baiwumm/EasyAPI/issues/55)
+* **#56:** 补基础安全响应头并关闭 X-Powered-By ([cf5ab69](https://github.com/baiwumm/EasyAPI/commit/cf5ab6992df1bce40855f987ec5433e561d77282)), references [#56](https://github.com/baiwumm/EasyAPI/issues/56)
+* **#57:** Vercel preview 环境不再加载 GA/Clarity ([92d9ff8](https://github.com/baiwumm/EasyAPI/commit/92d9ff8814df2c71a9bdcbae8a95de87ebfe8d37)), references [#57](https://github.com/baiwumm/EasyAPI/issues/57)
+* **#58:** 杂项清理 ([66c6369](https://github.com/baiwumm/EasyAPI/commit/66c63695db389a257660085a8ebfa28d5d6355b2)), references [#58](https://github.com/baiwumm/EasyAPI/issues/58)
+* **#58:** apis 唯一性冲突按约束名区分提示文案 ([db149e2](https://github.com/baiwumm/EasyAPI/commit/db149e29e9e95c93a9a992399086cd56ec4c942e)), references [#58](https://github.com/baiwumm/EasyAPI/issues/58)
+* **#5:** qrcode 业务错误 JSON 不再被当图片数据解析 ([c88d453](https://github.com/baiwumm/EasyAPI/commit/c88d453e6c2ff03512a081d549ac2830a7ca7944)), references [#5](https://github.com/baiwumm/EasyAPI/issues/5)
+* **#6:** 随机初始值改为确定性初值，消除 SSR/CSR 水合不一致 ([7d45dfa](https://github.com/baiwumm/EasyAPI/commit/7d45dfa53444b36d69436c78d90fec416123f4d9)), references [#6](https://github.com/baiwumm/EasyAPI/issues/6)
+* **#7:** 补充挂载期 setState 的定向 lint 豁免（时区今日只能在客户端确定） ([f0f50ef](https://github.com/baiwumm/EasyAPI/commit/f0f50efc196658498b5ccbb63d319f7b94e655dd)), references [#7](https://github.com/baiwumm/EasyAPI/issues/7)
+* **#7:** almanac 初始日期改为挂载后取用户本地时区 ([4f0aae5](https://github.com/baiwumm/EasyAPI/commit/4f0aae5e80b83f8ec7b562fd1bfdb5c77752e0fc)), references [#7](https://github.com/baiwumm/EasyAPI/issues/7)
+* **#7:** lint 豁免注释移至 setState 调用行，lint 恢复全绿 ([8477570](https://github.com/baiwumm/EasyAPI/commit/847757000c4e52407f5c68dbcb1f70256a426ca8)), references [#7](https://github.com/baiwumm/EasyAPI/issues/7)
+* **#8:** ip-region 增加 IP 格式校验、超时与响应检查 ([3e9a3d7](https://github.com/baiwumm/EasyAPI/commit/3e9a3d7691aaf2f81d8ac9fec162efcffbde666c)), references [#8](https://github.com/baiwumm/EasyAPI/issues/8)
+* **#9:** 模糊搜索关键字净化，拦截 like/.or() 过滤器注入 ([0385379](https://github.com/baiwumm/EasyAPI/commit/0385379a955cbb6fa9e57e898087577073b1c942)), references [#9](https://github.com/baiwumm/EasyAPI/issues/9)
+* 恢复生成页加载反馈并锁定首屏遮罩滚动 ([9f83b00](https://github.com/baiwumm/EasyAPI/commit/9f83b0043d2efa2f8998d19ba20940994a6a93a0))
+
+### 🎫 Chores | 其他更新
+
+* 安装 heroui-react 和 vercel-react-best-practices skills，更新 AGENTS.md ([199b58a](https://github.com/baiwumm/EasyAPI/commit/199b58a3322c197df052ec4a0459b75ec4211f45))
+* **deps:** 升级依赖版本 ([dc1d8ad](https://github.com/baiwumm/EasyAPI/commit/dc1d8ad9ec53ca235608d677802d9ea16e355383))
+
+### 📝 Documentation | 文档
+
+* 归档审查清单与修复报告 ([1f68ac2](https://github.com/baiwumm/EasyAPI/commit/1f68ac22875d3fafc87731944068cbb8245b20b2))
+* 删除项目审查清单文件 ([94d08d6](https://github.com/baiwumm/EasyAPI/commit/94d08d64c935108b806981d6facf902797f728a6))
+* 删除已完成的历史工作文档 ([aed8fc3](https://github.com/baiwumm/EasyAPI/commit/aed8fc39df828794f7de2c238d5b160fce286a66))
+
+### 💄 Styles | 风格
+
+* 代码规范修复与 ESLint 全绿通过 ([08bd798](https://github.com/baiwumm/EasyAPI/commit/08bd798abae0ce4930fad09da37fe7ecbe85fad1))
+* HeroUI 组件 onClick 改为 onPress ([63ba9a0](https://github.com/baiwumm/EasyAPI/commit/63ba9a0f67b569d56321cdaf7149735eb4da533e))
+
+### ♻ Code Refactoring | 代码重构
+
+* 将远程字体改为本地自托管方式 ([752bccd](https://github.com/baiwumm/EasyAPI/commit/752bccd0fc66c548752a483c5fd273f39d949e06))
+* **batch-1:** T5 图片生成 hook + T6 已提交参数 hook + 共享常量组件 ([d0992a5](https://github.com/baiwumm/EasyAPI/commit/d0992a59bbbb4c0a7febea18fe799198d3750cf3))
+* **batch-2:** T1 引言页模板统一 12 页 + T3 KV 校验 + T4 chips stagger ([8843c51](https://github.com/baiwumm/EasyAPI/commit/8843c5176bd3a8940339b97b81aad35575503db4))
+* **batch-3:** API 路由模板抽取 ([4d6d1a5](https://github.com/baiwumm/EasyAPI/commit/4d6d1a5477129b7072e04a92c1c5c4bf2895b672))
+* **batch-4:** admin 表格壳与删除弹窗合并为共享组件 ([f827ae9](https://github.com/baiwumm/EasyAPI/commit/f827ae99ca53d356c6a7d3ca52ad0f7902832594))
+* **eslint:** 将 @antfu/eslint-config 替换为标准 eslint 配置 ([aa68094](https://github.com/baiwumm/EasyAPI/commit/aa68094d546835268dfbdb4ec6c81695b2121c2c))
+* **Header:** 移除社交链接功能并优化组件依赖 ([dd7c571](https://github.com/baiwumm/EasyAPI/commit/dd7c571f291d54e8e8c88396883674e32e79ec0e))
+* **loading:** 删除路由加载组件 ([7076997](https://github.com/baiwumm/EasyAPI/commit/7076997b58ec4c95d6b28bd0e70f74aa6e47f1ba))
+* **QuoteWorld:** 移除未使用的isLoading变量 ([13ba784](https://github.com/baiwumm/EasyAPI/commit/13ba784124127eb6cb89c455dbb191b9bad52451))
+* **types:** 将全局命名空间 App 改为 ES module 导出 ([78c9ca2](https://github.com/baiwumm/EasyAPI/commit/78c9ca283c3ddf693e00163f9d435f498e523960))
+
 ## [2.8.1](https://github.com/baiwumm/EasyAPI/compare/2.8.0...2.8.1) (2026-08-12)
 
 ### ✨ Features | 新功能
