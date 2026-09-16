@@ -1,0 +1,1903 @@
+# EasyAPI 开放接口文档
+# 维护约定：新增/修改接口时手动同步本文件（参见 API_DOCS_PLAN.md 第五节）
+# 生成日期：2026-09-16
+openapi: 3.1.0
+info:
+  title: EasyAPI 开放接口
+  version: 2.8.1
+  description: |
+    EasyAPI 聚合平台开放接口，收录 30+ 个高频接口，公开接口无需鉴权。
+
+    **统一响应壳**：所有 JSON 接口返回 `{ code, msg, data, timestamp }`。
+    HTTP 状态码恒为 200，业务结果看 `code`：`200` 成功，`-1` 数据已存在，`500` 失败（失败时 `data` 为 `null`，`msg` 为错误原因）。
+
+    **纯文本输出**：文案类接口支持 `format=text`，此时直接返回 `text/plain` 正文，不再包装响应壳。
+
+    管理端接口（新增/修改/删除）未包含在本文档中。
+  contact:
+    name: 白雾茫茫丶
+    url: https://baiwumm.com
+servers:
+  - url: https://api.baiwumm.com
+    description: 生产环境
+  - url: http://localhost:3000
+    description: 本地开发
+tags:
+  - name: 每日推荐
+    description: 每日更新或按日期/年份查询的内容
+  - name: 随机生成
+    description: 随机头像、颜色、字符串、用户等测试数据
+  - name: 心灵语录
+    description: 语录、诗词、笑话等文案类接口，均支持 format=text 直出纯文本
+  - name: 生活服务
+    description: 编码转换、信息查询等工具类接口
+
+paths:
+  # ==================== 每日推荐 ====================
+  /api/hitokoto:
+    get:
+      tags: [每日推荐]
+      operationId: getHitokoto
+      summary: 每日一言
+      description: 随机返回一条句子，支持按类型与长度筛选；`format=text` 时直接返回句子文本。
+      parameters:
+        - name: type
+          in: query
+          required: false
+          description: |
+            句子类型，多个用英文逗号分隔，可选值：
+            a 动画、b 漫画、c 游戏、d 文学、e 原创、f 来自网络、g 其他、h 影视、i 诗词、j 网易云、k 哲学、l 抖机灵
+          schema:
+            type: string
+            examples: ["a,d"]
+        - name: minLength
+          in: query
+          required: false
+          description: 句子最小长度，0 ~ 1000，且不能大于 maxLength
+          schema:
+            type: integer
+            minimum: 0
+            maximum: 1000
+        - name: maxLength
+          in: query
+          required: false
+          description: 句子最大长度，0 ~ 1000
+          schema:
+            type: integer
+            minimum: 0
+            maximum: 1000
+        - $ref: "#/components/parameters/FormatText"
+      responses:
+        "200":
+          description: 请求成功；`format=text` 时为纯文本
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Envelope"
+                  - type: object
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/HitokotoData"
+            text/plain:
+              schema:
+                type: string
+                description: 句子文本
+
+  /api/bing-wallpaper:
+    get:
+      tags: [每日推荐]
+      operationId: getBingWallpaper
+      summary: Bing 每日壁纸
+      description: 返回当天 Bing 壁纸的 1080P 与 4K 地址，一天内结果不变；`format=text` 时直接返回 1080P 图片地址。
+      parameters:
+        - $ref: "#/components/parameters/FormatText"
+      responses:
+        "200":
+          description: 请求成功；`format=text` 时为图片地址纯文本
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Envelope"
+                  - type: object
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/BingWallpaperData"
+            text/plain:
+              schema:
+                type: string
+                description: 1080P 图片地址
+
+  /api/holiday:
+    get:
+      tags: [每日推荐]
+      operationId: getHoliday
+      summary: 法定节假日
+      description: 返回指定年份的法定节假日安排（含调休上班日、距今天数、假期余额）。结果一天内可缓存。
+      parameters:
+        - name: year
+          in: query
+          required: false
+          description: 年份，范围 2022 ~ 当前年份，默认当前年份；超出范围自动钳制到边界
+          schema:
+            type: integer
+            minimum: 2022
+            examples: [2026]
+      responses:
+        "200":
+          description: 请求成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Envelope"
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/HolidayItem"
+
+  /api/solar-term:
+    get:
+      tags: [每日推荐]
+      operationId: getSolarTerm
+      summary: 二十四节气
+      description: 返回指定年份的二十四节气及对应公历时间（按时间先后排序）。结果一天内可缓存。
+      parameters:
+        - name: year
+          in: query
+          required: false
+          description: 四位年份，1900 ~ 2100，默认当前年份
+          schema:
+            type: integer
+            minimum: 1900
+            maximum: 2100
+            examples: [2026]
+      responses:
+        "200":
+          description: 请求成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Envelope"
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/SolarTermItem"
+
+  /api/almanac:
+    get:
+      tags: [每日推荐]
+      operationId: getAlmanac
+      summary: 黄历时辰宜忌
+      description: 返回指定日期十二时辰的宜忌、冲煞、纳音、九星（子时排首位）。结果一天内可缓存。
+      parameters:
+        - name: date
+          in: query
+          required: false
+          description: 日期，格式 YYYY-MM-DD，默认今天
+          schema:
+            type: string
+            format: date
+            examples: ["2026-09-16"]
+      responses:
+        "200":
+          description: 请求成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Envelope"
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        description: 十二时辰列表
+                        items:
+                          $ref: "#/components/schemas/AlmanacHourItem"
+
+  # ==================== 随机生成 ====================
+  /api/random-avatar:
+    get:
+      tags: [随机生成]
+      operationId: getRandomAvatar
+      summary: 随机头像
+      description: |
+        基于 DiceBear 生成 SVG 头像。`count=1`（默认）直接返回 SVG 图片；`count>1` 返回 JSON，`data` 为头像地址数组。
+        同一 `seed` 生成结果固定，SVG 响应可长期缓存。
+      parameters:
+        - name: style
+          in: query
+          required: false
+          description: 头像风格，`random` 为随机风格；非法值回退为 adventurer
+          schema:
+            type: string
+            enum: [random, adventurer, avataaars, bottts, pixelArt, funEmoji, lorelei, micah, notionists, openPeeps, personas, thumbs]
+            default: adventurer
+        - name: seed
+          in: query
+          required: false
+          description: 随机种子，相同种子生成相同头像；不传则随机
+          schema:
+            type: string
+        - name: count
+          in: query
+          required: false
+          description: 生成数量，1 ~ 20
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 20
+            default: 1
+        - name: size
+          in: query
+          required: false
+          description: 头像尺寸（像素），16 ~ 512
+          schema:
+            type: integer
+            minimum: 16
+            maximum: 512
+            default: 128
+      responses:
+        "200":
+          description: count=1 返回 SVG 图片；count>1 返回 JSON 头像地址数组
+          content:
+            image/svg+xml:
+              schema:
+                type: string
+                description: SVG 图片
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Envelope"
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        description: 头像地址数组
+                        items:
+                          type: string
+                          format: uri
+
+  /api/random-color:
+    get:
+      tags: [随机生成]
+      operationId: getRandomColor
+      summary: 随机颜色
+      description: 生成随机颜色。`format=all`（默认）返回包含 hex/rgb/hsl/hsv 的对象数组，指定单一格式时返回字符串数组。
+      parameters:
+        - name: format
+          in: query
+          required: false
+          description: 返回格式
+          schema:
+            type: string
+            enum: [all, hex, rgb, hsl, hsv]
+            default: all
+        - name: count
+          in: query
+          required: false
+          description: 生成数量，1 ~ 50
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 50
+            default: 1
+      responses:
+        "200":
+          description: 请求成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Envelope"
+                  - type: object
+                    properties:
+                      data:
+                        oneOf:
+                          - type: array
+                            description: format=all 时
+                            items:
+                              $ref: "#/components/schemas/ColorItem"
+                          - type: array
+                            description: 指定单一格式时
+                            items:
+                              type: string
+                              examples: ["#3070ec"]
+
+  /api/random-emoji:
+    get:
+      tags: [随机生成]
+      operationId: getRandomEmoji
+      summary: 随机 emoji
+      parameters:
+        - name: count
+          in: query
+          required: false
+          description: 生成数量，1 ~ 50
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 50
+            default: 1
+      responses:
+        "200":
+          description: 请求成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Envelope"
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/EmojiItem"
+
+  /api/random-idcard:
+    get:
+      tags: [随机生成]
+      operationId: getRandomIdcard
+      summary: 随机身份证号
+      description: 生成符合校验规则的随机 18 位身份证号（仅供测试）。
+      parameters:
+        - name: count
+          in: query
+          required: false
+          description: 生成数量，1 ~ 50
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 50
+            default: 1
+      responses:
+        "200":
+          description: 请求成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Envelope"
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          type: string
+                          description: 18 位身份证号
+
+  /api/random-image:
+    get:
+      tags: [随机生成]
+      operationId: getRandomImage
+      summary: 随机图片
+      description: 返回指定尺寸的随机图片地址数组。
+      parameters:
+        - name: count
+          in: query
+          required: false
+          description: 生成数量，1 ~ 20
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 20
+            default: 5
+        - name: width
+          in: query
+          required: false
+          description: 图片宽度（像素），16 ~ 1024
+          schema:
+            type: integer
+            minimum: 16
+            maximum: 1024
+            default: 128
+        - name: height
+          in: query
+          required: false
+          description: 图片高度（像素），16 ~ 1024
+          schema:
+            type: integer
+            minimum: 16
+            maximum: 1024
+            default: 128
+      responses:
+        "200":
+          description: 请求成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Envelope"
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          type: string
+                          format: uri
+
+  /api/random-person:
+    get:
+      tags: [随机生成]
+      operationId: getRandomPerson
+      summary: 随机人物肖像
+      description: 返回随机人物肖像图片地址数组。
+      parameters:
+        - name: count
+          in: query
+          required: false
+          description: 生成数量，1 ~ 20
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 20
+            default: 5
+        - name: sex
+          in: query
+          required: false
+          description: 性别
+          schema:
+            type: string
+            enum: [generic, male, female]
+            default: generic
+        - name: size
+          in: query
+          required: false
+          description: 图片尺寸（像素）
+          schema:
+            type: integer
+            enum: [32, 64, 128, 256, 512]
+            default: 128
+      responses:
+        "200":
+          description: 请求成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Envelope"
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          type: string
+                          format: uri
+
+  /api/random-string:
+    get:
+      tags: [随机生成]
+      operationId: getRandomString
+      summary: 随机字符串
+      description: 生成密码学安全的随机字符串，可按预设类型或自定义字符集生成。
+      parameters:
+        - name: length
+          in: query
+          required: false
+          description: 字符串长度，1 ~ 100
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 16
+        - name: count
+          in: query
+          required: false
+          description: 生成数量，1 ~ 50
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 50
+            default: 1
+        - name: type
+          in: query
+          required: false
+          description: |
+            字符类型：alphanumeric 字母+数字、url-safe URL 安全 Base64、numeric 纯数字、
+            distinguishable 易区分字符（去除 0/O、1/l）、hex 十六进制、base64、ascii-printable 可打印 ASCII
+          schema:
+            type: string
+            enum: [alphanumeric, url-safe, numeric, distinguishable, hex, base64, ascii-printable]
+            default: alphanumeric
+        - name: characters
+          in: query
+          required: false
+          description: 自定义字符集，传入后忽略 type 参数
+          schema:
+            type: string
+            examples: ["abc123"]
+      responses:
+        "200":
+          description: 请求成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Envelope"
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          type: string
+
+  /api/random-user:
+    get:
+      tags: [随机生成]
+      operationId: getRandomUser
+      summary: 随机用户
+      description: 生成中文随机用户信息（姓名、手机号、邮箱、地址、公司等）。
+      parameters:
+        - name: count
+          in: query
+          required: false
+          description: 生成数量，1 ~ 20
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 20
+            default: 1
+        - name: gender
+          in: query
+          required: false
+          description: 性别；不传或其他值时随机
+          schema:
+            type: string
+            enum: [male, female]
+      responses:
+        "200":
+          description: 请求成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Envelope"
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/RandomUser"
+
+  # ==================== 心灵语录 ====================
+  /api/chicken-soup:
+    get:
+      tags: [心灵语录]
+      operationId: getChickenSoup
+      summary: 毒鸡汤
+      description: 随机返回一条毒鸡汤；`format=text` 时直接返回文本。
+      parameters:
+        - $ref: "#/components/parameters/FormatText"
+      responses:
+        "200":
+          $ref: "#/components/responses/TextContentResponse"
+
+  /api/chinese-poetry:
+    get:
+      tags: [心灵语录]
+      operationId: getChinesePoetry
+      summary: 飞花令
+      description: 随机返回一首古诗词，可按作者筛选。
+      parameters:
+        - name: author
+          in: query
+          required: false
+          description: 作者姓名，不传则不限
+          schema:
+            type: string
+            examples: ["李白"]
+      responses:
+        "200":
+          description: 请求成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Envelope"
+                  - type: object
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/ChinesePoetryData"
+
+  /api/cold-fact:
+    get:
+      tags: [心灵语录]
+      operationId: getColdFact
+      summary: 每日冷知识
+      description: 随机返回一条冷知识；`format=text` 时直接返回文本。
+      parameters:
+        - $ref: "#/components/parameters/FormatText"
+      responses:
+        "200":
+          description: 请求成功；`format=text` 时为纯文本
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Envelope"
+                  - type: object
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/ColdFactData"
+            text/plain:
+              schema:
+                type: string
+
+  /api/dairy-joke:
+    get:
+      tags: [心灵语录]
+      operationId: getDairyJoke
+      summary: 每日笑话
+      description: 随机返回一条笑话；`format=text` 时直接返回文本。
+      parameters:
+        - $ref: "#/components/parameters/FormatText"
+      responses:
+        "200":
+          $ref: "#/components/responses/TextContentResponse"
+
+  /api/diary-poetry:
+    get:
+      tags: [心灵语录]
+      operationId: getDiaryPoetry
+      summary: 今日诗词
+      description: 返回当天推荐的一句诗词（一天内结果不变）；`format=text` 时直接返回诗句文本。
+      parameters:
+        - $ref: "#/components/parameters/FormatText"
+      responses:
+        "200":
+          description: 请求成功；`format=text` 时为纯文本
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Envelope"
+                  - type: object
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/DiaryPoetryData"
+            text/plain:
+              schema:
+                type: string
+
+  /api/dog-diary:
+    get:
+      tags: [心灵语录]
+      operationId: getDogDiary
+      summary: 舔狗日记
+      description: 随机返回一条舔狗日记；`format=text` 时直接返回文本。
+      parameters:
+        - $ref: "#/components/parameters/FormatText"
+      responses:
+        "200":
+          $ref: "#/components/responses/TextContentResponse"
+
+  /api/kfc:
+    get:
+      tags: [心灵语录]
+      operationId: getKfc
+      summary: 疯狂星期四
+      description: 随机返回一条疯狂星期四文案；`format=text` 时直接返回文本。
+      parameters:
+        - $ref: "#/components/parameters/FormatText"
+      responses:
+        "200":
+          $ref: "#/components/responses/TextContentResponse"
+
+  /api/love-words:
+    get:
+      tags: [心灵语录]
+      operationId: getLoveWords
+      summary: 土味情话
+      description: 随机返回一条土味情话；`format=text` 时直接返回文本。
+      parameters:
+        - $ref: "#/components/parameters/FormatText"
+      responses:
+        "200":
+          $ref: "#/components/responses/TextContentResponse"
+
+  /api/riddle:
+    get:
+      tags: [心灵语录]
+      operationId: getRiddle
+      summary: 歇后语
+      description: 随机返回一条歇后语及其答案。
+      responses:
+        "200":
+          description: 请求成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Envelope"
+                  - type: object
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/RiddleData"
+
+  /api/swearing:
+    get:
+      tags: [心灵语录]
+      operationId: getSwearing
+      summary: 骂人宝典（祖安语录）
+      description: 随机返回一条祖安语录；`format=text` 时直接返回文本。
+      parameters:
+        - $ref: "#/components/parameters/FormatText"
+      responses:
+        "200":
+          $ref: "#/components/responses/TextContentResponse"
+
+  /api/tongue-twister:
+    get:
+      tags: [心灵语录]
+      operationId: getTongueTwister
+      summary: 每日绕口令
+      description: 随机返回一条绕口令；`format=text` 时直接返回文本。
+      parameters:
+        - $ref: "#/components/parameters/FormatText"
+      responses:
+        "200":
+          $ref: "#/components/responses/TextContentResponse"
+
+  # ==================== 生活服务 ====================
+  /api/apis:
+    get:
+      tags: [生活服务]
+      operationId: getApis
+      summary: 接口列表
+      description: 分页查询平台收录的接口（含所属分类），按置顶、排序、推荐、创建时间降序。
+      parameters:
+        - $ref: "#/components/parameters/PageIndex"
+        - $ref: "#/components/parameters/PageSize"
+        - name: name
+          in: query
+          required: false
+          description: 按接口名称模糊搜索
+          schema:
+            type: string
+        - name: category_id
+          in: query
+          required: false
+          description: 按分类 ID 筛选
+          schema:
+            type: string
+      responses:
+        "200":
+          description: 请求成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Envelope"
+                  - type: object
+                    properties:
+                      data:
+                        allOf:
+                          - $ref: "#/components/schemas/PageMeta"
+                          - type: object
+                            properties:
+                              list:
+                                type: array
+                                items:
+                                  $ref: "#/components/schemas/ApiItem"
+
+  /api/categorys:
+    get:
+      tags: [生活服务]
+      operationId: getCategorys
+      summary: 接口分类列表
+      description: 分页查询接口分类，每个分类内嵌其下全部接口（按置顶、排序、推荐、创建时间降序）。
+      parameters:
+        - $ref: "#/components/parameters/PageIndex"
+        - $ref: "#/components/parameters/PageSize"
+        - name: name
+          in: query
+          required: false
+          description: 按分类名称模糊搜索
+          schema:
+            type: string
+      responses:
+        "200":
+          description: 请求成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Envelope"
+                  - type: object
+                    properties:
+                      data:
+                        allOf:
+                          - $ref: "#/components/schemas/PageMeta"
+                          - type: object
+                            properties:
+                              list:
+                                type: array
+                                items:
+                                  $ref: "#/components/schemas/CategoryItem"
+
+  /api/barcode:
+    get:
+      tags: [生活服务]
+      operationId: getBarcode
+      summary: 生成条形码
+      description: |
+        按指定编码格式生成条形码图片，`type` 决定返回 SVG 或 PNG。
+        除下列参数外，其余任意 JsBarcode 选项（如 `lineColor`、`background`、`displayValue`、`textMargin`）均可作为查询参数透传，数值类参数统一钳制到 0 ~ 500。
+      parameters:
+        - name: text
+          in: query
+          required: true
+          description: 条码内容，最长 200 个字符；EAN/UPC/ITF 类格式需符合位数要求，校验位可省略由系统补全
+          schema:
+            type: string
+            maxLength: 200
+            examples: ["HELLO123456"]
+        - name: format
+          in: query
+          required: true
+          description: |
+            编码格式：CODE128 通用高密度、CODE39 工业物流、CODE93、EAN13 13 位商品码、EAN8 8 位商品码、
+            UPC 北美商品码、ITF14 物流箱码、MSI 库存管理、pharmacode 制药、codabar 图书馆/血库（需以 A~D 开头结尾）
+          schema:
+            type: string
+            enum: [CODE128, CODE39, CODE93, EAN13, EAN8, UPC, ITF14, MSI, pharmacode, codabar]
+        - name: type
+          in: query
+          required: true
+          description: 输出图片类型
+          schema:
+            type: string
+            enum: [svg, png]
+        - name: width
+          in: query
+          required: false
+          description: 单条线宽（JsBarcode 选项），0 ~ 500
+          schema:
+            type: integer
+            minimum: 0
+            maximum: 500
+        - name: height
+          in: query
+          required: false
+          description: 条码高度（JsBarcode 选项），0 ~ 500
+          schema:
+            type: integer
+            minimum: 0
+            maximum: 500
+        - name: margin
+          in: query
+          required: false
+          description: 外边距（JsBarcode 选项），0 ~ 500
+          schema:
+            type: integer
+            minimum: 0
+            maximum: 500
+        - name: fontSize
+          in: query
+          required: false
+          description: 文字大小（JsBarcode 选项），0 ~ 500
+          schema:
+            type: integer
+            minimum: 0
+            maximum: 500
+      responses:
+        "200":
+          description: type=svg 返回 SVG，type=png 返回 PNG；参数错误时返回 JSON 响应壳（code=500）
+          content:
+            image/svg+xml:
+              schema:
+                type: string
+                description: SVG 图片
+            image/png:
+              schema:
+                type: string
+                format: binary
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Envelope"
+
+  /api/bmi:
+    get:
+      tags: [生活服务]
+      operationId: getBmi
+      summary: BMI 计算器
+      description: 根据身高体重计算 BMI 指数并给出体重状态。
+      parameters:
+        - name: height
+          in: query
+          required: true
+          description: 身高（厘米）
+          schema:
+            type: number
+            examples: [175]
+        - name: weight
+          in: query
+          required: true
+          description: 体重（千克）
+          schema:
+            type: number
+            examples: [65]
+      responses:
+        "200":
+          description: 请求成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Envelope"
+                  - type: object
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/BmiData"
+
+  /api/color-conversion:
+    get:
+      tags: [生活服务]
+      operationId: getColorConversion
+      summary: 颜色转换
+      description: 将任意合法颜色值转换为 hex / rgb / hsl / hsv 四种表示。
+      parameters:
+        - name: color
+          in: query
+          required: true
+          description: 颜色值，支持 hex、rgb、hsl、hsv 及 CSS 颜色名
+          schema:
+            type: string
+            examples: ["#3070ec", "rgb(48, 112, 236)", "red"]
+      responses:
+        "200":
+          description: 请求成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Envelope"
+                  - type: object
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/ColorItem"
+
+  /api/country-code:
+    get:
+      tags: [生活服务]
+      operationId: getCountryCode
+      summary: 国际区号查询
+      description: 按国家/地区名称或电话区号模糊查询。字典数据基本不变，响应可缓存一小时。
+      parameters:
+        - name: keyword
+          in: query
+          required: true
+          description: 国家/地区中文名或电话区号
+          schema:
+            type: string
+            examples: ["中国", "86"]
+      responses:
+        "200":
+          description: 请求成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Envelope"
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/CountryCodeItem"
+
+  /api/idcard:
+    get:
+      tags: [生活服务]
+      operationId: getIdcard
+      summary: 身份证信息查询
+      description: 解析 18 位身份证号，返回籍贯、性别、年龄、星座等信息。
+      parameters:
+        - name: id
+          in: query
+          required: true
+          description: 18 位身份证号
+          schema:
+            type: string
+            minLength: 18
+            maxLength: 18
+      responses:
+        "200":
+          description: 请求成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Envelope"
+                  - type: object
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/IdCardInfo"
+
+  /api/ip-region:
+    get:
+      tags: [生活服务]
+      operationId: getIpRegion
+      summary: IP 归属地查询
+      description: 查询 IP 的地理位置与运营商信息；不传 `ip` 时自动使用请求来源 IP。
+      parameters:
+        - name: ip
+          in: query
+          required: false
+          description: IPv4 或 IPv6 地址，不传则取请求来源 IP
+          schema:
+            type: string
+            examples: ["8.8.8.8"]
+      responses:
+        "200":
+          description: 请求成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Envelope"
+                  - type: object
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/IpRegionData"
+
+  /api/license-plate:
+    get:
+      tags: [生活服务]
+      operationId: getLicensePlate
+      summary: 车牌归属地查询
+      description: 按省份、城市或车牌前缀模糊查询。字典数据基本不变，响应可缓存一小时。
+      parameters:
+        - name: keyword
+          in: query
+          required: true
+          description: 省份、城市名称或车牌前缀
+          schema:
+            type: string
+            examples: ["粤B", "深圳"]
+      responses:
+        "200":
+          description: 请求成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Envelope"
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/LicensePlateItem"
+
+  /api/password-strength:
+    get:
+      tags: [生活服务]
+      operationId: getPasswordStrength
+      summary: 密码强度检测
+      description: 基于 zxcvbn 评估密码强度（支持中文字典），返回评分、破解耗时估算与改进建议。
+      parameters:
+        - name: password
+          in: query
+          required: true
+          description: 待检测密码，最长 128 个字符
+          schema:
+            type: string
+            maxLength: 128
+      responses:
+        "200":
+          description: 请求成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Envelope"
+                  - type: object
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/PasswordStrengthData"
+
+  /api/postal-code:
+    get:
+      tags: [生活服务]
+      operationId: getPostalCode
+      summary: 邮政编码查询
+      description: |
+        `type=1` 按邮编精确查地区（返回单个对象）；`type=2` 按地区名称模糊查邮编（最多返回 20 条）。
+        字典数据基本不变，响应可缓存一小时。
+      parameters:
+        - name: type
+          in: query
+          required: false
+          description: 查询方式：1 邮编查地区，2 地区查邮编
+          schema:
+            type: integer
+            enum: [1, 2]
+            default: 1
+        - name: keyword
+          in: query
+          required: true
+          description: type=1 时为邮政编码，type=2 时为省/市/区名称
+          schema:
+            type: string
+            examples: ["518000", "深圳"]
+      responses:
+        "200":
+          description: 请求成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Envelope"
+                  - type: object
+                    properties:
+                      data:
+                        oneOf:
+                          - $ref: "#/components/schemas/PostalCodeItem"
+                          - type: array
+                            description: type=2 时
+                            items:
+                              $ref: "#/components/schemas/PostalCodeItem"
+
+  /api/qrcode:
+    get:
+      tags: [生活服务]
+      operationId: getQrcode
+      summary: 生成二维码
+      description: |
+        生成二维码。`format=png`（默认）返回 PNG 图片，`format=svg` 返回 SVG，`format=dataurl` 返回 JSON，`data` 为 Base64 Data URL。
+      parameters:
+        - name: text
+          in: query
+          required: true
+          description: 二维码内容，最长 2000 个字符
+          schema:
+            type: string
+            maxLength: 2000
+            examples: ["https://api.baiwumm.com"]
+        - name: format
+          in: query
+          required: false
+          description: 输出格式
+          schema:
+            type: string
+            enum: [png, svg, dataurl]
+            default: png
+        - name: size
+          in: query
+          required: false
+          description: 图片尺寸（像素），64 ~ 1000
+          schema:
+            type: integer
+            minimum: 64
+            maximum: 1000
+            default: 256
+      responses:
+        "200":
+          description: format=png 返回 PNG，format=svg 返回 SVG，format=dataurl 返回 JSON；参数错误时返回 JSON 响应壳（code=500）
+          content:
+            image/png:
+              schema:
+                type: string
+                format: binary
+            image/svg+xml:
+              schema:
+                type: string
+                description: SVG 图片
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Envelope"
+                  - type: object
+                    properties:
+                      data:
+                        type: string
+                        description: format=dataurl 时的 Base64 Data URL
+                        examples: ["data:image/png;base64,iVBORw0KGgo..."]
+
+  /api/tailwind-color-palette:
+    get:
+      tags: [生活服务]
+      operationId: getTailwindColorPalette
+      summary: Tailwind 色板生成器
+      description: 以指定颜色为基准生成 Tailwind 风格的 50 ~ 950 色阶。
+      parameters:
+        - name: color
+          in: query
+          required: true
+          description: 基准颜色，支持 hex、rgb、hsl、hsv 及 CSS 颜色名
+          schema:
+            type: string
+            examples: ["#3070ec"]
+      responses:
+        "200":
+          description: 请求成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Envelope"
+                  - type: object
+                    properties:
+                      data:
+                        $ref: "#/components/schemas/TailwindPaletteData"
+
+components:
+  parameters:
+    FormatText:
+      name: format
+      in: query
+      required: false
+      description: 传 `text` 时直接返回纯文本（text/plain），不传或其他值返回 JSON 响应壳
+      schema:
+        type: string
+        enum: [text]
+    PageIndex:
+      name: pageIndex
+      in: query
+      required: false
+      description: 页码，从 0 开始
+      schema:
+        type: integer
+        minimum: 0
+        default: 0
+    PageSize:
+      name: pageSize
+      in: query
+      required: false
+      description: 每页条数，1 ~ 1000
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 1000
+        default: 10
+
+  responses:
+    TextContentResponse:
+      description: 请求成功；`format=text` 时为纯文本
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "#/components/schemas/Envelope"
+              - type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/TextContentData"
+        text/plain:
+          schema:
+            type: string
+            description: 文案内容
+
+  schemas:
+    # ---------- 公共 ----------
+    Envelope:
+      type: object
+      description: 统一响应壳
+      required: [code, msg, data, timestamp]
+      properties:
+        code:
+          type: integer
+          description: "业务状态码：200 成功，-1 数据已存在，500 失败"
+          examples: [200]
+        msg:
+          type: string
+          description: 提示信息，失败时为错误原因
+          examples: ["请求成功"]
+        data:
+          description: 业务数据，失败时为 null
+        timestamp:
+          type: integer
+          format: int64
+          description: 服务端毫秒时间戳
+          examples: [1757952000000]
+
+    PageMeta:
+      type: object
+      description: 分页信息
+      properties:
+        total:
+          type: integer
+          description: 总条数
+        page:
+          type: integer
+          description: 当前页码（从 1 开始）
+        pageSize:
+          type: integer
+          description: 每页条数
+
+    TextContentData:
+      type: object
+      properties:
+        content:
+          type: string
+          description: 文案内容
+
+    # ---------- 每日推荐 ----------
+    HitokotoData:
+      type: object
+      description: 一言句子（数据库整行返回，此处列出核心字段，其余字段以实际返回为准）
+      additionalProperties: true
+      properties:
+        content:
+          type: string
+          description: 句子内容
+        type:
+          type: string
+          description: 句子类型 a~l
+
+    BingWallpaperData:
+      type: object
+      properties:
+        url:
+          type: string
+          format: uri
+          description: 1080P 图片地址
+        url_4k:
+          type: string
+          format: uri
+          description: 4K 图片地址
+        title:
+          type: string
+          description: 壁纸标题
+        copyright:
+          type: string
+          description: 版权信息
+
+    HolidayItem:
+      type: object
+      properties:
+        name:
+          type: string
+          description: 节假日名称
+          examples: ["国庆节"]
+        start:
+          type: string
+          format: date
+          description: 假期开始日期
+        end:
+          type: string
+          format: date
+          description: 假期结束日期
+        distance:
+          type: integer
+          description: 假期开始日距今天数（负数表示已开始或已过）
+        length:
+          type: integer
+          description: 假期总天数
+        balance:
+          type: integer
+          description: 假期剩余天数（未开始为总天数，已结束为 0）
+        work:
+          type: array
+          description: 调休上班日期
+          items:
+            type: string
+            format: date
+
+    SolarTermItem:
+      type: object
+      properties:
+        name:
+          type: string
+          description: 节气名称
+          examples: ["立春"]
+        date:
+          type: string
+          description: 交节时间，格式 YYYY-MM-DD HH:mm:ss
+
+    AlmanacHourItem:
+      type: object
+      properties:
+        date:
+          type: string
+          format: date
+          description: 公历日期
+        hours:
+          type: string
+          description: 时段
+          examples: ["23:00-00:59"]
+        hour:
+          type: string
+          description: 时辰
+          examples: ["子时"]
+        yi:
+          type: string
+          description: 时宜（空格分隔）
+        ji:
+          type: string
+          description: 时忌（空格分隔）
+        chong:
+          type: string
+          description: 时冲
+        sha:
+          type: string
+          description: 时煞
+        nayin:
+          type: string
+          description: 纳音
+        jiuxing:
+          type: string
+          description: 九星
+
+    # ---------- 随机生成 ----------
+    ColorItem:
+      type: object
+      properties:
+        hex:
+          type: string
+          examples: ["#3070ec"]
+        rgb:
+          type: string
+          examples: ["rgb(48, 112, 236)"]
+        hsl:
+          type: string
+          examples: ["hsl(220, 83%, 56%)"]
+        hsv:
+          type: string
+          examples: ["hsv(220, 80%, 93%)"]
+
+    EmojiItem:
+      type: object
+      properties:
+        emoji:
+          type: string
+          description: emoji 字符
+          examples: ["😀"]
+        name:
+          type: string
+          description: emoji 名称
+          examples: ["grinning"]
+
+    RandomUser:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          description: 姓名
+        gender:
+          type: string
+          description: 性别（男/女）
+        username:
+          type: string
+          description: 用户名
+        phone:
+          type: string
+          description: 手机号（11 位）
+        email:
+          type: string
+          format: email
+        avatar:
+          type: string
+          format: uri
+          description: 头像地址
+        birthday:
+          type: string
+          format: date
+          description: 生日
+        address:
+          type: object
+          properties:
+            province:
+              type: string
+            city:
+              type: string
+            street:
+              type: string
+            zipCode:
+              type: string
+        company:
+          type: string
+          description: 公司
+        job:
+          type: string
+          description: 职位
+        website:
+          type: string
+          format: uri
+        ip:
+          type: string
+          description: IPv4 地址
+        createdAt:
+          type: string
+          format: date-time
+
+    # ---------- 心灵语录 ----------
+    ChinesePoetryData:
+      type: object
+      description: 诗词（数据库整行返回，此处列出核心字段，其余字段以实际返回为准）
+      additionalProperties: true
+      properties:
+        title:
+          type: string
+          description: 标题
+        author:
+          type: string
+          description: 作者
+        paragraphs:
+          type: array
+          description: 诗句
+          items:
+            type: string
+
+    ColdFactData:
+      type: object
+      properties:
+        content:
+          type: string
+          description: 冷知识内容
+        category:
+          type: string
+          description: 分类
+        source:
+          type: string
+          description: 来源
+
+    DiaryPoetryData:
+      type: object
+      properties:
+        content:
+          type: string
+          description: 诗句
+        origin:
+          type: string
+          description: 出处
+        author:
+          type: string
+          description: 作者
+        category:
+          type: string
+          description: 分类
+
+    RiddleData:
+      type: object
+      properties:
+        riddle:
+          type: string
+          description: 歇后语前半句
+        answer:
+          type: string
+          description: 答案
+
+    # ---------- 生活服务 ----------
+    ApiBase:
+      type: object
+      description: 接口记录
+      properties:
+        id:
+          type: string
+          description: 主键
+        category_id:
+          type: string
+          description: 所属分类 ID
+        name:
+          type: string
+          description: 接口名称
+        desc:
+          type: string
+          description: 接口描述
+        path:
+          type: string
+          description: 接口路径
+        method:
+          type: string
+          description: 请求方式
+          enum: [GET, POST, PUT, DELETE, PATCH]
+        operation_id:
+          type: string
+          description: 操作标识
+        pinned:
+          type: boolean
+          description: 是否置顶
+        is_featured:
+          type: boolean
+          description: 是否推荐
+        sort:
+          type: integer
+          description: 排序值
+        call_count:
+          type: integer
+          description: 调用次数
+        last_called:
+          type: [string, "null"]
+          format: date-time
+          description: 最后调用时间
+        user_id:
+          type: string
+          description: 创建人 ID
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    CategoryBase:
+      type: object
+      description: 分类记录
+      properties:
+        id:
+          type: string
+          description: 主键
+        name:
+          type: string
+          description: 分类名称
+        desc:
+          type: string
+          description: 分类描述
+        sort:
+          type: integer
+          description: 排序值
+        user_id:
+          type: string
+          description: 创建人 ID
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    ApiItem:
+      allOf:
+        - $ref: "#/components/schemas/ApiBase"
+        - type: object
+          properties:
+            category:
+              $ref: "#/components/schemas/CategoryBase"
+
+    CategoryItem:
+      allOf:
+        - $ref: "#/components/schemas/CategoryBase"
+        - type: object
+          properties:
+            apis:
+              type: array
+              description: 分类下的接口列表
+              items:
+                $ref: "#/components/schemas/ApiBase"
+
+    BmiData:
+      type: object
+      properties:
+        bmi:
+          type: string
+          description: BMI 指数（保留两位小数）
+          examples: ["21.22"]
+        status:
+          type: string
+          description: 体重状态
+          enum: [体重过低, 正常体重, 超重, 肥胖]
+
+    CountryCodeItem:
+      type: object
+      properties:
+        name:
+          type: string
+          description: 中文名称
+          examples: ["中国"]
+        englishName:
+          type: string
+          description: 英文名称
+          examples: ["China"]
+        countryCode:
+          type: string
+          description: 国家代码
+          examples: ["CN"]
+        phoneCode:
+          type: string
+          description: 电话区号
+          examples: ["86"]
+
+    RegionCode:
+      type: object
+      properties:
+        code:
+          type: string
+          description: 6 位行政区划代码
+          examples: ["440000"]
+        text:
+          type: string
+          description: 名称
+          examples: ["广东省"]
+
+    IdCardInfo:
+      type: object
+      properties:
+        valid:
+          type: boolean
+          description: 是否合法
+        gender:
+          type: string
+          description: 性别，M 男 / F 女
+          enum: [M, F]
+        province:
+          $ref: "#/components/schemas/RegionCode"
+        city:
+          $ref: "#/components/schemas/RegionCode"
+        area:
+          $ref: "#/components/schemas/RegionCode"
+        cardType:
+          type: integer
+          description: 证件类型，1 大陆 / 2 港澳台
+          enum: [1, 2]
+        cardText:
+          type: string
+          description: 证件类型文本
+          examples: ["大陆"]
+        address:
+          type: string
+          description: 籍贯地址
+          examples: ["广东省湛江市雷州市"]
+        age:
+          type: integer
+          description: 周岁
+        constellation:
+          type: string
+          description: 星座
+
+    IpRegionData:
+      type: object
+      description: 归属地信息（来自 ip-api.com，查询失败时 status 为 fail 并附 message）
+      additionalProperties: true
+      properties:
+        status:
+          type: string
+          description: success / fail
+        query:
+          type: string
+          description: 查询的 IP
+        country:
+          type: string
+          description: 国家
+        countryCode:
+          type: string
+        region:
+          type: string
+          description: 省/州代码
+        regionName:
+          type: string
+          description: 省/州名称
+        city:
+          type: string
+          description: 城市
+        zip:
+          type: string
+          description: 邮编
+        lat:
+          type: number
+          description: 纬度
+        lon:
+          type: number
+          description: 经度
+        timezone:
+          type: string
+          description: 时区
+        isp:
+          type: string
+          description: 运营商
+        org:
+          type: string
+          description: 组织
+        as:
+          type: string
+          description: 自治系统
+
+    LicensePlateItem:
+      type: object
+      properties:
+        province:
+          type: string
+          description: 省份
+        city:
+          type: string
+          description: 城市
+        code:
+          type: string
+          description: 行政区划代码
+        prefix:
+          type: string
+          description: 车牌前缀
+          examples: ["粤B"]
+
+    CrackTimes:
+      type: object
+      description: 四种攻击场景下的破解耗时
+      properties:
+        onlineThrottling100PerHour:
+          description: 在线限流（100 次/小时）
+        onlineNoThrottling10PerSecond:
+          description: 在线不限流（10 次/秒）
+        offlineSlowHashing1e4PerSecond:
+          description: 离线慢哈希（1e4 次/秒）
+        offlineFastHashing1e10PerSecond:
+          description: 离线快哈希（1e10 次/秒）
+
+    PasswordStrengthData:
+      type: object
+      description: zxcvbn 检测结果
+      properties:
+        password:
+          type: string
+          description: 原始密码
+        score:
+          type: integer
+          description: 强度评分，0 最弱 ~ 4 最强
+          minimum: 0
+          maximum: 4
+        guesses:
+          type: number
+          description: 预估猜测次数
+        guessesLog10:
+          type: number
+          description: 猜测次数的 log10
+        calcTime:
+          type: integer
+          description: 计算耗时（毫秒）
+        crackTimesSeconds:
+          $ref: "#/components/schemas/CrackTimes"
+        crackTimesDisplay:
+          $ref: "#/components/schemas/CrackTimes"
+        feedback:
+          type: object
+          properties:
+            warning:
+              type: string
+              description: 警告信息
+            suggestions:
+              type: array
+              description: 改进建议
+              items:
+                type: string
+        sequence:
+          type: array
+          description: 密码匹配模式序列
+          items:
+            type: object
+            additionalProperties: true
+
+    PostalCodeItem:
+      type: object
+      properties:
+        province:
+          type: string
+          description: 省份
+        city:
+          type: string
+          description: 城市
+        area:
+          type: string
+          description: 区县
+        areaCode:
+          type: string
+          description: 区号
+        postCode:
+          type: string
+          description: 邮政编码
+          examples: ["518000"]
+
+    TailwindPaletteData:
+      type: object
+      properties:
+        color:
+          type: string
+          description: 基准颜色（hex）
+          examples: ["#3070ec"]
+        palette:
+          type: object
+          description: 色阶映射，键为 50 ~ 950
+          additionalProperties:
+            type: string
+          examples:
+            - "50": "#eff6ff"
+              "500": "#3070ec"
+              "950": "#172554"

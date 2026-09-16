@@ -42,6 +42,7 @@
     "@internationalized/date": "^3.12.4",
     "@next/third-parties": "^16.3.4",
     "@number-flow/react": "^0.6.2",
+    "@scalar/nextjs-api-reference": "^0.11.18",
     "@supabase/ssr": "^0.12.5",
     "@supabase/supabase-js": "^2.115.0",
     "@tanstack/react-table": "^9.2.4",

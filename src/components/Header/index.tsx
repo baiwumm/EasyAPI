@@ -2,7 +2,7 @@
  * @Author: 白雾茫茫丶<baiwumm.com>
  * @Date: 2026-01-21 17:57:28
  * @LastEditors: 白雾茫茫丶<baiwumm.com>
- * @LastEditTime: 2026-07-07 16:21:45
+ * @LastEditTime: 2026-09-16 09:20:51
  * @Description: 顶部导航
  */
 "use client";
@@ -25,13 +25,16 @@ interface Social {
   name: string;
   url: string;
   icon: ReactNode;
+  /** 外部链接新标签页打开 */
+  external?: boolean;
 }
 
 const socials: Social[] = [
   {
-    name: "文档",
-    url: "https://api-docs.baiwumm.com/",
+    name: "接口文档",
+    url: "/docs",
     icon: <AbbrApi />,
+    external: true,
   },
 ];
 
@@ -51,9 +54,13 @@ const Header: FC = () => {
       {/* 右侧区域 */}
       <div className="flex items-center gap-2 justify-self-end">
         <ThemeSwitcher />
-        {socials.map(({ name, url, icon }) => (
+        {socials.map(({ name, url, icon, external }) => (
           <Tooltip key={name} delay={0}>
-            <Link aria-label={name} href={url} target="_blank">
+            <Link
+              aria-label={name}
+              href={url}
+              target={external ? "_blank" : undefined}
+            >
               <Button isIconOnly size="sm" variant="ghost">
                 {icon}
               </Button>

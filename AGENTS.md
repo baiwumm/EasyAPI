@@ -35,7 +35,8 @@ src/
 ├── app/                  # App Router 页面，每个 API 功能一个目录（index.tsx + ClientComponent.tsx）
 │   ├── layout.tsx        # 根布局（next-themes + HeroUI Toast）
 │   ├── admin/            # 后台管理（apis / categorys 表格 + CRUD）
-│   └── login/            # 登录页
+│   ├── login/            # 登录页
+│   └── docs/             # 接口文档页（Scalar Route Handler，渲染 public/openapi.yaml）
 ├── components/           # 共享组件（ApiCard、Header、Footer、TableLoading 等，一个组件一个目录 index.tsx）
 ├── hooks/                # 自定义 hooks（use-request、use-copy、use-supabase-user 等）
 ├── lib/                  # 工具（utils、request、icons）
@@ -43,6 +44,7 @@ src/
 ├── enums/                # enum-plus 枚举定义
 └── typings/              # 全局类型（App namespace：Api / Category / Columns / PaginatingParams）
 supabase/rls.sql          # 数据库 RLS 策略
+public/openapi.yaml       # 手工维护的 OpenAPI 3.1 接口文档（/docs 页数据源）
 ```
 
 ## Conventions
@@ -52,9 +54,23 @@ supabase/rls.sql          # 数据库 RLS 策略
 - **事件**：优先 `onPress` 而非 `onClick`（无障碍）。
 - **样式**：`globals.css` 中必须先 `@import 'tailwindcss'` 再 `@import '@heroui/styles'`；主题基于 CSS 变量 + `oklch` 色值（`--accent`、`--background` 等），亮暗切换由 `next-themes` 控制，`@custom-variant dark (&:is(.dark *))`。
 - **import 规范**：组件一律从 `@heroui/react` 导入（如 `Button`、`Card`、`Table`、`Toast`、`toast`、`cn`），不要单独安装子包；`next.config.ts` 已配置 `optimizePackageImports: ['@heroui/react']`。
-- 新增 API 页面遵循既有模式：`index.tsx`（server component 数据获取 + 布局）+ `ClientComponent.tsx`（'use client' 交互）。
+- 新增 API 页面遵循既有模式：`index.tsx`（server component 数据获取 + 布局）+ `ClientComponent.tsx`（'use client' 交互），并同步在 `public/openapi.yaml` 补充接口文档（见「接口文档维护」）。
 - 类型定义集中放在 `src/typings/global.d.ts` 的 `App` namespace 中，页面内部类型就近声明。
 - 中文注释、目录命名使用 kebab-case，组件文件命名为 `index.tsx`。
+
+## 接口文档维护（Scalar + 手工 OpenAPI）
+
+- **文档页** `/docs`：由 `src/app/docs/route.ts` 通过 `@scalar/nextjs-api-reference` 渲染。它是 Route Handler（`export const GET = ApiReference(...)`），不是 page.tsx；`force-static` 构建期静态化；渲染脚本默认走 jsdelivr CDN，主题色是写死的字面量（页面为独立 HTML，读不到站点 CSS 变量）。
+- **数据源** `public/openapi.yaml`（OpenAPI 3.1.0）：**手工维护，不使用生成器**。项目不引入 zod / next-openapi-gen，现有 route.ts 的手写校验保持现状。
+- **新增接口时必须同步补文档**，在对应 tag（每日推荐 / 随机生成 / 心灵语录 / 生活服务）下添加 path：
+  - 路径写完整 `/api/xxx`；`operationId` 用 `getXxx` 驼峰；summary 与 route.ts 头注释 `@Description` 一致；中文描述，参数约束（必填、边界、默认值、枚举）以 route.ts 实际校验逻辑为准，枚举值取自 `src/enums/index.tsx`。
+  - JSON 响应用 `allOf` 引用 `#/components/schemas/Envelope` 再覆盖 `data`；每个接口只写 `"200"` 一个响应，错误语义由 Envelope 的 `code` 统一说明。
+  - 文案类接口（支持 `format=text`）直接引用 `#/components/responses/TextContentResponse`；分页接口复用 `PageIndex` / `PageSize` 参数与 `PageMeta` 模型。
+  - 图片直出接口（PNG/SVG）在 `responses."200".content` 下并列 `image/*` 与 `application/json`，不套 Envelope。
+- **修改接口**：同步改 YAML 对应 path 的参数与响应模型。
+- **不收录**：管理端写接口（POST/PUT/DELETE、`[id]` 路径）与 `/auth/*`。
+- `info.version` 跟随 `package.json` 版本更新。
+- **校验**：改完 YAML 后启动 dev 访问 `/docs` 确认渲染正常即可（Scalar 解析失败会在页面提示）。
 
 ## 代码规范与质量门禁
 
