@@ -57,10 +57,15 @@ export async function GET(request: NextRequest) {
 
     for (let i = 0, j = l.length; i < j; i++) {
       const name = l[i];
+      const solar = jieQi[name];
+
+      // getJieQiTable() 返回的是跨年区间（上年 12 月～次年 3 月），
+      // 不过滤会把 31 个节气（含相邻年份与重复节气名）一起返回
+      if (solar.getYear() !== year) continue;
 
       result.push({
         name: solarTermEnum[name] || name,
-        date: jieQi[name].toYmdHms(),
+        date: solar.toYmdHms(),
       });
     }
 

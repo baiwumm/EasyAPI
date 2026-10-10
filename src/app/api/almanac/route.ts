@@ -30,7 +30,12 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const solarInstance = Solar.fromDate(new Date(date));
+    const [year, month, day] = date.split("-").map(Number);
+
+    // 用已校验的 Y-M-D 直接构造，不用 Solar.fromDate(new Date(date))：
+    // new Date('YYYY-MM-DD') 按 UTC 午夜解析，而 Solar.fromDate 读本地字段，
+    // 在非 UTC 时区的服务器上会整体偏移一天
+    const solarInstance = Solar.fromYmd(year, month, day);
     const lunarInstance = solarInstance.getLunar();
 
     // 公历

@@ -8,6 +8,7 @@ import { useMemo, useState } from "react";
 
 import RefreshButton from "@/components/RefreshButton";
 import RequestContent from "@/components/RequestContent";
+import { useCommittedParams } from "@/hooks/use-committed-params";
 import { useSwrQuery } from "@/hooks/use-swr";
 import { get } from "@/lib/utils";
 import { getApiData } from "@/services/common";
@@ -26,21 +27,33 @@ const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
     [height, weight],
   );
 
-  // 请求数据
+  // 实际请求参数（已提交模式：点击计算才更新，变化自动重查）
+  const { params: queryParams, commit } = useCommittedParams(params);
+
+  // 请求数据：key 含已提交参数，提交后参数变化自动请求
   const {
     data = {},
     loading,
     error,
     mutate,
-  } = useSwrQuery(pathname, async () =>
-    get(await getApiData(pathname, params), "data", {}),
+  } = useSwrQuery([pathname, queryParams], async () =>
+    get(await getApiData(pathname, queryParams), "data", {}),
   );
 
+  // 提交计算：参数没变时 key 不变，SWR 不会发请求 → 手动刷新
+  const handleCalculate = () => {
+    if (!commit(params)) {
+      mutate();
+    }
+  };
+
   // 计算 bmi 是否正常
+  // 区间与后端 api/bmi/route.ts 的分级阈值保持一致：
+  // [18.5, 24.9) 为「正常体重」，改这里必须同步后端
   const isNormal = useMemo(() => {
     const bmi = get(data, "bmi", 0);
 
-    return bmi >= 18.5 && bmi <= 23.9;
+    return bmi >= 18.5 && bmi < 24.9;
   }, [data]);
 
   return (
@@ -115,7 +128,7 @@ const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
           <RefreshButton
             loading={loading}
             text="计算"
-            onPress={() => mutate()}
+            onPress={handleCalculate}
           />
         </div>
       </div>

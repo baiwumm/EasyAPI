@@ -26,7 +26,7 @@ import { faker } from "@faker-js/faker";
 import { NextResponse } from "next/server";
 
 import { AVATAR_STYLES } from "@/enums";
-import { catchError, clamp, responseMessage } from "@/lib/utils";
+import { catchError, parseBoundedInt, responseMessage } from "@/lib/utils";
 
 /**
  * style -> dicebear style
@@ -59,9 +59,11 @@ export async function GET(request: NextRequest) {
 
     /**
      * 参数限制
+     * 用 parseBoundedInt 而非 clamp(parseInt())：后者遇到非数字会得到 NaN，
+     * 一路传给 createAvatar 产出 width="NaN" 的坏 SVG
      */
-    const count = clamp(parseInt(params.get("count") || "1"), 1, 20);
-    const size = clamp(parseInt(params.get("size") || "128"), 16, 512);
+    const count = parseBoundedInt(params.get("count"), 1, 1, 20);
+    const size = parseBoundedInt(params.get("size"), 128, 16, 512);
 
     /**
      * style 校验

@@ -4,8 +4,8 @@ import { NextResponse } from "next/server";
 
 import { POSTALCODE_TYPES, RESPONSE } from "@/enums";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
-import { ilikeOr } from "@/lib/server/api-helpers";
-import { catchError, responseMessage } from "@/lib/utils";
+import { dbErrorResponse, ilikeOr } from "@/lib/server/api-helpers";
+import { catchError, responseMessage, sanitizeLikeKeyword } from "@/lib/utils";
 
 /*
  * @Author: 白雾茫茫丶<baiwumm.com>
@@ -43,6 +43,13 @@ export async function GET(request: NextRequest) {
       );
     }
 
+    // 净化后复查：纯标点关键字净化后为空串时，`xx.ilike.%%` 会匹配全表
+    if (!sanitizeLikeKeyword(keyword)) {
+      return NextResponse.json(
+        responseMessage(null, "请输入有效的查询关键字", RESPONSE.ERROR),
+      );
+    }
+
     const supabase = await getSupabaseServerClient();
 
     let data;
@@ -57,10 +64,17 @@ export async function GET(request: NextRequest) {
         .limit(1)
         .single();
 
+      // 区分「库里没有这条邮编」与「查询本身失败」：
+      // 此前两种情况共用同一文案，DB 报错会被误报成查无数据，误导排查
       if (error) {
-        return NextResponse.json(
-          responseMessage(null, "未找到相关邮政编码信息", RESPONSE.ERROR),
-        );
+        // PGRST116 = 单行查询没有匹配到数据
+        if (error.code === "PGRST116") {
+          return NextResponse.json(
+            responseMessage(null, "未找到相关邮政编码信息", RESPONSE.ERROR),
+          );
+        }
+
+        return dbErrorResponse(error, "ea_postal_code");
       }
       data = res;
     } else if (type === POSTALCODE_TYPES.AREA_TO_CODE) {
