@@ -4,8 +4,8 @@ import { NextResponse } from "next/server";
 
 import { RESPONSE } from "@/enums";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
-import { ilikeOr } from "@/lib/server/api-helpers";
-import { catchError, responseMessage } from "@/lib/utils";
+import { dbErrorResponse, ilikeOr } from "@/lib/server/api-helpers";
+import { catchError, responseMessage, sanitizeLikeKeyword } from "@/lib/utils";
 
 /*
  * @Author: 白雾茫茫丶<baiwumm.com>
@@ -28,19 +28,26 @@ export async function GET(request: NextRequest) {
       );
     }
 
+    // 净化后复查：纯标点关键字（, ( ) " \）净化后为空串，
+    // 拼出的 `xx.ilike.%%` 会匹配全表，等于把整张字典表返回给调用方
+    if (!sanitizeLikeKeyword(keyword)) {
+      return NextResponse.json(
+        responseMessage(null, "请输入有效的查询关键字", RESPONSE.ERROR),
+      );
+    }
+
     const supabase = await getSupabaseServerClient();
 
-    // 按邮编查地区，返回单个对象
+    // 多列模糊匹配，返回数组；limit 兜底避免未命中索引时拉全表
     const { data, error } = await supabase
       .from("ea_country_code")
       .select("englishName,name,countryCode,phoneCode")
-      .or(ilikeOr(keyword, ["name", "phoneCode"]));
+      .or(ilikeOr(keyword, ["name", "phoneCode"]))
+      .limit(50);
 
-    // 数据库错误如实返回（此前与查空混用同一文案，误导排查）
+    // 数据库错误。（原文 error.message 带表名/列名，不对外返回）
     if (error) {
-      return NextResponse.json(
-        responseMessage(null, error.message, RESPONSE.ERROR),
-      );
+      return dbErrorResponse(error, "ea_country_code");
     }
 
     // 字典表基本只读，短缓存 + 后台刷新减轻 Supabase 压力

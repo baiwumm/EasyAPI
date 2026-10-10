@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 
 import { RESPONSE } from "@/enums";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
+import { dbErrorResponse } from "@/lib/server/api-helpers";
 import { catchError, responseMessage } from "@/lib/utils";
 
 /*
@@ -109,9 +110,7 @@ export async function GET(request: NextRequest) {
 
     // 执行失败
     if (error) {
-      return NextResponse.json(
-        responseMessage(null, error.message, RESPONSE.ERROR),
-      );
+      return dbErrorResponse(error, "get_random_hitokoto");
     }
 
     // 数据为空（表空/RPC 无返回）时 text 分支会崩，统一返回业务错误
