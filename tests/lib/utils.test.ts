@@ -181,15 +181,13 @@ describe("parseBoundedInt", () => {
   });
 
   // B1/B2 的回归点：此前用 parseInt + Math.max/Math.min，
-  // 非数字会得到 NaN 并一路透传给下游库
+  // 非数字会得到 NaN 并一路透传给下游库。
+  // 签名只接 string | null，正好是 searchParams.get() 的返回类型
   it("非数字与空值回退到 fallback，不产生 NaN", () => {
     expect(parseBoundedInt("abc", 16, 1, 100)).toBe(16);
     expect(parseBoundedInt("", 16, 1, 100)).toBe(16);
     expect(parseBoundedInt(null, 16, 1, 100)).toBe(16);
-    expect(parseBoundedInt(undefined, 16, 1, 100)).toBe(16);
-    expect(
-      Number.isNaN(parseBoundedInt("xyz", 0, 1, 20)),
-    ).toBe(false);
+    expect(Number.isNaN(parseBoundedInt("xyz", 0, 1, 20))).toBe(false);
   });
 
   it("负数、小数与 parse 截断行为", () => {

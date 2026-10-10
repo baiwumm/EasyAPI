@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import type { SupabaseClient } from "@supabase/supabase-js";
 
 import { RESPONSE } from "@/enums";
 import {
@@ -8,15 +9,17 @@ import {
   textResponse,
 } from "@/lib/server/api-helpers";
 
+type Supabase = SupabaseClient<any, "public", any>;
+
 /** 最小可用的 supabase.rpc 假实现，只按脚本返回 { data, error } */
 function fakeSupabase(
   result: { data: unknown; error: unknown } | (() => unknown),
-) {
+): Supabase {
   return {
     rpc: vi.fn(async () =>
       typeof result === "function" ? result() : result,
     ),
-  } as never;
+  } as unknown as Supabase;
 }
 
 async function readJson(res: Response) {
