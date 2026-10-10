@@ -1,6 +1,7 @@
 shellEmulator: true
 
-trustPolicy: ignore
+# 安装时不降级已锁定版本；pnpm 校验该字段只接受 off / no-downgrade
+trustPolicy: off
 
 packages:
   - .
