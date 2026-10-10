@@ -5,7 +5,7 @@
  * @LastEditTime: 2026-07-07 14:30:41
  * @Description: 底部版权
  */
-import type { FC, ReactNode } from "react";
+import type { FC } from "react";
 
 import { Chip, cn, Description, Link, Separator } from "@heroui/react";
 import dayjs from "dayjs";
@@ -13,26 +13,26 @@ import Image from "next/image";
 
 import pkg from "#/package.json";
 
-interface Social {
-  icon?: ReactNode;
-  image?: string;
+/** 备案入口（label 缺失时整条过滤掉） */
+interface IcpLink {
+  image: string;
   url: string;
   label: string;
 }
 
-// 备案信息
-const IcpLinks: Social[] = [
+// 备案信息（未配置 env 时过滤掉该入口，避免页脚出现 "undefined" 可点链接）
+const IcpLinks: IcpLink[] = [
   {
     image: "/icp.png",
     url: "https://beian.miit.gov.cn/#/Integrated/index",
-    label: process.env.NEXT_PUBLIC_ICP!,
+    label: process.env.NEXT_PUBLIC_ICP,
   },
   {
     image: "/gongan.png",
     url: "https://beian.mps.gov.cn/#/query/webSearch",
-    label: process.env.NEXT_PUBLIC_GUAN_ICP!,
+    label: process.env.NEXT_PUBLIC_GUAN_ICP,
   },
-];
+].filter((item): item is IcpLink => !!item.label);
 
 const Footer: FC = () => {
   return (
@@ -87,7 +87,7 @@ const Footer: FC = () => {
               {label}
             </Description>
           </Link>
-        ))}
+        ))}{" "}
       </div>
     </footer>
   );

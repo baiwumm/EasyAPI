@@ -34,7 +34,6 @@ const socials: Social[] = [
     name: "接口文档",
     url: "/docs",
     icon: <AbbrApi />,
-    external: true,
   },
 ];
 
@@ -71,8 +70,9 @@ const Header: FC = () => {
             </Tooltip.Content>
           </Tooltip>
         ))}
+        {/* 作者个人主页：站外链接，新标签页打开 */}
         <Tooltip>
-          <Link aria-label="主页" href={pkg.author.url} target="_blank">
+          <Link aria-label="个人主页" href={pkg.author.url} target="_blank">
             <Button isIconOnly size="sm" variant="ghost">
               <HouseFill />
             </Button>

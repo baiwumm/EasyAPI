@@ -19,12 +19,14 @@ import {
   Label,
   Separator,
   Spinner,
+  toast,
   Tooltip,
   Typography,
   useOverlayState,
 } from "@heroui/react";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { useSWRConfig } from "swr";
+import { CircleXmarkFill } from "@gravity-ui/icons";
 
 import { useSupabaseUser } from "@/hooks/use-supabase-user";
 import { useSwrQuery } from "@/hooks/use-swr";
@@ -53,17 +55,6 @@ const UserAvatar: FC = () => {
   // 退出确认弹窗
   const [open, setOpen] = useState(false);
   const alertState = useOverlayState();
-  // 弹窗延迟打开的定时器（卸载时清理）
-  const logoutTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(
-    undefined,
-  );
-
-  useEffect(
-    () => () => {
-      clearTimeout(logoutTimerRef.current);
-    },
-    [],
-  );
   // 用户名称
   const name =
     user?.user_metadata.name ||
@@ -79,11 +70,8 @@ const UserAvatar: FC = () => {
         router.push("/admin");
         break;
       case "logout":
-        setOpen(false);
-        clearTimeout(logoutTimerRef.current);
-        logoutTimerRef.current = setTimeout(() => {
-          alertState.open();
-        }, 500);
+        // 直接打开确认弹窗（原实现先 setTimeout 500ms 再 open，纯属拖慢交互）
+        alertState.open();
         break;
     }
   };
@@ -92,13 +80,17 @@ const UserAvatar: FC = () => {
   const handleLogout = async () => {
     setLogoutLoading(true);
     try {
-      // 登出
-      await supabase.auth.signOut().then(() => {
-        alertState.close();
-        // 清除 /auth/me 缓存，避免切换账号后展示旧会话权限
-        mutate("/auth/me", null);
-        // 返回首页
-        router.push("/login");
+      await supabase.auth.signOut();
+      alertState.close();
+      // 清除 /auth/me 缓存，避免切换账号后展示旧会话权限
+      mutate("/auth/me", null);
+      // 返回首页
+      await router.push("/login");
+    } catch (err) {
+      // 登出失败（多为网络异常）：保持弹窗打开，让用户能直接重试
+      toast.danger(`退出登录失败，请稍后重试：${(err as Error).message}`, {
+        indicator: <CircleXmarkFill />,
+        timeout: 3000,
       });
     } finally {
       setLogoutLoading(false);

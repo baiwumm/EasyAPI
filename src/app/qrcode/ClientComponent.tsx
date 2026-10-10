@@ -3,7 +3,14 @@ import type { FC } from "react";
 import type { ClientComponentProps } from "@/typings";
 
 import { ArrowDownToSquare } from "@gravity-ui/icons";
-import { Button, Input, NumberField, toast, Typography } from "@heroui/react";
+import {
+  Button,
+  Description,
+  Input,
+  NumberField,
+  toast,
+  Typography,
+} from "@heroui/react";
 import Image from "next/image";
 import { useMemo, useState } from "react";
 
@@ -66,12 +73,17 @@ const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
           reFresh={reFresh}
         >
           <div className="flex justify-center items-center">
-            <Image
-              alt={text || "二维码"}
-              height={size}
-              src={imgSrc}
-              width={size}
-            />
+            {/* 生成失败 / 清空旧图时 imgSrc 为 ""，不判空会让 next/image 渲染出破图图标 */}
+            {imgSrc ? (
+              <Image
+                alt={text || "二维码"}
+                height={size}
+                src={imgSrc}
+                width={size}
+              />
+            ) : (
+              <Description>点击「生成」以生成二维码</Description>
+            )}
           </div>
         </RequestContent>
       </div>
