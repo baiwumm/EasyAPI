@@ -24,6 +24,7 @@ import CopyText from "@/components/CopyText";
 import RefreshButton from "@/components/RefreshButton";
 import RequestContent from "@/components/RequestContent";
 import TypingAnimation from "@/components/TypingAnimation";
+import { useCommittedParams } from "@/hooks/use-committed-params";
 import { useSwrQuery } from "@/hooks/use-swr";
 import { get } from "@/lib/utils";
 import { getApiData } from "@/services/common";
@@ -79,14 +80,18 @@ const QuoteWorld: FC<QuoteWorldProps> = ({
     return {};
   }, [mode, selected, author]);
 
-  // 请求数据（key 固定为路由，参数走闭包；点击刷新用 mutate）
+  // 实际请求参数（已提交模式）：切换筛选标签/改作者只更新本地 state，
+  // 点「换一句 / 吟诗一首」提交后才进 SWR key，避免每次交互都打接口
+  const { params: queryParams, commit } = useCommittedParams(params);
+
+  // 请求数据（key 含已提交参数，提交后参数变化自动请求）
   const {
     data = {},
     loading,
     error,
     mutate,
-  } = useSwrQuery(pathname, async () => {
-    const res = get(await getApiData(pathname, params), "data", {});
+  } = useSwrQuery([pathname, queryParams], async () => {
+    const res = get(await getApiData(pathname, queryParams), "data", {});
 
     // poetry 的响应是数组，取第一首
     return mode === "poetry" ? get(res, "[0]", {}) : res;
@@ -95,7 +100,10 @@ const QuoteWorld: FC<QuoteWorldProps> = ({
   // 刷新入口：原 onBefore 的 UI 重置逻辑在请求前执行
   const handleRefresh = () => {
     setShowFormContent(false);
-    mutate();
+    // 参数没变时 key 不变，SWR 不会发请求 → 用 mutate() 手动刷新
+    if (!commit(params)) {
+      mutate();
+    }
   };
 
   // 主文案

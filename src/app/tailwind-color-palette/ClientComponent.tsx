@@ -22,6 +22,7 @@ import CopyText from "@/components/CopyText";
 import RefreshButton from "@/components/RefreshButton";
 import RequestContent from "@/components/RequestContent";
 import { colorPresets, getRandomColor } from "@/lib/color";
+import { useCommittedParams } from "@/hooks/use-committed-params";
 import { useCopy } from "@/hooks/use-copy";
 import { useSwrQuery } from "@/hooks/use-swr";
 import { get } from "@/lib/utils";
@@ -36,13 +37,25 @@ const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
   // 参数处理
   const params = useMemo(() => ({ color }), [color]);
 
-  // 请求数据
-  const { data, loading, error, mutate } = useSwrQuery(pathname, async () =>
-    get(await getApiData(pathname, params), "data.palette", {}),
+  // 实际请求参数（已提交模式：点击生成才更新，变化自动重查）
+  const { params: queryParams, commit } = useCommittedParams(params);
+
+  // 请求数据：key 含已提交参数，提交后参数变化自动请求
+  const { data, loading, error, mutate } = useSwrQuery(
+    [pathname, queryParams],
+    async () =>
+      get(await getApiData(pathname, queryParams), "data.palette", {}),
   );
 
   const shuffleColor = () => {
     setColor(getRandomColor());
+  };
+
+  // 提交生成：参数没变时 key 不变，SWR 不会发请求 → 手动刷新
+  const handleGenerate = () => {
+    if (!commit(params)) {
+      mutate();
+    }
   };
 
   return (
@@ -141,7 +154,7 @@ const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
           <RefreshButton
             loading={loading}
             text="生成"
-            onPress={() => mutate()}
+            onPress={handleGenerate}
           />
           <CopyText content={JSON.stringify(data, null, 2)} />
         </div>

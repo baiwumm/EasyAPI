@@ -9,6 +9,7 @@ import EmptyContent from "@/components/EmptyContent";
 import RefreshButton from "@/components/RefreshButton";
 import RequestContent from "@/components/RequestContent";
 import TableLoading from "@/components/TableLoading";
+import { useCommittedParams } from "@/hooks/use-committed-params";
 import { useSwrQuery } from "@/hooks/use-swr";
 import { get } from "@/lib/utils";
 import { getApiData } from "@/services/common";
@@ -39,16 +40,22 @@ function JsonContent<T>({
 }: JsonContentProps<T>) {
   const pathname = usePathname();
 
-  // 请求数据（key 固定为路由，参数走闭包；点击刷新用 mutate）
-  const { data, loading, error, mutate } = useSwrQuery<T>(pathname, async () =>
-    get(await getApiData(pathname, params), "data"),
+  // 实际请求参数（已提交模式）：输入框变化只更新本地 state，
+  // 点「查询/检测」提交后才进 SWR key，避免每次按键都打一次接口
+  const { params: queryParams, commit } = useCommittedParams(params);
+
+  // 请求数据：key 含已提交参数，提交后参数变化自动请求
+  const { data, loading, error, mutate } = useSwrQuery<T>(
+    [pathname, queryParams],
+    async () => get(await getApiData(pathname, queryParams), "data"),
   );
 
-  // 请求数据
+  // 请求数据：参数没变时 key 不变，SWR 不会发请求 → 用 mutate() 手动刷新
   const reload = () => {
-    const flag = onRefresh();
-
-    if (flag) {
+    if (!onRefresh()) {
+      return;
+    }
+    if (!commit(params)) {
       mutate();
     }
   };

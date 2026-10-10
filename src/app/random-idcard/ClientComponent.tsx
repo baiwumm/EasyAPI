@@ -10,6 +10,7 @@ import CopyChip from "@/components/CopyChip";
 import RefreshButton from "@/components/RefreshButton";
 import RequestContent from "@/components/RequestContent";
 import StaggerIn from "@/components/StaggerIn";
+import { useCommittedParams } from "@/hooks/use-committed-params";
 import { useSwrQuery } from "@/hooks/use-swr";
 import { get } from "@/lib/utils";
 import { getApiData } from "@/services/common";
@@ -21,15 +22,25 @@ const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
   // 参数处理
   const params = useMemo(() => ({ count }), [count]);
 
-  // 请求数据
+  // 实际请求参数（已提交模式：点击生成才更新，变化自动重查）
+  const { params: queryParams, commit } = useCommittedParams(params);
+
+  // 请求数据：key 含已提交参数，提交后参数变化自动请求
   const {
     data = [],
     loading,
     error,
     mutate,
-  } = useSwrQuery(pathname, async () =>
-    get(await getApiData(pathname, params), "data", []),
+  } = useSwrQuery([pathname, queryParams], async () =>
+    get(await getApiData(pathname, queryParams), "data", []),
   );
+
+  // 提交生成：参数没变时 key 不变，SWR 不会发请求 → 手动刷新
+  const handleGenerate = () => {
+    if (!commit(params)) {
+      mutate();
+    }
+  };
 
   return (
     <div className="flex-1 flex flex-col justify-between gap-4">
@@ -73,7 +84,7 @@ const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
           <RefreshButton
             loading={loading}
             text="生成"
-            onPress={() => mutate()}
+            onPress={handleGenerate}
           />
         </div>
       </div>
