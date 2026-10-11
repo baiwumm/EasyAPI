@@ -51,7 +51,6 @@
 
 - `src/app/page.tsx` 是 ISR（`revalidate = 300`），首页数据 5 分钟内可能滞后；
   后台保存目前**没有** `revalidateTag`，见 `backlog.md` F2。
-- `src/app/bing-wallpaper/page.tsx` 是 ISR 24h，且 `lib/utils.ts` 的
-  `getUrl()` 对非法入参会抛错而 JSX 里没有防护——Bing 改返回结构时
-  错误页会被缓存 24h，见 `backlog.md` C9。
+- `src/app/bing-wallpaper/page.tsx` 是 ISR 24h。`getBingWallpaper()` 已在返回前
+  校验地址可解析且带 id，Bing 改返回结构时走缓存兜底不会缓存坏数据（C9 已修）。
 - `supabase/rls.sql` 不在构建流程内，需在 Supabase Dashboard 手动执行。

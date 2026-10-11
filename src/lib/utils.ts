@@ -163,9 +163,13 @@ export function buildYearOptions(startYear: number, currentYear?: number) {
 
 // https://cn.bing.com//th?id=OHR.GipuzcoaSummer_ZH-CN1926924422_UHD.jpg
 // https://cn.bing.com/th?id=OHR.GipuzcoaSummer_ZH-CN1926924422_1920x1080.jpg
+// 尺寸后缀：数字分辨率与 UHD 都可能出现在入参里，拼接前先整体剥掉，
+// 否则 _UHD.jpg 上再拼 _1920x1080.jpg 会产出坏地址（C9）
+const BING_SIZE_SUFFIX = /_(?:\d+x\d+|UHD)\.jpg$/;
+
 export function get4kUrl(url: string) {
   const id = (new URL(url).searchParams.get("id") || "").replace(
-    /_\d+x\d+\.jpg$/,
+    BING_SIZE_SUFFIX,
     "",
   );
 
@@ -173,7 +177,7 @@ export function get4kUrl(url: string) {
 }
 export function getUrl(url: string) {
   const id = (new URL(url).searchParams.get("id") || "").replace(
-    /_\d+x\d+\.jpg$/,
+    BING_SIZE_SUFFIX,
     "",
   );
 

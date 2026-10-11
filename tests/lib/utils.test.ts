@@ -260,25 +260,30 @@ describe("getUrl / get4kUrl", () => {
     expect(get4kUrl(bare)).toBe("https://bing.com/th?id=OHR.Bare_UHD.jpg");
   });
 
-  // 已知脆弱点（此处钉住现状，未改实现）：
-  // 剥离正则只认 _\d+x\d+，不认 _UHD，所以输入已带 _UHD 时会二次拼接出
-  // ..._UHD.jpg_1920x1080.jpg。当前 Bing 的返回不带尺寸后缀所以踩不到，
-  // 但 Bing 一旦改返回结构就会产出坏 url，而调用方在 JSX 里没有防护，
-  // 会把 ISR 页面缓存成错误页（见 C9）。
-  it("已知脆弱点：输入已带 _UHD 时会被二次拼接", () => {
+  // C9 修复点：剥离正则同时认 _数字x数字 与 _UHD，
+  // 输入已带尺寸后缀时只剥一次再拼，不会出现二次拼接的坏地址
+  it("输入已带 _UHD 时先剥离再拼接，不重复叠加后缀", () => {
     const uhd = "https://cn.bing.com/th?id=OHR.Test_ZH-CN123_UHD.jpg";
 
     expect(getUrl(uhd)).toBe(
-      "https://bing.com/th?id=OHR.Test_ZH-CN123_UHD.jpg_1920x1080.jpg",
+      "https://bing.com/th?id=OHR.Test_ZH-CN123_1920x1080.jpg",
     );
-    // get4kUrl 因为目标后缀同样是 UHD，二次拼接后反而仍是合法 url
     expect(get4kUrl(uhd)).toBe(
-      "https://bing.com/th?id=OHR.Test_ZH-CN123_UHD.jpg_UHD.jpg",
+      "https://bing.com/th?id=OHR.Test_ZH-CN123_UHD.jpg",
     );
   });
 
-  // C9 的回归点：Bing 改返回结构时这里会抛错，
-  // 而调用方在 JSX 里没有 try/catch，会把 ISR 页面缓存成错误页
+  it("输入已带数字尺寸后缀时先剥离再拼接", () => {
+    expect(getUrl(numeric)).toBe(
+      "https://bing.com/th?id=OHR.Test_ZH-CN123_1920x1080.jpg",
+    );
+    expect(get4kUrl(numeric)).toBe(
+      "https://bing.com/th?id=OHR.Test_ZH-CN123_UHD.jpg",
+    );
+  });
+
+  // C9 的兜底：getBingWallpaper 在返回前已校验地址可解析，
+  // 所以正常调用链路上不会走到这里；仍显式抛出，避免坏 url 被静默拼出来
   it("非法 url 会抛错（调用方需自行防护）", () => {
     expect(() => getUrl("not-a-url")).toThrow();
   });

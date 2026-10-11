@@ -62,12 +62,35 @@ async function fetchBingWallpaper(): Promise<BingWallpaper> {
     throw new Error("未获取到壁纸数据");
   }
 
+  const url = `https://bing.com${img.url}`;
+
+  // 返回前校验地址可解析且带 id：Bing 改返回结构时在这里就失败，
+  // 走缓存兜底，而不是把坏数据写进缓存让下游（JSX、接口）无防护地拼接（C9）
+  assertWallpaperUrl(url);
+
   cached = {
-    url: `https://bing.com${img.url}`,
+    url,
     title: img.title,
     copyright: img.copyright,
   };
   cachedAt = Date.now();
 
   return cached;
+}
+
+/**
+ * @description: 校验壁纸地址可被解析且带 id，不可解析时抛出明确错误
+ */
+function assertWallpaperUrl(url: string): void {
+  let id: string | null = null;
+
+  try {
+    id = new URL(url).searchParams.get("id");
+  } catch {
+    throw new Error(`bing 壁纸地址无法解析：${url}`);
+  }
+
+  if (!id) {
+    throw new Error(`bing 壁纸地址缺少 id：${url}`);
+  }
 }
