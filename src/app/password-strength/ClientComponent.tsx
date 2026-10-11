@@ -10,6 +10,11 @@ import { useState } from "react";
 import { Chip, Input, toast } from "@heroui/react";
 
 import JsonContent from "@/components/JsonContent";
+import { postApiData } from "@/services/common";
+
+// zxcvbn 结果里不再回显 password 字段（见 api/password-strength），
+// 密码展示直接用输入框里的本地值
+type PasswordStrengthResult = Omit<ZxcvbnResult, "password">;
 
 const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
   const [password, setPassword] = useState("abc123456");
@@ -30,9 +35,8 @@ const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
     return true;
   };
 
-  const getColumns: GetColumnsFn<ZxcvbnResult> = (data) => {
-    const { password, score, guesses, crackTimesDisplay, feedback } =
-      data || {};
+  const getColumns: GetColumnsFn<PasswordStrengthResult> = (data) => {
+    const { score, guesses, crackTimesDisplay, feedback } = data || {};
 
     const scoreMap = ["非常弱", "弱", "一般", "强", "非常强"];
 
@@ -83,14 +87,15 @@ const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
     ];
   };
 
-  return (
-    <JsonContent
-      getColumns={getColumns}
-      params={{ password }}
-      searchText="检测"
-      title={title}
-      onRefresh={onRefresh}
-    >
+    return (
+      <JsonContent
+        getColumns={getColumns}
+        params={{ password }}
+        searchText="检测"
+        sendData={postApiData}
+        title={title}
+        onRefresh={onRefresh}
+      >
       <Input
         aria-label="密码"
         className="w-50"

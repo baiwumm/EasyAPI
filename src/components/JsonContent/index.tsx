@@ -1,4 +1,5 @@
 "use client";
+import type { IResponse } from "@/typings";
 import type { ReactNode } from "react";
 
 import { Form, Table, Typography } from "@heroui/react";
@@ -28,6 +29,8 @@ interface JsonContentProps<T> {
   onRefresh: () => boolean;
   searchText?: string;
   getColumns: GetColumnsFn<T>;
+  /** 自定义请求方式，默认 GET + query；敏感参数页面传 postApiData 走 POST + JSON body */
+  sendData?: (path: string, params: Record<string, any>) => Promise<IResponse>;
 }
 
 function JsonContent<T>({
@@ -37,6 +40,7 @@ function JsonContent<T>({
   onRefresh,
   searchText = "查询",
   getColumns,
+  sendData,
 }: JsonContentProps<T>) {
   const pathname = usePathname();
 
@@ -45,9 +49,10 @@ function JsonContent<T>({
   const { params: queryParams, commit } = useCommittedParams(params);
 
   // 请求数据：key 含已提交参数，提交后参数变化自动请求
+  // sendData 只影响怎么发，不影响 key 语义；敏感参数页面传 postApiData
   const { data, loading, error, mutate } = useSwrQuery<T>(
     [pathname, queryParams],
-    async () => get(await getApiData(pathname, queryParams), "data"),
+    async () => get(await (sendData ?? getApiData)(pathname, queryParams), "data"),
   );
 
   // 请求数据：参数没变时 key 不变，SWR 不会发请求 → 用 mutate() 手动刷新

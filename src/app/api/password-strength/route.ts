@@ -13,6 +13,8 @@ import * as zxcvbnZhPackage from "@zxcvbn-ts/language-zh";
 import { NextResponse } from "next/server";
 
 import { RESPONSE } from "@/enums";
+import { getClientIp } from "@/lib/server/api-helpers";
+import { createRateLimiter } from "@/lib/server/rate-limit";
 import { catchError, responseMessage } from "@/lib/utils";
 
 // zxcvbn 全局配置与请求无关，模块加载时初始化一次，避免每个请求重复 setOptions
@@ -25,12 +27,17 @@ zxcvbnOptions.setOptions({
   },
 });
 
-export async function GET(request: NextRequest) {
-  try {
-    // 解析 URL 查询参数
-    const { searchParams } = request.nextUrl;
+// 单次检测约 35ms CPU，无限流时这个接口就是现成的算力放大器（C13）
+const limiter = createRateLimiter({ limit: 20, windowMs: 60 * 1000 });
 
-    const password = searchParams.get("password") || "";
+const MAX_PASSWORD_LENGTH = 128;
+
+export async function POST(request: NextRequest) {
+  try {
+    // 密码不再走 query string：会原样落进 Vercel/CDN 访问日志（C13），
+    // 改为从 JSON body 读取；解析失败按必填处理，不把解析原文透出去
+    const body = await request.json().catch(() => null);
+    const password = typeof body?.password === "string" ? body.password : "";
 
     // 参数校验
     if (!password) {
@@ -39,19 +46,46 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    if (password.length > 128) {
+    if (password.length > MAX_PASSWORD_LENGTH) {
       return NextResponse.json(
         responseMessage(
           null,
-          "参数 password 长度不能超过 128 个字符",
+          `参数 password 长度不能超过 ${MAX_PASSWORD_LENGTH} 个字符`,
           RESPONSE.ERROR,
         ),
       );
     }
 
-    const result = zxcvbn(password);
+    // 限流：放在 CPU 密集计算之前，超限请求直接返回
+    if (!limiter.check(getClientIp(request))) {
+      return NextResponse.json(
+        responseMessage(null, "请求过于频繁，请稍后重试", RESPONSE.ERROR),
+      );
+    }
 
-    return NextResponse.json(responseMessage(result));
+    const {
+      score,
+      guesses,
+      guessesLog10,
+      calcTime,
+      crackTimesSeconds,
+      crackTimesDisplay,
+      feedback,
+    } = zxcvbn(password);
+
+    // 只回文档登记的字段：zxcvbn 的原始返回里带 password 字段本身，
+    // 不透出去，避免前端 CopyText 把密码原文抄进剪贴板（C13）
+    return NextResponse.json(
+      responseMessage({
+        score,
+        guesses,
+        guessesLog10,
+        calcTime,
+        crackTimesSeconds,
+        crackTimesDisplay,
+        feedback,
+      }),
+    );
   } catch (err) {
     return NextResponse.json(catchError(err));
   }

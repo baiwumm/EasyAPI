@@ -1,4 +1,5 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
+import type { NextRequest } from "next/server";
 
 import { NextResponse } from "next/server";
 
@@ -6,6 +7,22 @@ import { RESPONSE } from "@/enums";
 import { pick, responseMessage, sanitizeLikeKeyword } from "@/lib/utils";
 
 type Supabase = SupabaseClient<any, "public", any>;
+
+/**
+ * 取客户端真实 IP（尽力而为）：
+ * 反向代理后面 TCP 对端是代理自己，真实 IP 只存在于转发头里；
+ * 全部取不到时回退固定字符串，让限流等场景仍有稳定 key 可用
+ */
+export function getClientIp(request: NextRequest): string {
+  const forwarded = request.headers.get("x-forwarded-for");
+
+  return (
+    forwarded?.split(",")[0]?.trim() ||
+    request.headers.get("x-real-ip") ||
+    request.headers.get("cf-connecting-ip") ||
+    "anonymous"
+  );
+}
 
 /** 文本直出响应（format=text） */
 export function textResponse(content: string): NextResponse {

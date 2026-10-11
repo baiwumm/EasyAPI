@@ -1174,19 +1174,25 @@ paths:
                           $ref: "#/components/schemas/LicensePlateItem"
 
   /api/password-strength:
-    get:
+    post:
       tags: [生活服务]
       operationId: getPasswordStrength
       summary: 密码强度检测
-      description: 基于 zxcvbn 评估密码强度（支持中文字典），返回评分、破解耗时估算与改进建议。
-      parameters:
-        - name: password
-          in: query
-          required: true
-          description: 待检测密码，最长 128 个字符
-          schema:
-            type: string
-            maxLength: 128
+      description: |
+        基于 zxcvbn 评估密码强度（支持中文字典），返回评分、破解耗时估算与改进建议。
+        密码走 POST JSON body 而非 query string，避免落进访问日志；同一客户端每分钟最多 20 次，超出返回 `code=500`。
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [password]
+              properties:
+                password:
+                  type: string
+                  maxLength: 128
+                  description: 待检测密码，必填，最长 128 个字符
       responses:
         "200":
           description: 请求成功
@@ -1921,11 +1927,8 @@ components:
 
     PasswordStrengthData:
       type: object
-      description: zxcvbn 检测结果
+      description: zxcvbn 检测结果（不回显输入的 password 字段）
       properties:
-        password:
-          type: string
-          description: 原始密码
         score:
           type: integer
           description: 强度评分，0 最弱 ~ 4 最强

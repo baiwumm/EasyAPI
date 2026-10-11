@@ -108,6 +108,17 @@ public/openapi.yaml       # 手工维护的 OpenAPI 3.1 接口文档（/docs 页
 
 快速补充区：新约定、踩坑记录放这里。
 
+- **`pnpm build` 需要 env**：没有 `.env.local` 时构建会在 `/api/*` 与页面预渲染阶段报
+  `@supabase/ssr: Your project's URL and API key are required`。本地跑门禁前先按
+  `.env.example` 复制一份占位值即可（`.env.*` 已被 gitignore）。
+- **`@zxcvbn-ts/language-zh` 不能裸 `require`**：其 CJS 入口会 require
+  `@zxcvbn-ts/dictionary-compression/decompress`，而该包 CJS 产物是
+  `module.exports = { default: fn }`，直接调用会抛 `decompress is not a function`。
+  Next 的 bundler 会做默认导出 interop 所以线上正常；vitest 走原生 require 会炸，
+  `tests/app/api/password-strength-route.test.ts` 里用替身词库绕开。
+- **本地 lint 会有上万条 `Delete ␍`**：本机 `core.autocrlf=true` 把 LF 检出成 CRLF，
+  而仓库里存的是 LF。判lint是否干净要看**去掉 prettier/prettier 后还剩多少条**。
+
 ## 文档索引
 
 `AGENTS.md` 只保留入口必读内容，专题细则全部在 `docs/`：
