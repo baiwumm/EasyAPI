@@ -13,7 +13,7 @@ import { PinFill, StarFill, ThumbsUpFill } from "@gravity-ui/icons";
 import { Card, Chip, cn, Description } from "@heroui/react";
 import dayjs from "dayjs";
 import Link from "next/link";
-import { memo } from "react";
+import { memo, useEffect, useState } from "react";
 
 interface ApiCardProps {
   data: Api;
@@ -37,10 +37,18 @@ const ApiCard: FC<ApiCardProps> = memo(function ApiCard({ data }) {
     created_at,
   } = data || {};
 
-  const isNew = dayjs(created_at).isAfter(dayjs().subtract(7, "day"));
+  // 「新」依赖当前时间：在渲染里直接算 dayjs() 会让 SSR 与 CSR 各算一次，
+  // created_at 正好压在 7 天边界时出现 hydration mismatch。挂载后再算，
+  // 两侧首次渲染保持一致（只差 chip 的出现时机）（G6）
+  const [isNew, setIsNew] = useState(false);
+
+  useEffect(() => {
+    setIsNew(dayjs(created_at).isAfter(dayjs().subtract(7, "day")));
+  }, [created_at]);
 
   return (
-    <Link href={path}>
+    // 整卡是一个链接，补 aria-label 让读屏软件能念出「去哪里」而不是一堆子文本
+    <Link aria-label={`查看接口：${name ?? ""}`} href={path}>
       <Card
         className={cn(
           "flex flex-col h-full relative overflow-hidden rounded-4xl transition-transform duration-300 hover:-translate-y-1.5",
@@ -68,7 +76,11 @@ const ApiCard: FC<ApiCardProps> = memo(function ApiCard({ data }) {
             </Chip>
           </div>
           {desc ? (
-            <Card.Description className="text-xs overflow-hidden line-clamp-2 wrap-break-word mt-1">
+            // line-clamp-2 会截断描述，补 title 让悬停能看到完整文案
+            <Card.Description
+              className="text-xs overflow-hidden line-clamp-2 wrap-break-word mt-1"
+              title={desc}
+            >
               {desc}
             </Card.Description>
           ) : null}
