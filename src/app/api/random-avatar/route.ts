@@ -26,6 +26,10 @@ import { faker } from "@faker-js/faker";
 import { NextResponse } from "next/server";
 
 import { AVATAR_STYLES } from "@/enums";
+import {
+  getCachedAvatarSvg,
+  setCachedAvatarSvg,
+} from "@/lib/server/avatar-cache";
 import { catchError, parseBoundedInt, responseMessage } from "@/lib/utils";
 
 /**
@@ -100,18 +104,21 @@ export async function GET(request: NextRequest) {
 
     /**
      * 单个头像
+     * SVG 对同一组 seed+style+size 是确定性的，命中缓存就不必再跑一遍 dicebear（F3）
      */
     const seed = seedParam || crypto.randomUUID();
 
-    const avatar = createAvatar(style, {
-      seed,
-      size,
-    });
+    const cacheKey = `${styleValue}:${size}:${seed}`;
+    let svg = getCachedAvatarSvg(cacheKey);
 
-    /**
-     * SVG
-     */
-    const svg = avatar.toString();
+    if (svg === undefined) {
+      svg = createAvatar(style, {
+        seed,
+        size,
+      }).toString();
+
+      setCachedAvatarSvg(cacheKey, svg);
+    }
 
     return new NextResponse(svg, {
       headers: {

@@ -18,7 +18,6 @@
 
 | ID | 位置 | 问题 | 处理建议 | 优先级 | 状态 |
 |---|---|---|---|---|---|
-| F3 | `src/app/api/random-avatar/route.ts` | 同 seed 重复请求每次重新生成 SVG 字符串 | 加 LRU 或 `unstable_cache`，按 `seed+style+size` 缓存 | P2 | 待办 |
 | F4 | `src/app/opengraph-image.tsx:36-38` | 3 个 `publicAssetToDataUrl` 在模块作用域启动，但 `ImageResponse` 每请求重渲染 | 构建期生成或 `revalidate = 86400` | P3 | 待办 |
 | F5 | `src/app/api/barcode/route.ts:113-115` | PNG 分支每次起一整套 libvips 流水线，内存与冷启动开销极大且无并发上限 | 加超时/尺寸上限；或预生成常用规格 | P2 | 待办 |
 | F6 | `src/app/random-avatar/ClientComponent.tsx:111` | 50 个头像 = 50 次 `/api/random-avatar` 请求，每次过中间件（DB 查询 + 计数 RPC） | 后端已支持 `count>1` 返回 URL 数组，前端没用；改为一次请求 | P2 | 待办 |
@@ -68,6 +67,8 @@
 - `C13` password-strength 改 POST + 限流 + 不回显密码（含 `rate-limit` 与 `getClientIp` 工具）
 - `C12` ip-region 区分显式/自动 IP 的缓存策略 + JSON 兜底（含 YAML 同步）
 - `C14` write-guard update 空 payload 拦截 + 字段取值范围校验（镜像前端 save-modal）
+- `F2` 首页 ISR：后台写操作后 `revalidatePath('/')`（未用 `revalidateTag`，原因见 `lib/server/home.ts` 注释）
+- `F3` random-avatar SVG LRU 缓存（`lib/server/avatar-cache.ts`，上限 200 条）
 - `A1` B1 B2 B3 B4 B5 B7 B9 C1 C3 D2 D9 D11 D18 + `almanac` UTC 偏移 —— 见 `audit-2026-10.md`
 - 测试框架引入 + 122 条测试（`tests/`）—— 见 `docs/code-standards.md`
 - `C2` RLS 策略 —— 按裁决跳过（库侧已手工配置），`rls.sql` 已回退到改动前版本
