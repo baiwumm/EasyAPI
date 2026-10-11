@@ -9,7 +9,8 @@ import HomeContent from "@/components/HomeContent";
 import { fetchHomeData } from "@/lib/server/home";
 
 // ISR：首页为全站最高流量页，每 5 分钟后台再生成；
-// 后台变更最迟 5 分钟生效（完整方案为后台保存时 revalidateTag，见修复报告）。
+// 后台保存（/api/apis、/api/categorys 的写操作）会 revalidatePath('/')，
+// 变更最迟在下次访问时生效，不必等满 5 分钟
 // 再生成期间返回旧页面，瞬时数据库故障也不影响首页可用性
 export const revalidate = 300;
 

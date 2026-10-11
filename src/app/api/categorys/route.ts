@@ -4,6 +4,7 @@ import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
 import { RESPONSE } from "@/enums";
+import { revalidateHome } from "@/lib/server/home";
 import { getSupabaseServerClient, requireAdmin } from "@/lib/supabase/server";
 import { parseCategoryBody } from "@/lib/server/write-guard";
 import { catchError, responseMessage, sanitizeLikeKeyword } from "@/lib/utils";
@@ -150,6 +151,9 @@ export async function POST(request: NextRequest) {
         responseMessage(null, error.message, RESPONSE.ERROR),
       );
     }
+
+    // 写成功：让首页立刻拿到新数据（ISR 最迟 5 分钟才生效，见 F2）
+    revalidateHome();
 
     return NextResponse.json(responseMessage(data));
   } catch (err) {

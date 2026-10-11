@@ -3,6 +3,7 @@ import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
 import { RESPONSE } from "@/enums";
+import { revalidateHome } from "@/lib/server/home";
 import { getSupabaseServerClient, requireAdmin } from "@/lib/supabase/server";
 import { parseApiBody } from "@/lib/server/write-guard";
 import { catchError, responseMessage } from "@/lib/utils";
@@ -43,6 +44,9 @@ export async function DELETE(
         responseMessage(null, error.message, RESPONSE.ERROR),
       );
     }
+
+    // 写成功：让首页立刻去掉已删除的接口卡片（ISR 最迟 5 分钟才生效，见 F2）
+    revalidateHome();
 
     return NextResponse.json(responseMessage(data));
   } catch (err) {
@@ -118,6 +122,9 @@ export async function PUT(
         responseMessage(null, error.message, RESPONSE.ERROR),
       );
     }
+
+    // 写成功：让首页立刻拿到新数据（ISR 最迟 5 分钟才生效，见 F2）
+    revalidateHome();
 
     // 返回更新后的菜单数据
     return NextResponse.json(responseMessage(data));

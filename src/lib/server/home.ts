@@ -5,9 +5,24 @@
  */
 import type { Category } from "@/typings";
 
+import { revalidatePath } from "next/cache";
 import { cache } from "react";
 
 import { getSupabaseServerClient } from "@/lib/supabase/server";
+
+/**
+ * @description: 后台写操作成功后调用，让首页立刻看到变更
+ * 首页是 ISR（revalidate = 300），不主动失效的话后台改完最迟 5 分钟才生效。
+ *
+ * 这里用 revalidatePath('/') 而不是 backlog 里提的 revalidateTag('home')：
+ * - fetchHomeData 用 React.cache 只做「同一请求内去重」，没有给任何数据打 tag，
+ *   本项目也没启用 cacheComponents，revalidateTag 找不到带 home 标签的缓存项，会是空操作；
+ * - Next 16 里 revalidateTag 的单参形式已废弃，双参形式仍然只对打了 tag 的数据生效。
+ * Route Handler 中调用会把首页标记为待再生成，下次访问时生效。
+ */
+export function revalidateHome(): void {
+  revalidatePath("/");
+}
 
 /**
  * @description: 首页数据（全部分类 + 接口），服务端直接查询

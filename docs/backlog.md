@@ -18,7 +18,6 @@
 
 | ID | 位置 | 问题 | 处理建议 | 优先级 | 状态 |
 |---|---|---|---|---|---|
-| F2 | `src/app/page.tsx:14` | 首页 ISR 5 分钟，后台保存后**无** `revalidateTag`，最长 5 分钟不生效 | 保存成功后 `revalidateTag('home')`（`fetchHomeData` 已用 `React.cache`，接入成本低） | P2 | 待办 |
 | F3 | `src/app/api/random-avatar/route.ts` | 同 seed 重复请求每次重新生成 SVG 字符串 | 加 LRU 或 `unstable_cache`，按 `seed+style+size` 缓存 | P2 | 待办 |
 | F4 | `src/app/opengraph-image.tsx:36-38` | 3 个 `publicAssetToDataUrl` 在模块作用域启动，但 `ImageResponse` 每请求重渲染 | 构建期生成或 `revalidate = 86400` | P3 | 待办 |
 | F5 | `src/app/api/barcode/route.ts:113-115` | PNG 分支每次起一整套 libvips 流水线，内存与冷启动开销极大且无并发上限 | 加超时/尺寸上限；或预生成常用规格 | P2 | 待办 |
