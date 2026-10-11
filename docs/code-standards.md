@@ -51,14 +51,14 @@ ESLint + Prettier。必须遵守的规则：
 
 ### 当前覆盖与缺口
 
-已覆盖：`lib/utils`、`lib/server/api-helpers`、6 个不依赖 Supabase 的路由、
-6 个依赖 Supabase 的路由（共 122 条）。
+已覆盖：`lib/utils`、`lib/server/{api-helpers,bing-wallpaper,rate-limit,avatar-cache,write-guard}`、
+14 个路由（含 barcode / password-strength / ip-region / random-avatar / 管理端写路由 / 分页钳制），
+共 214 条。
 
 未覆盖（见 `backlog.md` 的 T1/T2/T3）：
 
 - admin 两个 save-modal 表单（需 jsdom + 用户事件模拟）
 - D2 的 SWR key 行为（改参数不请求、点提交才请求）
-- 管理端 CRUD 路由的 POST/PUT/DELETE（写链路已由 `tests/app/api/admin-write-routes.test.ts` 覆盖）
 
 **客户端模块暂不补单测**：`src/lib/request.ts`、`src/hooks/*` 依赖浏览器环境
 （`window`、blob、SWR 缓存），当前 vitest 是纯 node 环境，且 `import` 它们会连带

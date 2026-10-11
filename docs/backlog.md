@@ -38,14 +38,13 @@
 |---|---|---|---|---|---|
 | T1 | `src/app/admin/components/{apis,categorys}/components/save-modal.tsx` | 2 个表单 0 覆盖。涉及 HeroUI Form + SWR mutation，且 `Number("")===0` 会被静默提交（客户端原生校验靠 `minValue` 兜住，服务端不校验——见 C14） | 需 jsdom + `@testing-library/react`；补「必填校验」「提交 payload 形状」「失败后状态复位」 | P2 | 待办 |
 | T2 | D2 的 17 处 SWR key 改动 | 只有编译期保障，无行为保障。核心语义未验证：改参数不请求、点提交才请求、参数没变时走 `mutate()` | 需渲染测试 + SWR 的 `useSWRConfig` mock/cache 隔离；优先覆盖 `JsonContent`（三页共用）与 `QuoteWorld`（九页共用） | P2 | 待办 |
-| T3 | 管理端 CRUD 路由（`apis`/`categorys` 的 POST/PUT/DELETE） | 0 覆盖。`requireAdmin` 鉴权 + 写入链 + 唯一性冲突分支 | mock 模式已由 `tests/app/api/supabase-routes.test.ts` 铺好，补起来快 | P3 | 待办 |
+| T3 | 管理端 CRUD 路由（`apis`/`categorys` 的 POST/PUT/DELETE） | ~~0 覆盖~~ 写链路与鉴权已由 `tests/app/api/admin-write-routes.test.ts` 覆盖（含空 payload 守卫、失败/未登录不刷首页） | 如需继续补强：唯一性冲突分支（23505）与删除分类前的引用检查（`count` 查询） | P3 | 大部分完成 |
 
 ## 文档与工程
 
 | ID | 位置 | 问题 | 处理建议 | 优先级 | 状态 |
 |---|---|---|---|---|---|
 | G4 | `package.json` | 缺 `packageManager` 字段，pnpm 大版本行为差异曾引发 A1 | 单独一个 commit 处理（会牵动 lockfile） | P3 | 待办 |
-| G5 | `.env.example` | `NEXT_PUBLIC_AUTHOR_ROLE` 未登记（只在 `opengraph-image.tsx` 用到） | 补一行并注明用途 | P3 | 待办 |
 | G8 | `src/app/api/random-image/route.ts` | 走 `faker.image.url()` 指向第三方 loremflickr，第三方挂掉则整页图片全废 | 换自有图源或本地图库 | P2 | 待办 |
 
 ## 已完成
