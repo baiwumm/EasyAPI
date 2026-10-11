@@ -6,7 +6,12 @@ import { RESPONSE } from "@/enums";
 import { getSupabaseServerClient, requireAdmin } from "@/lib/supabase/server";
 import { parseApiBody } from "@/lib/server/write-guard";
 import { revalidateHome } from "@/lib/server/home";
-import { catchError, responseMessage, sanitizeLikeKeyword } from "@/lib/utils";
+import {
+  catchError,
+  parseBoundedInt,
+  responseMessage,
+  sanitizeLikeKeyword,
+} from "@/lib/utils";
 
 /*
  * @Author: 白雾茫茫丶<baiwumm.com>
@@ -16,6 +21,10 @@ import { catchError, responseMessage, sanitizeLikeKeyword } from "@/lib/utils";
  * @Description: 接口列表模块
  */
 
+// pageIndex 上限：配合 pageSize 上限 1000，最大约一千万行的偏移，
+// 再往上就是拿接口扫库而非查数据了
+const MAX_PAGE_INDEX = 10000;
+
 /**
  * @description: 查询接口列表
  * @param {Request} request
@@ -24,24 +33,20 @@ export async function GET(request: NextRequest) {
   try {
     // 解析 URL 查询参数
     const searchParams = request.nextUrl.searchParams;
-    const pageIndex = Number(searchParams.get("pageIndex") || "0");
-    const pageSize = Number(searchParams.get("pageSize") || "10");
     const name = searchParams.get("name");
     const category_id = searchParams.get("category_id");
 
-    // 判断参数（同步校验前置，通过后才创建客户端）
+    // 分页参数（同步校验前置，通过后才创建客户端）
     // pageSize 上限 1000：接口为公开路由，无上限可一次拉全表刷穿 Supabase 配额
-    if (
-      Number.isNaN(pageIndex) ||
-      Number.isNaN(pageSize) ||
-      pageIndex < 0 ||
-      pageSize <= 0 ||
-      pageSize > 1000
-    ) {
-      return NextResponse.json(
-        responseMessage(null, "参数错误", RESPONSE.ERROR),
-      );
-    }
+    // pageIndex 同样要有上限：没有的话 ?pageIndex=1e9 会让 PostgREST 的 range()
+    // 直接报错，拿到的是一条看不懂的库错误而不是友好提示（D19）
+    const pageIndex = parseBoundedInt(
+      searchParams.get("pageIndex"),
+      0,
+      0,
+      MAX_PAGE_INDEX,
+    );
+    const pageSize = parseBoundedInt(searchParams.get("pageSize"), 10, 1, 1000);
 
     // 计算分页
     const start = pageIndex * pageSize;
