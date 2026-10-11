@@ -119,7 +119,9 @@ paths:
         - name: year
           in: query
           required: false
-          description: 年份，范围 2022 ~ 当前年份，默认当前年份；超出范围自动钳制到边界
+          description: |
+            年份，范围 2022 ~ 当前年份，默认当前年份；超出范围自动钳制到边界。
+            非数字（如 `abc`）不会报错，会静默回退成当前年份
           schema:
             type: integer
             minimum: 2022
@@ -457,7 +459,9 @@ paths:
         - name: size
           in: query
           required: false
-          description: 图片尺寸（像素）
+          description: |
+            图片尺寸（像素）。校验方式是 `Number(size)` 后与枚举值比对，
+            因此接受 `128`、`0128`、`128.0` 这类等价数字写法，非数字值报错
           schema:
             type: integer
             enum: [32, 64, 128, 256, 512]
@@ -488,7 +492,7 @@ paths:
         - name: length
           in: query
           required: false
-          description: 字符串长度，1 ~ 100
+          description: 字符串长度，1 ~ 100；非数字时回退默认 16
           schema:
             type: integer
             minimum: 1
@@ -497,7 +501,7 @@ paths:
         - name: count
           in: query
           required: false
-          description: 生成数量，1 ~ 50
+          description: 生成数量，1 ~ 50；非数字时回退默认 1
           schema:
             type: integer
             minimum: 1
@@ -516,9 +520,10 @@ paths:
         - name: characters
           in: query
           required: false
-          description: 自定义字符集，传入后忽略 type 参数
+          description: 自定义字符集，传入后忽略 type 参数；最长 256 个字符
           schema:
             type: string
+            maxLength: 256
             examples: ["abc123"]
       responses:
         "200":
@@ -1012,21 +1017,27 @@ paths:
       tags: [生活服务]
       operationId: getBmi
       summary: BMI 计算器
-      description: 根据身高体重计算 BMI 指数并给出体重状态。
+      description: |
+        根据身高体重计算 BMI 指数并给出体重状态。
+        分级阈值：`[0, 18.5)` 体重过低，`[18.5, 24.9)` 正常体重，`[24.9, 29.9)` 超重，`>= 29.9` 肥胖。
       parameters:
         - name: height
           in: query
           required: true
-          description: 身高（厘米）
+          description: 身高（厘米），0 < height <= 300
           schema:
             type: number
+            exclusiveMinimum: 0
+            maximum: 300
             examples: [175]
         - name: weight
           in: query
           required: true
-          description: 体重（千克）
+          description: 体重（千克），0 < weight <= 500
           schema:
             type: number
+            exclusiveMinimum: 0
+            maximum: 500
             examples: [65]
       responses:
         "200":

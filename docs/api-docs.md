@@ -53,16 +53,18 @@
 - 管理端写接口（POST/PUT/DELETE、`[id]` 路径）
 - `/auth/*`
 
-## 已知漂移（修复前请勿照抄 YAML）
+## 已知漂移（全部修复）
 
-以下 path 的文档与实现不一致，是待办项（编号见 `backlog.md` 的 G2）：
+以下 path 曾是文档与实现不一致的待办项（编号见 `backlog.md` 的 G1/G2），已按 route.ts 的实际校验逻辑补齐：
 
-- `/api/bmi`：未声明 `height`/`weight` 的最小值，分级阈值未记录。
-- `/api/random-person`：`size` 文档写整数枚举，实现接受 `0128`/`128.0` 这类非枚举值。
-- `/api/random-string`：`length`/`count` 非数字时的行为未描述，`characters` 无 `maxLength`。
-- `/api/holiday`：非数字 `year` 会静默回退当前年，未描述。
+- ~~`info.version` 落后于 `package.json`。~~ 已同步（G1）。
+- ~~`/api/bmi`：未声明 `height`/`weight` 的最小值，分级阈值未记录。~~ 已补 `exclusiveMinimum: 0`、上限与四级阈值（G2）。
+- ~~`/api/random-person`：`size` 文档写整数枚举，实现接受 `0128`/`128.0` 这类非枚举值。~~ 已在描述里说明按 `Number(size)` 比对（G2）。
+- ~~`/api/random-string`：`length`/`count` 非数字时的行为未描述，`characters` 无 `maxLength`。~~
+  已补「非数字回退默认值」与 `maxLength: 256`（G2）。
+- ~~`/api/holiday`：非数字 `year` 会静默回退当前年，未描述。~~ 已在描述里注明（G2）。
 
-> `info.version` 已在 G1 同步为 2.9.0；后续发版（`pnpm release`）时记得一起改。
+> `info.version` 在 G1 同步为 2.9.0；后续发版（`pnpm release`）时记得一起改。
 
 ## 校验方式
 
