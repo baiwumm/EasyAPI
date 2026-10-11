@@ -30,7 +30,6 @@
 | D13 | `src/components/StaggerIn/index.tsx:34` | `Children.map` 给每个 child 包一层 `motion.div`，**破坏 CSS grid/flex 布局**（`random-color` 靠子元素自身样式兜住） | 改用 `variants` 传播，不额外包 DOM | P3 | 待办 |
 | D15 | `src/components/AlertContent/index.tsx:39-56`、`ErrorContent` | 桌面/移动两套 Button 靠 `sm:hidden`/`hidden sm:block`，两个都在 DOM 里，键盘用户会 Tab 到隐藏的重复按钮 | 用一套响应式 class 的按钮 | P3 | 待办 |
 | D20 | `src/components/ColumnsVisibility/index.tsx:28-34` | `handleSelectionChange` 每次交互对所有列 `toggleVisibility()`，O(N) 次 state 写入 | 合并为一次批量 set | P3 | 待办 |
-| — | `src/typings/index.ts:5-12` | 公共 `Columns` 的 `user_id` 与 `emial`（`email` 拼写错误）在 `Api`/`Category` 上不存在 | 删除无用字段；若要用邮件字段修正拼写 | P3 | 待办 |
 | — | `src/enums/index.tsx`、`src/hooks/use-copy.tsx` | 文件扩展名与内容不符：前者是 `.tsx` 但纯数据无 JSX；后者是 `.tsx` 且有 JSX（正确） | 前者重命名为 `.ts` | P3 | 待办 |
 
 ## 第四组：测试覆盖缺口
@@ -71,6 +70,7 @@
 - `G5` `.env.example` 补 `NEXT_PUBLIC_AUTHOR_ROLE`，`docs/deployment.md` 去掉「未登记」提示
 - `G6` `ApiCard`：Link 补 `aria-label`、描述补 `title`、「NEW」改挂载后判定以避开 hydration mismatch
 - `G2` `openapi.yaml` 4 处漂移全部按 route.ts 实际校验补齐（bmi/random-person/random-string/holiday）
+- 公共 `Columns` 删除从未使用的 `user_id` 与错拼的 `emial` 字段
 - `A1` B1 B2 B3 B4 B5 B7 B9 C1 C3 D2 D9 D11 D18 + `almanac` UTC 偏移 —— 见 `audit-2026-10.md`
 - 测试框架引入 + 122 条测试（`tests/`）—— 见 `docs/code-standards.md`
 - `C2` RLS 策略 —— 按裁决跳过（库侧已手工配置），`rls.sql` 已回退到改动前版本
