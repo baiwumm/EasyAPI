@@ -45,8 +45,7 @@
 
 | ID | 位置 | 问题 | 处理建议 | 优先级 | 状态 |
 |---|---|---|---|---|---|
-| G1 | `public/openapi.yaml:7` | `info.version: 2.8.1` ≠ `package.json` 的 `2.9.0`，违反「跟随 package.json」约定 | 发版时同步 | P3 | 待办 |
-| G2 | `public/openapi.yaml` | 与实现有 5 处漂移：bmi 无最小值/阈值未记录、random-person 的 size 接受非枚举值、random-string 非数字行为未描述且 characters 无 maxLength、holiday 的 year 静默回退未描述 | 详见 `docs/api-docs.md` 的「已知漂移」小节，按实际校验逻辑补齐 | P3 | 待办 |
+| G2 | `public/openapi.yaml` | 与实现有 4 处漂移：bmi 无最小值/阈值未记录、random-person 的 size 接受非枚举值、random-string 非数字行为未描述且 characters 无 maxLength、holiday 的 year 静默回退未描述 | 详见 `docs/api-docs.md` 的「已知漂移」小节，按实际校验逻辑补齐 | P3 | 待办 |
 | G4 | `package.json` | 缺 `packageManager` 字段，pnpm 大版本行为差异曾引发 A1 | 单独一个 commit 处理（会牵动 lockfile） | P3 | 待办 |
 | G5 | `.env.example` | `NEXT_PUBLIC_AUTHOR_ROLE` 未登记（只在 `opengraph-image.tsx` 用到） | 补一行并注明用途 | P3 | 待办 |
 | G6 | `src/components/ApiCard/index.tsx` | 整卡是一个 `<Link>` 但无 `aria-label`；`desc` 用 `line-clamp-2` 截断但无 `title`/tooltip；`isNew` 的 7 天判定在服务端与客户端各算一次，跨边界时 SSR/CSR 可能不一致 | 补 `aria-label`；用 `title` 或 Tooltip 展示完整描述 | P3 | 待办 |
@@ -70,6 +69,8 @@
 - `D19` `apis`/`categorys` 列表分页改用 `parseBoundedInt`，`pageIndex` 加上限 10000
 - `D16` 404 页改 `render` 函数形式渲染 Link，不再有 `<a><button>` 嵌套交互元素
 - `D17` `CopyChip` 的 render 函数改 `useCallback` 稳定引用（Chip 无 `onPress`，点击仍走原生 button）
+- `G1` `openapi.yaml` 的 `info.version` 同步 `package.json`（2.9.0；后续跟 `pnpm release` 一起走）
+- `G5` `.env.example` 补 `NEXT_PUBLIC_AUTHOR_ROLE`，`docs/deployment.md` 去掉「未登记」提示
 - `A1` B1 B2 B3 B4 B5 B7 B9 C1 C3 D2 D9 D11 D18 + `almanac` UTC 偏移 —— 见 `audit-2026-10.md`
 - 测试框架引入 + 122 条测试（`tests/`）—— 见 `docs/code-standards.md`
 - `C2` RLS 策略 —— 按裁决跳过（库侧已手工配置），`rls.sql` 已回退到改动前版本

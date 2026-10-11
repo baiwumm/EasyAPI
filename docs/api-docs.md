@@ -55,13 +55,14 @@
 
 ## 已知漂移（修复前请勿照抄 YAML）
 
-以下 path 的文档与实现不一致，是待办项（编号见 `backlog.md` 的 G1/G2）：
+以下 path 的文档与实现不一致，是待办项（编号见 `backlog.md` 的 G2）：
 
-- `info.version` 落后于 `package.json`。
 - `/api/bmi`：未声明 `height`/`weight` 的最小值，分级阈值未记录。
 - `/api/random-person`：`size` 文档写整数枚举，实现接受 `0128`/`128.0` 这类非枚举值。
 - `/api/random-string`：`length`/`count` 非数字时的行为未描述，`characters` 无 `maxLength`。
 - `/api/holiday`：非数字 `year` 会静默回退当前年，未描述。
+
+> `info.version` 已在 G1 同步为 2.9.0；后续发版（`pnpm release`）时记得一起改。
 
 ## 校验方式
 

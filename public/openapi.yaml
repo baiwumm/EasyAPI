@@ -4,7 +4,7 @@
 openapi: 3.1.0
 info:
   title: EasyAPI 开放接口
-  version: 2.8.1
+  version: 2.9.0
   description: |
     EasyAPI 聚合平台开放接口，收录 30+ 个高频接口，公开接口无需鉴权。
 

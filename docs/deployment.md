@@ -36,7 +36,7 @@
 | `NEXT_PUBLIC_APP_DESC` | 站点描述 | metadata 为空 |
 | `NEXT_PUBLIC_APP_KEYWORDS` | 关键词 | metadata 为空 |
 | `NEXT_PUBLIC_COPYRIGHT` | 版权方 | 页脚版权为空 |
-| `NEXT_PUBLIC_AUTHOR_ROLE` | OG 图作者身份 | OG 图有 fallback。⚠️ 未登记在 `.env.example` |
+| `NEXT_PUBLIC_AUTHOR_ROLE` | OG 图作者身份 | OG 图有 fallback「独立开发者」 |
 
 ### 备案与统计（缺失则对应入口隐藏或不加载）
 
@@ -49,8 +49,8 @@
 
 ## 构建产物注意
 
-- `src/app/page.tsx` 是 ISR（`revalidate = 300`），首页数据 5 分钟内可能滞后；
-  后台保存目前**没有** `revalidateTag`，见 `backlog.md` F2。
+- `src/app/page.tsx` 是 ISR（`revalidate = 300`），后台保存接口/分类后会
+  `revalidatePath('/')`，变更最迟在下次访问时生效（F2 已修）。
 - `src/app/bing-wallpaper/page.tsx` 是 ISR 24h。`getBingWallpaper()` 已在返回前
   校验地址可解析且带 id，Bing 改返回结构时走缓存兜底不会缓存坏数据（C9 已修）。
 - `supabase/rls.sql` 不在构建流程内，需在 Supabase Dashboard 手动执行。
