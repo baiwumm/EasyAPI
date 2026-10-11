@@ -215,4 +215,29 @@ describe("GET /api/barcode 输出", () => {
     expect(res.headers.get("Content-Type")).toBe("image/png");
     expect((await res.arrayBuffer()).byteLength).toBeGreaterThan(0);
   });
+
+  // F5：text 很长且 width 顶上限时，SVG 声明尺寸会有几十万，
+  // 不拦住的话 sharp 会抛 "Input image exceeds pixel limit" 这种内部原文
+  it("type=png 的超大尺寸被提前拦下，返回可读文案且不透出 sharp 原文", async () => {
+    const res = await GET(
+      req(
+        `text=${"A".repeat(200)}&type=png&format=CODE128&width=500&height=500`,
+      ),
+    );
+
+    const b = await body(res);
+
+    expect(b.code).toBe(500);
+    expect(b.msg).toContain("条码尺寸过大");
+    expect(b.msg).not.toContain("pixel limit");
+  });
+
+  it("type=png 的正常尺寸不受影响", async () => {
+    const res = await GET(
+      req("text=HELLO123456&type=png&format=CODE128&width=2&height=100"),
+    );
+
+    expect(res.headers.get("Content-Type")).toBe("image/png");
+    expect((await res.arrayBuffer()).byteLength).toBeGreaterThan(0);
+  });
 });

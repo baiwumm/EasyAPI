@@ -19,7 +19,6 @@
 | ID | 位置 | 问题 | 处理建议 | 优先级 | 状态 |
 |---|---|---|---|---|---|
 | F4 | `src/app/opengraph-image.tsx:36-38` | 3 个 `publicAssetToDataUrl` 在模块作用域启动，但 `ImageResponse` 每请求重渲染 | 构建期生成或 `revalidate = 86400` | P3 | 待办 |
-| F5 | `src/app/api/barcode/route.ts:113-115` | PNG 分支每次起一整套 libvips 流水线，内存与冷启动开销极大且无并发上限 | 加超时/尺寸上限；或预生成常用规格 | P2 | 待办 |
 | F7 | `src/components/GridReveal/index.tsx` | 631 行 canvas 引擎，`random-image` 页最多 20 实例，每个都跑 rAF + IntersectionObserver + ResizeObserver | 首屏外实例降级为普通 `<img>`；拆分为 `buildTree`/`measure`/`drawScene` 纯模块 | P3 | 待办 |
 | F8 | `src/app/globals.css:12-21` | 自托管 `maple-mono-cn-regular.woff2` **1.7MB**，`unicode-range` 覆盖整个 CJK 区，几乎必然全量下载 | 按区段拆多个 `@font-face`（latin / 常用汉字 / 完整汉字），首屏负担压到约 40KB | P2 | 待办 |
 | C5 | `src/lib/supabase/proxy.ts:42-64` | 每次 `/api/*` GET 额外 2 次 DB 往返（`ea_apis` count 查询 + 计数 RPC），即使该路由已带 `Cache-Control` 中间件仍会跑 | 与 F1 一并处理 | P2 | 待办 |
@@ -69,6 +68,7 @@
 - `F3` random-avatar SVG LRU 缓存（`lib/server/avatar-cache.ts`，上限 200 条）
 - `F6` random-avatar 改单次批量请求（`format=data` 直出 data URI，未采用「只返 URL」方案，原因见路由注释）
 - `G7` use-image-generation 显式 apiPath + 复用请求层超时/401 + blob URL 统一回收（`httpRequest.raw`）
+- `F5` barcode PNG 栅格化前校验 SVG 声明尺寸，超限返回可读文案（不再透出 sharp 原文）
 - `A1` B1 B2 B3 B4 B5 B7 B9 C1 C3 D2 D9 D11 D18 + `almanac` UTC 偏移 —— 见 `audit-2026-10.md`
 - 测试框架引入 + 122 条测试（`tests/`）—— 见 `docs/code-standards.md`
 - `C2` RLS 策略 —— 按裁决跳过（库侧已手工配置），`rls.sql` 已回退到改动前版本

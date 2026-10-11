@@ -23,6 +23,11 @@ type BarcodeFormat = (typeof BARCODE_FORMATS.keys)[number];
 // 防滥用限制：条形码实际编码容量有限，且 JsBarcode/sharp 的尺寸参数无界会放大内存占用
 const MAX_TEXT_LENGTH = 200;
 const MAX_OPTION_VALUE = 500;
+// PNG 栅格化后的单边上限（像素）。条码再大也不影响可扫，
+// 但没有这个上限时一个请求就能让 sharp 尝试分配几十亿像素的位图
+const MAX_RASTER_SIDE = 4096;
+// sharp 按 density 300 渲染 SVG，而 SVG 自身默认按 96 DPI 计算尺寸
+const RASTER_SCALE = 300 / 96;
 
 // JsBarcode 选项白名单（C10）：只放行下列已在文档登记的键及其取值形态，
 // 未登记的查询参数一律丢弃，不透传给 JsBarcode
@@ -149,6 +154,17 @@ export async function GET(request: NextRequest) {
       });
     }
 
+    // PNG 栅格化前先看 SVG 声明尺寸：text 最长 200 字符、width 又顶到 500 时，
+    // 声明宽度会有几十万，sharp 会抛 "Input image exceeds pixel limit" 这种内部原文
+    // （运气好撞上限，运气不好就是一次巨量内存分配），提前拦掉并给出可读文案（F5）
+    const oversizeError = checkSvgOversize(svgNode);
+
+    if (oversizeError) {
+      return NextResponse.json(
+        responseMessage(null, oversizeError, RESPONSE.ERROR),
+      );
+    }
+
     // PNG
     if (type === BARCODE_TYPES.PNG) {
       const pngBuffer = await sharp(Buffer.from(svg), { density: 300 })
@@ -176,6 +192,30 @@ export async function GET(request: NextRequest) {
 
 function isValidFormat(format: string): format is BarcodeFormat {
   return BARCODE_FORMATS.keys.includes(format as BarcodeFormat);
+}
+
+/**
+ * @description: 校验 SVG 声明尺寸换算成栅格像素后没超上限
+ * 只依赖 getAttribute，不耦合 @xmldom/xmldom 的具体类型
+ */
+function checkSvgOversize(svgNode: {
+  getAttribute: (name: string) => string | null;
+}): string | undefined {
+  // JsBarcode 写出来的属性带单位，形如 "288px"，用 parseFloat 而不是 Number
+  const width = Number.parseFloat(svgNode.getAttribute("width") ?? "");
+  const height = Number.parseFloat(svgNode.getAttribute("height") ?? "");
+  const maxSvgSide = MAX_RASTER_SIDE / RASTER_SCALE;
+
+  if (
+    width > maxSvgSide ||
+    height > maxSvgSide ||
+    (svgNode.getAttribute("width") !== null && !Number.isFinite(width)) ||
+    (svgNode.getAttribute("height") !== null && !Number.isFinite(height))
+  ) {
+    return `条码尺寸过大，请调小 width / height（上限约 ${Math.floor(maxSvgSide)}）`;
+  }
+
+  return undefined;
 }
 
 /**
