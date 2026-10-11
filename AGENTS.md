@@ -118,6 +118,12 @@ public/openapi.yaml       # 手工维护的 OpenAPI 3.1 接口文档（/docs 页
   `tests/app/api/password-strength-route.test.ts` 里用替身词库绕开。
 - **本地 lint 会有上万条 `Delete ␍`**：本机 `core.autocrlf=true` 把 LF 检出成 CRLF，
   而仓库里存的是 LF。判lint是否干净要看**去掉 prettier/prettier 后还剩多少条**。
+- **HeroUI 的 `render` 只接受函数，不接受元素**：这个版本的 RAC 底层是
+  `render ? (props) => render(props, values) : undefined`，写元素形式
+  （`render={<Link href="/" />}`）运行时会抛 `render is not a function`。
+  正确写法是 `render={(props) => <Link {...props} href="/" />}`；
+  Next 的 Link 不吃 Button 的 DOM props 时，至少把 `props.className` 传过去保住样式
+  （见 `src/app/not-found.tsx`）。
 
 ## 文档索引
 

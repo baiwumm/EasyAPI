@@ -29,8 +29,6 @@
 |---|---|---|---|---|---|
 | D13 | `src/components/StaggerIn/index.tsx:34` | `Children.map` 给每个 child 包一层 `motion.div`，**破坏 CSS grid/flex 布局**（`random-color` 靠子元素自身样式兜住） | 改用 `variants` 传播，不额外包 DOM | P3 | 待办 |
 | D15 | `src/components/AlertContent/index.tsx:39-56`、`ErrorContent` | 桌面/移动两套 Button 靠 `sm:hidden`/`hidden sm:block`，两个都在 DOM 里，键盘用户会 Tab 到隐藏的重复按钮 | 用一套响应式 class 的按钮 | P3 | 待办 |
-| D16 | `src/app/not-found.tsx:32-34` | `<Link><Button></Link>` 产出 `<a><button>`，嵌套交互元素 | HeroUI v3 写法：`<Button render={<Link href="/" />}>` | P3 | 待办 |
-| D17 | `src/components/CopyChip/index.tsx:29` | `onClick` 直接挂在 render 出的 button 上，绕过 HeroUI `onPress` 抽象；render prop 每次渲染新建函数 | 用 `render={<button/>}` + `onPress` | P3 | 待办 |
 | D20 | `src/components/ColumnsVisibility/index.tsx:28-34` | `handleSelectionChange` 每次交互对所有列 `toggleVisibility()`，O(N) 次 state 写入 | 合并为一次批量 set | P3 | 待办 |
 | — | `src/typings/index.ts:5-12` | 公共 `Columns` 的 `user_id` 与 `emial`（`email` 拼写错误）在 `Api`/`Category` 上不存在 | 删除无用字段；若要用邮件字段修正拼写 | P3 | 待办 |
 | — | `src/enums/index.tsx`、`src/hooks/use-copy.tsx` | 文件扩展名与内容不符：前者是 `.tsx` 但纯数据无 JSX；后者是 `.tsx` 且有 JSX（正确） | 前者重命名为 `.ts` | P3 | 待办 |
@@ -70,6 +68,8 @@
   `QuoteWorld`/`random-image` 只有用户主动刷新才卸载重挂载；其余页面 `loading` 语义不变
 - `D3` `BackTop` 圆环改由 MotionValue 写 CSS 变量驱动 `stroke-dashoffset`，删掉每帧 `setState`
 - `D19` `apis`/`categorys` 列表分页改用 `parseBoundedInt`，`pageIndex` 加上限 10000
+- `D16` 404 页改 `render` 函数形式渲染 Link，不再有 `<a><button>` 嵌套交互元素
+- `D17` `CopyChip` 的 render 函数改 `useCallback` 稳定引用（Chip 无 `onPress`，点击仍走原生 button）
 - `A1` B1 B2 B3 B4 B5 B7 B9 C1 C3 D2 D9 D11 D18 + `almanac` UTC 偏移 —— 见 `audit-2026-10.md`
 - 测试框架引入 + 122 条测试（`tests/`）—— 见 `docs/code-standards.md`
 - `C2` RLS 策略 —— 按裁决跳过（库侧已手工配置），`rls.sql` 已回退到改动前版本
