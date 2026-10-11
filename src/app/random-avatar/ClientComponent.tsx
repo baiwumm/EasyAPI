@@ -9,10 +9,14 @@ import {
   Select,
   Typography,
 } from "@heroui/react";
-import { useState } from "react";
+import { usePathname } from "next/navigation";
+import { useMemo, useState } from "react";
 
 import RefreshButton from "@/components/RefreshButton";
 import { AVATAR_STYLES } from "@/enums";
+import { useSwrQuery } from "@/hooks/use-swr";
+import { getApiData } from "@/services/common";
+import { get } from "@/lib/utils";
 
 type Style = typeof AVATAR_STYLES.valueType;
 
@@ -72,23 +76,42 @@ const NAME_POOL = [
   "Tom",
 ];
 
-function generateUsers(length = 5) {
-  return Array.from({ length }).map(() => ({
-    name: NAME_POOL[Math.floor(Math.random() * NAME_POOL.length)]!,
-  }));
-}
-
 const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
   const [style, setStyle] = useState<Style>(AVATAR_STYLES.RANDOM);
-  // 初始头像名取名字池前 N 个（确定性），避免 SSR/CSR 各随机一次导致 hydration mismatch；点击"换一批"再随机
-  const [users, setUsers] = useState(() =>
-    NAME_POOL.slice(0, 5).map((name) => ({ name })),
-  );
   const [count, setCount] = useState(5); // 生成的数量
   const [size, setSize] = useState(128); // 生成的大小
+  const [nameSeed, setNameSeed] = useState(0);
+  const pathname = usePathname();
+
+  // 兜底首字母按位次从姓名池取（确定性，SSR/CSR 一致）；「换一批」时错位洗牌
+  const names = useMemo(
+    () =>
+      Array.from(
+        { length: count },
+        (_, index) => NAME_POOL[(index + nameSeed) % NAME_POOL.length]!,
+      ),
+    [count, nameSeed],
+  );
+
+  // 一次请求拿整批 data URI：逐个头像单独请求时，每个都要过一次中间件的计数查询（F6）
+  const { data, mutate } = useSwrQuery<string[]>(
+    [pathname, { count, style, size }],
+    async () =>
+      get(
+        await getApiData(pathname, {
+          count,
+          style,
+          size,
+          format: "data",
+        }),
+        "data",
+      ) as string[],
+  );
 
   const regenerate = () => {
-    setUsers(generateUsers(count));
+    setNameSeed(nameSeed + 1);
+    // key 不变时 SWR 不会重新请求， mutate() 才会真正再打一次接口换一批头像
+    mutate();
   };
 
   return (
@@ -103,14 +126,13 @@ const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
       <div className="flex-1 flex justify-center items-center">
         <div className="flex justify-center items-center">
           <div className="flex items-center gap-4 flex-wrap">
-            {users.map((user, index) => {
+            {Array.from({ length: count }).map((_, index) => {
+              const src = data?.[index];
+
               return (
                 <Avatar key={index} size="lg">
-                  <Avatar.Image
-                    alt={user.name}
-                    src={`/api/random-avatar?seed=${user.name}&style=${style}&size=${size}`}
-                  />
-                  <Avatar.Fallback>{user.name.slice(0, 1)}</Avatar.Fallback>
+                  {src ? <Avatar.Image alt={names[index]} src={src} /> : null}
+                  <Avatar.Fallback>{names[index]?.slice(0, 1) ?? "*"}</Avatar.Fallback>
                 </Avatar>
               );
             })}

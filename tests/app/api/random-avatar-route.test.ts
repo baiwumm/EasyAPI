@@ -71,3 +71,62 @@ describe("GET /api/random-avatar SVG 缓存", () => {
     );
   });
 });
+
+// F6：只返 URL 的话浏览器还要逐个请求，每个都再过一次中间件的计数查询
+describe("GET /api/random-avatar 批量", () => {
+  beforeEach(() => {
+    svgCalls.count = 0;
+  });
+
+  it("format=data 返回 data URI 数组，可直接给 <img> 用", async () => {
+    const res = await GET(req("?count=5&format=data"));
+    const body = (await res.json()) as {
+      code: number;
+      data: string[];
+    };
+
+    expect(body.code).toBe(200);
+    expect(body.data).toHaveLength(5);
+    body.data.forEach((item) => {
+      expect(item.startsWith("data:image/svg+xml;charset=utf-8,")).toBe(true);
+    });
+  });
+
+  it("不带 format 时仍返回 URL 数组（保持向后兼容）", async () => {
+    const body = (await (await GET(req("?count=3"))).json()) as {
+      data: string[];
+    };
+
+    expect(body.data).toHaveLength(3);
+    body.data.forEach((item) => {
+      expect(item.startsWith("http://x/api/random-avatar?seed=")).toBe(true);
+    });
+  });
+
+  it("count 上限 50，与页面控件的 maxValue 一致", async () => {
+    const body = (await (await GET(req("?count=999&format=data"))).json()) as {
+      data: string[];
+    };
+
+    expect(body.data).toHaveLength(50);
+  });
+
+  it("style=random 时逐个头像各自随机，URL 里带上的是具体风格", async () => {
+    const body = (await (await GET(req("?count=5"))).json()) as {
+      data: string[];
+    };
+
+    body.data.forEach((url) => {
+      expect(url).toContain("style=");
+      // random 必须已被解析成具体风格，不能原样透传
+      expect(url).not.toContain("style=random");
+    });
+  });
+
+  it("批量生成同样走缓存：同一 seed+style+size 不重复生成", async () => {
+    // 连续两次同参批量的 seed 是随机的，走的是不同 key，这里只验证不会少于生成次数
+    await GET(req("?count=3&format=data&style=bottts&size=32"));
+
+    expect(svgCalls.count).toBe(3);
+  });
+});

@@ -208,7 +208,8 @@ paths:
       operationId: getRandomAvatar
       summary: 随机头像
       description: |
-        基于 DiceBear 生成 SVG 头像。`count=1`（默认）直接返回 SVG 图片；`count>1` 返回 JSON，`data` 为头像地址数组。
+        基于 DiceBear 生成 SVG 头像。`count=1`（默认）直接返回 SVG 图片；`count>1` 返回 JSON，`data` 默认为头像地址数组，
+        带 `format=data` 时改为 SVG data URI 数组（可直接给 `<img>`，省掉浏览器逐个请求地址的开销）。
         同一 `seed` 生成结果固定，SVG 响应可长期缓存。
       parameters:
         - name: style
@@ -228,12 +229,19 @@ paths:
         - name: count
           in: query
           required: false
-          description: 生成数量，1 ~ 20
+          description: 生成数量，1 ~ 50
           schema:
             type: integer
             minimum: 1
-            maximum: 20
+            maximum: 50
             default: 1
+        - name: format
+          in: query
+          required: false
+          description: 仅 count>1 生效，`data` 时返回 SVG data URI 数组，其余返回头像地址数组
+          schema:
+            type: string
+            enum: [data]
         - name: size
           in: query
           required: false
@@ -245,7 +253,7 @@ paths:
             default: 128
       responses:
         "200":
-          description: count=1 返回 SVG 图片；count>1 返回 JSON 头像地址数组
+          description: count=1 返回 SVG 图片；count>1 返回 JSON，data 为头像地址或 SVG data URI 数组
           content:
             image/svg+xml:
               schema:
@@ -259,7 +267,7 @@ paths:
                     properties:
                       data:
                         type: array
-                        description: 头像地址数组
+                        description: 头像地址或 SVG data URI 数组
                         items:
                           type: string
                           format: uri
