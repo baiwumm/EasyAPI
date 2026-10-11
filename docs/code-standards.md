@@ -58,7 +58,12 @@ ESLint + Prettier。必须遵守的规则：
 
 - admin 两个 save-modal 表单（需 jsdom + 用户事件模拟）
 - D2 的 SWR key 行为（改参数不请求、点提交才请求）
-- 管理端 CRUD 路由的 POST/PUT/DELETE
+- 管理端 CRUD 路由的 POST/PUT/DELETE（写链路已由 `tests/app/api/admin-write-routes.test.ts` 覆盖）
+
+**客户端模块暂不补单测**：`src/lib/request.ts`、`src/hooks/*` 依赖浏览器环境
+（`window`、blob、SWR 缓存），当前 vitest 是纯 node 环境，且 `import` 它们会连带
+拉进 `@heroui/react`（transform 就要十几秒），性价比太低。等 T1 引入 jsdom 环境后
+再按 `tests/lib/request.test.ts`、`tests/hooks/use-image-generation.test.ts` 补。
 
 ## Git 提交规范
 

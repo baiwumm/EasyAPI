@@ -1,15 +1,17 @@
 "use client";
 import { CircleXmarkFill } from "@gravity-ui/icons";
 import { toast } from "@heroui/react";
-import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createElement } from "react";
 
 import { RESPONSE } from "@/enums";
 import { useSwrMutation } from "@/hooks/use-swr";
+import { httpRequest } from "@/lib/request";
 import { isSuccess } from "@/lib/utils";
 
 interface UseImageGenerationOptions {
+  /** 接口路径（不含 /api 前缀），显式传入而不是从 route 推导，避免页面路径与接口路径隐式耦合 */
+  apiPath: string;
   /** 生成查询参数（每次 trigger 闭包捕获最新值） */
   params: Record<string, string>;
   /** 响应为 SVG 文本，转 data URL 展示（如 type=format=svg） */
@@ -27,26 +29,44 @@ interface UseImageGenerationOptions {
  * - 挂载自动生成一次 + 下载函数
  */
 export function useImageGeneration({
+  apiPath,
   params,
   svgResponse,
   jsonSuccessData,
 }: UseImageGenerationOptions) {
-  const pathname = usePathname();
   const [imgSrc, setImgSrc] = useState("");
   const [downloadUrl, setDownloadUrl] = useState("");
+  // 记录「当前持有的 blob URL」，替换、失败、卸载时统一回收（G7）
+  const blobUrlRef = useRef("");
+
+  const clearResult = () => {
+    setImgSrc("");
+    setDownloadUrl("");
+  };
+
+  // 换新结果前先释放上一个 blob URL：此前 onError 分支没 revoke，反复失败会泄漏
+  const releaseBlobUrl = () => {
+    if (blobUrlRef.current) {
+      URL.revokeObjectURL(blobUrlRef.current);
+      blobUrlRef.current = "";
+    }
+  };
 
   const { loading, error, trigger } = useSwrMutation(
-    `${pathname}:generate`, // mutation key 加后缀，避免与其他查询 key 冲突
+    `${apiPath}:generate`, // mutation key 加后缀，避免与其他查询 key 冲突
     async () => {
-      const searchParams = new URLSearchParams(params);
-
-      const res = await fetch(`/api/${pathname}?${searchParams.toString()}`);
+      // 走统一请求层：复用超时与 401 会话过期处理（此前直接 fetch 两项都没有）
+      const res = await httpRequest.raw(apiPath, params);
 
       const contentType = res.headers.get("content-type") || "";
 
       // JSON 响应：dataurl 的成功结果或业务错误信息，按 code 区分
       if (contentType.includes("application/json")) {
-        const { code, msg, data } = await res.json();
+        const { code, msg, data } = (await res.json()) as {
+          code: number;
+          msg?: string;
+          data?: unknown;
+        };
 
         if (jsonSuccessData && isSuccess(code) && typeof data === "string") {
           return data;
@@ -74,27 +94,27 @@ export function useImageGeneration({
       }
 
       // 其他二进制格式
-      const blob = await res.blob();
-
-      return URL.createObjectURL(blob);
+      return URL.createObjectURL(await res.blob());
     },
     {
       // 网络异常：清掉旧图，避免把旧结果误读为本次生成成功
       onError: () => {
-        setImgSrc("");
-        setDownloadUrl("");
+        releaseBlobUrl();
+        clearResult();
       },
       onSuccess: (url) => {
-        if (downloadUrl?.startsWith("blob:")) {
-          URL.revokeObjectURL(downloadUrl);
-        }
+        releaseBlobUrl();
+
         if (url) {
+          if (url.startsWith("blob:")) {
+            blobUrlRef.current = url;
+          }
+
           setImgSrc(url);
           setDownloadUrl(url);
         } else {
           // 业务失败：清掉旧图
-          setImgSrc("");
-          setDownloadUrl("");
+          clearResult();
         }
       },
     },
@@ -108,11 +128,11 @@ export function useImageGeneration({
   // 卸载时回收 blob URL
   useEffect(() => {
     return () => {
-      if (imgSrc && imgSrc.startsWith("blob:")) {
-        URL.revokeObjectURL(imgSrc);
+      if (blobUrlRef.current) {
+        URL.revokeObjectURL(blobUrlRef.current);
       }
     };
-  }, [imgSrc]);
+  }, []);
 
   // 下载图片
   const downloadImage = (filename: string) => {

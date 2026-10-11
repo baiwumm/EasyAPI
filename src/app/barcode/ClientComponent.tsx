@@ -29,6 +29,7 @@ const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
   // 生成、错误兜底、blob 回收与下载（与 qrcode 共享）
   const { imgSrc, downloadUrl, loading, error, trigger, downloadImage } =
     useImageGeneration({
+      apiPath: "/barcode",
       params,
       svgResponse: type === BARCODE_TYPES.SVG,
       jsonSuccessData: false,

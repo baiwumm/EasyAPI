@@ -56,7 +56,6 @@
 | G4 | `package.json` | 缺 `packageManager` 字段，pnpm 大版本行为差异曾引发 A1 | 单独一个 commit 处理（会牵动 lockfile） | P3 | 待办 |
 | G5 | `.env.example` | `NEXT_PUBLIC_AUTHOR_ROLE` 未登记（只在 `opengraph-image.tsx` 用到） | 补一行并注明用途 | P3 | 待办 |
 | G6 | `src/components/ApiCard/index.tsx` | 整卡是一个 `<Link>` 但无 `aria-label`；`desc` 用 `line-clamp-2` 截断但无 `title`/tooltip；`isNew` 的 7 天判定在服务端与客户端各算一次，跨边界时 SSR/CSR 可能不一致 | 补 `aria-label`；用 `title` 或 Tooltip 展示完整描述 | P3 | 待办 |
-| G7 | `src/hooks/use-image-generation.ts` | 请求地址用 `fetch(\`/api/${pathname}\`)` 从路由推导，隐式约定页面路径与 API 路径相差一个 `/api` 前缀；且绕过 `httpRequest` 统一封装（无超时、无 401 处理）。`onError` 分支不 revoke blob URL，会泄漏 | 显式传 API path；复用 request 层的超时与 401 处理；卸载时统一 revoke | P2 | 待办 |
 | G8 | `src/app/api/random-image/route.ts` | 走 `faker.image.url()` 指向第三方 loremflickr，第三方挂掉则整页图片全废 | 换自有图源或本地图库 | P2 | 待办 |
 
 ## 已完成
@@ -69,6 +68,7 @@
 - `F2` 首页 ISR：后台写操作后 `revalidatePath('/')`（未用 `revalidateTag`，原因见 `lib/server/home.ts` 注释）
 - `F3` random-avatar SVG LRU 缓存（`lib/server/avatar-cache.ts`，上限 200 条）
 - `F6` random-avatar 改单次批量请求（`format=data` 直出 data URI，未采用「只返 URL」方案，原因见路由注释）
+- `G7` use-image-generation 显式 apiPath + 复用请求层超时/401 + blob URL 统一回收（`httpRequest.raw`）
 - `A1` B1 B2 B3 B4 B5 B7 B9 C1 C3 D2 D9 D11 D18 + `almanac` UTC 偏移 —— 见 `audit-2026-10.md`
 - 测试框架引入 + 122 条测试（`tests/`）—— 见 `docs/code-standards.md`
 - `C2` RLS 策略 —— 按裁决跳过（库侧已手工配置），`rls.sql` 已回退到改动前版本
