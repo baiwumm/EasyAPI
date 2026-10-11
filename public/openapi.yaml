@@ -1122,7 +1122,10 @@ paths:
       tags: [生活服务]
       operationId: getIpRegion
       summary: IP 归属地查询
-      description: 查询 IP 的地理位置与运营商信息；不传 `ip` 时自动使用请求来源 IP。
+      description: |
+        查询 IP 的地理位置与运营商信息；不传 `ip` 时自动使用请求来源 IP。
+        传 `ip` 的响应可公共缓存（`max-age=86400, s-maxage=604800, stale-while-revalidate=86400`）；
+        不传 `ip` 的响应按来源 IP 区分，为 `private, no-store`。
       parameters:
         - name: ip
           in: query
