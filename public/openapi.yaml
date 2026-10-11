@@ -828,7 +828,9 @@ paths:
       summary: 生成条形码
       description: |
         按指定编码格式生成条形码图片，`type` 决定返回 SVG 或 PNG。
-        除下列参数外，其余任意 JsBarcode 选项（如 `lineColor`、`background`、`displayValue`、`textMargin`）均可作为查询参数透传，数值类参数统一钳制到 0 ~ 500。
+        JsBarcode 选项按白名单透传：只接受下文登记的查询参数，未登记的一律忽略；数值类参数统一钳制到 0 ~ 500，
+        颜色只放行十六进制（`#rgb`/`#rgba`/`#rrggbb`/`#rrggbbaa`）与 `transparent`/`currentcolor`/`black`/`white`，
+        布尔类参数传 `true`/`1` 为真，其余值（含 `false`、`0`）为假。
       parameters:
         - name: text
           in: query
@@ -873,7 +875,47 @@ paths:
         - name: margin
           in: query
           required: false
-          description: 外边距（JsBarcode 选项），0 ~ 500
+          description: 四边外边距（JsBarcode 选项），0 ~ 500
+          schema:
+            type: integer
+            minimum: 0
+            maximum: 500
+        - name: marginTop
+          in: query
+          required: false
+          description: 上外边距，0 ~ 500
+          schema:
+            type: integer
+            minimum: 0
+            maximum: 500
+        - name: marginBottom
+          in: query
+          required: false
+          description: 下外边距，0 ~ 500
+          schema:
+            type: integer
+            minimum: 0
+            maximum: 500
+        - name: marginLeft
+          in: query
+          required: false
+          description: 左外边距，0 ~ 500
+          schema:
+            type: integer
+            minimum: 0
+            maximum: 500
+        - name: marginRight
+          in: query
+          required: false
+          description: 右外边距，0 ~ 500
+          schema:
+            type: integer
+            minimum: 0
+            maximum: 500
+        - name: textMargin
+          in: query
+          required: false
+          description: 文字与条码间距，0 ~ 500
           schema:
             type: integer
             minimum: 0
@@ -881,11 +923,66 @@ paths:
         - name: fontSize
           in: query
           required: false
-          description: 文字大小（JsBarcode 选项），0 ~ 500
+          description: 文字大小，0 ~ 500
           schema:
             type: integer
             minimum: 0
             maximum: 500
+        - name: lineColor
+          in: query
+          required: false
+          description: 条码线条颜色，仅十六进制或 transparent/currentcolor/black/white
+          schema:
+            type: string
+            examples: ["#000000"]
+        - name: background
+          in: query
+          required: false
+          description: 背景色，仅十六进制或 transparent/currentcolor/black/white
+          schema:
+            type: string
+            examples: ["#ffffff"]
+        - name: displayValue
+          in: query
+          required: false
+          description: 是否显示文字，true/1 为真，其余值为假
+          schema:
+            type: boolean
+        - name: flat
+          in: query
+          required: false
+          description: EAN13/EAN8 是否打印守卫条延伸出的辅助线，true/1 为真，其余值为假
+          schema:
+            type: boolean
+        - name: font
+          in: query
+          required: false
+          description: 文字字体（font-family），最长 64 字符
+          schema:
+            type: string
+            maxLength: 64
+            examples: ["monospace"]
+        - name: fontOptions
+          in: query
+          required: false
+          description: 文字样式
+          schema:
+            type: string
+            enum: ["", bold, italic, "bold italic", "italic bold"]
+        - name: textAlign
+          in: query
+          required: false
+          description: 文字水平对齐
+          schema:
+            type: string
+            enum: [left, center, right]
+        - name: textPosition
+          in: query
+          required: false
+          description: 文字位置
+          schema:
+            type: string
+            enum: [top, bottom]
       responses:
         "200":
           description: type=svg 返回 SVG，type=png 返回 PNG；参数错误时返回 JSON 响应壳（code=500）

@@ -24,6 +24,53 @@ type BarcodeFormat = (typeof BARCODE_FORMATS.keys)[number];
 const MAX_TEXT_LENGTH = 200;
 const MAX_OPTION_VALUE = 500;
 
+// JsBarcode 选项白名单（C10）：只放行下列已在文档登记的键及其取值形态，
+// 未登记的查询参数一律丢弃，不透传给 JsBarcode
+// 键集合对齐 jsbarcode 的 BaseOptions，去掉由本路由单独校验的 format/text
+// 与只能在服务端使用的回调 valid
+type BarcodeOptionRule =
+  | { type: "number"; max: number }
+  | { type: "boolean" }
+  | { type: "color" }
+  | { type: "enum"; values: readonly string[] }
+  | { type: "text"; maxLength: number };
+
+const BARCODE_OPTION_RULES: Record<string, BarcodeOptionRule> = {
+  width: { type: "number", max: MAX_OPTION_VALUE },
+  height: { type: "number", max: MAX_OPTION_VALUE },
+  margin: { type: "number", max: MAX_OPTION_VALUE },
+  marginTop: { type: "number", max: MAX_OPTION_VALUE },
+  marginBottom: { type: "number", max: MAX_OPTION_VALUE },
+  marginLeft: { type: "number", max: MAX_OPTION_VALUE },
+  marginRight: { type: "number", max: MAX_OPTION_VALUE },
+  textMargin: { type: "number", max: MAX_OPTION_VALUE },
+  fontSize: { type: "number", max: MAX_OPTION_VALUE },
+  displayValue: { type: "boolean" },
+  flat: { type: "boolean" },
+  lineColor: { type: "color" },
+  background: { type: "color" },
+  font: { type: "text", maxLength: 64 },
+  fontOptions: {
+    type: "enum",
+    values: ["bold", "italic", "bold italic", "italic bold"],
+  },
+  textAlign: { type: "enum", values: ["left", "center", "right"] },
+  textPosition: { type: "enum", values: ["top", "bottom"] },
+};
+
+// 颜色写法收窄为十六进制与少量关键字：取值最终写进 SVG 的 stroke / fill，
+// 收窄格式既避免渲染端拿到垃圾值，也让文档能如实描述
+const COLOR_PATTERN = /^#(?:[0-9a-f]{3,4}|[0-9a-f]{6}|[0-9a-f]{8})$/i;
+const NAMED_COLORS: readonly string[] = [
+  "transparent",
+  "currentcolor",
+  "black",
+  "white",
+];
+
+const isSafeColor = (value: string): boolean =>
+  COLOR_PATTERN.test(value) || NAMED_COLORS.includes(value.toLowerCase());
+
 export async function GET(request: NextRequest) {
   try {
     // 解析 URL 查询参数
@@ -79,14 +126,8 @@ export async function GET(request: NextRequest) {
       "svg",
     );
 
-    // 任意查询参数转数字后直传 JsBarcode，统一钳制在 0 ~ 500
-    const extraOptions = Object.fromEntries(
-      Object.entries(rest).map(([k, v]) => {
-        const n = Number(v);
-
-        return [k, Number.isNaN(n) ? v : clamp(n, 0, MAX_OPTION_VALUE)];
-      }),
-    );
+    // 额外选项按白名单逐个解析后再传给 JsBarcode
+    const extraOptions = parseBarcodeOptions(rest);
 
     const options: Options = {
       format,
@@ -135,4 +176,49 @@ export async function GET(request: NextRequest) {
 
 function isValidFormat(format: string): format is BarcodeFormat {
   return BARCODE_FORMATS.keys.includes(format as BarcodeFormat);
+}
+
+/**
+ * @description: 按白名单解析 JsBarcode 额外选项（C10）
+ * 只放行 BARCODE_OPTION_RULES 登记过的键，取值还要符合登记的类型；
+ * 未登记的键、空值一律丢弃，不再像之前那样把 rest 原样透传
+ */
+function parseBarcodeOptions(
+  rest: Record<string, string>,
+): Record<string, string | number | boolean> {
+  const options: Record<string, string | number | boolean> = {};
+
+  for (const [key, raw] of Object.entries(rest)) {
+    const rule = BARCODE_OPTION_RULES[key];
+
+    if (!rule || raw === "") {
+      continue;
+    }
+
+    if (rule.type === "number") {
+      const n = Number(raw);
+
+      // 非数字直接丢弃，让该选项走 JsBarcode 默认值，
+      // 而不是把 width=abc 这样的字符串塞进绘图参数
+      if (Number.isFinite(n)) {
+        options[key] = clamp(n, 0, rule.max);
+      }
+    } else if (rule.type === "boolean") {
+      // "false"/"0" 字符串本身就是真值，直接透传会让 displayValue=false
+      // 变成「显示」，必须显式转换成布尔
+      options[key] = raw === "true" || raw === "1";
+    } else if (rule.type === "enum") {
+      if (rule.values.includes(raw)) {
+        options[key] = raw;
+      }
+    } else if (rule.type === "color") {
+      if (isSafeColor(raw)) {
+        options[key] = raw;
+      }
+    } else if (raw.length <= rule.maxLength) {
+      options[key] = raw;
+    }
+  }
+
+  return options;
 }

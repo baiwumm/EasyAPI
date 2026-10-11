@@ -12,7 +12,6 @@
 | ID | 位置 | 问题 | 处理建议 | 优先级 | 状态 |
 |---|---|---|---|---|---|
 | C6/C7 | `src/lib/supabase/proxy.ts` | 中间件职责重叠：`/api` 分支提前 return 绕过登录态校验；OAuth 分支用 `NextResponse.rewrite` 清理 `?code=`，但 rewrite 不改变浏览器地址栏，注释写的「跳首页」没实现，且该分支丢弃 `supabaseResponse` 上刷新的 cookie | 先更新 `AGENTS.md` 禁止清单放开该文件，再把鉴权守卫上移到 `src/proxy.ts`（不在禁止清单内），`proxy.ts` 只留 session 刷新；OAuth 的 code 交换由 `@supabase/ssr` 浏览器端完成，服务端不应 redirect（会丢 code） | P1 | ⛔ 被规则拦截，待人工裁决 |
-| C10 | `src/app/api/barcode/route.ts:32,83-89` | `Object.fromEntries(searchParams)` 后把 rest 全部当 JsBarcode options 传入，只钳制数值范围、无 key 白名单（`displayValue`、`font`、`flat` 等可控） | 建 JsBarcode option 白名单，只放行文档化的几个 | P2 | 待办 |
 | C12 | `src/app/api/ip-region/route.ts` | 最贵路由：每请求最多 2 次非受信出站 fetch，无 `Cache-Control`；`await res.json()` 无 try/catch，第三方返回非 JSON 时把 `Unexpected token` 原文透出 | 加长缓存 + JSON parse 兜底走固定文案。IP 正则已在拼 URL 前校验，无 SSRF | P2 | 待办 |
 | C13 | `src/app/api/password-strength/route.ts` | 密码走 URL query string，进 Vercel/CDN 访问日志；每请求约 35ms CPU 无限流 | 改 POST + JSON body，加限流；`zxcvbn(password)` 的返回原样透出（含 `password` 字段本身），按需裁剪 | P2 | 待办 |
 | C14 | `src/lib/server/write-guard.ts` | `update` 模式不校验 payload 非空（`{}` 会通过白名单，`update({})` 报错）；`sort` 无范围校验（前端有 `minValue/maxValue`，直接调 API 可写 `sort:-999`） | update 前判空；补 `sort` 与 `name`/`desc` 的长度范围 | P2 | 待办 |
@@ -69,6 +68,7 @@
 ## 已完成
 
 - `C9` Bing 壁纸地址剥离正则与返回前校验 —— 见 `audit-2026-10.md`
+- `C10` barcode JsBarcode 选项白名单（含 YAML 同步）
 - `A1` B1 B2 B3 B4 B5 B7 B9 C1 C3 D2 D9 D11 D18 + `almanac` UTC 偏移 —— 见 `audit-2026-10.md`
 - 测试框架引入 + 122 条测试（`tests/`）—— 见 `docs/code-standards.md`
 - `C2` RLS 策略 —— 按裁决跳过（库侧已手工配置），`rls.sql` 已回退到改动前版本
