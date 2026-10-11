@@ -27,7 +27,6 @@
 
 | ID | 位置 | 问题 | 处理建议 | 优先级 | 状态 |
 |---|---|---|---|---|---|
-| D3 | `src/components/BackTop/index.tsx:61-65` | `useMotionValueEvent` 每帧 `setRingValue`，滚动时整个组件 60fps 重渲染 | `ProgressCircle` 的 value 直接用 CSS 变量 / SVG `stroke-dashoffset` 驱动，删掉 state | P2 | 待办 |
 | D13 | `src/components/StaggerIn/index.tsx:34` | `Children.map` 给每个 child 包一层 `motion.div`，**破坏 CSS grid/flex 布局**（`random-color` 靠子元素自身样式兜住） | 改用 `variants` 传播，不额外包 DOM | P3 | 待办 |
 | D15 | `src/components/AlertContent/index.tsx:39-56`、`ErrorContent` | 桌面/移动两套 Button 靠 `sm:hidden`/`hidden sm:block`，两个都在 DOM 里，键盘用户会 Tab 到隐藏的重复按钮 | 用一套响应式 class 的按钮 | P3 | 待办 |
 | D16 | `src/app/not-found.tsx:32-34` | `<Link><Button></Link>` 产出 `<a><button>`，嵌套交互元素 | HeroUI v3 写法：`<Button render={<Link href="/" />}>` | P3 | 待办 |
@@ -70,6 +69,7 @@
 - `F5` barcode PNG 栅格化前校验 SVG 声明尺寸，超限返回可读文案（不再透出 sharp 原文）
 - `D1` `useSwrQuery` 拆出 `isLoading`/`isValidating`：`JsonContent` 后台验证改覆盖式 spinner，
   `QuoteWorld`/`random-image` 只有用户主动刷新才卸载重挂载；其余页面 `loading` 语义不变
+- `D3` `BackTop` 圆环改由 MotionValue 写 CSS 变量驱动 `stroke-dashoffset`，删掉每帧 `setState`
 - `A1` B1 B2 B3 B4 B5 B7 B9 C1 C3 D2 D9 D11 D18 + `almanac` UTC 偏移 —— 见 `audit-2026-10.md`
 - 测试框架引入 + 122 条测试（`tests/`）—— 见 `docs/code-standards.md`
 - `C2` RLS 策略 —— 按裁决跳过（库侧已手工配置），`rls.sql` 已回退到改动前版本

@@ -243,3 +243,11 @@ html[data-nav-dir='backward']::view-transition-old(blur-slide) {
     animation: none;
   }
 }
+
+/* BackTop 滚动进度环
+ * 进度由 MotionValue 写成 --backtop-ring-offset（见 components/BackTop/index.tsx），
+ * 这里消费它，滚动时 motion 只写 DOM style，不触发 React 重渲染。
+ * SVG 呈现属性的优先级低于 CSS 规则，所以能覆盖 HeroUI 自己算的 stroke-dashoffset。 */
+.backtop .progress-circle__fill-circle {
+  stroke-dashoffset: var(--backtop-ring-offset, 0);
+}

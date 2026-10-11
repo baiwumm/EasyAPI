@@ -7,6 +7,7 @@
  */
 "use client";
 import type { FC } from "react";
+import type { MotionStyle } from "motion/react";
 
 import { ArrowUp } from "@gravity-ui/icons";
 import { ProgressCircle } from "@heroui/react";
@@ -30,6 +31,10 @@ interface BackTopProps {
 
 // easeOutCubic：减速收尾，比浏览器原生 smooth 滚动更自然
 const easeOutCubic = (t: number) => 1 - (1 - t) ** 3;
+
+// 圆环周长：与 HeroUI ProgressCircle 内部一致（r=16），
+// 由 stroke-dashoffset 反推进度，避免每帧 setState 触发 React 重渲染（D3）
+const RING_CIRCUMFERENCE = 2 * Math.PI * 16;
 
 // 会触发滚动的按键，用于中断回顶动画（Enter/Space 由按钮 click 处理）
 const SCROLL_KEYS = new Set([
@@ -57,12 +62,13 @@ const BackTop: FC<BackTopProps> = ({ visibilityHeight = 150 }) => {
     Math.round(latest * 100),
   );
 
-  // 圆环进度：motion 组件不会把 MotionValue 透传给普通 prop，这里读回后转成 state 驱动
-  const [ringValue, setRingValue] = useState(0);
-
-  useMotionValueEvent(percent, "change", (v) => {
-    setRingValue((prev) => (prev === v ? prev : v));
-  });
+  // 圆环进度同样由 MotionValue 直接驱动：写成 CSS 变量后交给
+  // stroke-dashoffset 消费，滚动时 motion 只写一次 DOM style，
+  // 不再每帧 setState 让整个 BackTop 重渲染（D3）
+  const ringOffset = useTransform(
+    percent,
+    (v) => RING_CIRCUMFERENCE * (1 - v / 100),
+  );
 
   const [visible, setVisible] = useState(false);
   const [direction, setDirection] = useState<"up" | "down">("down");
@@ -196,9 +202,15 @@ const BackTop: FC<BackTopProps> = ({ visibilityHeight = 150 }) => {
         <motion.button
           animate={{ opacity: 1, y: 0, scale: 1 }}
           aria-label={scrolling ? "停止回到顶部" : "回到顶部"}
-          className="fixed right-4 bottom-4 z-50 grid size-10 cursor-pointer place-items-center rounded-full bg-transparent p-0 outline-none select-none focus-visible:ring-2 focus-visible:ring-foreground/40"
+          className="backtop fixed right-4 bottom-4 z-50 grid size-10 cursor-pointer place-items-center rounded-full bg-transparent p-0 outline-none select-none focus-visible:ring-2 focus-visible:ring-foreground/40"
           exit={{ opacity: 0, y: 24, scale: 0.5 }}
           initial={{ opacity: 0, y: 24, scale: 0.5 }}
+          style={
+            {
+              // MotionStyle 的类型定义里没有 CSS 变量这一项，这里显式断言
+              "--backtop-ring-offset": ringOffset,
+            } as MotionStyle
+          }
           transition={{ type: "spring", stiffness: 320, damping: 26 }}
           type="button"
           whileHover={{ scale: 1.1 }}
@@ -211,7 +223,7 @@ const BackTop: FC<BackTopProps> = ({ visibilityHeight = 150 }) => {
             className="pointer-events-none"
             color="accent"
             size="lg"
-            value={ringValue}
+            value={0}
           >
             {/* 中间内容 */}
             <div className="absolute inset-0 flex items-center justify-center">
@@ -255,7 +267,9 @@ const BackTop: FC<BackTopProps> = ({ visibilityHeight = 150 }) => {
             {/* 圆环轨道 */}
             <ProgressCircle.Track>
               <ProgressCircle.TrackCircle strokeWidth={3} />
-              <ProgressCircle.FillCircle strokeWidth={3} />
+              {/* 过渡交给上层的 spring，关掉组件自带的 300ms 过渡，
+                  否则两段缓动叠在一起会有近 600ms 的滞后感 */}
+              <ProgressCircle.FillCircle className="transition-none" strokeWidth={3} />
             </ProgressCircle.Track>
           </MotionProgressCircle>
         </motion.button>
