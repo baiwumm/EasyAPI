@@ -63,6 +63,8 @@ const QuoteWorld: FC<QuoteWorldProps> = ({
 }) => {
   const pathname = usePathname();
   const [showFormContent, setShowFormContent] = useState(false);
+  // 用户主动刷新中（mutate 期间）：用于触发替换式 loading 重挂载打字动画
+  const [refreshing, setRefreshing] = useState(false);
   // hitokoto 类型筛选（空 = 全部）
   const [selected, setSelected] = useState<Iterable<Key>>(() => new Set([]));
   // poetry 作者筛选
@@ -87,7 +89,8 @@ const QuoteWorld: FC<QuoteWorldProps> = ({
   // 请求数据（key 含已提交参数，提交后参数变化自动请求）
   const {
     data = {},
-    loading,
+    isLoading,
+    isValidating,
     error,
     mutate,
   } = useSwrQuery([pathname, queryParams], async () => {
@@ -100,9 +103,19 @@ const QuoteWorld: FC<QuoteWorldProps> = ({
   // 刷新入口：原 onBefore 的 UI 重置逻辑在请求前执行
   const handleRefresh = () => {
     setShowFormContent(false);
-    // 参数没变时 key 不变，SWR 不会发请求 → 用 mutate() 手动刷新
+    // 参数没变时 key 不变，SWR 不会发请求 → 用 mutate() 手动刷新。
+    // mutate 期间要主动标记 refreshing：TypingAnimation 是有状态动画
+    // （loop=false 打完一句状态机即停止），只有卸载子树再重挂载才会重新打字，
+    // 直接靠 isLoading 区分不出「用户点刷新」和「后台再验证」（D1）
+    setRefreshing(true);
+
+    const done = () => setRefreshing(false);
+
     if (!commit(params)) {
-      mutate();
+      void mutate().finally(done);
+    } else {
+      // key 会变，isLoading 会接手替换式 loading
+      done();
     }
   };
 
@@ -186,11 +199,9 @@ const QuoteWorld: FC<QuoteWorldProps> = ({
       <div className="flex-1 flex justify-center items-center">
         <RequestContent
           error={error}
-          // 必须用替换式 loading（含刷新中）：TypingAnimation 是有状态动画
-          // （loop=false 打完一句状态机即停止），只能靠刷新期间卸载子树、
-          // 新数据到达后重挂载来重新打字。改用 isLoading 保留旧子树会导致
-          // "换一句"请求了新数据但内容不更新
-          loading={loading}
+          // 只有首屏/参数变化/用户主动刷新才替换式卸载（TypingAnimation 要重挂载
+          // 才会重新打字）；后台再验证（窗口聚焦等）走覆盖式 spinner，不打断动画
+          loading={isLoading || refreshing}
           loadingText="灵感正在路上..."
           reFresh={handleRefresh}
         >
@@ -246,7 +257,7 @@ const QuoteWorld: FC<QuoteWorldProps> = ({
             />
           ) : null}
           <RefreshButton
-            loading={loading}
+            loading={isValidating}
             text={mode === "poetry" ? "吟诗一首" : "换一句"}
             onPress={handleRefresh}
           />

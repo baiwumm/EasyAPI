@@ -50,7 +50,7 @@ function JsonContent<T>({
 
   // 请求数据：key 含已提交参数，提交后参数变化自动请求
   // sendData 只影响怎么发，不影响 key 语义；敏感参数页面传 postApiData
-  const { data, loading, error, mutate } = useSwrQuery<T>(
+  const { data, isLoading, isValidating, error, mutate } = useSwrQuery<T>(
     [pathname, queryParams],
     async () => get(await (sendData ?? getApiData)(pathname, queryParams), "data"),
   );
@@ -85,7 +85,7 @@ function JsonContent<T>({
                     <Table.Column>值</Table.Column>
                   </Table.Header>
                   <Table.Body
-                    renderEmptyState={() => (loading ? null : <EmptyContent />)}
+                    renderEmptyState={() => (isLoading ? null : <EmptyContent />)}
                   >
                     {(data ? getColumns(data) : []).map(
                       ({ label, children }, index) => (
@@ -99,7 +99,8 @@ function JsonContent<T>({
                 </Table.Content>
               </Table.ScrollContainer>
             </Table>
-            <TableLoading loading={loading} />
+            {/* 覆盖式 spinner：后台再验证时只盖一层，不卸载结果区（D1） */}
+            <TableLoading loading={isValidating} />
           </div>
         </RequestContent>
       </div>
@@ -114,7 +115,7 @@ function JsonContent<T>({
         >
           {children}
           <button aria-hidden="true" className="hidden" type="submit" />
-          <RefreshButton loading={loading} text={searchText} onPress={reload} />
+          <RefreshButton loading={isValidating} text={searchText} onPress={reload} />
           <CopyText
             content={
               Object.keys(data || {}).length > 0

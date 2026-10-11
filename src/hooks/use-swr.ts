@@ -33,6 +33,8 @@ export function useSwrMutation<T = unknown, A = unknown>(
  * - fetcher 为闭包：捕获调用点最新参数；key 固定时，点击刷新用 mutate()（mutate 不受 dedupingInterval 限制）
  * - loading = 首次加载或任何重新验证进行中（等价原 loading）
  * - isLoading = 仅首次加载（无缓存数据），替换式展示用它避免刷新时闪空
+ * - isValidating = 任何验证进行中（含后台再验证），此时仍有旧数据，
+ *   要覆盖式 spinner（不卸载结果区）就用它
  */
 export function useSwrQuery<T = unknown>(
   key: Key,
@@ -44,5 +46,7 @@ export function useSwrQuery<T = unknown>(
   return {
     ...result,
     loading: result.isLoading || result.isValidating,
+    isLoading: result.isLoading,
+    isValidating: result.isValidating,
   };
 }
