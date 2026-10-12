@@ -62,6 +62,10 @@ const UserAvatar: FC = () => {
     user?.email?.slice(0, 1);
   // 用户头像
   const avatar = user?.user_metadata.avatar_url as string;
+  // GitHub 头像域名在部分网络不可达，统一走本站代理；无头像时交给 Fallback
+  const avatarUrl = avatar
+    ? `/api/avatar-proxy?url=${encodeURIComponent(avatar)}`
+    : undefined;
 
   // 点击菜单回调
   const onClickMenu = (key: Key) => {
@@ -105,7 +109,7 @@ const UserAvatar: FC = () => {
         <Dropdown.Trigger>
           <Badge.Anchor>
             <Avatar className="size-8">
-              <Avatar.Image alt="在线用户" src={avatar} />
+              <Avatar.Image alt="在线用户" src={avatarUrl} />
               <Avatar.Fallback>
                 <Person />
               </Avatar.Fallback>
@@ -121,7 +125,7 @@ const UserAvatar: FC = () => {
         <Dropdown.Popover>
           <div className="flex items-center gap-3 p-3">
             <Avatar size="sm">
-              <Avatar.Image alt="在线用户" src={avatar} />
+              <Avatar.Image alt="在线用户" src={avatarUrl} />
               <Avatar.Fallback>
                 <Person />
               </Avatar.Fallback>
