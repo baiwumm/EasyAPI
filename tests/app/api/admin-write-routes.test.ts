@@ -50,6 +50,26 @@ function writeReturns(result: { data: unknown; error: unknown }) {
   return api;
 }
 
+/** 可 await 的链式替身：链上任意一环被 await 都 resolve 到 result */
+function queryChain(result: { data?: unknown; error?: unknown; count?: unknown }) {
+  const chain: Record<string, unknown> = {
+    insert: vi.fn(() => chain),
+    update: vi.fn(() => chain),
+    delete: vi.fn(() => chain),
+    select: vi.fn(() => chain),
+    eq: vi.fn(() => chain),
+    single: vi.fn(() => chain),
+    then: (resolve: (v: unknown) => void) => resolve(result),
+  };
+
+  return chain;
+}
+
+/** 按表名返回不同链：删除分类会先 count ea_apis，再 delete ea_categorys */
+function mockFromByTable(handlers: Record<string, Record<string, unknown>>) {
+  supabase.from.mockImplementation((table: string) => handlers[table]);
+}
+
 const post = (url: string, body: unknown) =>
   new NextRequest(url, {
     method: "POST",
@@ -202,5 +222,172 @@ describe("管理端写接口的请求体守卫", () => {
 
     expect((await json(res)).msg).toContain("sort");
     expect(supabase.from).not.toHaveBeenCalled();
+  });
+});
+
+// T3：唯一性冲突分支（PostgreSQL 23505）——按约束名区分文案，且不刷首页
+describe("管理端写接口的唯一性冲突（23505）", () => {
+  beforeEach(() => {
+    supabase.from.mockReset();
+    revalidateHome.mockClear();
+    requireAdmin.mockResolvedValue({ email: "me@baiwumm.com" });
+  });
+
+  it("POST /api/apis 名称约束冲突返回 DUPLICATE 与「接口名称已存在」", async () => {
+    writeReturns({
+      data: null,
+      error: { message: "dup", code: "23505", constraint: "ea_apis_name_key" },
+    });
+
+    const res = await createApi(post("http://x/api/apis", API_BODY));
+    const b = await json(res);
+
+    expect(b.code).toBe(-1);
+    expect(b.msg).toBe("接口名称已存在！");
+    expect(revalidateHome).not.toHaveBeenCalled();
+  });
+
+  it("POST /api/apis 非名称约束冲突返回通用文案", async () => {
+    writeReturns({
+      data: null,
+      error: { message: "dup", code: "23505", constraint: "ea_apis_path_key" },
+    });
+
+    const b = await json(await createApi(post("http://x/api/apis", API_BODY)));
+
+    expect(b.code).toBe(-1);
+    expect(b.msg).toBe("保存失败：数据已存在（唯一性冲突）");
+    expect(revalidateHome).not.toHaveBeenCalled();
+  });
+
+  it("POST /api/apis 缺 constraint 字段时回落通用文案", async () => {
+    writeReturns({ data: null, error: { message: "dup", code: "23505" } });
+
+    const b = await json(await createApi(post("http://x/api/apis", API_BODY)));
+
+    expect(b.code).toBe(-1);
+    expect(b.msg).toBe("保存失败：数据已存在（唯一性冲突）");
+  });
+
+  it("PUT /api/apis/[id] 名称约束冲突返回 DUPLICATE", async () => {
+    writeReturns({
+      data: null,
+      error: { message: "dup", code: "23505", constraint: "ea_apis_name_key" },
+    });
+
+    const b = await json(
+      await updateApi(put("http://x/api/apis/1", { name: "重名" }), {
+        params: Promise.resolve({ id: "1" }),
+      }),
+    );
+
+    expect(b.code).toBe(-1);
+    expect(b.msg).toBe("接口名称已存在！");
+    expect(revalidateHome).not.toHaveBeenCalled();
+  });
+
+  it("POST /api/categorys 名称冲突返回 DUPLICATE", async () => {
+    writeReturns({
+      data: null,
+      error: {
+        message: "dup",
+        code: "23505",
+        constraint: "ea_categorys_name_key",
+      },
+    });
+
+    const b = await json(
+      await createCategory(
+        post("http://x/api/categorys", { name: "重复分类", sort: 1 }),
+      ),
+    );
+
+    expect(b.code).toBe(-1);
+    expect(b.msg).toBe("分类名称已存在！");
+    expect(revalidateHome).not.toHaveBeenCalled();
+  });
+
+  it("PUT /api/categorys/[id] 名称冲突返回 DUPLICATE", async () => {
+    writeReturns({
+      data: null,
+      error: {
+        message: "dup",
+        code: "23505",
+        constraint: "ea_categorys_name_key",
+      },
+    });
+
+    const b = await json(
+      await updateCategory(put("http://x/api/categorys/1", { name: "重复分类" }), {
+        params: Promise.resolve({ id: "1" }),
+      }),
+    );
+
+    expect(b.code).toBe(-1);
+    expect(b.msg).toBe("分类名称已存在！");
+    expect(revalidateHome).not.toHaveBeenCalled();
+  });
+});
+
+// T3：删除分类前的服务端引用检查——分类下仍有接口时拒绝删除
+describe("删除分类前的引用检查", () => {
+  beforeEach(() => {
+    supabase.from.mockReset();
+    revalidateHome.mockClear();
+    requireAdmin.mockResolvedValue({ email: "me@baiwumm.com" });
+  });
+
+  it("分类下仍有接口时拒绝删除，不打 ea_categorys 也不刷新首页", async () => {
+    const categorysChain = queryChain({ data: { id: "1" }, error: null });
+    mockFromByTable({
+      ea_apis: queryChain({ count: 3, error: null }),
+      ea_categorys: categorysChain,
+    });
+
+    const res = await deleteCategory(del("http://x/api/categorys/1"), {
+      params: Promise.resolve({ id: "1" }),
+    });
+
+    const b = await json(res);
+
+    expect(b.code).toBe(500);
+    expect(b.msg).toBe("该分类下存在关联接口，无法删除");
+    expect(categorysChain.delete).not.toHaveBeenCalled();
+    expect(revalidateHome).not.toHaveBeenCalled();
+  });
+
+  it("分类下没有接口时正常删除并刷新首页", async () => {
+    const categorysChain = queryChain({ data: { id: "1" }, error: null });
+    mockFromByTable({
+      ea_apis: queryChain({ count: 0, error: null }),
+      ea_categorys: categorysChain,
+    });
+
+    const res = await deleteCategory(del("http://x/api/categorys/1"), {
+      params: Promise.resolve({ id: "1" }),
+    });
+
+    expect((await json(res)).code).toBe(200);
+    expect(categorysChain.delete).toHaveBeenCalledTimes(1);
+    expect(revalidateHome).toHaveBeenCalledTimes(1);
+  });
+
+  it("引用计数查询失败时返回错误且不删除", async () => {
+    const categorysChain = queryChain({ data: { id: "1" }, error: null });
+    mockFromByTable({
+      ea_apis: queryChain({ count: null, error: { message: "count boom" } }),
+      ea_categorys: categorysChain,
+    });
+
+    const b = await json(
+      await deleteCategory(del("http://x/api/categorys/1"), {
+        params: Promise.resolve({ id: "1" }),
+      }),
+    );
+
+    expect(b.code).toBe(500);
+    expect(b.msg).toBe("count boom");
+    expect(categorysChain.delete).not.toHaveBeenCalled();
+    expect(revalidateHome).not.toHaveBeenCalled();
   });
 });
