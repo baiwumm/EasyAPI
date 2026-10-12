@@ -53,11 +53,13 @@ ESLint + Prettier。必须遵守的规则：
 
 ### 当前覆盖与缺口
 
-已覆盖：`lib/utils`、`lib/server/{api-helpers,bing-wallpaper,rate-limit,avatar-cache,write-guard,random-image-art}`、
-16 个路由（含 barcode / password-strength / ip-region / random-avatar / random-image / 管理端写路由 / 分页钳制）、
-admin 两个 save-modal 表单（jsdom + 用户事件，含 Select 弹层交互与提交后状态复位）、
-`JsonContent` / `QuoteWorld` 的 SWR key 行为（改参数不请求、提交才请求、参数没变走 mutate），
-共 244 条。
+已覆盖：`lib/utils`、`lib/server/{api-helpers,bing-wallpaper,rate-limit,avatar-cache,write-guard}`、
+`components/GridReveal` 的引擎纯模块与首屏外降级、16 个路由（含 barcode / password-strength /
+ip-region / random-avatar / random-image / 管理端写路由（写链路与鉴权、23505 唯一性冲突、
+删分类引用检查）/ 分页钳制）、admin 两个 save-modal 表单（jsdom + 用户事件，含 Select
+弹层交互与提交后状态复位）、`AlertContent` / `ErrorContent` 单按钮结构、`ColumnsVisibility`
+批量写回、`StaggerIn` 无包装结构、`JsonContent` / `QuoteWorld` 的 SWR key 行为
+（改参数不请求、提交才请求、参数没变走 mutate），共 307 条。
 
 **客户端模块暂不补单测**：`src/lib/request.ts`、`src/hooks/*` 依赖浏览器环境
 （`window`、blob、SWR 缓存）。jsdom 环境已具备（见上），但 `import` 它们仍会连带

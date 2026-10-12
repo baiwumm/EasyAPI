@@ -7,35 +7,36 @@
 
 ---
 
-## 性能
+## 当前无待办
 
-| ID | 位置 | 问题 | 处理建议 | 优先级 | 状态 |
-|---|---|---|---|---|---|
-| F4 | `src/app/opengraph-image.tsx:36-38` | 3 个 `publicAssetToDataUrl` 在模块作用域启动，但 `ImageResponse` 每请求重渲染 | 构建期生成或 `revalidate = 86400` | P3 | 待办 |
-
-## UI / 交互 / 可访问性
-
-| ID | 位置 | 问题 | 处理建议 | 优先级 | 状态 |
-|---|---|---|---|---|---|
-| D13 | `src/components/StaggerIn/index.tsx:34` | `Children.map` 给每个 child 包一层 `motion.div`，**破坏 CSS grid/flex 布局**（`random-color` 靠子元素自身样式兜住） | 改用 `variants` 传播，不额外包 DOM | P3 | 待办 |
-| D15 | `src/components/AlertContent/index.tsx:39-56`、`ErrorContent` | 桌面/移动两套 Button 靠 `sm:hidden`/`hidden sm:block`，两个都在 DOM 里，键盘用户会 Tab 到隐藏的重复按钮 | 用一套响应式 class 的按钮 | P3 | 待办 |
-| D20 | `src/components/ColumnsVisibility/index.tsx:28-34` | `handleSelectionChange` 每次交互对所有列 `toggleVisibility()`，O(N) 次 state 写入 | 合并为一次批量 set | P3 | 待办 |
-| — | `src/enums/index.tsx`、`src/hooks/use-copy.tsx` | 文件扩展名与内容不符：前者是 `.tsx` 但纯数据无 JSX；后者是 `.tsx` 且有 JSX（正确） | 前者重命名为 `.ts` | P3 | 待办 |
-
-## 测试覆盖缺口
-
-| ID | 位置 | 缺口 | 建议 | 优先级 | 状态 |
-|---|---|---|---|---|---|
-| T3 | 管理端 CRUD 路由（`apis`/`categorys` 的 POST/PUT/DELETE） | ~~0 覆盖~~ 写链路与鉴权已由 `tests/app/api/admin-write-routes.test.ts` 覆盖（含空 payload 守卫、失败/未登录不刷首页）；save-modal 前端表单已由 T1 补齐（含 Select 弹层交互、payload 形状、失败复位） | 如需继续补强：唯一性冲突分支（23505）与删除分类前的引用检查（`count` 查询） | P3 | 大部分完成 |
-
-## 文档与工程
-
-| ID | 位置 | 问题 | 处理建议 | 优先级 | 状态 |
-|---|---|---|---|---|---|
-| G4 | `package.json` | 缺 `packageManager` 字段，pnpm 大版本行为差异曾引发 A1 | 单独一个 commit 处理（会牵动 lockfile） | P3 | 待办 |
+2026-10-12 闲时任务已把剩余 P3 项全部清零（F4 / D13 / D15 / D20 / T3 /
+enums 改名 / G4，见文末「已完成」）。新发现的待办按原表格式追加到
+对应分组即可。
 
 ## 已完成
 
+- `D15` AlertContent/ErrorContent 操作按钮合并为一套：原桌面/移动两套按钮都挂在
+  DOM（sm:hidden / hidden sm:block），键盘会 Tab 到隐藏副本。改为单一按钮进内容列，
+  内容列 `sm:flex-row`：移动端纵向（按钮在描述下方）、桌面横向（按钮靠右），
+  两种视口视觉位置不变（配 5 条 jsdom 用例钉住单按钮与回调）
+- `F4` OG 图路由加 `revalidate = 86400`：内容固定不依赖请求参数，
+  社交爬虫抓取不再每次重渲染 ImageResponse
+- `D20` ColumnsVisibility 选区变更合并为一次函数式 `setColumnVisibility`：
+  v9 受控 onChange 单轮同步（原为每列一次 toggleVisibility，O(N) 次写入）；
+  隐藏条目缺省即可见，enableHiding: false 功能列不受影响（配单次写入与
+  勾选往返用例）
+- `T3` 管理端 CRUD 测试补强（+11 条）：23505 唯一性冲突（apis 按约束名区分
+  文案、含缺 constraint 回落通用文案；categorys 名称冲突）与删除分类前的
+  ea_apis 引用计数检查（有接口拒绝删除 / 无接口正常删除 / 计数查询失败不删），
+  全部断言不刷新首页
+- `D13` StaggerIn 去掉子元素包装层：原 `Children.map` 包的 motion.div 会破坏
+  grid/flex 布局。改为 CSS 动画直接落在真实子元素（globals.css `.stagger-in > *`，
+  nth-child 给 40ms 交错延迟，上限 50 与页面 count 上限一致），both 填充保证
+  延迟期透明，reduced-motion 走媒体查询且首帧生效无闪动；三个使用页零改动
+- `enums/index.tsx` 重命名为 `index.ts`（纯数据无 JSX，扩展名与内容对齐）
+- `G4` package.json 补 `packageManager: pnpm@12.11.2`：pnpm 12 把自托管二进制
+  记入 lockfile（packageManagerDependencies，+158 行），`--frozen-lockfile`
+  验证通过；单独提交
 - `F7` GridReveal 引擎拆分 + 首屏外降级：canvas 引擎（buildTree/measureTree/
   orderByDetail/drawScene/readAverages）移入 `components/GridReveal/engine.ts`
   纯模块并配 22 条单测；实例距视口 150px 内才经 IntersectionObserver 激活引擎，
