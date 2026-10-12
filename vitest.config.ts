@@ -6,10 +6,10 @@ const r = (p: string) => fileURLToPath(new URL(p, import.meta.url));
 
 export default defineConfig({
   test: {
-    // 当前只覆盖纯函数与 route handler，不需要 DOM；
-    // 真需要渲染组件时再按文件加 // @vitest-environment jsdom
+    // 默认 node 环境覆盖纯函数与 route handler；
+    // 渲染组件的测试按文件加 // @vitest-environment jsdom
     environment: "node",
-    include: ["tests/**/*.test.ts"],
+    include: ["tests/**/*.test.{ts,tsx}"],
     // 排除 App Router 的 __tests__（colocated 测试另行约定）
     exclude: ["**/node_modules/**", "**/.next/**", "**/dist/**"],
   },
