@@ -166,7 +166,7 @@ const ClientComponent: FC = () => {
         <Card.Header>
           <div className="flex gap-1 items-center flex-col">
             <div className="w-30 h-8 relative">
-              <Image fill alt="Logo" src="/logo.png" />
+              <Image fill priority alt="Logo" src="/logo.png" />
             </div>
             <Description>
               {process.env.NEXT_PUBLIC_APP_TITLE}

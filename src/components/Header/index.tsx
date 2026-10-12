@@ -46,7 +46,7 @@ const Header: FC = () => {
       {/* 左侧 Logo */}
       <Link href="/">
         <div className="w-30 h-8 relative justify-self-start">
-          <Image fill alt="Logo" src="/logo.png" />
+          <Image fill priority alt="Logo" src="/logo.png" />
         </div>
       </Link>
       <TimeAndLunar />
