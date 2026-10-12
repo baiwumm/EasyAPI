@@ -28,9 +28,15 @@ function ColumnsVisibility<TData extends RowData>({
   const handleSelectionChange = (keys: Selection) => {
     const visibleIds = new Set(Array.from(keys));
 
-    columns.forEach((column) => {
-      column.toggleVisibility(visibleIds.has(column.id));
-    });
+    // D20：合并为一次批量 set。原先对每列调 toggleVisibility（O(N) 次状态写入），
+    // 现在函数式 updater 单轮经 onColumnVisibilityChange 同步；隐藏条目缺省即
+    // 可见（v9 语义），enableHiding: false 的功能列不在可隐藏集合内不受影响
+    table.setColumnVisibility((old) => ({
+      ...old,
+      ...Object.fromEntries(
+        columns.map((column) => [column.id, visibleIds.has(column.id)]),
+      ),
+    }));
   };
 
   return (
