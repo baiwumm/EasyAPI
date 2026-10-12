@@ -1,6 +1,6 @@
 /*
  * @Author: 白雾茫茫丶<baiwumm.com>
- * @Date: 2026-01-30 09:49:28
+ * @Date: 2026-01-30 09:49:14
  * @LastEditors: 白雾茫茫丶<baiwumm.com>
  * @LastEditTime: 2026-01-30 09:56:56
  * @Description: 提示框占位
@@ -33,11 +33,18 @@ const AlertContent: FC<AlertContentProps> = ({
   return (
     <Alert className={className} status={status}>
       <Alert.Indicator />
-      <Alert.Content>
-        <Alert.Title>{title}</Alert.Title>
-        <Alert.Description className="text-xs">{description}</Alert.Description>
+      {/* D15：只保留一个操作按钮。内容区移动端保持纵向（按钮在描述下方）、
+          桌面端转横向（文字块 grow 顶开、按钮靠右），DOM 中不再有
+          视觉隐藏的重复交互元素 */}
+      <Alert.Content className="sm:flex-row">
+        <div className="flex min-w-0 grow flex-col items-start">
+          <Alert.Title>{title}</Alert.Title>
+          <Alert.Description className="text-xs">
+            {description}
+          </Alert.Description>
+        </div>
         <Button
-          className="mt-2 sm:hidden"
+          className="mt-2 shrink-0 sm:mt-0 sm:ml-4"
           size="sm"
           variant={buttonVariant}
           onPress={buttonAction}
@@ -45,14 +52,6 @@ const AlertContent: FC<AlertContentProps> = ({
           {actionText}
         </Button>
       </Alert.Content>
-      <Button
-        className="hidden sm:block"
-        size="sm"
-        variant={buttonVariant}
-        onPress={buttonAction}
-      >
-        {actionText}
-      </Button>
     </Alert>
   );
 };
