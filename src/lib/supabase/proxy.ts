@@ -3,7 +3,15 @@ import type { NextRequest } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse } from "next/server";
 
-export async function updateSession(request: NextRequest) {
+/** 会话声明中本项目用到的字段（宽松结构，字段存在性在调用方判断） */
+export type SessionClaims = { email?: string } & Record<string, unknown>;
+
+/**
+ * 创建绑定请求 cookie 的中间件客户端。
+ * token 刷新时 setAll 会把新 cookie 写进一个新的 NextResponse，
+ * 因此响应必须经 getResponse() 在 auth 调用之后取，不能提前缓存引用
+ */
+export function createMiddlewareClient(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
     request,
   });
@@ -31,80 +39,26 @@ export async function updateSession(request: NextRequest) {
     },
   );
 
-  const path = request.nextUrl.pathname;
+  return {
+    supabase,
+    getResponse: () => supabaseResponse,
+  };
+}
 
-  if (path.startsWith("/api")) {
-    // 仅统计对外只读调用：管理端 CRUD 的 POST/PUT/DELETE 不计数
-    if (request.method === "GET") {
-      // 去掉 /api 前缀，并且去掉查询参数
-      const reqPath = path.replace(/^\/api/, "").split("?")[0];
-      // head:true 不返回行数据，只确认 path 是否存在，减轻查询负担
-      const { data } = await supabase
-        .from("ea_apis")
-        .select("id", { count: "exact", head: true })
-        .eq("path", reqPath)
-        .limit(1)
-        .maybeSingle();
-
-      if (data) {
-        // 调用 RPC 函数随机增加 call_count 1~10
-        const increment = Math.floor(Math.random() * 10) + 1;
-
-        // 计数不阻塞响应（Node 运行时下返回后仍会执行）；
-        // 失败不能静默（如 RLS 拦截 SECURITY INVOKER 的 RPC），至少留痕
-        void supabase
-          .rpc("increment_call_count", { row_id: data.id, inc: increment })
-          .then(({ error: rpcError }) => {
-            if (rpcError) {
-              // 服务端运维日志（中间件无上报通道），定向豁免 no-console
-              // eslint-disable-next-line no-console
-              console.error("increment_call_count failed:", rpcError.message);
-            }
-          });
-      }
-    }
-
-    return supabaseResponse;
-  }
-
-  const url = request.nextUrl.clone();
-  const code = url.searchParams.get("code");
-
-  // ✅ 只要有 code，立刻清理并跳首页
-  if (code) {
-    url.searchParams.delete("code");
-
-    return NextResponse.rewrite(url);
-  }
-
+/**
+ * 页面导航的会话刷新：getClaims 时过期 token 经 setAll 续期并写入响应 cookie。
+ * 只做会话机制（刷新 + 读 claims），不做路由策略——守卫在 src/proxy.ts。
+ *
+ * 注意：URL 带 ?code= 时这里不做任何拦截。OAuth 的 code 交换由浏览器端
+ * @supabase/ssr 完成（detectSessionInUrl 默认开启）；服务端用 rewrite 清参数
+ * 既不改浏览器地址栏，还会丢弃本响应上刚刷新的 cookie（C7，已删）
+ */
+export async function updateSession(request: NextRequest) {
+  const { supabase, getResponse } = createMiddlewareClient(request);
   const { data } = await supabase.auth.getClaims();
 
-  const claims = data?.claims;
-
-  // 管理员白名单（与 lib/supabase/server.ts 的 requireAdmin 保持一致）
-  const adminEmails = (process.env.ADMIN_EMAILS || "")
-    .split(",")
-    .map((email) => email.trim().toLowerCase())
-    .filter(Boolean);
-  const email =
-    typeof claims?.email === "string" ? claims.email.toLowerCase() : "";
-  const isAdmin = !!(email && adminEmails.includes(email));
-
-  // 已登录访问登录页：管理员跳转管理页面，其他用户回首页
-  if (claims && path.startsWith("/login")) {
-    return NextResponse.redirect(
-      new URL(isAdmin ? "/admin" : "/", request.url),
-    );
-  }
-
-  // 未登录或非白名单邮箱访问管理页面，一律跳转登录页
-  if ((!claims || !isAdmin) && path.startsWith("/admin")) {
-    const url = request.nextUrl.clone();
-
-    url.pathname = "/login";
-
-    return NextResponse.redirect(url);
-  }
-
-  return supabaseResponse;
+  return {
+    supabaseResponse: getResponse(),
+    claims: (data?.claims ?? null) as SessionClaims | null,
+  };
 }

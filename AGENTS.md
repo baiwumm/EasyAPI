@@ -70,10 +70,12 @@ public/openapi.yaml       # 手工维护的 OpenAPI 3.1 接口文档（/docs 页
 
 ### 禁止修改的文件
 
-- `src/lib/supabase/*.ts` — Supabase 客户端配置，涉及认证安全
 - `src/typings/table-types.ts` — TanStack Table 类型定义
 - `eslint.config.mjs` — ESLint 配置，修改可能导致 CI 失败
 - `next.config.ts` — Next.js 配置，影响构建行为
+
+> `src/lib/supabase/*.ts` 原在此清单（C6/C7 整改时经人工裁决放开，见
+> `docs/backlog.md`），改动仍须谨慎并配套测试。
 
 > 若某处改动确实需要动这些文件，**先提问等人工裁决，不得擅自修改**。
 
