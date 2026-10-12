@@ -142,7 +142,11 @@ const ClientComponent: FC = () => {
       const { error } = await supabase.auth.signInWithOAuth({
         provider,
         options: {
-          redirectTo: process.env.NEXT_PUBLIC_APP_URL,
+          // 回到发起登录的地址：本地开发回 localhost、线上回线上，
+          // 不依赖 NEXT_PUBLIC_APP_URL 与部署环境对齐。
+          // 各环境地址需在 Supabase Dashboard → Authentication →
+          // URL Configuration → Redirect URLs 白名单内，否则回退 Site URL
+          redirectTo: window.location.origin,
         },
       });
 
