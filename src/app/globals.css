@@ -241,3 +241,180 @@ html[data-nav-dir='backward']::view-transition-old(blur-slide) {
 .backtop .progress-circle__fill-circle {
   stroke-dashoffset: var(--backtop-ring-offset, 0);
 }
+
+/* D13: StaggerIn 交错入场
+ * 动画直接落在容器的真实子元素上（不包额外 motion.div，避免破坏 grid/flex 布局），
+ * 每个子元素 40ms 交错；both 填充让子元素在延迟开始前保持透明。
+ * 子元素上限 50（random-string / random-idcard 的 count 上限）。 */
+@keyframes stagger-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.stagger-in > * {
+  animation: stagger-in 0.3s ease both;
+}
+
+.stagger-in > :nth-child(1) {
+  animation-delay: 0ms;
+}
+.stagger-in > :nth-child(2) {
+  animation-delay: 40ms;
+}
+.stagger-in > :nth-child(3) {
+  animation-delay: 80ms;
+}
+.stagger-in > :nth-child(4) {
+  animation-delay: 120ms;
+}
+.stagger-in > :nth-child(5) {
+  animation-delay: 160ms;
+}
+.stagger-in > :nth-child(6) {
+  animation-delay: 200ms;
+}
+.stagger-in > :nth-child(7) {
+  animation-delay: 240ms;
+}
+.stagger-in > :nth-child(8) {
+  animation-delay: 280ms;
+}
+.stagger-in > :nth-child(9) {
+  animation-delay: 320ms;
+}
+.stagger-in > :nth-child(10) {
+  animation-delay: 360ms;
+}
+.stagger-in > :nth-child(11) {
+  animation-delay: 400ms;
+}
+.stagger-in > :nth-child(12) {
+  animation-delay: 440ms;
+}
+.stagger-in > :nth-child(13) {
+  animation-delay: 480ms;
+}
+.stagger-in > :nth-child(14) {
+  animation-delay: 520ms;
+}
+.stagger-in > :nth-child(15) {
+  animation-delay: 560ms;
+}
+.stagger-in > :nth-child(16) {
+  animation-delay: 600ms;
+}
+.stagger-in > :nth-child(17) {
+  animation-delay: 640ms;
+}
+.stagger-in > :nth-child(18) {
+  animation-delay: 680ms;
+}
+.stagger-in > :nth-child(19) {
+  animation-delay: 720ms;
+}
+.stagger-in > :nth-child(20) {
+  animation-delay: 760ms;
+}
+.stagger-in > :nth-child(21) {
+  animation-delay: 800ms;
+}
+.stagger-in > :nth-child(22) {
+  animation-delay: 840ms;
+}
+.stagger-in > :nth-child(23) {
+  animation-delay: 880ms;
+}
+.stagger-in > :nth-child(24) {
+  animation-delay: 920ms;
+}
+.stagger-in > :nth-child(25) {
+  animation-delay: 960ms;
+}
+.stagger-in > :nth-child(26) {
+  animation-delay: 1000ms;
+}
+.stagger-in > :nth-child(27) {
+  animation-delay: 1040ms;
+}
+.stagger-in > :nth-child(28) {
+  animation-delay: 1080ms;
+}
+.stagger-in > :nth-child(29) {
+  animation-delay: 1120ms;
+}
+.stagger-in > :nth-child(30) {
+  animation-delay: 1160ms;
+}
+.stagger-in > :nth-child(31) {
+  animation-delay: 1200ms;
+}
+.stagger-in > :nth-child(32) {
+  animation-delay: 1240ms;
+}
+.stagger-in > :nth-child(33) {
+  animation-delay: 1280ms;
+}
+.stagger-in > :nth-child(34) {
+  animation-delay: 1320ms;
+}
+.stagger-in > :nth-child(35) {
+  animation-delay: 1360ms;
+}
+.stagger-in > :nth-child(36) {
+  animation-delay: 1400ms;
+}
+.stagger-in > :nth-child(37) {
+  animation-delay: 1440ms;
+}
+.stagger-in > :nth-child(38) {
+  animation-delay: 1480ms;
+}
+.stagger-in > :nth-child(39) {
+  animation-delay: 1520ms;
+}
+.stagger-in > :nth-child(40) {
+  animation-delay: 1560ms;
+}
+.stagger-in > :nth-child(41) {
+  animation-delay: 1600ms;
+}
+.stagger-in > :nth-child(42) {
+  animation-delay: 1640ms;
+}
+.stagger-in > :nth-child(43) {
+  animation-delay: 1680ms;
+}
+.stagger-in > :nth-child(44) {
+  animation-delay: 1720ms;
+}
+.stagger-in > :nth-child(45) {
+  animation-delay: 1760ms;
+}
+.stagger-in > :nth-child(46) {
+  animation-delay: 1800ms;
+}
+.stagger-in > :nth-child(47) {
+  animation-delay: 1840ms;
+}
+.stagger-in > :nth-child(48) {
+  animation-delay: 1880ms;
+}
+.stagger-in > :nth-child(49) {
+  animation-delay: 1920ms;
+}
+.stagger-in > :nth-child(50) {
+  animation-delay: 1960ms;
+}
+
+/* 系统开启减弱动效时禁用交错入场 */
+@media (prefers-reduced-motion: reduce) {
+  .stagger-in > * {
+    animation: none;
+  }
+}
