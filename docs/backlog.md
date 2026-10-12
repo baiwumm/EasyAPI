@@ -47,8 +47,10 @@
   （旧函数 `SECURITY DEFINER` 已确认，新函数保持同款姿态）
 - `F8` 字体分片按需加载：`cn-font-split` 把 1.7MB 子集切成 78 个带 unicode-range 的 woff2 分片，
   首屏只下载实际渲染到的字形；源字体挪至 `assets/fonts/`，`pnpm split-font` 再生成（产物随仓库提交）
-- `G8` random-image 摆脱第三方 loremflickr：服务端本地生成确定性抽象 SVG，
-  列表路由单请求直出 data URI（与 random-avatar 批量的 F6 决策一致），openapi 已同步
+- `G8` random-image 图源最终形态：`faker.image.url()` 真实照片（faker v10 起指向
+  picsum.photos，旧 loremflickr 已 401 不可用）。中途曾改为服务端生成确定性抽象 SVG，
+  但观感单一、不是照片，2026-10-12 经人工裁决换回并删除生成器；第三方不可用时
+  整页图片会挂，由 GridReveal 的 onerror 重试与灰色揭幕降级兜底
 - `T1` 测试基建引入 jsdom + `@testing-library/react`（含 React Aria 的 pointerCapture 垫片），
   admin 两个 save-modal 各 6 条用例：必填拦截（含 `Number("")===0` 隐患由原生校验钉住）、
   Select 弹层交互、payload 形状、失败后按钮文案复位、成功关窗
