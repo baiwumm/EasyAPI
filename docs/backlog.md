@@ -12,7 +12,6 @@
 | ID | 位置 | 问题 | 处理建议 | 优先级 | 状态 |
 |---|---|---|---|---|---|
 | F4 | `src/app/opengraph-image.tsx:36-38` | 3 个 `publicAssetToDataUrl` 在模块作用域启动，但 `ImageResponse` 每请求重渲染 | 构建期生成或 `revalidate = 86400` | P3 | 待办 |
-| F7 | `src/components/GridReveal/index.tsx` | 631 行 canvas 引擎，`random-image` 页最多 20 实例，每个都跑 rAF + IntersectionObserver + ResizeObserver | 首屏外实例降级为普通 `<img>`；拆分为 `buildTree`/`measure`/`drawScene` 纯模块 | P3 | 待办 |
 
 ## UI / 交互 / 可访问性
 
@@ -37,6 +36,12 @@
 
 ## 已完成
 
+- `F7` GridReveal 引擎拆分 + 首屏外降级：canvas 引擎（buildTree/measureTree/
+  orderByDetail/drawScene/readAverages）移入 `components/GridReveal/engine.ts`
+  纯模块并配 22 条单测；实例距视口 150px 内才经 IntersectionObserver 激活引擎，
+  首屏外保持普通 `<img>`（reduce-motion 同理），random-image 页 20 实例不再
+  挂载即全部建树/跑 rAF；7 条 jsdom 行为测试钉住降级与激活。顺带修复原引擎
+  采样越界（边缘格子四舍五入顶到画布尺寸）产出 NaN 颜色的问题
 - `C6/C7` 代理层整改：守卫上移 `src/proxy.ts`（admin 白名单、登录页互斥跳转），
   `lib/supabase/proxy.ts` 只留会话机制；删除 OAuth `?code=` 的 rewrite 分支
   （不改地址栏且丢刷新 cookie，code 交换由浏览器端 `detectSessionInUrl` 完成）；
