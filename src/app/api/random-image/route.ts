@@ -7,10 +7,9 @@
  */
 import type { NextRequest } from "next/server";
 
-import cryptoRandomString from "crypto-random-string";
+import { faker } from "@faker-js/faker";
 import { NextResponse } from "next/server";
 
-import { generateRandomImageSvg } from "@/lib/server/random-image-art";
 import { catchError, parseBoundedInt, responseMessage } from "@/lib/utils";
 
 export async function GET(request: NextRequest) {
@@ -22,15 +21,14 @@ export async function GET(request: NextRequest) {
     const width = parseBoundedInt(searchParams.get("width"), 128, 16, 1024);
     const height = parseBoundedInt(searchParams.get("height"), 128, 16, 1024);
 
-    // G8：不再返回第三方 loremflickr 外链（第三方不可用则整页图片全废），
-    // 改为本地生成确定性 SVG 的 data URI。一次请求全部直出、图片不再单独走
-    // /api/* 中间件——与 random-avatar 批量的 F6 决策一致
-    const images = Array.from({ length: count }, () => {
-      const seed = cryptoRandomString({ length: 8 });
-      const svg = generateRandomImageSvg(seed, width, height);
-
-      return `data:image/svg+xml;base64,${Buffer.from(svg, "utf8").toString("base64")}`;
-    });
+    // 真实照片源：faker.image.url() 输出 picsum.photos 的 seed 地址。
+    // faker v10 起 image.url() 已从 loremflickr（现已 401 不可用）切换到 picsum，
+    // 与升级前的旧实现同款写法。曾改为服务端生成抽象 SVG（G8），但观感单一、
+    // 不是照片，2026-10-12 换回。第三方不可用时整页图片会挂，由 GridReveal 的
+    // onerror 重试与灰色揭幕降级兜底
+    const images = Array.from({ length: count }, () =>
+      faker.image.url({ width, height }),
+    );
 
     return NextResponse.json(responseMessage(images));
   } catch (err) {
