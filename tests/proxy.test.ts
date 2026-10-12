@@ -12,7 +12,6 @@ const { state, createServerClient } = vi.hoisted(() => {
     claims: null as Record<string, unknown> | null,
     /** 模拟 token 续期：getClaims 时经 setAll 写回的刷新 cookie */
     refreshCookies: [] as { name: string; value: string }[],
-    eaApisExists: true,
     rpcCalls: [] as Array<{ name: string; params: Record<string, unknown> }>,
     fromCalls: [] as string[],
     getClaimsCalls: 0,
@@ -41,6 +40,7 @@ const { state, createServerClient } = vi.hoisted(() => {
             return { data: { claims: state.claims } };
           },
         },
+        // C5 后中间件不再查 ea_apis；保留记录以便断言「完全没被调用」
         from: (table: string) => {
           state.fromCalls.push(table);
 
@@ -48,9 +48,7 @@ const { state, createServerClient } = vi.hoisted(() => {
             select: () => chain,
             eq: () => chain,
             limit: () => chain,
-            maybeSingle: async () => ({
-              data: state.eaApisExists ? { id: "api-row-1" } : null,
-            }),
+            maybeSingle: async () => ({ data: { id: "api-row-1" } }),
           };
 
           return chain;
@@ -78,7 +76,6 @@ beforeEach(() => {
   vi.stubEnv("NEXT_PUBLIC_SUPABASE_ANON_KEY", "stub-key");
   state.claims = null;
   state.refreshCookies = [];
-  state.eaApisExists = true;
   state.rpcCalls = [];
   state.fromCalls = [];
   state.getClaimsCalls = 0;
@@ -89,34 +86,21 @@ afterEach(() => {
 });
 
 describe("代理层 /api 分支", () => {
-  it("只读 GET 命中已知 path 时走计数 RPC", async () => {
+  it("只读 GET 直接按 path 发计数 RPC，不再预查 ea_apis（C5）", async () => {
     const res = await proxy(req("/api/bmi?h=1"));
 
     expect(res.status).toBe(200);
-    expect(state.fromCalls).toEqual(["ea_apis"]);
+    // C5：省掉存在性检查，每个 GET 只剩一轮 DB 往返
+    expect(state.fromCalls).toEqual([]);
     expect(state.rpcCalls).toHaveLength(1);
-    expect(state.rpcCalls[0].name).toBe("increment_call_count");
-    expect(state.rpcCalls[0].params.row_id).toBe("api-row-1");
-    // 随机增量 1~10 的整数
-    const inc = state.rpcCalls[0].params.inc as number;
-    expect(Number.isInteger(inc)).toBe(true);
-    expect(inc).toBeGreaterThanOrEqual(1);
-    expect(inc).toBeLessThanOrEqual(10);
-  });
-
-  it("path 未收录时不计数", async () => {
-    state.eaApisExists = false;
-
-    await proxy(req("/api/not-exist"));
-
-    expect(state.fromCalls).toEqual(["ea_apis"]);
-    expect(state.rpcCalls).toHaveLength(0);
+    expect(state.rpcCalls[0].name).toBe("increment_call_count_by_path");
+    // F1：按 path 计数，未收录 path 由函数内部 no-op
+    expect(state.rpcCalls[0].params).toEqual({ p_path: "/bmi" });
   });
 
   it("写方法（管理端 CRUD）不计数", async () => {
     await proxy(req("/api/apis", { method: "POST" }));
 
-    expect(state.fromCalls).toHaveLength(0);
     expect(state.rpcCalls).toHaveLength(0);
   });
 
