@@ -1,28 +1,20 @@
 # 待办清单（backlog）
 
-**开工前先读这里。** 已完成的工作见 `audit-2026-10.md`，不要重复做。
-本文只列**剩余**项，按优先级分四组。
+**开工前先读这里。** 已完成的工作见 `audit-2026-10.md` 与文末「已完成」，不要重复做。
+本文只列**剩余**项，按优先级分组。
 
 约定：认领某项后在「状态」列标注 `进行中 @名字/日期`，完成后移到文末「已完成」。
 
 ---
 
-## 第一组：安全与正确性（建议优先）
-
-| ID | 位置 | 问题 | 处理建议 | 优先级 | 状态 |
-|---|---|---|---|---|---|
-| C6/C7 | `src/lib/supabase/proxy.ts` | 中间件职责重叠：`/api` 分支提前 return 绕过登录态校验；OAuth 分支用 `NextResponse.rewrite` 清理 `?code=`，但 rewrite 不改变浏览器地址栏，注释写的「跳首页」没实现，且该分支丢弃 `supabaseResponse` 上刷新的 cookie | 先更新 `AGENTS.md` 禁止清单放开该文件，再把鉴权守卫上移到 `src/proxy.ts`（不在禁止清单内），`proxy.ts` 只留 session 刷新；OAuth 的 code 交换由 `@supabase/ssr` 浏览器端完成，服务端不应 redirect（会丢 code） | P1 | ⛔ 被规则拦截，待人工裁决 |
-| F1 | `src/lib/supabase/proxy.ts:50-63` | `increment_call_count` 每次调用随机 `+1~10`（非真实调用量）；RPC 是 `void` fire-and-forget，Serverless 冻结后可能随机漏计 | 计数改固定 +1 或聚合后批量写。**另需人工确认该函数是 `SECURITY DEFINER`**：RLS 收紧写权限后它不是就会被拦，表现为接口卡片调用次数静默停涨。确认 SQL：`select prosecdef from pg_proc where proname='increment_call_count';` | P2 | 待办 |
-
-## 第二组：性能
+## 性能
 
 | ID | 位置 | 问题 | 处理建议 | 优先级 | 状态 |
 |---|---|---|---|---|---|
 | F4 | `src/app/opengraph-image.tsx:36-38` | 3 个 `publicAssetToDataUrl` 在模块作用域启动，但 `ImageResponse` 每请求重渲染 | 构建期生成或 `revalidate = 86400` | P3 | 待办 |
 | F7 | `src/components/GridReveal/index.tsx` | 631 行 canvas 引擎，`random-image` 页最多 20 实例，每个都跑 rAF + IntersectionObserver + ResizeObserver | 首屏外实例降级为普通 `<img>`；拆分为 `buildTree`/`measure`/`drawScene` 纯模块 | P3 | 待办 |
-| C5 | `src/lib/supabase/proxy.ts:42-64` | 每次 `/api/*` GET 额外 2 次 DB 往返（`ea_apis` count 查询 + 计数 RPC），即使该路由已带 `Cache-Control` 中间件仍会跑 | 与 F1 一并处理 | P2 | 待办 |
 
-## 第三组：UI / 交互 / 可访问性
+## UI / 交互 / 可访问性
 
 | ID | 位置 | 问题 | 处理建议 | 优先级 | 状态 |
 |---|---|---|---|---|---|
@@ -31,7 +23,7 @@
 | D20 | `src/components/ColumnsVisibility/index.tsx:28-34` | `handleSelectionChange` 每次交互对所有列 `toggleVisibility()`，O(N) 次 state 写入 | 合并为一次批量 set | P3 | 待办 |
 | — | `src/enums/index.tsx`、`src/hooks/use-copy.tsx` | 文件扩展名与内容不符：前者是 `.tsx` 但纯数据无 JSX；后者是 `.tsx` 且有 JSX（正确） | 前者重命名为 `.ts` | P3 | 待办 |
 
-## 第四组：测试覆盖缺口
+## 测试覆盖缺口
 
 | ID | 位置 | 缺口 | 建议 | 优先级 | 状态 |
 |---|---|---|---|---|---|
@@ -45,6 +37,14 @@
 
 ## 已完成
 
+- `C6/C7` 代理层整改：守卫上移 `src/proxy.ts`（admin 白名单、登录页互斥跳转），
+  `lib/supabase/proxy.ts` 只留会话机制；删除 OAuth `?code=` 的 rewrite 分支
+  （不改地址栏且丢刷新 cookie，code 交换由浏览器端 `detectSessionInUrl` 完成）；
+  `src/lib/supabase/*.ts` 的修改限制经人工裁决放开（AGENTS.md 已同步）
+- `F1/C5` 调用计数：固定 +1、`increment_call_count_by_path` 单轮 RPC，
+  去掉每个 `/api` GET 的 `ea_apis` 预查询；SQL 迁移
+  `supabase/increment-call-count-by-path.sql` **需先在 Dashboard 执行再部署代码**
+  （旧函数 `SECURITY DEFINER` 已确认，新函数保持同款姿态）
 - `F8` 字体分片按需加载：`cn-font-split` 把 1.7MB 子集切成 78 个带 unicode-range 的 woff2 分片，
   首屏只下载实际渲染到的字形；源字体挪至 `assets/fonts/`，`pnpm split-font` 再生成（产物随仓库提交）
 - `G8` random-image 摆脱第三方 loremflickr：服务端本地生成确定性抽象 SVG，
