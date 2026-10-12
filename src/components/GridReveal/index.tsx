@@ -37,6 +37,9 @@ const SHIMMER = {
   backgroundSize: "250% 100%",
 } as const;
 
+/** 引擎激活边距：距视口 150px 内才挂载 canvas 引擎 */
+const ARM_MARGIN = "150px";
+
 function MotionCaption({
   caption,
   finished,
@@ -111,6 +114,10 @@ export default function GridReveal({
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [loadedSrc, setLoadedSrc] = useState<string | null>(null);
   const [revealedSrc, setRevealedSrc] = useState<string | null>(null);
+  // F7：canvas 引擎只在接近视口时才挂载。首屏外实例保持普通 <img>，
+  // 不建格子树、不加载图片进画布、不跑 rAF——random-image 页最多 20 个
+  // 实例，滚动不到的就一张懒加载图片的开销
+  const [engineMounted, setEngineMounted] = useState(false);
   const progressRef = useRef(progress);
   const durationRef = useRef(estimatedDuration);
   const doneRef = useRef(onRevealComplete);
@@ -123,7 +130,37 @@ export default function GridReveal({
     errorRef.current = onError;
   });
 
+  // 接近视口时激活引擎；reduce-motion 用户永不激活（普通 img 即最终形态）。
+  // 环境没有 IntersectionObserver 时不激活——保持普通 img 即为降级形态
   useEffect(() => {
+    if (reduce || engineMounted || !src) return;
+
+    const frame = frameRef.current;
+
+    if (!frame) return;
+
+    // 没有 IntersectionObserver 的环境：保持普通 img 即为降级形态
+    if (typeof IntersectionObserver !== "function") return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          setEngineMounted(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: ARM_MARGIN },
+    );
+
+    observer.observe(frame);
+
+    return () => observer.disconnect();
+  }, [reduce, engineMounted, src]);
+
+  useEffect(() => {
+    // 引擎未激活时画布尚未渲染，不建树不跑动画
+    if (!engineMounted) return;
+
     const canvas = canvasRef.current;
     const frame = frameRef.current;
 
@@ -313,7 +350,7 @@ export default function GridReveal({
                 cancelAnimationFrame(frameId);
               }
             },
-            { rootMargin: "150px" },
+            { rootMargin: ARM_MARGIN },
           )
         : null;
 
@@ -326,7 +363,7 @@ export default function GridReveal({
       observer?.disconnect();
       visibility?.disconnect();
     };
-  }, [reduce, ratio, src]);
+  }, [reduce, ratio, src, engineMounted]);
 
   useEffect(() => {
     const loaded = loadedSrc === (src ?? null);
@@ -351,13 +388,32 @@ export default function GridReveal({
       style={{ aspectRatio: ratio, ...style }}
       {...props}
     >
-      <canvas
-        ref={canvasRef}
-        className="block h-full w-full"
-        {...(alt
-          ? { role: "img", "aria-label": alt }
-          : { "aria-hidden": true })}
-      />
+      {/* 引擎激活前：普通 <img>（浏览器原生懒加载），图片加载即视为展示完成 */}
+      {src && !engineMounted ? (
+        // eslint-disable-next-line @next/next/no-img-element -- picsum 跨域外链需原样直出，next/image 要配 remotePatterns（next.config.ts 禁改）；引擎激活后此 img 即卸载
+        <img
+          alt={alt}
+          className="absolute inset-0 h-full w-full object-cover"
+          decoding="async"
+          loading="lazy"
+          src={src}
+          onError={() => errorRef.current?.()}
+          onLoad={() => {
+            setLoadedSrc(src);
+            doneRef.current?.();
+          }}
+        />
+      ) : null}
+
+      {engineMounted ? (
+        <canvas
+          ref={canvasRef}
+          className="block h-full w-full"
+          {...(alt
+            ? { role: "img", "aria-label": alt }
+            : { "aria-hidden": true })}
+        />
+      ) : null}
 
       {caption ? (
         <MotionCaption caption={caption} finished={finished} reduce={reduce} />
