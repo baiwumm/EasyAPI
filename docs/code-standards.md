@@ -35,12 +35,14 @@ ESLint + Prettier。必须遵守的规则：
 ## 测试规范
 
 - 框架 **vitest 5.x**，配置见 `vitest.config.ts`：
-  - `environment: "node"`（当前只覆盖纯函数与 route handler，不渲染组件）
-  - `include: ["tests/**/*.test.ts"]`
+  - `environment: "node"` 为默认；渲染组件的用例在文件头部加
+    `// @vitest-environment jsdom`（测试基建：`@testing-library/react` +
+    `user-event` + `jest-dom`，React Aria 组件需在 `beforeAll` 垫 `pointerCapture`/`scrollIntoView`）
+  - `include: ["tests/**/*.test.{ts,tsx}"]`
   - 已按 `tsconfig.json` 配好 `@/` 与 `#/` 别名，测试里直接 `import "@/lib/utils"`
 - 目录 **`tests/` 镜像 `src/`**：`src/lib/utils.ts` → `tests/lib/utils.test.ts`。
 - `tests/` 已被 eslint 的 `globalIgnores` 覆盖，测试代码不参与 lint，
-  但**必须通过 `tsc` 类型检查**（tsconfig 的 `include` 覆盖 `**/*.ts`）。
+  但**必须通过 `tsc` 类型检查**。
 - 写测试的硬要求：
   - 修 bug 时必须配一条**能复现该 bug 的失败用例**，而不是只测正常路径。
   - 安全类修复要断言「不泄露」+「仍留痕」：响应体不含内部信息，且 `console.error`
@@ -51,19 +53,16 @@ ESLint + Prettier。必须遵守的规则：
 
 ### 当前覆盖与缺口
 
-已覆盖：`lib/utils`、`lib/server/{api-helpers,bing-wallpaper,rate-limit,avatar-cache,write-guard}`、
-14 个路由（含 barcode / password-strength / ip-region / random-avatar / 管理端写路由 / 分页钳制），
-共 214 条。
-
-未覆盖（见 `backlog.md` 的 T1/T2/T3）：
-
-- admin 两个 save-modal 表单（需 jsdom + 用户事件模拟）
-- D2 的 SWR key 行为（改参数不请求、点提交才请求）
+已覆盖：`lib/utils`、`lib/server/{api-helpers,bing-wallpaper,rate-limit,avatar-cache,write-guard,random-image-art}`、
+16 个路由（含 barcode / password-strength / ip-region / random-avatar / random-image / 管理端写路由 / 分页钳制）、
+admin 两个 save-modal 表单（jsdom + 用户事件，含 Select 弹层交互与提交后状态复位）、
+`JsonContent` / `QuoteWorld` 的 SWR key 行为（改参数不请求、提交才请求、参数没变走 mutate），
+共 244 条。
 
 **客户端模块暂不补单测**：`src/lib/request.ts`、`src/hooks/*` 依赖浏览器环境
-（`window`、blob、SWR 缓存），当前 vitest 是纯 node 环境，且 `import` 它们会连带
-拉进 `@heroui/react`（transform 就要十几秒），性价比太低。等 T1 引入 jsdom 环境后
-再按 `tests/lib/request.test.ts`、`tests/hooks/use-image-generation.test.ts` 补。
+（`window`、blob、SWR 缓存）。jsdom 环境已具备（见上），但 `import` 它们仍会连带
+拉进 `@heroui/react`（transform 就要十几秒），按需再补 `tests/lib/request.test.ts`、
+`tests/hooks/use-image-generation.test.ts`。
 
 ## Git 提交规范
 

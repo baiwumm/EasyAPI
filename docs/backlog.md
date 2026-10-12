@@ -20,7 +20,6 @@
 |---|---|---|---|---|---|
 | F4 | `src/app/opengraph-image.tsx:36-38` | 3 个 `publicAssetToDataUrl` 在模块作用域启动，但 `ImageResponse` 每请求重渲染 | 构建期生成或 `revalidate = 86400` | P3 | 待办 |
 | F7 | `src/components/GridReveal/index.tsx` | 631 行 canvas 引擎，`random-image` 页最多 20 实例，每个都跑 rAF + IntersectionObserver + ResizeObserver | 首屏外实例降级为普通 `<img>`；拆分为 `buildTree`/`measure`/`drawScene` 纯模块 | P3 | 待办 |
-| F8 | `src/app/globals.css:12-21` | 自托管 `maple-mono-cn-regular.woff2` **1.7MB**，`unicode-range` 覆盖整个 CJK 区，几乎必然全量下载 | 按区段拆多个 `@font-face`（latin / 常用汉字 / 完整汉字），首屏负担压到约 40KB | P2 | 待办 |
 | C5 | `src/lib/supabase/proxy.ts:42-64` | 每次 `/api/*` GET 额外 2 次 DB 往返（`ea_apis` count 查询 + 计数 RPC），即使该路由已带 `Cache-Control` 中间件仍会跑 | 与 F1 一并处理 | P2 | 待办 |
 
 ## 第三组：UI / 交互 / 可访问性
@@ -36,19 +35,25 @@
 
 | ID | 位置 | 缺口 | 建议 | 优先级 | 状态 |
 |---|---|---|---|---|---|
-| T1 | `src/app/admin/components/{apis,categorys}/components/save-modal.tsx` | 2 个表单 0 覆盖。涉及 HeroUI Form + SWR mutation，且 `Number("")===0` 会被静默提交（客户端原生校验靠 `minValue` 兜住，服务端不校验——见 C14） | 需 jsdom + `@testing-library/react`；补「必填校验」「提交 payload 形状」「失败后状态复位」 | P2 | 待办 |
-| T2 | D2 的 17 处 SWR key 改动 | 只有编译期保障，无行为保障。核心语义未验证：改参数不请求、点提交才请求、参数没变时走 `mutate()` | 需渲染测试 + SWR 的 `useSWRConfig` mock/cache 隔离；优先覆盖 `JsonContent`（三页共用）与 `QuoteWorld`（九页共用） | P2 | 待办 |
-| T3 | 管理端 CRUD 路由（`apis`/`categorys` 的 POST/PUT/DELETE） | ~~0 覆盖~~ 写链路与鉴权已由 `tests/app/api/admin-write-routes.test.ts` 覆盖（含空 payload 守卫、失败/未登录不刷首页） | 如需继续补强：唯一性冲突分支（23505）与删除分类前的引用检查（`count` 查询） | P3 | 大部分完成 |
+| T3 | 管理端 CRUD 路由（`apis`/`categorys` 的 POST/PUT/DELETE） | ~~0 覆盖~~ 写链路与鉴权已由 `tests/app/api/admin-write-routes.test.ts` 覆盖（含空 payload 守卫、失败/未登录不刷首页）；save-modal 前端表单已由 T1 补齐（含 Select 弹层交互、payload 形状、失败复位） | 如需继续补强：唯一性冲突分支（23505）与删除分类前的引用检查（`count` 查询） | P3 | 大部分完成 |
 
 ## 文档与工程
 
 | ID | 位置 | 问题 | 处理建议 | 优先级 | 状态 |
 |---|---|---|---|---|---|
 | G4 | `package.json` | 缺 `packageManager` 字段，pnpm 大版本行为差异曾引发 A1 | 单独一个 commit 处理（会牵动 lockfile） | P3 | 待办 |
-| G8 | `src/app/api/random-image/route.ts` | 走 `faker.image.url()` 指向第三方 loremflickr，第三方挂掉则整页图片全废 | 换自有图源或本地图库 | P2 | 待办 |
 
 ## 已完成
 
+- `F8` 字体分片按需加载：`cn-font-split` 把 1.7MB 子集切成 78 个带 unicode-range 的 woff2 分片，
+  首屏只下载实际渲染到的字形；源字体挪至 `assets/fonts/`，`pnpm split-font` 再生成（产物随仓库提交）
+- `G8` random-image 摆脱第三方 loremflickr：服务端本地生成确定性抽象 SVG，
+  列表路由单请求直出 data URI（与 random-avatar 批量的 F6 决策一致），openapi 已同步
+- `T1` 测试基建引入 jsdom + `@testing-library/react`（含 React Aria 的 pointerCapture 垫片），
+  admin 两个 save-modal 各 6 条用例：必填拦截（含 `Number("")===0` 隐患由原生校验钉住）、
+  Select 弹层交互、payload 形状、失败后按钮文案复位、成功关窗
+- `T2` `JsonContent` / `QuoteWorld` 的 SWR key 行为测试：改参数不请求、
+  点提交才请求、参数没变走 `mutate()`（6 条用例）
 - `C9` Bing 壁纸地址剥离正则与返回前校验 —— 见 `audit-2026-10.md`
 - `C10` barcode JsBarcode 选项白名单（含 YAML 同步）
 - `C13` password-strength 改 POST + 限流 + 不回显密码（含 `rate-limit` 与 `getClientIp` 工具）
