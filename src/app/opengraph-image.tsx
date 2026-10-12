@@ -10,6 +10,9 @@ export const size = {
   height: 630,
 };
 export const contentType = "image/png";
+// F4：OG 图内容固定、不依赖请求参数，缓存一天，
+// 社交爬虫反复抓取时不再每次重渲染 ImageResponse
+export const revalidate = 86400;
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "https://api.baiwumm.com";
 const APP_NAME = process.env.NEXT_PUBLIC_APP_NAME || "EasyApi";
