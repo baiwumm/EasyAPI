@@ -387,7 +387,7 @@ paths:
       tags: [随机生成]
       operationId: getRandomImage
       summary: 随机图片
-      description: 返回指定尺寸的随机图片地址数组。
+      description: 返回指定尺寸的随机图片（服务端生成的抽象风格 SVG）data URI 数组，可直接用于 <img>，不依赖第三方图源。
       parameters:
         - name: count
           in: query
@@ -431,6 +431,7 @@ paths:
                         items:
                           type: string
                           format: uri
+                          description: SVG data URI（data:image/svg+xml;base64,...）
 
   /api/random-person:
     get:
