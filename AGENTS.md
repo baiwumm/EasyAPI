@@ -124,6 +124,11 @@ public/openapi.yaml       # 手工维护的 OpenAPI 3.1 接口文档（/docs 页
   正确写法是 `render={(props) => <Link {...props} href="/" />}`；
   Next 的 Link 不吃 Button 的 DOM props 时，至少把 `props.className` 传过去保住样式
   （见 `src/app/not-found.tsx`）。
+- **重跑 `pnpm split-font` 前要补原生二进制**：cn-font-split 的 Rust DLL 走
+  postinstall 下载，而 pnpm 会拦构建脚本，npm 包版本（7.4.3）又落后于 GitHub
+  release（7.6.8，无 7.4.x tag，作者预期拉 latest 配套）。装完依赖后手动执行：
+  `gh release download 7.6.8 --repo KonghaYao/cn-font-split --pattern "libffi-x86_64-pc-windows-msvc.dll" --output node_modules/.pnpm/cn-font-split@7.4.3/node_modules/cn-font-split/dist/libffi-x86_64-pc-windows-msvc.dll`。
+  产物（78 个分片 + `src/app/maple-mono-cn.css`）已随仓库提交，只有换字体才需要重跑。
 
 ## 文档索引
 
