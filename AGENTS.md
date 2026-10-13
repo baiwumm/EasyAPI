@@ -64,7 +64,7 @@ public/openapi.yaml       # 手工维护的 OpenAPI 3.1 接口文档（/docs 页
 - **客户端数据获取用 SWR**，封装见 `src/hooks/use-swr.ts`；带查询参数的页面一律用 `useCommittedParams` + `[pathname, params]` 作为 key（详见 `docs/audit-2026-10.md` 的 D2）。
 - 类型定义集中放在 `src/typings/index.ts`，页面内部类型就近声明。
 - **改 `src/lib` 与 `src/app/api` 下的逻辑必须配套 `tests/` 下同名路径的测试**（细则见 `docs/code-standards.md`）。
-- 中文注释、目录命名 kebab-case，组件文件命名 `index.tsx`。
+- 中文注释；路由目录命名 kebab-case（`random-avatar`），组件目录 PascalCase（`UserAvatar`）且入口为 `index.tsx`。
 
 ## AI 使用约束（强制规范）
 
