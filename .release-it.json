@@ -23,8 +23,13 @@
       "strictSemVer": true
     }
   },
+  "hooks": {
+    "after:bump": "node scripts/sync-openapi-version.mjs && git add public/openapi.yaml"
+  },
   "git": {
-    "commitMessage": "chore: Release v${version}"
+    "commitMessage": "chore: Release v${version}",
+    "tagName": "v${version}",
+    "additiveStaging": true
   },
   "github": {
     "release": true,
