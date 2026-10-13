@@ -1,0 +1,43 @@
+name: CI
+
+# push/PR 门禁：lint / typecheck / test 三道全绿才算过。
+# build 不在这里跑——Vercel 会用生产环境变量做真正的构建，这里只做轻量回归拦截；
+# 带完整 build 预检的发版流程见 release.yml。
+#
+# 说明：仓库索引全部 LF，Linux 检出无 CRLF 噪音，`pnpm lint` 以 0 warning 为准。
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    name: Lint / Typecheck / Test
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4 # 版本取自 package.json 的 packageManager 字段
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Test
+        run: pnpm test

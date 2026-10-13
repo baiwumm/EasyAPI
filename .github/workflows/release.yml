@@ -1,0 +1,99 @@
+name: Release
+
+# 一键远程发版（workflow_dispatch，请在 main 上触发）：lint / typecheck / test / build
+# 四道预检全绿后才进入 release-it，任一失败即中止、不产生任何提交；
+# 通过后由 release-it 一次性完成 版本号 → openapi.yaml 同步 → CHANGELOG.md →
+# Release 提交 → tag → GitHub Release，推上 main 后 Vercel 自动跟随部署。
+#
+# 触发方式（二选一）：
+#   · GitHub Actions 页面 → Release → Run workflow：选 patch / minor / major，或直接填自定义版本号；
+#   · gh workflow run release.yml -f bump=minor（自定义版本号用 -f version=2.10.0）。
+#
+# 设计取舍：
+#   · 版本真源是根 package.json（release-it bump），tag 由 .release-it.json 的
+#     git.tagName 锁定为 v 前缀（v2.10.0 起，历史 tag 已由
+#     scripts/migrate-tags-v-prefix.mjs 迁移）；openapi.yaml 的 info.version 由
+#     after:bump hook 读 bump 后的 package.json 自动同步，无需手改；
+#   · build 需要 Supabase 公开变量（缺失时 @supabase/ssr 在预渲染阶段报错），
+#     均为 NEXT_PUBLIC_ 前缀的前端公开值，存放于仓库 Actions secrets；
+#   · 权限仅 contents: write，最小化授权；release-it 以 GITHUB_TOKEN 推送提交与
+#     tag 并创建 GitHub Release，提交作者为 github-actions[bot]；
+#   · 本地仍可 `pnpm release`（需本地 GITHUB_TOKEN），与 CI 共用 .release-it.json，行为一致。
+
+on:
+  workflow_dispatch:
+    inputs:
+      bump:
+        description: 版本类型
+        type: choice
+        required: true
+        default: patch
+        options:
+          - patch
+          - minor
+          - major
+      version:
+        description: 自定义版本号（选填，填写后覆盖版本类型，如 2.10.0）
+        type: string
+        required: false
+
+permissions:
+  contents: write # release-it 需要推送 Release 提交与 tag，并创建 GitHub Release
+
+concurrency:
+  group: release # 同一时刻只允许一个发版流程排队
+  cancel-in-progress: false
+
+jobs:
+  release:
+    name: Lint / Test / Build / Release
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # release-it 需要完整 tag 历史来计算上一版本与 CHANGELOG 区间
+          fetch-depth: 0
+
+      - uses: pnpm/action-setup@v4 # 版本取自 package.json 的 packageManager 字段
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Test
+        run: pnpm test
+
+      - name: Build
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          NEXT_PUBLIC_APP_URL: ${{ secrets.NEXT_PUBLIC_APP_URL }}
+        run: pnpm build
+
+      - name: Configure git author
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+
+      - name: Release
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          BUMP: ${{ inputs.bump }}
+          CUSTOM_VERSION: ${{ inputs.version }}
+        run: |
+          INCREMENT="${CUSTOM_VERSION:-$BUMP}"
+          INCREMENT="${INCREMENT#v}" # 容忍 v 前缀写法，release-it 接受纯版本号
+          echo "发版增量：${INCREMENT}"
+          # 不用 `pnpm release -- ...`：pnpm 会把 -- 原样透传给脚本，release-it 会误当成版本参数
+          pnpm exec release-it "${INCREMENT}" --ci
