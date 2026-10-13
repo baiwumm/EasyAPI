@@ -100,6 +100,11 @@ public/openapi.yaml       # 手工维护的 OpenAPI 3.1 接口文档（/docs 页
 四道全绿才能提交，任一不过不要提：`pnpm lint`（以 0 warning 为准）、
 `pnpm typecheck`、`pnpm test`、`pnpm build`。细则见 `docs/code-standards.md`。
 
+> CI 兜底：push(main)/PR 自动跑 lint/typecheck/test（`.github/workflows/ci.yml`）；
+> 发版走 Actions 的 Release workflow（手动触发，四道预检全绿后 release-it 一键发版）。
+> tag 自 v2.10.0 起带 v 前缀，`openapi.yaml` 版本号由发版 hook 自动同步。
+> 细则见 `docs/deployment.md` 的「CI 与自动发版」。
+
 ## 相关链接
 
 - 在线预览：https://api.baiwumm.com/

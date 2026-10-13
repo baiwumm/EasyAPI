@@ -47,6 +47,35 @@
 | `NEXT_PUBLIC_GOOGLE_ID` | Google Analytics | 仅在 `NODE_ENV=production` 且非 Vercel preview 时加载 |
 | `NEXT_PUBLIC_CLARITY_ID` | Microsoft Clarity | 同上 |
 
+## CI 与自动发版
+
+仓库有两个 GitHub Actions workflow（`.github/workflows/`）：
+
+| workflow | 触发 | 内容 |
+|---|---|---|
+| `ci.yml` | push(main) / PR | `lint` + `typecheck` + `test` 三道门禁，轻量回归拦截；生产构建交给 Vercel |
+| `release.yml` | 手动（workflow_dispatch） | 同上三道门禁 + `build` 预检，全绿后 release-it 完成 版本号 → openapi.yaml 同步 → CHANGELOG.md → Release 提交 → tag → GitHub Release，推上 main 后 Vercel 自动跟随部署 |
+
+### 触发发版（二选一）
+
+- GitHub Actions 页面 → Release → Run workflow：选 patch / minor / major，或直接填自定义版本号；
+- 命令行：`gh workflow run release.yml -f bump=minor`（自定义版本号用 `-f version=2.10.0`，容忍 `v` 前缀写法）。
+
+本地 `pnpm release` 仍可用（需本地 `GITHUB_TOKEN`），与 CI 共用 `.release-it.json`，行为一致。
+
+### 发版相关约定
+
+- **tag 自 v2.10.0 起带 v 前缀**（`.release-it.json` 的 `git.tagName: "v${version}"` 锁定；
+  历史 35 个 tag 与 34 个 Release 已由 `scripts/migrate-tags-v-prefix.mjs` 迁移）。
+- **`public/openapi.yaml` 的 `info.version` 不用手改**：`.release-it.json` 的 `after:bump`
+  hook 会读 bump 后的 `package.json` 自动写入并纳入 Release 提交
+  （`scripts/sync-openapi-version.mjs`，找不到 version 行即中止发版）。
+- **Actions secrets**（build 预检需要，均为前端公开值）：
+  `NEXT_PUBLIC_SUPABASE_URL`、`NEXT_PUBLIC_SUPABASE_ANON_KEY`、`NEXT_PUBLIC_APP_URL`
+  （生产域名 `https://api.baiwumm.com`，供 sitemap/metadata 等构建期内联）。
+- Release workflow 用 `GITHUB_TOKEN`（`contents: write`）推送提交与 tag 并创建 Release，
+  提交作者为 `github-actions[bot]`；`concurrency: release` 保证同时只有一个发版流程。
+
 ## 构建产物注意
 
 - `src/app/page.tsx` 是 ISR（`revalidate = 300`），后台保存接口/分类后会

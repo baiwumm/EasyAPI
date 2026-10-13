@@ -64,7 +64,9 @@
   已补「非数字回退默认值」与 `maxLength: 256`（G2）。
 - ~~`/api/holiday`：非数字 `year` 会静默回退当前年，未描述。~~ 已在描述里注明（G2）。
 
-> `info.version` 在 G1 同步为 2.9.0；后续发版（`pnpm release`）时记得一起改。
+> `info.version` 由发版流程自动同步：`.release-it.json` 的 `after:bump` hook
+> 读 bump 后的 `package.json` 写入本文件并纳入 Release 提交，无需手改
+> （见 `docs/deployment.md` 的「CI 与自动发版」）。
 
 ## 校验方式
 
