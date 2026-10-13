@@ -44,3 +44,6 @@ next-env.d.ts
 
 # impeccable 审查产物
 .impeccable
+
+# AI 工具缓存
+/.heroui-docs/
