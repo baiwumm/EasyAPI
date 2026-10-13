@@ -8,6 +8,14 @@ packages:
 ignoredBuiltDependencies:
   - sharp
   - unrs-resolver
+# 字体切分工具链（cn-font-split 及其原生依赖）：构建期不需要跑 postinstall，
+# 分片产物已随仓库提交（见 AGENTS.md Notes 的 split-font 说明）。
+# pnpm 12 用 allowBuilds 映射：false = 有意跳过该包构建脚本——不声明的话
+# pnpm 12 会以 ERR_PNPM_IGNORED_BUILDS 硬错误打断 Vercel 的 pnpm install
+allowBuilds:
+  cn-font-split: false
+  koffi: false
+  protobufjs: false
 minimumReleaseAgeExclude:
   - '@eslint/compat@2.1.1'
   - '@supabase/auth-js@2.115.0'
