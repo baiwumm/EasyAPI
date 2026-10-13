@@ -24,4 +24,4 @@ minimumReleaseAgeExclude:
   - '@supabase/realtime-js@2.115.0'
   - '@supabase/storage-js@2.115.0'
   - '@supabase/supabase-js@2.115.0'
-  - theme-switch-animation@0.2.0
+  - theme-switch-animation@0.5.1
