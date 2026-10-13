@@ -125,6 +125,13 @@ public/openapi.yaml       # 手工维护的 OpenAPI 3.1 接口文档（/docs 页
   `tests/app/api/password-strength-route.test.ts` 里用替身词库绕开。
 - **本地 lint 会有上万条 `Delete ␍`**：本机 `core.autocrlf=true` 把 LF 检出成 CRLF，
   而仓库里存的是 LF。判lint是否干净要看**去掉 prettier/prettier 后还剩多少条**。
+- **`@next/next/no-img-element` 在 Windows 上误报 opengraph-image**：插件规则用
+  `filename.replace(path.sep, '/')` 剥 cwd，字符串替换只换首个分隔符，Windows 下
+  路径变混合分隔符导致 app 目录判定失效，元数据路由豁免（opengraph-image 等）
+  失效产生误报；Linux CI 判定正常且该文件**本来就被规则豁免**。所以
+  `src/app/opengraph-image.tsx` **不要加** `eslint-disable @next/next/no-img-element`
+  （CI 会报 unused）；本地看到该文件的 img 告警是平台误报，忽略即可。
+  GridReveal 的行级豁免是真命中（两平台都会报），保留。
 - **HeroUI 的 `render` 只接受函数，不接受元素**：这个版本的 RAC 底层是
   `render ? (props) => render(props, values) : undefined`，写元素形式
   （`render={<Link href="/" />}`）运行时会抛 `render is not a function`。

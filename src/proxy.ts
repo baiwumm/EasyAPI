@@ -2,10 +2,7 @@ import type { NextRequest } from "next/server";
 
 import { NextResponse } from "next/server";
 
-import {
-  createMiddlewareClient,
-  updateSession,
-} from "@/lib/supabase/proxy";
+import { createMiddlewareClient, updateSession } from "@/lib/supabase/proxy";
 
 /*
  * @Author: 白雾茫茫丶<baiwumm.com>

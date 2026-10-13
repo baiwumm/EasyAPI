@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 import { readFile } from "node:fs/promises";
 import { extname, join } from "node:path";
 
