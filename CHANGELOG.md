@@ -1,6 +1,6 @@
 # Changelog
 
-## [2.9.0](https://github.com/baiwumm/EasyAPI/compare/2.8.1...2.9.0) (2026-09-16)
+## [2.9.0](https://github.com/baiwumm/EasyAPI/compare/v2.8.1...v2.9.0) (2026-09-16)
 
 ### ✨ Features | 新功能
 
@@ -106,7 +106,7 @@
 * **QuoteWorld:** 移除未使用的isLoading变量 ([13ba784](https://github.com/baiwumm/EasyAPI/commit/13ba784124127eb6cb89c455dbb191b9bad52451))
 * **types:** 将全局命名空间 App 改为 ES module 导出 ([78c9ca2](https://github.com/baiwumm/EasyAPI/commit/78c9ca283c3ddf693e00163f9d435f498e523960))
 
-## [2.8.1](https://github.com/baiwumm/EasyAPI/compare/2.8.0...2.8.1) (2026-08-12)
+## [2.8.1](https://github.com/baiwumm/EasyAPI/compare/v2.8.0...v2.8.1) (2026-08-12)
 
 ### ✨ Features | 新功能
 
@@ -120,7 +120,7 @@
 
 * 将自实现 useRequest 迁移到 SWR ([0e24c61](https://github.com/baiwumm/EasyAPI/commit/0e24c61c13eaf208b37372439ba5e7ddf84e1503))
 
-## [2.8.0](https://github.com/baiwumm/EasyAPI/compare/2.7.5...2.8.0) (2026-08-12)
+## [2.8.0](https://github.com/baiwumm/EasyAPI/compare/v2.7.5...v2.8.0) (2026-08-12)
 
 ### ✨ Features | 新功能
 
@@ -158,37 +158,37 @@
 * **theme-switcher:** 主题切换改用模糊圆扩散动画，与 better-nav 一致 ([378ad8d](https://github.com/baiwumm/EasyAPI/commit/378ad8d79c1667f6e87e751e299f0a31ab9d0428))
 * **typography:** 文本元素平替为 HeroUI Typography 并修复居中 ([670d886](https://github.com/baiwumm/EasyAPI/commit/670d886b7ef9d4ddef203317426f264ac80053af))
 
-## [2.7.5](https://github.com/baiwumm/EasyAPI/compare/2.7.4...2.7.5) (2026-07-22)
+## [2.7.5](https://github.com/baiwumm/EasyAPI/compare/v2.7.4...v2.7.5) (2026-07-22)
 
 ### ⚡ Performance Improvements | 性能优化
 
 * **layout:** 优化布局结构 ([b6d103d](https://github.com/baiwumm/EasyAPI/commit/b6d103da17a56dd2ce84b48e237c5bd85cc9f1f7))
 
-## [2.7.4](https://github.com/baiwumm/EasyAPI/compare/2.7.3...2.7.4) (2026-07-21)
+## [2.7.4](https://github.com/baiwumm/EasyAPI/compare/v2.7.3...v2.7.4) (2026-07-21)
 
 ### 🐛 Bug Fixes | Bug 修复
 
 * **CopyText:** 修复复制成功提示重复的问题 ([057a933](https://github.com/baiwumm/EasyAPI/commit/057a93356e353cfa8c5077d3953969bcc23d0f9c))
 
-## [2.7.3](https://github.com/baiwumm/EasyAPI/compare/2.7.2...2.7.3) (2026-07-15)
+## [2.7.3](https://github.com/baiwumm/EasyAPI/compare/v2.7.2...v2.7.3) (2026-07-15)
 
 ### 💄 Styles | 风格
 
 * 优化加载和错误界面 UI ([196b9e9](https://github.com/baiwumm/EasyAPI/commit/196b9e91485fb51f7c40d5f4f3a0deca05acc752))
 
-## [2.7.2](https://github.com/baiwumm/EasyAPI/compare/2.7.1...2.7.2) (2026-07-07)
+## [2.7.2](https://github.com/baiwumm/EasyAPI/compare/v2.7.1...v2.7.2) (2026-07-07)
 
 ### 💄 Styles | 风格
 
 * UI 调整 ([b0861de](https://github.com/baiwumm/EasyAPI/commit/b0861dead85f86a8d979f3b132c31abf1e9c864e))
 
-## [2.7.1](https://github.com/baiwumm/EasyAPI/compare/2.7.0...2.7.1) (2026-07-07)
+## [2.7.1](https://github.com/baiwumm/EasyAPI/compare/v2.7.0...v2.7.1) (2026-07-07)
 
 ### ✨ Features | 新功能
 
 * 更改图标 ([a5ff0ff](https://github.com/baiwumm/EasyAPI/commit/a5ff0ff929e6c44410290106a80833fffb2d4167))
 
-## [2.7.0](https://github.com/baiwumm/EasyAPI/compare/2.6.2...2.7.0) (2026-07-07)
+## [2.7.0](https://github.com/baiwumm/EasyAPI/compare/v2.6.2...v2.7.0) (2026-07-07)
 
 ### ✨ Features | 新功能
 
@@ -209,7 +209,7 @@
 
 * 修复 bing-wallpaper 页面导致打包报错的问题 ([20c4eb2](https://github.com/baiwumm/EasyAPI/commit/20c4eb2ada49d4cd1904d3a3eeb010faaf957de2))
 
-## [2.6.2](https://github.com/baiwumm/EasyAPI/compare/2.6.1...2.6.2) (2026-07-02)
+## [2.6.2](https://github.com/baiwumm/EasyAPI/compare/v2.6.1...v2.6.2) (2026-07-02)
 
 ### ✨ Features | 新功能
 
@@ -227,7 +227,7 @@
 * 更新 Hero UI 版本 ([ee37cf2](https://github.com/baiwumm/EasyAPI/commit/ee37cf22c75f3008f4416ffb88664f223806c4b1))
 * 更新 Hero UI 版本 ([bc84b91](https://github.com/baiwumm/EasyAPI/commit/bc84b919c31a6350b673d06294ecbe8454e2dd49))
 
-## [2.6.1](https://github.com/baiwumm/EasyAPI/compare/2.6.0...2.6.1) (2026-03-16)
+## [2.6.1](https://github.com/baiwumm/EasyAPI/compare/v2.6.0...v2.6.1) (2026-03-16)
 
 ### ✨ Features | 新功能
 
@@ -244,7 +244,7 @@
 
 * 新增 uicolors-generator包 ([6a9f749](https://github.com/baiwumm/EasyAPI/commit/6a9f74901c70cfebe4566375d4fc3e2171e02810))
 
-## [2.6.0](https://github.com/baiwumm/EasyAPI/compare/2.5.2...2.6.0) (2026-03-13)
+## [2.6.0](https://github.com/baiwumm/EasyAPI/compare/v2.5.2...v2.6.0) (2026-03-13)
 
 ### ✨ Features | 新功能
 
@@ -266,7 +266,7 @@
 
 * 新增 @zxcvbn-ts/language-zh 包 ([9d98e31](https://github.com/baiwumm/EasyAPI/commit/9d98e312d57e54db544dd556d414a59d9b2656e8))
 
-## [2.5.2](https://github.com/baiwumm/EasyAPI/compare/2.5.1...2.5.2) (2026-03-12)
+## [2.5.2](https://github.com/baiwumm/EasyAPI/compare/v2.5.1...v2.5.2) (2026-03-12)
 
 ### ✨ Features | 新功能
 
@@ -283,7 +283,7 @@
 
 * 新增 jsbarcode、xmldom、sharp包 ([1004172](https://github.com/baiwumm/EasyAPI/commit/1004172d9f205e77dbf0163e8e06bc4d5983c2e9))
 
-## [2.5.1](https://github.com/baiwumm/EasyAPI/compare/2.5.0...2.5.1) (2026-03-11)
+## [2.5.1](https://github.com/baiwumm/EasyAPI/compare/v2.5.0...v2.5.1) (2026-03-11)
 
 ### 💄 Styles | 风格
 
@@ -293,7 +293,7 @@
 
 * 删除没用的代码 ([6bbb6f8](https://github.com/baiwumm/EasyAPI/commit/6bbb6f8ac8b38d0fd551b369b4f41543fd904c5a))
 
-## [2.5.0](https://github.com/baiwumm/EasyAPI/compare/2.4.2...2.5.0) (2026-03-11)
+## [2.5.0](https://github.com/baiwumm/EasyAPI/compare/v2.4.2...v2.5.0) (2026-03-11)
 
 ### ✨ Features | 新功能
 
@@ -322,7 +322,7 @@
 * **Riddle:** 优化代码逻辑 ([1b9a2ed](https://github.com/baiwumm/EasyAPI/commit/1b9a2ed788e41c64d09542c134dd0b4450ee67b2))
 * **SolarTerm:** 优化代码逻辑 ([49c9be0](https://github.com/baiwumm/EasyAPI/commit/49c9be07e60887c20ad61960bf7d25e1a0051acc))
 
-## [2.4.2](https://github.com/baiwumm/EasyAPI/compare/2.4.1...2.4.2) (2026-03-09)
+## [2.4.2](https://github.com/baiwumm/EasyAPI/compare/v2.4.1...v2.4.2) (2026-03-09)
 
 ### ✨ Features | 新功能
 
@@ -332,7 +332,7 @@
 
 * 统一项目 Loading 状态 ([3d23bb6](https://github.com/baiwumm/EasyAPI/commit/3d23bb65aa7a6a94b0f1e1af7d19866c3ff8aa06))
 
-## [2.4.1](https://github.com/baiwumm/EasyAPI/compare/2.4.0...2.4.1) (2026-03-09)
+## [2.4.1](https://github.com/baiwumm/EasyAPI/compare/v2.4.0...v2.4.1) (2026-03-09)
 
 ### ✨ Features | 新功能
 
@@ -353,7 +353,7 @@
 * 新增 @faker-js/faker 包 ([e5e1941](https://github.com/baiwumm/EasyAPI/commit/e5e1941b3577f98ec4e46405734170d57f93cc31))
 * 新增 node-emoji 包 ([959ba61](https://github.com/baiwumm/EasyAPI/commit/959ba61779af2fd4014844dbc1c37d50341df8ce))
 
-## [2.4.0](https://github.com/baiwumm/EasyAPI/compare/2.3.0...2.4.0) (2026-03-06)
+## [2.4.0](https://github.com/baiwumm/EasyAPI/compare/v2.3.0...v2.4.0) (2026-03-06)
 
 ### ✨ Features | 新功能
 
@@ -367,7 +367,7 @@
 
 * 删除 zustand 库 ([8c9ec86](https://github.com/baiwumm/EasyAPI/commit/8c9ec868be23953f0fc6c126e798c2b8bc22358a))
 
-## [2.3.0](https://github.com/baiwumm/EasyAPI/compare/2.2.1...2.3.0) (2026-03-05)
+## [2.3.0](https://github.com/baiwumm/EasyAPI/compare/v2.2.1...v2.3.0) (2026-03-05)
 
 ### ✨ Features | 新功能
 
@@ -383,7 +383,7 @@
 * **Apis:** 更换 Table 和 Pagination 组件，优化页面 UI 显示 ([7629478](https://github.com/baiwumm/EasyAPI/commit/7629478b18611fc2f96b2921741b6fbac206973f))
 * **Categorys:** 更换 Table 和 Pagination 组件，优化页面 UI 显示 ([c546426](https://github.com/baiwumm/EasyAPI/commit/c5464263c80881b8729d4a83df32df5ed20e41ce))
 
-## [2.2.1](https://github.com/baiwumm/EasyAPI/compare/2.2.0...2.2.1) (2026-03-05)
+## [2.2.1](https://github.com/baiwumm/EasyAPI/compare/v2.2.0...v2.2.1) (2026-03-05)
 
 ### ✨ Features | 新功能
 
@@ -409,7 +409,7 @@
 
 * **RandomString:** 优化组件逻辑 ([748a47b](https://github.com/baiwumm/EasyAPI/commit/748a47b5d96e9617a46227d98a7d75d553cb793f))
 
-## [2.2.0](https://github.com/baiwumm/EasyAPI/compare/2.1.0...2.2.0) (2026-03-03)
+## [2.2.0](https://github.com/baiwumm/EasyAPI/compare/v2.1.0...v2.2.0) (2026-03-03)
 
 ### ✨ Features | 新功能
 
@@ -438,7 +438,7 @@
 * 细节调整 ([b3331d1](https://github.com/baiwumm/EasyAPI/commit/b3331d18bd53c0961dbf94371d6099078eaea1d2))
 * **RandomColor:** 优化页面逻辑 ([a1cf480](https://github.com/baiwumm/EasyAPI/commit/a1cf480b80a703b67db0b3d212eb740d9151bf34))
 
-## [2.1.0](https://github.com/baiwumm/EasyAPI/compare/2.0.0...2.1.0) (2026-02-27)
+## [2.1.0](https://github.com/baiwumm/EasyAPI/compare/v2.0.0...v2.1.0) (2026-02-27)
 
 ### ✨ Features | 新功能
 
@@ -454,7 +454,7 @@
 
 * 细节优化 ([7c44ff3](https://github.com/baiwumm/EasyAPI/commit/7c44ff31d9c12237405c7364d5c9bba3db91cf13))
 
-## [2.0.0](https://github.com/baiwumm/EasyAPI/compare/1.6.0...2.0.0) (2026-02-25)
+## [2.0.0](https://github.com/baiwumm/EasyAPI/compare/v1.6.0...v2.0.0) (2026-02-25)
 
 ### ✨ Features | 新功能
 
