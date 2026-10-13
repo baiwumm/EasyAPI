@@ -132,7 +132,9 @@ const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
               return (
                 <Avatar key={index} size="lg">
                   {src ? <Avatar.Image alt={names[index]} src={src} /> : null}
-                  <Avatar.Fallback>{names[index]?.slice(0, 1) ?? "*"}</Avatar.Fallback>
+                  <Avatar.Fallback>
+                    {names[index]?.slice(0, 1) ?? "*"}
+                  </Avatar.Fallback>
                 </Avatar>
               );
             })}

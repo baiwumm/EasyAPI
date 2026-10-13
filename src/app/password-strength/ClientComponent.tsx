@@ -87,15 +87,15 @@ const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
     ];
   };
 
-    return (
-      <JsonContent
-        getColumns={getColumns}
-        params={{ password }}
-        searchText="检测"
-        sendData={postApiData}
-        title={title}
-        onRefresh={onRefresh}
-      >
+  return (
+    <JsonContent
+      getColumns={getColumns}
+      params={{ password }}
+      searchText="检测"
+      sendData={postApiData}
+      title={title}
+      onRefresh={onRefresh}
+    >
       <Input
         aria-label="密码"
         className="w-50"

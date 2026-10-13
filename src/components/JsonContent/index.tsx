@@ -52,7 +52,8 @@ function JsonContent<T>({
   // sendData 只影响怎么发，不影响 key 语义；敏感参数页面传 postApiData
   const { data, isLoading, isValidating, error, mutate } = useSwrQuery<T>(
     [pathname, queryParams],
-    async () => get(await (sendData ?? getApiData)(pathname, queryParams), "data"),
+    async () =>
+      get(await (sendData ?? getApiData)(pathname, queryParams), "data"),
   );
 
   // 请求数据：参数没变时 key 不变，SWR 不会发请求 → 用 mutate() 手动刷新
@@ -85,7 +86,9 @@ function JsonContent<T>({
                     <Table.Column>值</Table.Column>
                   </Table.Header>
                   <Table.Body
-                    renderEmptyState={() => (isLoading ? null : <EmptyContent />)}
+                    renderEmptyState={() =>
+                      isLoading ? null : <EmptyContent />
+                    }
                   >
                     {(data ? getColumns(data) : []).map(
                       ({ label, children }, index) => (
@@ -115,7 +118,11 @@ function JsonContent<T>({
         >
           {children}
           <button aria-hidden="true" className="hidden" type="submit" />
-          <RefreshButton loading={isValidating} text={searchText} onPress={reload} />
+          <RefreshButton
+            loading={isValidating}
+            text={searchText}
+            onPress={reload}
+          />
           <CopyText
             content={
               Object.keys(data || {}).length > 0

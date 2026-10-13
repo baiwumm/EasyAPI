@@ -46,8 +46,7 @@ export async function GET(request: NextRequest) {
       headers: {
         "Content-Type": contentType,
         // 头像内容更新由 GitHub 的 ?v= 查询参数控制，缓存一天安全
-        "Cache-Control":
-          "public, max-age=86400, stale-while-revalidate=604800",
+        "Cache-Control": "public, max-age=86400, stale-while-revalidate=604800",
       },
     });
   } catch (err) {

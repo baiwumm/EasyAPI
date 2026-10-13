@@ -172,7 +172,11 @@ export function buildTree(aspect: number) {
 }
 
 /** 自底向上汇总每个格子的平均色与细节量（亮度方差） */
-export function measureTree(root: Cell, pixels: Uint8ClampedArray, size: number) {
+export function measureTree(
+  root: Cell,
+  pixels: Uint8ClampedArray,
+  size: number,
+) {
   const gather = (cell: Cell): Sums => {
     let sums: Sums;
 
@@ -439,10 +443,7 @@ export function readAverages(
 }
 
 /** 组件侧的场景对象工厂：屏蔽 Scene 的初始字段 */
-export function createScene(
-  ctx: CanvasRenderingContext2D,
-  root: Cell,
-): Scene {
+export function createScene(ctx: CanvasRenderingContext2D, root: Cell): Scene {
   return {
     ctx,
     root,

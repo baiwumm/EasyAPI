@@ -175,7 +175,11 @@ export const httpRequest = {
    * 与各业务方法共用超时与 401 处理，但不解 JSON、不弹业务错误，
    * 响应体由调用方按 content-type 自己读
    */
-  raw(url: string, params?: object, config?: HttpRequestConfig): Promise<Response> {
+  raw(
+    url: string,
+    params?: object,
+    config?: HttpRequestConfig,
+  ): Promise<Response> {
     return sendRequest(url, "GET", undefined, { ...config, params });
   },
 };

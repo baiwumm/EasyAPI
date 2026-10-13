@@ -269,7 +269,10 @@ const BackTop: FC<BackTopProps> = ({ visibilityHeight = 150 }) => {
               <ProgressCircle.TrackCircle strokeWidth={3} />
               {/* 过渡交给上层的 spring，关掉组件自带的 300ms 过渡，
                   否则两段缓动叠在一起会有近 600ms 的滞后感 */}
-              <ProgressCircle.FillCircle className="transition-none" strokeWidth={3} />
+              <ProgressCircle.FillCircle
+                className="transition-none"
+                strokeWidth={3}
+              />
             </ProgressCircle.Track>
           </MotionProgressCircle>
         </motion.button>

@@ -45,12 +45,14 @@ const API_FIELD_RULES: Record<(typeof API_FIELDS)[number], FieldRule> = {
   is_featured: { type: "boolean" },
 };
 
-const CATEGORY_FIELD_RULES: Record<(typeof CATEGORY_FIELDS)[number], FieldRule> =
-  {
-    name: { type: "text", min: 1, max: 100 },
-    desc: { type: "text", max: 200 },
-    sort: { type: "sort" },
-  };
+const CATEGORY_FIELD_RULES: Record<
+  (typeof CATEGORY_FIELDS)[number],
+  FieldRule
+> = {
+  name: { type: "text", min: 1, max: 100 },
+  desc: { type: "text", max: 200 },
+  sort: { type: "sort" },
+};
 
 interface ParseResult<T> {
   payload?: T;
