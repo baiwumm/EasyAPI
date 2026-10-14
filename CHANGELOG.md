@@ -1,5 +1,120 @@
 # Changelog
 
+## [2.10.0](https://github.com/baiwumm/EasyAPI/compare/v2.9.0...v2.10.0) (2026-10-14)
+
+### ✨ Features | 新功能
+
+* **api:** GitHub 头像走本站代理，解决部分网络头像不显示 ([20b35c4](https://github.com/baiwumm/EasyAPI/commit/20b35c4c6e93219aa96bd17a00b7035e3d8da211))
+* **api:** random-image 换回 picsum 真实照片源 ([d1cc26c](https://github.com/baiwumm/EasyAPI/commit/d1cc26c7b42e05daebf809b3ae44ca97ffc6570b))
+* **api:** random-image 改为本地生成 SVG data URI，摆脱第三方图源 ([c2d3e7f](https://github.com/baiwumm/EasyAPI/commit/c2d3e7f42951f3190483a8b93dac95d988b7778c))
+* **header:** 顶部导航加 GitHub 入口，开源准备补 repository 元数据 ([1cef8d1](https://github.com/baiwumm/EasyAPI/commit/1cef8d1e382033f6f74a13e51a86f968f7baa847))
+* **home:** 后台写操作后立即失效首页 ISR 缓存 ([cc102c3](https://github.com/baiwumm/EasyAPI/commit/cc102c34fefbd87001933e51c11d6b950a69a662))
+
+### 🐛 Bug Fixes | Bug 修复
+
+* **a11y:** 404 页不再嵌套交互元素，CopyChip 稳定 render 引用 ([034a392](https://github.com/baiwumm/EasyAPI/commit/034a3921141e7978adb1cdf4598de799bc3457a5))
+* **a11y:** AlertContent/ErrorContent 操作按钮合并为一套 ([2eddaa8](https://github.com/baiwumm/EasyAPI/commit/2eddaa804fdc7a4362717b7c1c9cdcec37c7d18b))
+* **a11y:** ApiCard 补 aria-label 与 title，NEW 判定避开 hydration mismatch ([5d75261](https://github.com/baiwumm/EasyAPI/commit/5d752617a824dee39a7bb3cd1a9842d5ab02ab1c))
+* **admin:** write-guard 拦截空 payload 并补齐字段取值范围 ([8e23c4c](https://github.com/baiwumm/EasyAPI/commit/8e23c4cd641fa3444d20398c737b503c88539fb6))
+* **api:** barcode PNG 栅格化前校验尺寸，不再透出 sharp 原文 ([7ae70e0](https://github.com/baiwumm/EasyAPI/commit/7ae70e0ba4d1d25d67885569e7e8f0e748fda3b6))
+* **api:** barcode 只按白名单透传 JsBarcode 选项 ([19ed6ff](https://github.com/baiwumm/EasyAPI/commit/19ed6ff4ed0d160cc8b54c70dccef2b6e1966e26))
+* **api:** ip-region 补缓存策略与 JSON 兜底 ([83de45c](https://github.com/baiwumm/EasyAPI/commit/83de45c3e6d643ac9dc7f60ca504f75f4bbd1733))
+* **api:** password-strength 改 POST + 限流并不再回显密码 ([e468e29](https://github.com/baiwumm/EasyAPI/commit/e468e29b26cea68d90da80f6234d74a44dd6a132))
+* **api:** 修正接口参数校验与空数据返回 ([463d5f2](https://github.com/baiwumm/EasyAPI/commit/463d5f2daf2ef8dbdeb302170362ca2b0f056702))
+* **api:** 列表分页改用 parseBoundedInt 并给 pageIndex 加上限 ([6756b28](https://github.com/baiwumm/EasyAPI/commit/6756b284684bb35b4ff839b3b87642e4d5a82c82))
+* **api:** 调用计数固定 +1 并按 path 单轮 RPC，去掉每个 GET 的预查询 ([515b954](https://github.com/baiwumm/EasyAPI/commit/515b954374ad52768d9aad15dc50d32801e5ee8d))
+* **auth:** OAuth 登录回跳发起登录的源地址，本地与线上各自生效 ([a774a58](https://github.com/baiwumm/EasyAPI/commit/a774a5842c5f34ea38d11ae4c83eb8edbf8de599))
+* **auth:** 鉴权守卫上移 src/proxy.ts，删掉 OAuth code 的 rewrite 分支 ([802006b](https://github.com/baiwumm/EasyAPI/commit/802006b2c4204acd196d90b46e1e9031f02093d4))
+* **bing:** 修正壁纸地址二次拼接并在返回前校验地址 ([2669c47](https://github.com/baiwumm/EasyAPI/commit/2669c47cc493247c6ea1329923729c746605ec81))
+* **ci:** allowBuilds 显式声明跳过字体工具链构建脚本 ([2cd031f](https://github.com/baiwumm/EasyAPI/commit/2cd031f233f22636127bc91af1534aa17bbc03e6))
+* **lint:** 摸清 no-img-element 平台差异，opengraph 移除误报豁免、修 proxy.ts 漂移 ([11e0ddf](https://github.com/baiwumm/EasyAPI/commit/11e0ddfdc1fa342ae6a0adf984527d4c0e9e4e5d))
+* **security:** 补齐字典表 RLS 策略并停止对外泄露数据库错误 ([b0a7c74](https://github.com/baiwumm/EasyAPI/commit/b0a7c7449d58aaf07b19466956e4368d3391b7a1))
+* **styles:** 滚动条规则收拢 :root 并常驻 scrollbar-gutter: stable，修复带滚动条页面弹窗退场卡死关不掉 ([681dba6](https://github.com/baiwumm/EasyAPI/commit/681dba649e6de572f5756a7409215ecfe30038ae))
+* **ui:** 修复三个交互缺陷与一个空态破图 ([690bc60](https://github.com/baiwumm/EasyAPI/commit/690bc608aacc06e7181414e746b19312bce4bab5))
+* **web:** 拆分 SWR 首屏与后台验证语义，后台刷新不再卸载结果区 ([cdeebe9](https://github.com/baiwumm/EasyAPI/commit/cdeebe9b9786ae91d291e8b291774770b859b299))
+* **web:** 首屏 Logo 加 priority，消除 LCP 检测警告 ([cacc1fd](https://github.com/baiwumm/EasyAPI/commit/cacc1fd7e90c448b5de12023f6b2d8aa1c834235))
+
+### 🎫 Chores | 其他更新
+
+* **deps:** next 升级到 16.4.0，同步 @next/third-parties 与 eslint 插件版本 ([9072bac](https://github.com/baiwumm/EasyAPI/commit/9072bac85630659b67fb00efed110aac48c896c2))
+* **deps:** react 与 react-dom 升级到 19.3.0，[@types](https://github.com/types) 同步 ([2a56140](https://github.com/baiwumm/EasyAPI/commit/2a56140ef1cdfe7e56c9978f593159de1bc6b85c))
+* **deps:** semver 兼容升级 15 个依赖（HeroUI 3.2.6、react-aria 3.53.1、supabase、eslint 10.12 等） ([03508f7](https://github.com/baiwumm/EasyAPI/commit/03508f7a488a514d321f799da01ab51836fd9922))
+* **deps:** 升级 theme-switch-animation 依赖包 ([1931905](https://github.com/baiwumm/EasyAPI/commit/193190558a38a94048566757883f2268f75a5999))
+* **deps:** 新增 cn-font-split 与 jsdom/testing-library 测试依赖 ([03d98ce](https://github.com/baiwumm/EasyAPI/commit/03d98ce8d866b36e6116890513332b8372051264))
+* **deps:** 移除未使用的 @vitejs/plugin-react 与 @types/xmldom ([8d381ea](https://github.com/baiwumm/EasyAPI/commit/8d381ea26025c18b5511c1211dd29f72dfe9e139))
+* package.json 补 packageManager 字段钉住 pnpm 版本 ([cd448d5](https://github.com/baiwumm/EasyAPI/commit/cd448d52b0d604e908e8b51af2c71f6339fea33d))
+* **release:** Release 标题统一 v 前缀——存量 34 条脚本归一，release-it 补 releaseName 治本 ([71808fb](https://github.com/baiwumm/EasyAPI/commit/71808fb296b6f5a3a39e62244ccb1003a87b0ceb))
+* **release:** tag 切换 v 前缀，发版自动同步 openapi.yaml 版本号 ([c457476](https://github.com/baiwumm/EasyAPI/commit/c457476827c1ea146c21ed085caa727a5935691e))
+* 修复 pnpm-workspace.yaml 配置项非法导致所有 pnpm 命令无法执行 ([9a1e42b](https://github.com/baiwumm/EasyAPI/commit/9a1e42bd3c2fcdb6041fc775a8f97cb81ddb9576))
+* 历史 tag 与 Release 迁移至 v 前缀 ([deaa1f2](https://github.com/baiwumm/EasyAPI/commit/deaa1f21b16a70331f3950d4ebf7e2bd9ddcff5f))
+* 清理死文件——.heroui-docs 文档缓存出库、shadcn 残留 components.json、模板遗留 vercel.svg/og.png/数字截图、孤儿组件 SkeletonContent ([7525e5f](https://github.com/baiwumm/EasyAPI/commit/7525e5f791e047f63b0a3f3be5a99d473d766d4d))
+
+### 📝 Documentation | 文档
+
+* **api:** 关闭全站挑战改为边缘限流，文档补限流口径（30 次/60 秒/IP，429 纯文本） ([43cd44e](https://github.com/baiwumm/EasyAPI/commit/43cd44eedc14664c5fd8dc6d8a39a167625a12c3))
+* **api:** 按 route.ts 实际校验补齐 openapi.yaml 的 4 处漂移 ([b7ca5ba](https://github.com/baiwumm/EasyAPI/commit/b7ca5ba180e128b875e86299da3bf84fca5ae14a))
+* backlog F7 移入已完成（引擎拆分 + 首屏外降级） ([8394478](https://github.com/baiwumm/EasyAPI/commit/83944785c8a2ef7eefb0ce764004fc15971a9eee))
+* backlog 待办清零（P3 七项移入已完成）并同步覆盖清单 ([10748a3](https://github.com/baiwumm/EasyAPI/commit/10748a3cc0edc6d74080906e460e155b63f898a6))
+* backlog 清空安全与正确性组（C6/C7、F1/C5 完成，含 SQL 上线顺序说明） ([6694305](https://github.com/baiwumm/EasyAPI/commit/6694305bdfd02a9b5191a34a72471699cb7cd3a9))
+* **readme:** 去掉截图章节，清理 README 独占截图（light.png 保留供 OG 卡片使用） ([1317a8f](https://github.com/baiwumm/EasyAPI/commit/1317a8fa3d5a31550a779195e031ff4fae976922))
+* **readme:** 宣传片升级为 issue 附件内嵌播放器（user-attachments） ([27d2cd1](https://github.com/baiwumm/EasyAPI/commit/27d2cd1c1b3cfb3530906a3f61d53e69e0539f37))
+* **readme:** 宣传片改为封面海报 + Release 下载（GitHub README 不放行非 user-attachments 的 video 标签） ([65247ac](https://github.com/baiwumm/EasyAPI/commit/65247ac7acf4605492acbc854e088fefa15967ed))
+* **readme:** 嵌入宣传片（promo-film Release 附件）并收敛环境变量说明 ([694d05e](https://github.com/baiwumm/EasyAPI/commit/694d05e874798d89032bed8601a66aac55d709b3))
+* **sql:** 计数函数改单引号 language sql 写法，规避 SQL Editor 的 dollar-quote 坑 ([6ea0962](https://github.com/baiwumm/EasyAPI/commit/6ea0962a0558de56499f709c9cce873b1293d7af))
+* upgrades.md 补记 motion 14 与 [@scalar](https://github.com/scalar) 0.12 待评估项，移除已完成的 G4 ([c47d8fd](https://github.com/baiwumm/EasyAPI/commit/c47d8fd03bb11f07f5b5b0f709db7030bc8a6af1))
+* 同步 backlog 与测试覆盖清单（F8/G8/T1/T2 完成，244 条测试） ([1af5314](https://github.com/baiwumm/EasyAPI/commit/1af5314558f36d012f0e2cfac5df07527640b248))
+* 同步 backlog 待办状态与测试覆盖清单（18 项已完成，214 条测试） ([bce4cdc](https://github.com/baiwumm/EasyAPI/commit/bce4cdc2d235fc7bb7e002d6c35d9b9a37a3b784))
+* 同步 CI 与自动发版说明 ([04f1124](https://github.com/baiwumm/EasyAPI/commit/04f1124889788a8fd48f35b8a469a9dae3a6cdd3))
+* 同步 random-image 图源说明（openapi 描述 + backlog G8 条目） ([f2554aa](https://github.com/baiwumm/EasyAPI/commit/f2554aa245d3aef08cf42d7c949f89446c84b2a4))
+* 命名规范措辞对齐实践——路由目录 kebab-case、组件目录 PascalCase ([dace1b2](https://github.com/baiwumm/EasyAPI/commit/dace1b26d9d286b8147dc92899cec10dd6a78734))
+* 拆分 AGENTS.md 到 docs/ 并补齐待办清单 ([359a29e](https://github.com/baiwumm/EasyAPI/commit/359a29ecc5a1435331f9993eeb8e23555d5b7d6c))
+* 补 env 示例与接口文档版本号对齐 ([0f9e777](https://github.com/baiwumm/EasyAPI/commit/0f9e777ecc9de3ac1edb0caa874b811868cb1dbd))
+
+### 💄 Styles | 风格
+
+* 修复 CI 检出的 8 文件 prettier 格式漂移；actions 升至当前大版本 ([b8be22c](https://github.com/baiwumm/EasyAPI/commit/b8be22c74543dbe90e67869d52a719ea04d466b4))
+
+### ♻ Code Refactoring | 代码重构
+
+* **components:** GridReveal canvas 引擎拆分为纯模块 ([b9361b5](https://github.com/baiwumm/EasyAPI/commit/b9361b5d4d6af9c97d21731d5711a124300fbbad))
+* **components:** StaggerIn 去掉子元素包装层，交错动画改 CSS 实现 ([abdd9ad](https://github.com/baiwumm/EasyAPI/commit/abdd9ad0dd47e9983f4f7c1e5a03a1170c95437f))
+* **enums:** index.tsx 改名 index.ts（纯数据无 JSX，扩展名与内容对齐） ([eb17b48](https://github.com/baiwumm/EasyAPI/commit/eb17b48fca123cbcde17b396c6f0dc21924448d3))
+* **hooks:** 图片生成请求走统一请求层并修掉 blob URL 泄漏 ([a118f80](https://github.com/baiwumm/EasyAPI/commit/a118f8074beb866570d5ea9605993fcc9792d33a))
+* **typings:** 删除公共 Columns 上从未使用的 user_id 与错拼 emial 字段 ([54e43aa](https://github.com/baiwumm/EasyAPI/commit/54e43aa1a4f2d0a8592ba99bc94be53562928ed5))
+* **web:** 统一 SWR 查询 key 为 [pathname, params] ([b4e816e](https://github.com/baiwumm/EasyAPI/commit/b4e816efffcc08f44f9d72e21abb778fbd604af4))
+
+### ⚡ Performance Improvements | 性能优化
+
+* **avatar:** 批量头像改为单次请求直出 data URI ([3651fa1](https://github.com/baiwumm/EasyAPI/commit/3651fa10b02eea9549219a5f7d0df39fc9237a71))
+* **avatar:** 随机头像 SVG 按 seed+style+size 走内存 LRU ([fbf8689](https://github.com/baiwumm/EasyAPI/commit/fbf868985dda369b55e52ee3b3d183dc1896865c))
+* **components:** GridReveal 首屏外实例降级为普通 img ([d246148](https://github.com/baiwumm/EasyAPI/commit/d24614840aeae5c72ac84a97f04a812b62361e4b))
+* **components:** 列设置选区变更合并为一次批量 set ([6875305](https://github.com/baiwumm/EasyAPI/commit/68753058f9d5ff95cbd67ba37c8149c660557f46))
+* **web:** BackTop 进度环改 CSS 变量驱动，删掉每帧 setState ([9adae15](https://github.com/baiwumm/EasyAPI/commit/9adae1511c71dad963a16fee1de4b3890a9e888c))
+* **web:** Maple Mono CN 字体分片按需加载，首屏不再全量拉 1.7MB ([b0018ff](https://github.com/baiwumm/EasyAPI/commit/b0018ff5384403e6772fac784ec4a6b3ba6cda01))
+* **web:** OG 图路由加 revalidate 一天缓存 ([64c14a0](https://github.com/baiwumm/EasyAPI/commit/64c14a05ca2889c816cdc7a8464e08f5bbd1fb6e))
+
+### ✅ Tests | 测试
+
+* **admin:** 引入 jsdom 渲染测试，补 admin 两个 save-modal 表单用例 ([f8673dd](https://github.com/baiwumm/EasyAPI/commit/f8673ddfdf0f6731c2359f122910feb27a7e057b))
+* **api-helpers:** 覆盖 ilikeOr / dbErrorResponse / randomTextResponse ([2bc73c5](https://github.com/baiwumm/EasyAPI/commit/2bc73c50134ea68ebea1b5d0da8e824f88047f0d))
+* **api:** 补管理端 CRUD 的 23505 唯一性冲突与删分类引用检查用例 ([cd74641](https://github.com/baiwumm/EasyAPI/commit/cd74641c4fb6139c738d8ca26ed348de7677d665))
+* **route:** 覆盖依赖 Supabase 的接口查询与错误路径 ([58f3e16](https://github.com/baiwumm/EasyAPI/commit/58f3e16342e57b0037f2c9798482c9024f88dbab))
+* **route:** 覆盖四个不依赖 Supabase 的接口参数校验 ([e33e340](https://github.com/baiwumm/EasyAPI/commit/e33e3404cce517eccb403021fa32095eab3c0ab3))
+* **utils:** 补齐 lib/utils 纯函数测试 ([44f3eb8](https://github.com/baiwumm/EasyAPI/commit/44f3eb811921c529f7b16a571dbd33c759376359))
+* **web:** 补 JsonContent/QuoteWorld 的 SWR key 行为用例 ([e6f8d79](https://github.com/baiwumm/EasyAPI/commit/e6f8d792be6c29c3091110ba8cfbd923c4aea7f7))
+* 修正测试文件的类型错误 ([1087ad9](https://github.com/baiwumm/EasyAPI/commit/1087ad9af0a9b5d610069f22f7f966f21b5f01e5))
+* 引入 vitest 并配置路径别名 ([cc8dbb0](https://github.com/baiwumm/EasyAPI/commit/cc8dbb087c5caf5d89428a83da3e24a62f57438e))
+
+### ⏪ Reverts | 回退
+
+* **rls:** 回退字典表 RLS 脚本改动 ([d564a26](https://github.com/baiwumm/EasyAPI/commit/d564a261995bf5b9c9cba4da9d3ab4485d22d698))
+
+### 🔧 Continuous Integration | CI 配置
+
+* 升级 theme-switch-animation 到 ^0.5.1 版本 ([2b7113a](https://github.com/baiwumm/EasyAPI/commit/2b7113ae91bbf537477f1584766703a8acfd6056))
+* 升级 theme-switch-animation 到 0.4.0 版本 ([05ec29c](https://github.com/baiwumm/EasyAPI/commit/05ec29cdc9b4dbbd30d428660d8ea48735d8eb5e))
+* 接入 GitHub Actions——push/PR 三道门禁与 workflow_dispatch 一键发版 ([aec5876](https://github.com/baiwumm/EasyAPI/commit/aec5876ef5e41fe78d4d9e4db986b604fddc6540))
+
 ## [2.9.0](https://github.com/baiwumm/EasyAPI/compare/v2.8.1...v2.9.0) (2026-09-16)
 
 ### ✨ Features | 新功能
