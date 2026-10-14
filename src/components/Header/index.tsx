@@ -8,7 +8,7 @@
 "use client";
 import type { FC, ReactNode } from "react";
 
-import { AbbrApi, HouseFill } from "@gravity-ui/icons";
+import { AbbrApi, HouseFill, LogoGithub } from "@gravity-ui/icons";
 import { Button, Tooltip } from "@heroui/react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
@@ -34,6 +34,12 @@ const socials: Social[] = [
     name: "接口文档",
     url: "/docs",
     icon: <AbbrApi />,
+  },
+  {
+    name: "GitHub",
+    url: "https://github.com/baiwumm/EasyAPI",
+    icon: <LogoGithub />,
+    external: true,
   },
 ];
 
