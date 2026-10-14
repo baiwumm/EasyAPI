@@ -55,6 +55,12 @@
 | --- | --- |
 | ![分类列表](./public/categorys.png) | ![接口列表](./public/apis.png) |
 
+## 🔌 开放 API
+
+全部接口公开可直连，在线文档：<https://api.baiwumm.com/docs>（源文件 [`public/openapi.yaml`](./public/openapi.yaml)）。
+
+限流：按客户端 IP **30 次 / 60 秒**，超限返回 `429`（Vercel 边缘层纯文本响应，约 1 分钟自动恢复）。
+
 ## ☘️ 技术栈
 
 - Next.js 16 + React 19

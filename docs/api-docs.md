@@ -48,6 +48,19 @@
 
 同步改 YAML 对应 path 的参数与响应模型。**不要只改代码不改 YAML。**
 
+## 限流（Vercel WAF，边缘层）
+
+全站 `/api/*` 在 Vercel Firewall 配了按 IP 的固定窗口限流：**30 次 / 60 秒**，超限由边缘直接返回
+`429 Too Many Requests`（纯文本，**不是** Envelope JSON——调用方按 HTTP 状态码处理，不要解析 body；
+站点应用层感知不到这类请求，Envelope 的 `code:500` 是另一层业务失败语义）。
+
+- 规则不在代码里：Vercel Dashboard → 项目 → Firewall →「API 限流 · IP 防刷」，
+  任何改动需 **Review Changes → Publish** 才生效；规则被删或关闭时应用层没有兜底限流。
+- 计数按 Vercel 处理区域独立（同一 IP 打到不同区域各有 30 次），这是平台行为不是配置问题。
+- 应急：遇到大规模分布式刷时，Firewall 里可临时打开 Attack Challenge Mode / Bot Protection
+  保命（代价是牺牲 API 可直连性，同上次事件），平时保持关闭。
+- 上线验证记录（2026-10-14）：并发 40 发 → 精确 30 放行 / 10 个 429；约 65 秒后窗口重置恢复 200。
+
 ## 不收录
 
 - 管理端写接口（POST/PUT/DELETE、`[id]` 路径）
