@@ -1,6 +1,6 @@
 <div align="center">
-  <img alt="Easy API logo" src="./public/logo.svg" width="80" />
-  <h1>Easy API</h1>
+  <img alt="EasyAPI logo" src="./public/logo.svg" width="80" />
+  <h1>EasyAPI</h1>
   <p>一个把常用 API 收拾得干干净净的小站。</p>
 </div>
 
@@ -20,14 +20,28 @@
   <a href="https://supabase.com/" target="_blank">
     <img alt="Supabase" src="https://img.shields.io/badge/Supabase-black?style=flat&logo=supabase" />
   </a>
+  <a href="https://github.com/baiwumm/EasyAPI" target="_blank">
+    <img alt="GitHub stars" src="https://img.shields.io/github/stars/baiwumm/EasyAPI?style=social" />
+  </a>
+  <a href="https://github.com/baiwumm/EasyAPI" target="_blank">
+    <img alt="GitHub forks" src="https://img.shields.io/github/forks/baiwumm/EasyAPI?style=social" />
+  </a>
   <a href="./LICENSE" target="_blank">
     <img alt="MIT License" src="https://img.shields.io/badge/license-MIT-blue?style=flat" />
   </a>
 </div>
 
+### 📺 宣传片
+
+<div align="center">
+  <video src="https://github.com/baiwumm/EasyAPI/releases/download/promo-film/easyapi-promo-final.mp4" width="90%" controls muted playsinline></video>
+  <br />
+  <sub>54 秒 · 1080p · 中文口播（附件载体见 <a href="https://github.com/baiwumm/EasyAPI/releases/tag/promo-film">promo-film Release</a>，请勿删除）</sub>
+</div>
+
 ## 🌱 简介
 
-`Easy API` 是一个基于 Next.js 与 Supabase 的 API 聚合平台。
+`EasyAPI` 是一个基于 Next.js 与 Supabase 的 API 聚合平台。
 
 它专注做一件小事：把常用 API 收拾得干干净净，打开就能用。覆盖每日推荐、随机生成、心灵语录、生活服务、功能小栈等 30+ 个高频接口，支持亮暗主题、响应式布局、基础 SEO，以及登录后的接口分类与管理。
 
@@ -71,30 +85,16 @@ pnpm dev
 
 ## 🌼 环境变量
 
-项目主要使用这些环境变量：
-
 ```bash
+# Supabase（必填）
 NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_ANON_KEY=
 
-# 后台管理员邮箱白名单（逗号分隔多个）。只有此列表内的账号能进入后台/执行增删改查。
-ADMIN_EMAILS=me@baiwumm.com,baiwumm@foxmail.com,843348394@qq.com
-
-NEXT_PUBLIC_APP_NAME=EasyApi
-NEXT_PUBLIC_APP_TITLE=一个把常用 API 收拾得干干净净的小站
-NEXT_PUBLIC_APP_DESC=基于 Next.js 构建的高性能 API 聚合平台，统一管理多服务商接口，支持智能转发与数据缓存，让 API 集成更简单。
-NEXT_PUBLIC_APP_KEYWORDS=Easy Api,API聚合,API管理,接口聚合平台,Next.js API,Next.js聚合,API网关,微服务网关,接口代理,请求转发,数据缓存,RESTful API,第三方API集成,Serverless,Next.js 16,TypeScript,API路由,后端即服务,BaaS,低代码平台,开发工具
-NEXT_PUBLIC_APP_URL=http://localhost:3000
-
-NEXT_PUBLIC_COPYRIGHT=白雾茫茫丶
-NEXT_PUBLIC_ICP=粤ICP备2023007649号
-NEXT_PUBLIC_GUAN_ICP=粤公网安备44030402006402号
-
-NEXT_PUBLIC_GOOGLE_ID=
-NEXT_PUBLIC_CLARITY_ID=
+# 后台管理员邮箱白名单（逗号分隔多个），只有白名单内的账号能进入后台增删改查
+ADMIN_EMAILS=
 ```
 
-完整示例见 [`.env.example`](./.env.example)。
+站点标题、SEO、统计、版权与备案等可选项见 [`.env.example`](./.env.example)。
 
 ## 🍀 Supabase 配置
 
