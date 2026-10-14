@@ -45,16 +45,6 @@
 
 它专注做一件小事：把常用 API 收拾得干干净净，打开就能用。覆盖每日推荐、随机生成、心灵语录、生活服务、功能小栈等 30+ 个高频接口，支持亮暗主题、响应式布局、基础 SEO，以及登录后的接口分类与管理。
 
-## 🌿 截图
-
-| 亮色模式 | 暗色模式 |
-| --- | --- |
-| ![亮色模式](./public/light.png) | ![暗色模式](./public/dark.png) |
-
-| 接口分类 | 接口列表 |
-| --- | --- |
-| ![分类列表](./public/categorys.png) | ![接口列表](./public/apis.png) |
-
 ## 🔌 开放 API
 
 全部接口公开可直连，在线文档：<https://api.baiwumm.com/docs>（源文件 [`public/openapi.yaml`](./public/openapi.yaml)）。
