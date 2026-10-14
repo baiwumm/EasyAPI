@@ -34,11 +34,9 @@
 ### 📺 宣传片
 
 <div align="center">
-  <a href="https://github.com/baiwumm/EasyAPI/releases/download/promo-film/easyapi-promo-final.mp4">
-    <img alt="EasyAPI 宣传片" src="./docs/promo-cover.jpg" width="90%" />
-  </a>
+  <video src="https://github.com/user-attachments/assets/a17d0126-beea-47e2-a6d0-747c95addbd9" width="90%" controls muted playsinline></video>
   <br />
-  <sub>点击封面观看 · 54 秒 · 1080p · 中文口播（附件载体见 <a href="https://github.com/baiwumm/EasyAPI/releases/tag/promo-film">promo-film Release</a>，请勿删除）</sub>
+  <sub>53 秒 · 1080p · 中文口播 + 中英字幕（附件载体见 <a href="https://github.com/baiwumm/EasyAPI/issues/1">#1</a>，请勿删除）</sub>
 </div>
 
 ## 🌱 简介
