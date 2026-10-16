@@ -63,19 +63,20 @@
 
 ### 🌱 环境要求
 
-- Node.js >= 18.17
+- Node.js >= 20.9（Next.js 16 的最低要求，CI 运行于 Node 22）
 - pnpm
 
 ### 🌵 启动项目
+
+先将 `.env.example` 复制为 `.env.local`，补全你自己的环境变量（Supabase 配置见下文），然后再启动：
 
 ```bash
 git clone https://github.com/baiwumm/EasyAPI.git
 cd EasyAPI
 pnpm install
+# 将 .env.example 复制为 .env.local 并补全环境变量
 pnpm dev
 ```
-
-先将 `.env.example` 复制为 `.env.local`，再补全你自己的环境变量。
 
 默认访问：`http://localhost:3000`
 
@@ -98,7 +99,7 @@ ADMIN_EMAILS=
 
 1. 创建项目，并填写 `NEXT_PUBLIC_SUPABASE_URL` 与 `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 2. 配置认证方式，并将你的邮箱加入 `ADMIN_EMAILS` 白名单（只有白名单账号能进入后台增删改查）
-3. 初始化项目依赖的数据结构：`ea_categorys`、`ea_apis` 表，以及 `increment_call_count` 函数
+3. 初始化项目依赖的数据结构：`ea_categorys`、`ea_apis` 表，以及 `increment_call_count_by_path` 函数（见 [`supabase/increment-call-count-by-path.sql`](./supabase/increment-call-count-by-path.sql)）
 4. 建议在 SQL Editor 中执行 [`supabase/rls.sql`](./supabase/rls.sql)，开启行级安全（RLS），防止有人拿浏览器公开的 anon key 直接调用 REST API 绕过应用层
 
 如果你准备把它作为自己的接口站二次使用，最省事的方式是按当前前端字段结构直接在 Supabase 中建表，再根据自己的登录方式补齐鉴权策略。
