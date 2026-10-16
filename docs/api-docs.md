@@ -19,7 +19,7 @@
 - `summary` 与 route.ts 头注释 `@Description` 一致。
 - 中文描述；**参数约束（必填、边界、默认值、枚举）以 route.ts 实际校验逻辑为准**，
   不要照抄前端——前后端口径漂移是已知问题（见下）。
-- 枚举值取自 `src/enums/index.tsx`。
+- 枚举值取自 `src/enums/index.ts`。
 
 ### 响应体写法
 
@@ -66,16 +66,12 @@
 - 管理端写接口（POST/PUT/DELETE、`[id]` 路径）
 - `/auth/*`
 
-## 已知漂移（全部修复）
+## 历史漂移（已全部修复）
 
-以下 path 曾是文档与实现不一致的待办项（编号见 `backlog.md` 的 G1/G2），已按 route.ts 的实际校验逻辑补齐：
-
-- ~~`info.version` 落后于 `package.json`。~~ 已同步（G1）。
-- ~~`/api/bmi`：未声明 `height`/`weight` 的最小值，分级阈值未记录。~~ 已补 `exclusiveMinimum: 0`、上限与四级阈值（G2）。
-- ~~`/api/random-person`：`size` 文档写整数枚举，实现接受 `0128`/`128.0` 这类非枚举值。~~ 已在描述里说明按 `Number(size)` 比对（G2）。
-- ~~`/api/random-string`：`length`/`count` 非数字时的行为未描述，`characters` 无 `maxLength`。~~
-  已补「非数字回退默认值」与 `maxLength: 256`（G2）。
-- ~~`/api/holiday`：非数字 `year` 会静默回退当前年，未描述。~~ 已在描述里注明（G2）。
+文档与实现曾出现 5 处漂移（`info.version`、`/api/bmi`、`/api/random-person`、
+`/api/random-string`、`/api/holiday`），已于 2026-10 按 route.ts 实际校验逻辑补齐
+（编号 G1/G2，明细见 `backlog.md` 的「已完成」）。教训即上文红线：**参数约束以
+route.ts 为准，不要照抄前端**。
 
 > `info.version` 由发版流程自动同步：`.release-it.json` 的 `after:bump` hook
 > 读 bump 后的 `package.json` 写入本文件并纳入 Release 提交，无需手改
