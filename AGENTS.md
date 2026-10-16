@@ -1,34 +1,21 @@
 # AGENTS.md
 
-AI agents 在本仓库工作的入口规范。**只看本文件不够，按下面的索引去读 `docs/` 里的专题文档。**
+AI agents 在本仓库工作的入口规范。本文件只放「不看就会踩坑」的内容，专题细则按 [docs/README.md](./docs/README.md) 的索引查阅。
 
 ## Project
 
-**EasyAPI** — 基于 Next.js 16 (App Router) + Supabase 的 API 聚合平台（api.baiwumm.com），
-收录 30+ 个高频接口（每日推荐、随机生成、心灵语录、生活服务等），支持亮暗主题、
-响应式布局、登录后的接口分类与管理。
+**EasyAPI** — 基于 Next.js（App Router）+ Supabase 的 API 聚合平台（api.baiwumm.com），收录 30+ 个高频接口（每日推荐、随机生成、心灵语录、生活服务等），支持亮暗主题、响应式布局、登录后的接口分类与管理。
 
-### Tech Stack
-
-| Technology | Version | Purpose |
-|---|---|---|
-| Next.js | 16.3.x | Framework（App Router） |
-| React | 19.2.x | UI framework |
-| HeroUI | 3.2.x（`@heroui/react` / `@heroui/styles`） | UI 组件库 |
-| Tailwind CSS | 4.x（`@tailwindcss/postcss`） | 样式 |
-| Supabase | `@supabase/ssr` + `@supabase/supabase-js` | 数据存储与鉴权 |
-| Vitest | 5.x | 单元测试（`tests/` 镜像 `src/`） |
-| 包管理 | pnpm | 依赖管理 |
+技术栈与版本以 `package.json` 为准：Next.js + React + **HeroUI v3** + **Tailwind CSS v4** + Supabase（`@supabase/ssr` / `@supabase/supabase-js`）+ Vitest，包管理 pnpm。
 
 ## Commands
 
 | Action | Command |
 |---|---|
 | 启动开发服务器 | `pnpm dev` |
-| 生产构建 | `pnpm build` |
+| 生产构建 | `pnpm build`（需要 `.env.local`，见「提交前门禁」） |
 | 类型检查 | `pnpm typecheck` |
-| Lint 检查 | `pnpm lint` |
-| Lint 自动修复 | `pnpm lint:fix` |
+| Lint 检查 / 自动修复 | `pnpm lint` / `pnpm lint:fix` |
 | 运行测试 | `pnpm test`（watch：`pnpm test:watch`） |
 | 启动生产服务 | `pnpm start` |
 | 发布 | `pnpm release`（release-it + conventional-changelog） |
@@ -37,125 +24,58 @@ AI agents 在本仓库工作的入口规范。**只看本文件不够，按下�
 
 ```
 src/
-├── app/                  # App Router，每个 API 功能一个目录（index.tsx + ClientComponent.tsx）
-│   ├── layout.tsx        # 根布局（next-themes + HeroUI Toast + MotionConfig）
+├── app/                  # App Router；每个 API 功能一个目录（index.tsx + ClientComponent.tsx）
 │   ├── admin/            # 后台管理（apis / categorys 表格 + CRUD）
-│   ├── login/            # 登录页
-│   └── docs/             # 接口文档页（Scalar Route Handler，渲染 public/openapi.yaml）
+│   ├── docs/             # 接口文档页：是 Route Handler 而非 page.tsx，渲染 public/openapi.yaml
+│   └── login/            # 登录页
 ├── components/           # 共享组件（一个组件一个目录，入口 index.tsx）
-├── hooks/                # 自定义 hooks（use-swr、use-copy、use-supabase-user 等）
+├── hooks/                # use-swr、use-committed-params、use-supabase-user 等
 ├── lib/                  # 工具（utils、request、icons、server/、supabase/、swr）
 ├── services/             # Supabase 数据访问（apis、categorys、common）
-├── enums/                # enum-plus 枚举定义
-└── typings/              # 全局类型（index.ts：Api/Category/Columns/PaginatingParams；table-types.ts：TanStack Table）
-tests/                    # 镜像 src 结构，*.test.ts；已被 eslint globalIgnores 忽略，但必须过 tsc
-supabase/rls.sql          # 数据库 RLS 策略（需在 Supabase Dashboard 手动执行）
-public/openapi.yaml       # 手工维护的 OpenAPI 3.1 接口文档（/docs 页数据源）
+├── enums/                # enum-plus 枚举（入口 index.ts）
+└── typings/              # 全局类型（index.ts；table-types.ts 禁改，见下）
+tests/                    # 镜像 src 结构，*.test.ts；eslint 已忽略，但必须过 tsc
+supabase/rls.sql          # RLS 策略，需在 Supabase Dashboard 手动执行
+public/openapi.yaml       # 手工维护的 OpenAPI 3.1（/docs 数据源；版本号发版时自动同步）
 ```
 
-## Conventions
+## 硬性约束
 
-- **HeroUI v3 API（CRITICAL）**：不要套用 v2 模式（`<HeroUIProvider>`、`@heroui/theme`、扁平 props 均已废弃）。本项目不需要 Provider，组件直接用 `<Card>` / `<Card.Header>` 等 **compound 子组件**组合。
-- **语义变体**：用 `primary` / `secondary` / `tertiary` / `danger` / `ghost` / `outline`，不要直接用原始颜色。
-- **事件**：优先 `onPress` 而非 `onClick`（无障碍）。
-- **样式**：`globals.css` 中必须先 `@import 'tailwindcss'` 再 `@import '@heroui/styles'`；主题基于 CSS 变量 + `oklch` 色值，亮暗切换由 `next-themes` 控制，`@custom-variant dark (&:is(.dark *))`。
-- **import 规范**：组件一律从 `@heroui/react` 导入（如 `Button`、`Card`、`Table`、`Toast`、`toast`、`cn`），不要单独安装子包；`next.config.ts` 已配置 `optimizePackageImports: ['@heroui/react']`。
-- 新增 API 页面遵循既有模式：`index.tsx`（server component 数据获取 + 布局）+ `ClientComponent.tsx`（'use client' 交互），**并同步补 `public/openapi.yaml`**（细则见 `docs/api-docs.md`）。
-- **客户端数据获取用 SWR**，封装见 `src/hooks/use-swr.ts`；带查询参数的页面一律用 `useCommittedParams` + `[pathname, params]` 作为 key（详见 `docs/audit-2026-10.md` 的 D2）。
-- 类型定义集中放在 `src/typings/index.ts`，页面内部类型就近声明。
-- **改 `src/lib` 与 `src/app/api` 下的逻辑必须配套 `tests/` 下同名路径的测试**（细则见 `docs/code-standards.md`）。
-- 中文注释；路由目录命名 kebab-case（`random-avatar`），组件目录 PascalCase（`UserAvatar`）且入口为 `index.tsx`。
+1. **HeroUI v3 API（CRITICAL）**：不要套用 v2 记忆里的模式——`<HeroUIProvider>`、`@heroui/theme`、扁平 props 均已废弃。本项目不需要 Provider，组件用 `<Card>` / `<Card.Header>` 这类 **compound 子组件**组合；组件一律从 `@heroui/react` 导入，禁止安装或 import 子包。
+2. **UI 只用 HeroUI 构建**：禁止引入其他 UI 库；禁止用 div+CSS 模拟 HeroUI 已有组件（Modal、Dropdown 等）。语义变体用 `primary` / `secondary` / `tertiary` / `danger` / `ghost` / `outline`，不用原始颜色；事件优先 `onPress` 而非 `onClick`。
+3. **样式只用 Tailwind CSS**：禁止内联样式或 CSS-in-JS；主题走 CSS 变量 + `oklch`（亮暗由 next-themes 切换），`globals.css` 里 `@import 'tailwindcss'` 必须在 `@heroui/styles` 之前。
+4. **客户端数据获取必须走 SWR**（封装见 `src/hooks/use-swr.ts`）；带查询参数的页面一律 `useCommittedParams` + `[pathname, params]` 作为 key（详见 `docs/audit-2026-10.md` 的 D2）。
+5. **Supabase 操作必须经过 RLS**。
+6. **新增 API 页面**：`index.tsx`（server component 数据获取 + 布局）+ `ClientComponent.tsx`（'use client' 交互），并同步补 `public/openapi.yaml`（细则见 `docs/api-docs.md`）。
+7. **改 `src/lib` 与 `src/app/api` 逻辑必须配套 `tests/` 下同名路径的测试**（细则见 `docs/code-standards.md`）。
+8. **代码产出遵循 `vercel-react-best-practices` Skill**（`.agents/skills/vercel-react-best-practices`，性能与正确性硬规范，以 Skill 原文为准、勿凭记忆转述）；规则库之间冲突时提问等人工裁决，不得擅自决定。
+9. 命名与类型：路由目录 kebab-case（`random-avatar`），组件目录 PascalCase（`UserAvatar`）且入口 `index.tsx`；中文注释；类型集中放 `src/typings/index.ts`，页面内部类型就近声明。
 
-## AI 使用约束（强制规范）
+## 禁止修改的文件
 
-### 禁止修改的文件
+`src/typings/table-types.ts`、`eslint.config.mjs`、`next.config.ts`。确需改动时**先提问等人工裁决**，不得擅自修改。`src/lib/supabase/*.ts` 已放开，但改动须谨慎并配套测试。
 
-- `src/typings/table-types.ts` — TanStack Table 类型定义
-- `eslint.config.mjs` — ESLint 配置，修改可能导致 CI 失败
-- `next.config.ts` — Next.js 配置，影响构建行为
+## 提交前门禁
 
-> `src/lib/supabase/*.ts` 原在此清单（C6/C7 整改时经人工裁决放开，见
-> `docs/backlog.md`），改动仍须谨慎并配套测试。
+四道全绿才能提交，任一不过不要提：`pnpm lint`（以 0 warning 为准）、`pnpm typecheck`、`pnpm test`、`pnpm build`。细则见 `docs/code-standards.md`。
 
-> 若某处改动确实需要动这些文件，**先提问等人工裁决，不得擅自修改**。
+- `pnpm build` 需要 env：没有 `.env.local` 时会在 `/api/*` 与页面预渲染阶段报 `@supabase/ssr: Your project's URL and API key are required`，先按 `.env.example` 复制一份（`.env.*` 已被 gitignore）。
+- CI 兜底：push(main)/PR 自动跑 lint/typecheck/test；发版走 Release workflow（手动触发，四道预检全绿后 release-it 一键发版）。细则见 `docs/deployment.md` 的「CI 与自动发版」。
 
-### 必须遵守的约束
+## Windows 本地坑
 
-1. **UI 组件必须使用 HeroUI**：禁止引入其他 UI 库（如 Ant Design、Material UI）
-2. **数据获取使用 SWR**：客户端数据获取必须通过 SWR
-3. **样式必须使用 Tailwind CSS**：禁止内联样式或 CSS-in-JS
-4. **Supabase 操作必须经过 RLS**：任何数据库操作必须遵循 Row Level Security 策略
-5. **组件文件使用 `index.tsx` 命名**：每个组件目录下统一使用 `index.tsx` 作为入口
-
-### AI 代码生成守则
-
-1. **性能第一**：严格遵守 Vercel React 官方性能优化指南（使用 memo、useCallback、避免匿名函数 props）
-2. **组件优先**：所有 UI 元素必须基于 HeroUI 组件构建，严禁使用纯 div+CSS 模拟 HeroUI 已有功能（如 Modal、Dropdown）
-3. **自检机制**：生成代码后，AI 必须主动检查是否违反上述两条规则，如有违反需重写
-4. **异常处理**：若规则库之间存在冲突（例如 HeroUI 某个组件用法与 Vercel 建议相悖），AI 需主动提问并等待人工裁决，不得擅自决定
-5. **代码生成与重构必须遵循 `vercel-react-best-practices` Skill**（`.agents/skills/vercel-react-best-practices`），是所有代码产出的硬性性能与正确性规范
-
-### 提交前门禁
-
-四道全绿才能提交，任一不过不要提：`pnpm lint`（以 0 warning 为准）、
-`pnpm typecheck`、`pnpm test`、`pnpm build`。细则见 `docs/code-standards.md`。
-
-> CI 兜底：push(main)/PR 自动跑 lint/typecheck/test（`.github/workflows/ci.yml`）；
-> 发版走 Actions 的 Release workflow（手动触发，四道预检全绿后 release-it 一键发版）。
-> tag 自 v2.10.0 起带 v 前缀，`openapi.yaml` 版本号由发版 hook 自动同步。
-> 细则见 `docs/deployment.md` 的「CI 与自动发版」。
-
-## 相关链接
-
-- 在线预览：https://api.baiwumm.com/
-- GitHub：https://github.com/baiwumm/EasyAPI
-- **剩余待办：`docs/backlog.md`（开工前先读，认领任务）**
-
-## Notes
-
-快速补充区：新约定、踩坑记录放这里。
-
-- **`pnpm build` 需要 env**：没有 `.env.local` 时构建会在 `/api/*` 与页面预渲染阶段报
-  `@supabase/ssr: Your project's URL and API key are required`。本地跑门禁前先按
-  `.env.example` 复制一份占位值即可（`.env.*` 已被 gitignore）。
-- **`@zxcvbn-ts/language-zh` 不能裸 `require`**：其 CJS 入口会 require
-  `@zxcvbn-ts/dictionary-compression/decompress`，而该包 CJS 产物是
-  `module.exports = { default: fn }`，直接调用会抛 `decompress is not a function`。
-  Next 的 bundler 会做默认导出 interop 所以线上正常；vitest 走原生 require 会炸，
-  `tests/app/api/password-strength-route.test.ts` 里用替身词库绕开。
-- **本地 lint 会有上万条 `Delete ␍`**：本机 `core.autocrlf=true` 把 LF 检出成 CRLF，
-  而仓库里存的是 LF。判lint是否干净要看**去掉 prettier/prettier 后还剩多少条**。
-- **`@next/next/no-img-element` 在 Windows 上误报 opengraph-image**：插件规则用
-  `filename.replace(path.sep, '/')` 剥 cwd，字符串替换只换首个分隔符，Windows 下
-  路径变混合分隔符导致 app 目录判定失效，元数据路由豁免（opengraph-image 等）
-  失效产生误报；Linux CI 判定正常且该文件**本来就被规则豁免**。所以
-  `src/app/opengraph-image.tsx` **不要加** `eslint-disable @next/next/no-img-element`
-  （CI 会报 unused）；本地看到该文件的 img 告警是平台误报，忽略即可。
-  GridReveal 的行级豁免是真命中（两平台都会报），保留。
-- **HeroUI 的 `render` 只接受函数，不接受元素**：这个版本的 RAC 底层是
-  `render ? (props) => render(props, values) : undefined`，写元素形式
-  （`render={<Link href="/" />}`）运行时会抛 `render is not a function`。
-  正确写法是 `render={(props) => <Link {...props} href="/" />}`；
-  Next 的 Link 不吃 Button 的 DOM props 时，至少把 `props.className` 传过去保住样式
-  （见 `src/app/not-found.tsx`）。
-- **重跑 `pnpm split-font` 前要补原生二进制**：cn-font-split 的 Rust DLL 走
-  postinstall 下载，而 pnpm 会拦构建脚本，npm 包版本（7.4.3）又落后于 GitHub
-  release（7.6.8，无 7.4.x tag，作者预期拉 latest 配套）。装完依赖后手动执行：
-  `gh release download 7.6.8 --repo KonghaYao/cn-font-split --pattern "libffi-x86_64-pc-windows-msvc.dll" --output node_modules/.pnpm/cn-font-split@7.4.3/node_modules/cn-font-split/dist/libffi-x86_64-pc-windows-msvc.dll`。
-  产物（78 个分片 + `src/app/maple-mono-cn.css`）已随仓库提交，只有换字体才需要重跑。
+- **lint 冒出上万条 `Delete ␍`**：本机 `core.autocrlf=true` 把 LF 检出成 CRLF 所致，判 lint 是否干净看**去掉 `prettier/prettier` 后还剩几条**。
+- **`src/app/opengraph-image.tsx` 的 img 告警**：Windows 平台误报（CI 判定正常且该文件本就被规则豁免），忽略即可；**不要加** `eslint-disable @next/next/no-img-element`（CI 会报 unused）。GridReveal 的行级豁免是真命中，保留。
+- 其余踩坑按主题查：password-strength 测试词库 → `docs/code-standards.md`；HeroUI `render` 用法 → `docs/ai-tooling.md`；换字体补原生 DLL → `docs/deployment.md`。
 
 ## 文档索引
 
-`AGENTS.md` 只保留入口必读内容，专题细则全部在 `docs/`：
-
-| 文档 | 内容 | 何时读 |
-|---|---|---|
-| `docs/backlog.md` | **剩余待优化项与待办** | 每次开工前 |
-| `docs/api-docs.md` | 接口文档维护（Scalar + 手工 OpenAPI） | 改 `/api/*` 前后 |
-| `docs/code-standards.md` | 代码规范与质量门禁、测试规范 | 写代码前、提交前 |
-| `docs/ai-tooling.md` | HeroUI 文档查询、Skill/MCP、推荐工具库 | 查 HeroUI 用法时 |
-| `docs/deployment.md` | 部署流程与完整环境变量清单 | 部署、新增配置项时 |
-| `docs/upgrades.md` | 待评估的依赖 major 升级 | 升级依赖前 |
-| `docs/audit-2026-10.md` | 本次审计的完整问题清单与修复记录 | 想了解某处为什么这么改 |
-
-完整索引见 [`docs/README.md`](./docs/README.md)。
+| 时机 | 文档 |
+|---|---|
+| 每次开工前（认领待办） | `docs/backlog.md` |
+| 改 `/api/*` 前后 | `docs/api-docs.md` |
+| 写代码前 / 提交前 | `docs/code-standards.md` |
+| 查 HeroUI 用法、Skill、MCP | `docs/ai-tooling.md` |
+| 部署、环境变量、发版 | `docs/deployment.md` |
+| 升级依赖前 | `docs/upgrades.md` |
+| 查某处为什么这么改 | `docs/audit-2026-10.md` |

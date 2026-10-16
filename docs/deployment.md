@@ -8,7 +8,7 @@
 4. 点击 Deploy
 
 自托管同样可行，只需保证 Node 环境可跑 `pnpm build && pnpm start`，
-并补齐下方的服务端变量（`SUPABASE_*` 与 `ADMIN_EMAILS` 缺失时接口直接不可用）。
+并补齐下方的服务端变量（`NEXT_PUBLIC_SUPABASE_*` 与 `ADMIN_EMAILS` 缺失时接口直接不可用）。
 
 ## 环境变量清单
 
@@ -83,3 +83,13 @@
 - `src/app/bing-wallpaper/page.tsx` 是 ISR 24h。`getBingWallpaper()` 已在返回前
   校验地址可解析且带 id，Bing 改返回结构时走缓存兜底不会缓存坏数据（C9 已修）。
 - `supabase/rls.sql` 不在构建流程内，需在 Supabase Dashboard 手动执行。
+- 字体分片产物（78 个 woff2 分片 + `src/app/maple-mono-cn.css`）已随仓库提交，
+  只有换字体才需要重跑 `pnpm split-font`。重跑前要手动补 cn-font-split 的原生 DLL
+  ——pnpm 会拦 postinstall 下载，npm 包版本（7.4.3）又落后于 GitHub release
+  （7.6.8，无 7.4.x tag，作者预期拉 latest 配套）：
+
+  ```bash
+  gh release download 7.6.8 --repo KonghaYao/cn-font-split \
+    --pattern "libffi-x86_64-pc-windows-msvc.dll" \
+    --output node_modules/.pnpm/cn-font-split@7.4.3/node_modules/cn-font-split/dist/libffi-x86_64-pc-windows-msvc.dll
+  ```

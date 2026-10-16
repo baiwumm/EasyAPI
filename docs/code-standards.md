@@ -43,6 +43,11 @@ ESLint + Prettier。必须遵守的规则：
 - 目录 **`tests/` 镜像 `src/`**：`src/lib/utils.ts` → `tests/lib/utils.test.ts`。
 - `tests/` 已被 eslint 的 `globalIgnores` 覆盖，测试代码不参与 lint，
   但**必须通过 `tsc` 类型检查**。
+- 依赖坑：`@zxcvbn-ts/language-zh` 在测试里不能裸 `require`——其 CJS 入口会 require
+  `@zxcvbn-ts/dictionary-compression/decompress`，而该包 CJS 产物是
+  `module.exports = { default: fn }`，直接调用会抛 `decompress is not a function`
+  （Next 的 bundler 做了默认导出 interop 所以线上正常）。
+  `tests/app/api/password-strength-route.test.ts` 里用替身词库绕开。
 - 写测试的硬要求：
   - 修 bug 时必须配一条**能复现该 bug 的失败用例**，而不是只测正常路径。
   - 安全类修复要断言「不泄露」+「仍留痕」：响应体不含内部信息，且 `console.error`
@@ -59,7 +64,7 @@ ip-region / random-avatar / random-image / 管理端写路由（写链路与鉴�
 删分类引用检查）/ 分页钳制）、admin 两个 save-modal 表单（jsdom + 用户事件，含 Select
 弹层交互与提交后状态复位）、`AlertContent` / `ErrorContent` 单按钮结构、`ColumnsVisibility`
 批量写回、`StaggerIn` 无包装结构、`JsonContent` / `QuoteWorld` 的 SWR key 行为
-（改参数不请求、提交才请求、参数没变走 mutate），共 307 条。
+（改参数不请求、提交才请求、参数没变走 mutate）；条数以 `pnpm test` 实时输出为准。
 
 **客户端模块暂不补单测**：`src/lib/request.ts`、`src/hooks/*` 依赖浏览器环境
 （`window`、blob、SWR 缓存）。jsdom 环境已具备（见上），但 `import` 它们仍会连带
