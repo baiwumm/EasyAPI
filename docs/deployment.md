@@ -43,8 +43,9 @@
 | `NEXT_PUBLIC_APP_TITLE` | 站点标题 | OG 图有 fallback，metadata 无 |
 | `NEXT_PUBLIC_APP_DESC` | 站点描述 | metadata 为空 |
 | `NEXT_PUBLIC_APP_KEYWORDS` | 关键词 | metadata 为空 |
-| `NEXT_PUBLIC_COPYRIGHT` | 版权方 | 页脚版权为空 |
-| `NEXT_PUBLIC_AUTHOR_ROLE` | OG 图作者身份 | OG 图有 fallback「独立开发者」 |
+
+> 版权/作者身份不走 env：展示名固定为 GitHub 用户名，bio 与头像运行时从
+> GitHub 账户拉取（缓存一天），单一来源见 `src/lib/author.ts`。
 
 ### 备案与统计（缺失则对应入口隐藏或不加载）
 

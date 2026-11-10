@@ -28,7 +28,9 @@ import { useState } from "react";
 import { CircleXmarkFill } from "@gravity-ui/icons";
 
 import { useSupabaseUser } from "@/hooks/use-supabase-user";
+import { useUserAvatarUrl } from "@/hooks/use-user-avatar";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
+import { getUserDisplayName } from "@/lib/user-profile";
 
 const UserAvatar: FC = () => {
   const supabase = getSupabaseBrowserClient();
@@ -40,17 +42,11 @@ const UserAvatar: FC = () => {
   // 退出确认弹窗
   const [open, setOpen] = useState(false);
   const alertState = useOverlayState();
-  // 用户名称
-  const name =
-    user?.user_metadata.name ||
-    user?.user_metadata.user_name ||
-    user?.email?.slice(0, 1);
-  // 用户头像
-  const avatar = user?.user_metadata.avatar_url as string;
-  // GitHub 头像域名在部分网络不可达，统一走本站代理；无头像时交给 Fallback
-  const avatarUrl = avatar
-    ? `/api/avatar-proxy?url=${encodeURIComponent(avatar)}`
-    : undefined;
+  // 用户名称：GitHub 用户名优先（不展示真名），回退登录资料名、邮箱首字符
+  const name = getUserDisplayName(user);
+  // 用户头像：候选链预加载降级（GitHub 身份头像 > 登录资料头像 > 本地兜底），
+  // 远程候选统一走 /api/avatar-proxy 代理，全部不可达时交给 Fallback
+  const avatarUrl = useUserAvatarUrl(user);
 
   // 点击菜单回调
   const onClickMenu = (key: Key) => {

@@ -11,6 +11,7 @@ import { Chip, cn, Description, Link, Separator } from "@heroui/react";
 import dayjs from "dayjs";
 import Image from "next/image";
 
+import { AUTHOR_HANDLE } from "@/lib/author";
 import pkg from "#/package.json";
 
 /** 备案入口（label 缺失时整条过滤掉） */
@@ -37,10 +38,12 @@ const IcpLinks: IcpLink[] = [
 const Footer: FC = () => {
   return (
     <footer
-      className="mx-auto w-full container! px-6 py-4 grid grid-cols-1 sm:grid-cols-3 items-center gap-2"
+      className="mx-auto w-full container! px-6 py-4 grid grid-cols-1 lg:grid-cols-3 items-center gap-3 lg:gap-4"
       id="footer"
     >
-      <div className="flex items-center justify-center gap-3 justify-self-center sm:justify-self-start">
+      {/* 三列布局只在 lg（≥1024px）启用：sm~lg 档三等分每列仅约 197px，
+          品牌、版权、备案号都会被挤断行 */}
+      <div className="flex items-center justify-center gap-3 justify-self-center lg:justify-self-start whitespace-nowrap">
         <div className="w-[90px] h-6 relative">
           <Image fill alt="Logo" src="/logo.png" />
         </div>
@@ -62,7 +65,7 @@ const Footer: FC = () => {
           <Chip.Label>服务状态正常</Chip.Label>
         </Chip>
       </div>
-      <Description className="justify-self-center">
+      <Description className="justify-self-center text-center whitespace-nowrap">
         &copy; {dayjs().year()}{" "}
         <a
           className="hover:text-accent transition-colors"
@@ -70,15 +73,15 @@ const Footer: FC = () => {
           rel="noopener noreferrer"
           target="_blank"
         >
-          {process.env.NEXT_PUBLIC_COPYRIGHT}
+          {AUTHOR_HANDLE}
         </a>
         . All rights reserved.
       </Description>
-      <div className="flex gap-2 items-center flex-col sm:flex-row justify-self-center sm:justify-self-end">
+      <div className="flex gap-2 items-center flex-col sm:flex-row justify-self-center lg:justify-self-end whitespace-nowrap">
         {IcpLinks.map(({ image, url, label }) => (
           <Link
             key={url}
-            className="flex gap-1 items-center no-underline"
+            className="flex gap-1 items-center no-underline whitespace-nowrap"
             href={url}
             target="_blank"
           >

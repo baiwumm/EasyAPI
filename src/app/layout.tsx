@@ -12,6 +12,7 @@ import Provider from "./Provider";
 import { GoogleUtilities, MicrosoftClarity } from "@/components/Analytics";
 import Footer from "@/components/Footer";
 import FullLoading from "@/components/FullLoading";
+import { AUTHOR_HANDLE } from "@/lib/author";
 import pkg from "#/package.json";
 
 export const metadata: Metadata = {
@@ -24,9 +25,9 @@ export const metadata: Metadata = {
   },
   description: process.env.NEXT_PUBLIC_APP_DESC,
   keywords: process.env.NEXT_PUBLIC_APP_KEYWORDS,
-  authors: [{ name: process.env.NEXT_PUBLIC_COPYRIGHT, url: pkg.author.url }],
-  creator: process.env.NEXT_PUBLIC_COPYRIGHT,
-  publisher: process.env.NEXT_PUBLIC_COPYRIGHT,
+  authors: [{ name: AUTHOR_HANDLE, url: pkg.author.url }],
+  creator: AUTHOR_HANDLE,
+  publisher: AUTHOR_HANDLE,
   icons: {
     icon: "/favicon.ico",
     apple: "/apple-icon.png",

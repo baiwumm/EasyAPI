@@ -3,6 +3,8 @@ import { extname, join } from "node:path";
 
 import { ImageResponse } from "next/og";
 
+import { AUTHOR_HANDLE, getGithubAuthor } from "@/lib/author";
+
 export const alt = process.env.NEXT_PUBLIC_APP_TITLE;
 export const size = {
   width: 1200,
@@ -18,8 +20,6 @@ const APP_NAME = process.env.NEXT_PUBLIC_APP_NAME || "EasyApi";
 const APP_TITLE =
   process.env.NEXT_PUBLIC_APP_TITLE || "一个把常用 API 收拾得干干净净的小站";
 const APP_HOST = APP_URL.replace(/^https?:\/\//, "").replace(/\/$/, "");
-const AUTHOR_NAME = process.env.NEXT_PUBLIC_COPYRIGHT || "白雾茫茫丶";
-const AUTHOR_ROLE = process.env.NEXT_PUBLIC_AUTHOR_ROLE || "独立开发者";
 const TECH_TAGS = ["React", "Next.js", "HeroUI", "Tailwind CSS"];
 
 // 主题色：取自 globals.css --accent: oklch(73.06% 0.1911 137.23) → #67C23A
@@ -37,14 +37,33 @@ const ASSET_MIME_TYPES: Record<string, string> = {
 // Vercel 最佳实践：静态 I/O 提升到模块级，只读一次，避免每次请求重复 readFile
 const logoAsset = publicAssetToDataUrl("logo-256.png");
 const previewAsset = publicAssetToDataUrl("light.png");
-const avatarAsset = publicAssetToDataUrl("avatar.jpg");
+const avatarAsset = publicAssetToDataUrl("avatar.png");
+
+// 作者头像：优先 GitHub 账户头像（revalidate 缓存），抓取失败回退本地 avatar.png
+async function resolveAuthorAvatar(avatarUrl: string) {
+  try {
+    const res = await fetch(avatarUrl, { next: { revalidate: 86400 } });
+
+    if (res.ok) {
+      const buffer = await res.arrayBuffer();
+      const contentType = res.headers.get("content-type") ?? "image/png";
+
+      return `data:${contentType};base64,${Buffer.from(buffer).toString("base64")}`;
+    }
+  } catch {
+    // 网络失败走本地兜底
+  }
+
+  return avatarAsset;
+}
 
 export default async function OpenGraphImage() {
-  const [logoUrl, previewUrl, avatarUrl] = await Promise.all([
+  const [logoUrl, previewUrl, author] = await Promise.all([
     logoAsset,
     previewAsset,
-    avatarAsset,
+    getGithubAuthor(),
   ]);
+  const avatarUrl = await resolveAuthorAvatar(author.avatarUrl);
 
   return new ImageResponse(
     <div
@@ -196,7 +215,7 @@ export default async function OpenGraphImage() {
               }}
             >
               <img
-                alt={AUTHOR_NAME}
+                alt={author.name}
                 height={48}
                 src={avatarUrl}
                 style={{
@@ -222,7 +241,7 @@ export default async function OpenGraphImage() {
                   color: "#1A1A1A",
                 }}
               >
-                {AUTHOR_NAME}
+                {author.name}
               </span>
               <span
                 style={{
@@ -230,7 +249,7 @@ export default async function OpenGraphImage() {
                   color: "#666666",
                 }}
               >
-                {AUTHOR_ROLE}
+                {author.bio ?? AUTHOR_HANDLE}
               </span>
             </div>
           </div>
