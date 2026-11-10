@@ -49,9 +49,11 @@ export function createMiddlewareClient(request: NextRequest) {
  * 页面导航的会话刷新：getClaims 时过期 token 经 setAll 续期并写入响应 cookie。
  * 只做会话机制（刷新 + 读 claims），不做路由策略——守卫在 src/proxy.ts。
  *
- * 注意：URL 带 ?code= 时这里不做任何拦截。OAuth 的 code 交换由浏览器端
- * @supabase/ssr 完成（detectSessionInUrl 默认开启）；服务端用 rewrite 清参数
- * 既不改浏览器地址栏，还会丢弃本响应上刚刷新的 cookie（C7，已删）
+ * 注意：URL 带 ?code= 时这里不做任何拦截。OAuth 的 code 交换已收敛到
+ * /auth/callback 服务端路由（2026-11 起）；若站点根路径仍出现 ?code=
+ * （如 Supabase 回退 Site URL 的退化场景），由浏览器端
+ * detectSessionInUrl 兜底交换（C7：服务端 rewrite 清参数不改地址栏还丢
+ * cookie，故不做）
  */
 export async function updateSession(request: NextRequest) {
   const { supabase, getResponse } = createMiddlewareClient(request);

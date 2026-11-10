@@ -168,11 +168,13 @@ const ClientComponent: FC = () => {
       const { error } = await supabase.auth.signInWithOAuth({
         provider,
         options: {
-          // 回到发起登录的地址：本地开发回 localhost、线上回线上，
-          // 不依赖 NEXT_PUBLIC_APP_URL 与部署环境对齐。
-          // 各环境地址需在 Supabase Dashboard → Authentication →
-          // URL Configuration → Redirect URLs 白名单内，否则回退 Site URL
-          redirectTo: window.location.origin,
+          // 走服务端回调路由 /auth/callback：code 落地即服务端交换并 302 到
+          // 干净地址，地址栏几乎看不到交换码。本地开发回 localhost、线上回
+          // 线上，不依赖 NEXT_PUBLIC_APP_URL 与部署环境对齐。
+          // 各环境的 /auth/callback 地址需在 Supabase Dashboard →
+          // Authentication → URL Configuration → Redirect URLs 白名单内，
+          // 否则 Supabase 回退 Site URL，退化为浏览器端交换（URL 带 code）
+          redirectTo: `${window.location.origin}/auth/callback`,
         },
       });
 

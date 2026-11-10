@@ -1,8 +1,10 @@
 // @vitest-environment jsdom
 /*
- * 登录页 OAuth 回跳（redirectTo）：从哪个地址发起登录就回哪个地址，
+ * 登录页 OAuth 回跳（redirectTo）：回各环境的服务端回调路由 /auth/callback
+ * ——code 落地即服务端交换并 302 到干净地址，地址栏几乎看不到交换码。
  * 本地开发回 localhost、线上回线上，不依赖 NEXT_PUBLIC_APP_URL 与部署环境对齐。
- * （Supabase 侧要求各环境 origin 在 Redirect URLs 白名单内，否则回退 Site URL）
+ * （Supabase 侧要求各环境 /auth/callback 地址在 Redirect URLs 白名单内，
+ * 否则回退 Site URL、退化为浏览器端交换）
  */
 import { render, screen, cleanup } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
@@ -46,7 +48,7 @@ beforeEach(() => {
 afterEach(cleanup);
 
 describe("登录页 OAuth redirectTo", () => {
-  it("Github 登录回跳当前站点源（jsdom 默认 http://localhost:3000）", async () => {
+  it("Github 登录回跳服务端回调路由（jsdom 默认 http://localhost:3000）", async () => {
     const user = userEvent.setup();
     render(<ClientComponent />);
 
@@ -54,11 +56,11 @@ describe("登录页 OAuth redirectTo", () => {
 
     expect(signInWithOAuth).toHaveBeenCalledWith({
       provider: "github",
-      options: { redirectTo: window.location.origin },
+      options: { redirectTo: `${window.location.origin}/auth/callback` },
     });
   });
 
-  it("Google 登录同样回跳当前站点源", async () => {
+  it("Google 登录同样回跳服务端回调路由", async () => {
     const user = userEvent.setup();
     render(<ClientComponent />);
 
@@ -66,7 +68,7 @@ describe("登录页 OAuth redirectTo", () => {
 
     expect(signInWithOAuth).toHaveBeenCalledWith({
       provider: "google",
-      options: { redirectTo: window.location.origin },
+      options: { redirectTo: `${window.location.origin}/auth/callback` },
     });
   });
 });
