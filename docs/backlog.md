@@ -15,6 +15,22 @@ enums 改名 / G4，见文末「已完成」）。新发现的待办按原表格
 
 ## 已完成
 
+- 2026-11 权限模型改造：登录鉴权从 `ADMIN_EMAILS` 白名单收敛为
+  「注册已关闭（Dashboard 关 Allow new users to sign up）、登录即可信」，
+  与 better-nav 同模型——删 `requireAdmin` 与 `/api/auth/me`，写接口与
+  `/admin` 统一 `requireUser`；RLS 写策略改 `to authenticated`（线上库经
+  `DATABASE_URL` 直连已执行）；API 密钥切 publishable key（`ANON_KEY` /
+  `ADMIN_EMAILS` 全部下架，Vercel / GitHub secrets 同名迁移）；17 个注册
+  开放期遗留用户经 Auth Admin API 清理，`auth.users` 仅剩管理员账号；
+  新增 OAuth 注册拒绝的服务端改写与登录页提示。运维通道见
+  `docs/deployment.md`「Agent 运维指令」
+- 2026-11 作者信息单一来源 + 头像候选链（移植自 better-nav）：
+  `src/lib/author.ts` 展示名固定 GitHub 用户名、bio/头像拉 GitHub API
+  缓存一天，OG 图 / metadata / Footer 统一接入，`NEXT_PUBLIC_COPYRIGHT`
+  / `NEXT_PUBLIC_AUTHOR_ROLE` 两个 env 下架；`user-profile.ts` +
+  `use-user-avatar.ts` 头像候选链预加载降级（GitHub 身份头像优先，远程
+  统一走 avatar-proxy）；Footer 三列布局推迟到 lg；`avatar.jpg` →
+  `avatar.png`；登录按钮改单一 `pending` 互斥态；`w-[90px]` → `w-22.5`
 - CI/自动发版（2026-10-13）：新增 `ci.yml`（push/PR 跑 lint/typecheck/test）与
   `release.yml`（手动触发，四道预检全绿后 release-it 一键发版，Vercel 跟随部署）；
   tag 自 v2.10.0 起带 v 前缀，历史 35 个 tag / 34 个 Release 已迁移；

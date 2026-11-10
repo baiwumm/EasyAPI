@@ -56,6 +56,30 @@
 | `NEXT_PUBLIC_GOOGLE_ID` | Google Analytics | 仅在 `NODE_ENV=production` 且非 Vercel preview 时加载 |
 | `NEXT_PUBLIC_CLARITY_ID` | Microsoft Clarity | 同上 |
 
+## Agent 运维指令（免人工 Dashboard）
+
+本地 `.env` 的两个机密密钥是 Agent 做运维的合法通道。**可脚本化的操作
+Agent 直接执行，不要推给用户去 Dashboard 手动点**：
+
+| 密钥 | 通道 | Agent 可直接执行 |
+|---|---|---|
+| `DATABASE_URL` | psql / node `pg` 直连（pooler 事务端口 6543，角色 `postgres`） | 执行 `supabase/*.sql`；核对 `pg_policies` / `pg_proc` / 触发器 / 表行数；RLS 变更与回滚 |
+| `SUPABASE_SECRET_KEY` | Supabase Auth Admin API（`/auth/v1/admin/*`，Bearer 密钥） | 列出/创建/删除用户、设置密码；探测注册开关（`POST /auth/v1/signup` 故意用废密码验证返回 `signup_disabled`，不落库） |
+
+硬性约束：
+
+- 两个密钥**只存在于本地 `.env`**：不进仓库、不进 Vercel、不进 CI secrets、
+  禁止加 `NEXT_PUBLIC_` 前缀；任何输出（日志/报告/终端回显）不得出现密钥值
+- 破坏性操作（删用户、DROP/替换策略、改表结构）执行前必须向用户确认范围
+  与清单，执行后立即复核结果
+- `auth.users` 是唯一用户账本（没有 public.users / profiles 表）：注册已关闭，
+  账号仅经 Admin API 或 Dashboard Add user 进入，登录态即权限（模型说明见
+  「环境变量清单」）
+
+仍然必须人工的事项（平台层，Agent 无权限）：Vercel 环境变量、GitHub Actions
+secrets、Supabase Dashboard 的 OAuth provider 配置与 Redirect URLs 白名单、
+域名/DNS、发版工作流的触发决策。
+
 ## CI 与自动发版
 
 仓库有两个 GitHub Actions workflow（`.github/workflows/`）：
@@ -92,8 +116,9 @@
   `revalidatePath('/')`，变更最迟在下次访问时生效（F2 已修）。
 - `src/app/bing-wallpaper/page.tsx` 是 ISR 24h。`getBingWallpaper()` 已在返回前
   校验地址可解析且带 id，Bing 改返回结构时走缓存兜底不会缓存坏数据（C9 已修）。
-- `supabase/rls.sql` 不在构建流程内，需在 Supabase Dashboard SQL Editor
-  或本地 `psql "$DATABASE_URL" -f supabase/rls.sql` 手动执行。
+- `supabase/rls.sql` 不在构建流程内：2026-11 已在线上库执行过；后续变更
+  用本地 `psql "$DATABASE_URL" -f supabase/rls.sql` 直连执行（见
+  「Agent 运维指令」），无需开 Dashboard。
 - 字体分片产物（78 个 woff2 分片 + `src/app/maple-mono-cn.css`）已随仓库提交，
   只有换字体才需要重跑 `pnpm split-font`。重跑前要手动补 cn-font-split 的原生 DLL
   ——pnpm 会拦 postinstall 下载，npm 包版本（7.4.3）又落后于 GitHub release

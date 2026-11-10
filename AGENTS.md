@@ -35,7 +35,7 @@ src/
 ├── enums/                # enum-plus 枚举（入口 index.ts）
 └── typings/              # 全局类型（index.ts；table-types.ts 禁改，见下）
 tests/                    # 镜像 src 结构，*.test.ts；eslint 已忽略，但必须过 tsc
-supabase/rls.sql          # RLS 策略，需在 Supabase Dashboard 手动执行
+supabase/rls.sql          # RLS 策略（2026-11 已在线上库执行；变更/核对用本地 .env 的 DATABASE_URL 直连，见 docs/deployment.md「Agent 运维指令」）
 public/openapi.yaml       # 手工维护的 OpenAPI 3.1（/docs 数据源；版本号发版时自动同步）
 ```
 
@@ -77,5 +77,6 @@ public/openapi.yaml       # 手工维护的 OpenAPI 3.1（/docs 数据源；版�
 | 写代码前 / 提交前 | `docs/code-standards.md` |
 | 查 HeroUI 用法、Skill、MCP | `docs/ai-tooling.md` |
 | 部署、环境变量、发版 | `docs/deployment.md` |
+| 改库 / 管理用户 / 密钥运维（免人工 Dashboard） | `docs/deployment.md` 的「Agent 运维指令」 |
 | 升级依赖前 | `docs/upgrades.md` |
 | 查某处为什么这么改 | `docs/audit-2026-10.md` |
