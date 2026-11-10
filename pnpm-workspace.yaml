@@ -3,11 +3,6 @@ shellEmulator: true
 # 安装时不降级已锁定版本；pnpm 校验该字段只接受 off / no-downgrade
 trustPolicy: off
 
-packages:
-  - .
-ignoredBuiltDependencies:
-  - sharp
-  - unrs-resolver
 # 字体切分工具链（cn-font-split 及其原生依赖）：构建期不需要跑 postinstall，
 # 分片产物已随仓库提交（见 AGENTS.md Notes 的 split-font 说明）。
 # pnpm 12 用 allowBuilds 映射：false = 有意跳过该包构建脚本——不声明的话
@@ -16,12 +11,3 @@ allowBuilds:
   cn-font-split: false
   koffi: false
   protobufjs: false
-minimumReleaseAgeExclude:
-  - '@eslint/compat@2.1.1'
-  - '@supabase/auth-js@2.115.0'
-  - '@supabase/functions-js@2.115.0'
-  - '@supabase/postgrest-js@2.115.0'
-  - '@supabase/realtime-js@2.115.0'
-  - '@supabase/storage-js@2.115.0'
-  - '@supabase/supabase-js@2.115.0'
-  - theme-switch-animation@0.5.1
