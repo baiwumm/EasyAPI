@@ -1,5 +1,44 @@
 # Changelog
 
+## [3.0.0](https://github.com/baiwumm/EasyAPI/compare/v2.10.0...v3.0.0) (2026-11-10)
+
+### ⚠ BREAKING CHANGES
+
+* **auth:** 部署需配置 NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY，
+  并从 Vercel / GitHub secrets 移除已废弃的 ADMIN_EMAILS 与
+  NEXT_PUBLIC_SUPABASE_ANON_KEY
+
+### ✨ Features | 新功能
+
+* **profile:** 作者信息单一来源化 + 头像候选链降级（移植自 better-nav） ([a6a5c37](https://github.com/baiwumm/EasyAPI/commit/a6a5c37f885710282b64182585180c2db7642048))
+
+### 🐛 Bug Fixes | Bug 修复
+
+* **a11y:** BackTop 圆环补 aria-label 消除 React Aria 校验警告 ([dc8ff91](https://github.com/baiwumm/EasyAPI/commit/dc8ff911cce48d8bf2131038ccddffc0c62c310f))
+* **deps:** 补装 eslint-config-prettier，修复 CI Lint 崩溃 ([ee8b1df](https://github.com/baiwumm/EasyAPI/commit/ee8b1df9770fd83b4010e1b42f2aaf7a6bce178b))
+* **login:** 登录按钮互斥状态，点击谁只有谁 Loading（移植 better-nav 模式） ([9d39c22](https://github.com/baiwumm/EasyAPI/commit/9d39c22ae5067ddf6c990711be66f0040a074ffe))
+
+### 🎫 Chores | 其他更新
+
+* **deps:** theme-switch-animation 0.5.1 → 0.6.0 ([b2bc242](https://github.com/baiwumm/EasyAPI/commit/b2bc24276e409542c43de9586e2c8356440791ad))
+* **deps:** 升级 next 16.4.5（安全修复）与范围内依赖，清理 workspace 死配置 ([50c857d](https://github.com/baiwumm/EasyAPI/commit/50c857d6139d288b9646b791ccf96e93ffdca237))
+
+### 📝 Documentation | 文档
+
+* **agents:** AGENTS.md 瘦身至百行内，踩坑细则按主题归位 ([6ef68fd](https://github.com/baiwumm/EasyAPI/commit/6ef68fde7bdc70714af5fee4618000ba9ec0af5c))
+* **readme:** 修正 Node 版本要求与调用计数函数名 ([51d723b](https://github.com/baiwumm/EasyAPI/commit/51d723bde6c6290da8fa25091314a907d2685c4e))
+* **readme:** 宣传片去 sub 说明行，部署与环境变量小更新 ([874b4bf](https://github.com/baiwumm/EasyAPI/commit/874b4bf8ce5a1ae27a4a12ccc3ab1d2d3e81b052)), references [#1](https://github.com/baiwumm/EasyAPI/issues/1)
+* 新增 Agent 运维指令，清理过时的人工 Dashboard 指引 ([c9e46bf](https://github.com/baiwumm/EasyAPI/commit/c9e46bf3df5eb3255091c86dc304a509a72d4706))
+* 清理专题文档过期描述 ([3fb58fd](https://github.com/baiwumm/EasyAPI/commit/3fb58fd78494874add331a96949f309f5c308b9e))
+
+### 💄 Styles | 风格
+
+* **tailwind:** Footer 任意值类名 w-[90px] 规范化为 w-22.5 ([c6d58da](https://github.com/baiwumm/EasyAPI/commit/c6d58dabb74b17996a4f2834365f8dea3a237fe1))
+
+### ♻ Code Refactoring | 代码重构
+
+* **auth:** 权限模型改为「注册已关闭、登录即可信」，切换 publishable key ([3e1412f](https://github.com/baiwumm/EasyAPI/commit/3e1412f6e935068e3e6be6239c5a7f2b0cda73ae))
+
 ## [2.10.0](https://github.com/baiwumm/EasyAPI/compare/v2.9.0...v2.10.0) (2026-10-14)
 
 ### ✨ Features | 新功能
