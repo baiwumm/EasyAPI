@@ -39,8 +39,10 @@ interface EmailForm {
 const ClientComponent: FC = () => {
   const supabase = getSupabaseBrowserClient();
   const router = useRouter();
-  const [emailLoading, setEmailLoading] = useState(false);
-  const [oauthLoading, setOauthLoading] = useState(false);
+  // 当前进行中的登录方式：被点击的按钮给 Spinner，其余两个按钮一律禁用
+  const [pending, setPending] = useState<
+    "email" | typeof OAUTH_PROVIDERS.valueType | null
+  >(null);
   // 是否显示密码
   const [showPassword, setShowPassword] = useState(false);
 
@@ -108,7 +110,7 @@ const ClientComponent: FC = () => {
       data[key as keyof EmailForm] = value.toString();
     });
 
-    setEmailLoading(true);
+    setPending("email");
 
     // 邮箱 + 密码登录（注册已关闭，账号仅由管理员在 Supabase Dashboard 添加）
     const authPromise = (async () => {
@@ -126,7 +128,7 @@ const ClientComponent: FC = () => {
     toast.promise(authPromise, {
       loading: "登录中...",
       success: async () => {
-        setEmailLoading(false);
+        setPending(null);
         // 显式跳转：不再仅依赖中间件对 /login 的间接重定向
         // （注册已关闭，登录用户即受信任，统一进管理后台）
         await router.replace("/admin");
@@ -135,7 +137,7 @@ const ClientComponent: FC = () => {
         return "登录成功，欢迎回来！";
       },
       error: (err: { message: string }) => {
-        setEmailLoading(false);
+        setPending(null);
 
         return `登录失败，请稍后重试：${err.message}`;
       },
@@ -146,7 +148,7 @@ const ClientComponent: FC = () => {
   const handleOAuthLogin = async (
     provider: typeof OAUTH_PROVIDERS.valueType,
   ) => {
-    setOauthLoading(true);
+    setPending(provider);
     // 加一个短提示，避免跳转等待时间过长无反馈
     toast("登录中...", {
       timeout: 2000,
@@ -176,11 +178,11 @@ const ClientComponent: FC = () => {
 
       if (error) {
         errorToast(error.message);
-        setOauthLoading(false);
+        setPending(null);
       }
     } catch (err) {
       errorToast((err as Error).message);
-      setOauthLoading(false);
+      setPending(null);
     }
   };
 
@@ -275,8 +277,8 @@ const ClientComponent: FC = () => {
             </TextField>
             <Button
               className="w-full"
-              isDisabled={oauthLoading || emailLoading}
-              isPending={emailLoading}
+              isDisabled={pending !== null}
+              isPending={pending === "email"}
               type="submit"
             >
               {({ isPending }) => (
@@ -299,8 +301,8 @@ const ClientComponent: FC = () => {
               <Button
                 key={value}
                 className="w-full"
-                isDisabled={oauthLoading || emailLoading}
-                isPending={oauthLoading}
+                isDisabled={pending !== null}
+                isPending={pending === value}
                 variant="outline"
                 onPress={() => handleOAuthLogin(value)}
               >
