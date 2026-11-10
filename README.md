@@ -35,8 +35,6 @@
 
 <div align="center">
   <video src="https://github.com/user-attachments/assets/a17d0126-beea-47e2-a6d0-747c95addbd9" width="90%" controls muted playsinline></video>
-  <br />
-  <sub>53 秒 · 1080p · 中文口播 + 中英字幕（附件载体见 <a href="https://github.com/baiwumm/EasyAPI/issues/1">#1</a>，请勿删除）</sub>
 </div>
 
 ## 🌱 简介
@@ -88,7 +86,7 @@ NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=
 ```
 
-站点标题、SEO、统计、版权与备案等可选项见 [`.env.example`](./.env.example)。
+站点标题、SEO、统计与备案等可选项见 [`.env.example`](./.env.example)。
 
 ## 🍀 Supabase 配置
 
@@ -107,7 +105,7 @@ NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=
 
 1. Fork 本项目
 2. 在 Vercel 中导入仓库
-3. 配置环境变量
+3. 配置环境变量（`NEXT_PUBLIC_SUPABASE_URL` / `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`，完整清单与缺失表现见 [`docs/deployment.md`](./docs/deployment.md)）
 4. 点击 Deploy
 
 ## 🌸 许可证
