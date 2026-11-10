@@ -48,26 +48,31 @@ export default async function proxy(request: NextRequest) {
     return NextResponse.next();
   }
 
-  const { supabaseResponse, claims } = await updateSession(request);
+  // OAuth 新用户被注册开关拒绝时，Supabase 会把 error/error_code 参数带回
+  // redirectTo（站点根路径），浏览器端 detectSessionInUrl 会静默消费掉这些
+  // 参数导致毫无反馈；这里在服务端抢先改写到登录页，由登录页统一提示
+  // （登录页自身不再改写，防止循环）
+  const errorCode = request.nextUrl.searchParams.get("error_code");
 
-  // 管理员白名单（与 lib/supabase/server.ts 的 requireAdmin 保持一致）
-  const adminEmails = (process.env.ADMIN_EMAILS || "")
-    .split(",")
-    .map((email) => email.trim().toLowerCase())
-    .filter(Boolean);
-  const email =
-    typeof claims?.email === "string" ? claims.email.toLowerCase() : "";
-  const isAdmin = !!(email && adminEmails.includes(email));
+  if (request.nextUrl.searchParams.has("error") && !path.startsWith("/login")) {
+    const url = request.nextUrl.clone();
 
-  // 已登录访问登录页：管理员跳转管理页面，其他用户回首页
-  if (claims && path.startsWith("/login")) {
-    return NextResponse.redirect(
-      new URL(isAdmin ? "/admin" : "/", request.url),
-    );
+    url.pathname = "/login";
+    // 只保留错误码，丢弃 error_description 等其余回调参数
+    url.search = `error=${encodeURIComponent(errorCode || "oauth_error")}`;
+
+    return NextResponse.redirect(url);
   }
 
-  // 未登录或非白名单邮箱访问管理页面，一律跳转登录页
-  if ((!claims || !isAdmin) && path.startsWith("/admin")) {
+  const { supabaseResponse, claims } = await updateSession(request);
+
+  // 已登录访问登录页：注册已关闭、登录用户即受信任，直接进管理后台
+  if (claims && path.startsWith("/login")) {
+    return NextResponse.redirect(new URL("/admin", request.url));
+  }
+
+  // 未登录访问管理页面，一律跳转登录页
+  if (!claims && path.startsWith("/admin")) {
     const url = request.nextUrl.clone();
 
     url.pathname = "/login";

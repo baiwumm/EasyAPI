@@ -16,17 +16,17 @@ import Apis from "./components/apis";
 import Categorys from "./components/categorys";
 
 import { ADMIN_TABS } from "@/enums";
-import { requireAdmin } from "@/lib/supabase/server";
+import { requireUser } from "@/lib/supabase/server";
 
 export const metadata: Metadata = {
   title: "后台管理",
 };
 
 const Admin: FC = async () => {
-  // 服务端校验管理员（登录 + 邮箱白名单），未通过跳登录页
-  const admin = await requireAdmin();
+  // 服务端校验登录（注册已关闭，登录用户即受信任），未通过跳登录页
+  const user = await requireUser();
 
-  if (!admin) {
+  if (!user) {
     redirect("/login");
   }
 

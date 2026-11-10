@@ -85,10 +85,7 @@ pnpm dev
 ```bash
 # Supabase（必填）
 NEXT_PUBLIC_SUPABASE_URL=
-NEXT_PUBLIC_SUPABASE_ANON_KEY=
-
-# 后台管理员邮箱白名单（逗号分隔多个），只有白名单内的账号能进入后台增删改查
-ADMIN_EMAILS=
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=
 ```
 
 站点标题、SEO、统计、版权与备案等可选项见 [`.env.example`](./.env.example)。
@@ -97,10 +94,10 @@ ADMIN_EMAILS=
 
 开始之前，你需要在 Supabase 中准备好以下内容：
 
-1. 创建项目，并填写 `NEXT_PUBLIC_SUPABASE_URL` 与 `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-2. 配置认证方式，并将你的邮箱加入 `ADMIN_EMAILS` 白名单（只有白名单账号能进入后台增删改查）
+1. 创建项目，并填写 `NEXT_PUBLIC_SUPABASE_URL` 与 `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`
+2. 关闭注册：Authentication → Sign In / Providers → Email 取消勾选 *Allow new users to sign up*；账号通过 Authentication → Users → **Add user** 添加（登录用户即可进后台增删改查，未受邀的第三方 OAuth 登录会被拒绝、不会入库）
 3. 初始化项目依赖的数据结构：`ea_categorys`、`ea_apis` 表，以及 `increment_call_count_by_path` 函数（见 [`supabase/increment-call-count-by-path.sql`](./supabase/increment-call-count-by-path.sql)）
-4. 建议在 SQL Editor 中执行 [`supabase/rls.sql`](./supabase/rls.sql)，开启行级安全（RLS），防止有人拿浏览器公开的 anon key 直接调用 REST API 绕过应用层
+4. 建议在 SQL Editor 中执行 [`supabase/rls.sql`](./supabase/rls.sql)，开启行级安全（RLS），防止有人拿浏览器公开的 publishable key 直接调用 REST API 绕过应用层
 
 如果你准备把它作为自己的接口站二次使用，最省事的方式是按当前前端字段结构直接在 Supabase 中建表，再根据自己的登录方式补齐鉴权策略。
 

@@ -3,7 +3,7 @@ import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
 import { RESPONSE } from "@/enums";
-import { getSupabaseServerClient, requireAdmin } from "@/lib/supabase/server";
+import { getSupabaseServerClient, requireUser } from "@/lib/supabase/server";
 import { parseApiBody } from "@/lib/server/write-guard";
 import { revalidateHome } from "@/lib/server/home";
 import {
@@ -109,8 +109,8 @@ export async function GET(request: NextRequest) {
  */
 export async function POST(request: NextRequest) {
   try {
-    // 校验管理员（登录 + 邮箱白名单）
-    const user = await requireAdmin();
+    // 校验登录（注册已关闭，登录用户即可写）
+    const user = await requireUser();
 
     if (!user) {
       return NextResponse.json(

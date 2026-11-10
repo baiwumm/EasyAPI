@@ -19,7 +19,8 @@ enums 改名 / G4，见文末「已完成」）。新发现的待办按原表格
   `release.yml`（手动触发，四道预检全绿后 release-it 一键发版，Vercel 跟随部署）；
   tag 自 v2.10.0 起带 v 前缀，历史 35 个 tag / 34 个 Release 已迁移；
   `openapi.yaml` 版本号由发版 hook 自动同步（`scripts/sync-openapi-version.mjs`）；
-  Actions secrets：NEXT_PUBLIC_SUPABASE_URL / ANON_KEY / APP_URL。见 `docs/deployment.md`
+  Actions secrets：NEXT_PUBLIC_SUPABASE_URL / PUBLISHABLE_KEY / APP_URL
+  （2026-11 权限模型改造时由 ANON_KEY 迁移）。见 `docs/deployment.md`
 - `D15` AlertContent/ErrorContent 操作按钮合并为一套：原桌面/移动两套按钮都挂在
   DOM（sm:hidden / hidden sm:block），键盘会 Tab 到隐藏副本。改为单一按钮进内容列，
   内容列 `sm:flex-row`：移动端纵向（按钮在描述下方）、桌面横向（按钮靠右），

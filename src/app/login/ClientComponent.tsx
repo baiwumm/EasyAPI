@@ -67,6 +67,36 @@ const ClientComponent: FC = () => {
     );
   }, []);
 
+  // OAuth 新用户被注册开关拒绝时，中间件把错误改写到 /login?error=<错误码>，
+  // 这里只负责提示（服务端已抢先改写，展示后清理查询参数）
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const errorCode = params.get("error");
+
+    if (!errorCode) {
+      return;
+    }
+
+    toast.danger(
+      errorCode === "signup_disabled"
+        ? "本站注册已关闭，仅限受邀账号登录。"
+        : "第三方登录失败，请稍后重试",
+      {
+        indicator: <CircleXmark />,
+        timeout: 4000,
+      },
+    );
+    params.delete("error");
+
+    const query = params.toString();
+
+    window.history.replaceState(
+      null,
+      "",
+      window.location.pathname + (query ? `?${query}` : ""),
+    );
+  }, []);
+
   // 表单提交
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -80,7 +110,7 @@ const ClientComponent: FC = () => {
 
     setEmailLoading(true);
 
-    // 邮箱 + 密码登录（本站仅管理员使用，不开放注册）
+    // 邮箱 + 密码登录（注册已关闭，账号仅由管理员在 Supabase Dashboard 添加）
     const authPromise = (async () => {
       const { data: authData, error } = await supabase.auth.signInWithPassword(
         data as EmailForm,
@@ -98,15 +128,9 @@ const ClientComponent: FC = () => {
       success: async () => {
         setEmailLoading(false);
         // 显式跳转：不再仅依赖中间件对 /login 的间接重定向
-        try {
-          const res = await fetch("/api/auth/me");
-          const { data } = await res.json();
-
-          await router.replace(data?.isAdmin ? "/admin" : "/");
-          router.refresh();
-        } catch {
-          router.replace("/");
-        }
+        // （注册已关闭，登录用户即受信任，统一进管理后台）
+        await router.replace("/admin");
+        router.refresh();
 
         return "登录成功，欢迎回来！";
       },

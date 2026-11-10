@@ -2,17 +2,17 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { NextRequest } from "next/server";
 
 // 写路由链式调用形态：insert/update/delete(...).select().single() 后解构 { data, error }
-const { supabase, revalidateHome, requireAdmin } = vi.hoisted(() => ({
+const { supabase, revalidateHome, requireUser } = vi.hoisted(() => ({
   supabase: {
     from: vi.fn(),
   },
   revalidateHome: vi.fn(),
-  requireAdmin: vi.fn(),
+  requireUser: vi.fn(),
 }));
 
 vi.mock("@/lib/supabase/server", () => ({
   getSupabaseServerClient: async () => supabase,
-  requireAdmin: () => requireAdmin(),
+  requireUser: () => requireUser(),
 }));
 
 // next/cache 的真实实现只在 Next 运行时有效，测试里换成记录型替身，
@@ -106,7 +106,7 @@ describe("管理端写接口成功后刷新首页（F2）", () => {
   beforeEach(() => {
     supabase.from.mockReset();
     revalidateHome.mockClear();
-    requireAdmin.mockResolvedValue({ email: "me@baiwumm.com" });
+    requireUser.mockResolvedValue({ email: "me@baiwumm.com" });
   });
 
   it("POST /api/apis 成功后刷新首页", async () => {
@@ -184,8 +184,8 @@ describe("管理端写接口成功后刷新首页（F2）", () => {
     expect(revalidateHome).not.toHaveBeenCalled();
   });
 
-  it("未登录/无权限时不刷新首页", async () => {
-    requireAdmin.mockResolvedValue(null);
+  it("未登录时不刷新首页", async () => {
+    requireUser.mockResolvedValue(null);
 
     const res = await createApi(post("http://x/api/apis", API_BODY));
 
@@ -199,7 +199,7 @@ describe("管理端写接口的请求体守卫", () => {
   beforeEach(() => {
     supabase.from.mockReset();
     revalidateHome.mockClear();
-    requireAdmin.mockResolvedValue({ email: "me@baiwumm.com" });
+    requireUser.mockResolvedValue({ email: "me@baiwumm.com" });
   });
 
   it("PUT 空 payload 返回 500，不打数据库也不刷新首页", async () => {
@@ -230,7 +230,7 @@ describe("管理端写接口的唯一性冲突（23505）", () => {
   beforeEach(() => {
     supabase.from.mockReset();
     revalidateHome.mockClear();
-    requireAdmin.mockResolvedValue({ email: "me@baiwumm.com" });
+    requireUser.mockResolvedValue({ email: "me@baiwumm.com" });
   });
 
   it("POST /api/apis 名称约束冲突返回 DUPLICATE 与「接口名称已存在」", async () => {
@@ -334,7 +334,7 @@ describe("删除分类前的引用检查", () => {
   beforeEach(() => {
     supabase.from.mockReset();
     revalidateHome.mockClear();
-    requireAdmin.mockResolvedValue({ email: "me@baiwumm.com" });
+    requireUser.mockResolvedValue({ email: "me@baiwumm.com" });
   });
 
   it("分类下仍有接口时拒绝删除，不打 ea_categorys 也不刷新首页", async () => {

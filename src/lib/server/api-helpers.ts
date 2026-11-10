@@ -39,7 +39,7 @@ export function textResponse(content: string): NextResponse {
  * 直接回传 `error.message` 会把 PostgREST 的内部细节透给匿名调用方
  * （如 `relation "ea_license_plate" does not exist`、列名、权限信息），
  * 既泄露 schema 又给攻击者省了踩点成本。仅管理端路由可保留原文，
- * 那边调用方已通过 requireAdmin 鉴权、需要原文排查。
+ * 那边调用方已通过 requireUser 登录校验、需要原文排查。
  */
 export function dbErrorResponse(
   error: { message?: string } | null,

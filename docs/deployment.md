@@ -8,7 +8,7 @@
 4. 点击 Deploy
 
 自托管同样可行，只需保证 Node 环境可跑 `pnpm build && pnpm start`，
-并补齐下方的服务端变量（`NEXT_PUBLIC_SUPABASE_*` 与 `ADMIN_EMAILS` 缺失时接口直接不可用）。
+并补齐下方的服务端变量（`NEXT_PUBLIC_SUPABASE_*` 缺失时接口直接不可用）。
 
 ## 环境变量清单
 
@@ -19,12 +19,20 @@
 | 变量 | 用途 | 缺失时 |
 |---|---|---|
 | `NEXT_PUBLIC_SUPABASE_URL` | Supabase 项目地址 | 所有接口 500 |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | 公开 anon key（进前端 bundle） | 所有接口 500 |
-| `ADMIN_EMAILS` | 管理员邮箱白名单，逗号分隔 | 无法登录后台、写接口全部 401 |
+| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | 公开 publishable key（`sb_publishable_` 新格式，进前端 bundle） | 所有接口 500 |
 
-> `ADMIN_EMAILS` 与 `supabase/rls.sql` 里的 `admin_emails` 数组是两处，
-> 改邮箱要同步。注意：rls.sql 是「DROP 全部旧策略再重建」的形式，
-> 执行前确认不会清掉手工策略。
+> **登录与权限模型（2026-11 起）**：注册已在 Supabase Dashboard 关闭
+> （Authentication → Sign In / Providers → Email → 取消 *Allow new users
+> to sign up*），账号仅通过 Authentication → Users → **Add user** 添加，
+> 「已登录」即受信任（可进 `/admin`、可写接口）；`ADMIN_EMAILS` 白名单已
+> 移除，RLS 写策略放行 `authenticated` 角色（见 `supabase/rls.sql`，
+> 2026-11 已在线上库执行）。未受邀的第三方账号 OAuth 登录会被 Supabase
+> 以 `signup_disabled` 拒绝、不会入库，登录页会给出提示。
+>
+> 另有两个**本地运维变量**：`DATABASE_URL`（psql/node 直连改库）与
+> `SUPABASE_SECRET_KEY`（`sb_secret_` 密钥，可调 Auth Admin API 批量管理
+> 用户）。应用运行时不读取，不进 `.env.example`、不配到 Vercel，
+> 均为机密、禁止加 `NEXT_PUBLIC_` 前缀。
 
 ### 站点展示（有默认值，缺失则退化）
 
@@ -71,8 +79,9 @@
   hook 会读 bump 后的 `package.json` 自动写入并纳入 Release 提交
   （`scripts/sync-openapi-version.mjs`，找不到 version 行即中止发版）。
 - **Actions secrets**（build 预检需要，均为前端公开值）：
-  `NEXT_PUBLIC_SUPABASE_URL`、`NEXT_PUBLIC_SUPABASE_ANON_KEY`、`NEXT_PUBLIC_APP_URL`
-  （生产域名 `https://api.baiwumm.com`，供 sitemap/metadata 等构建期内联）。
+  `NEXT_PUBLIC_SUPABASE_URL`、`NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`、`NEXT_PUBLIC_APP_URL`
+  （生产域名 `https://api.baiwumm.com`，供 sitemap/metadata 等构建期内联；
+  2026-11 起由 ANON_KEY 迁移为 PUBLISHABLE_KEY，旧 secret 需从 GitHub/Vercel 移除）。
 - Release workflow 用 `GITHUB_TOKEN`（`contents: write`）推送提交与 tag 并创建 Release，
   提交作者为 `github-actions[bot]`；`concurrency: release` 保证同时只有一个发版流程。
 
@@ -82,7 +91,8 @@
   `revalidatePath('/')`，变更最迟在下次访问时生效（F2 已修）。
 - `src/app/bing-wallpaper/page.tsx` 是 ISR 24h。`getBingWallpaper()` 已在返回前
   校验地址可解析且带 id，Bing 改返回结构时走缓存兜底不会缓存坏数据（C9 已修）。
-- `supabase/rls.sql` 不在构建流程内，需在 Supabase Dashboard 手动执行。
+- `supabase/rls.sql` 不在构建流程内，需在 Supabase Dashboard SQL Editor
+  或本地 `psql "$DATABASE_URL" -f supabase/rls.sql` 手动执行。
 - 字体分片产物（78 个 woff2 分片 + `src/app/maple-mono-cn.css`）已随仓库提交，
   只有换字体才需要重跑 `pnpm split-font`。重跑前要手动补 cn-font-split 的原生 DLL
   ——pnpm 会拦 postinstall 下载，npm 包版本（7.4.3）又落后于 GitHub release

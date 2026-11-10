@@ -25,31 +25,16 @@ import {
   useOverlayState,
 } from "@heroui/react";
 import { useState } from "react";
-import { useSWRConfig } from "swr";
 import { CircleXmarkFill } from "@gravity-ui/icons";
 
 import { useSupabaseUser } from "@/hooks/use-supabase-user";
-import { useSwrQuery } from "@/hooks/use-swr";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
-import { get } from "@/lib/utils";
-import { getApiData } from "@/services/common";
 
 const UserAvatar: FC = () => {
   const supabase = getSupabaseBrowserClient();
   const router = useRouter();
-  // 登出时清除 /auth/me 缓存（见迁移文档踩坑 13）
-  const { mutate } = useSWRConfig();
   // 获取登录用户信息
   const { user, loading } = useSupabaseUser();
-  // 查询当前用户是否为管理员（登录 + 邮箱白名单），非管理员不显示后台入口
-  // 匿名访客跳过请求，避免每次进入都打一次 /auth/me → Supabase auth
-  const { data: adminInfo } = useSwrQuery<{
-    isAdmin: boolean;
-    email: string | null;
-  } | null>(user ? "/auth/me" : null, async () =>
-    get(await getApiData("/auth/me"), "data", null),
-  );
-  const isAdmin = adminInfo?.isAdmin === true;
   // 注销 Loading
   const [logoutLoading, setLogoutLoading] = useState(false);
   // 退出确认弹窗
@@ -86,8 +71,6 @@ const UserAvatar: FC = () => {
     try {
       await supabase.auth.signOut();
       alertState.close();
-      // 清除 /auth/me 缓存，避免切换账号后展示旧会话权限
-      mutate("/auth/me", null);
       // 返回首页
       await router.push("/login");
     } catch (err) {
@@ -139,12 +122,11 @@ const UserAvatar: FC = () => {
           </div>
           <Separator />
           <Dropdown.Menu className="font-normal" onAction={onClickMenu}>
-            {isAdmin ? (
-              <Dropdown.Item id="admin" textValue="Admin">
-                <GearDot className="size-4 shrink-0 text-muted" />
-                <Label>管理后台</Label>
-              </Dropdown.Item>
-            ) : null}
+            {/* 注册已关闭，登录用户即受信任（账号仅由管理员在 Dashboard 添加） */}
+            <Dropdown.Item id="admin" textValue="Admin">
+              <GearDot className="size-4 shrink-0 text-muted" />
+              <Label>管理后台</Label>
+            </Dropdown.Item>
             <Dropdown.Item id="logout" textValue="Logout" variant="danger">
               <ArrowRightFromSquare className="size-4 shrink-0 text-danger" />
               <Label>退出登录</Label>

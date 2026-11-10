@@ -5,7 +5,7 @@ import { NextRequest } from "next/server";
  * 代理层（C6/C7 整改后的结构）：
  * - /api/*：只读 GET 计数，不进会话流程
  * - 页面：updateSession 刷新会话并携带刷新 cookie（?code= 不再被 rewrite 丢弃）
- * - 守卫：admin 白名单、登录页互斥跳转
+ * - 守卫：登录门禁、登录页互斥跳转、OAuth 注册拒绝改写
  */
 const { state, createServerClient } = vi.hoisted(() => {
   const state = {
@@ -71,9 +71,8 @@ const req = (url: string, init?: { method: string }) =>
   new NextRequest(`http://x${url}`, init);
 
 beforeEach(() => {
-  vi.stubEnv("ADMIN_EMAILS", "admin@x.com");
   vi.stubEnv("NEXT_PUBLIC_SUPABASE_URL", "https://stub.supabase.co");
-  vi.stubEnv("NEXT_PUBLIC_SUPABASE_ANON_KEY", "stub-key");
+  vi.stubEnv("NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY", "stub-key");
   state.claims = null;
   state.refreshCookies = [];
   state.rpcCalls = [];
@@ -145,16 +144,8 @@ describe("代理层 路由守卫", () => {
     expect(res.headers.get("location")).toBe("http://x/login");
   });
 
-  it("已登录但邮箱不在白名单，访问 /admin 也跳登录页", async () => {
+  it("已登录访问 /admin 正常放行（注册已关闭，登录用户即受信任）", async () => {
     state.claims = { email: "user@x.com" };
-
-    const res = await proxy(req("/admin/apis"));
-
-    expect(res.headers.get("location")).toBe("http://x/login");
-  });
-
-  it("白名单管理员访问 /admin 正常放行", async () => {
-    state.claims = { email: "Admin@X.com" };
 
     const res = await proxy(req("/admin"));
 
@@ -162,14 +153,30 @@ describe("代理层 路由守卫", () => {
     expect(res.headers.get("location")).toBeNull();
   });
 
-  it("普通用户访问 /login 跳回首页，管理员跳管理页", async () => {
+  it("已登录访问 /login 跳转管理后台", async () => {
     state.claims = { email: "user@x.com" };
-    const userRes = await proxy(req("/login"));
-    expect(userRes.headers.get("location")).toBe("http://x/");
 
-    state.claims = { email: "admin@x.com" };
-    const adminRes = await proxy(req("/login"));
-    expect(adminRes.headers.get("location")).toBe("http://x/admin");
+    const res = await proxy(req("/login"));
+
+    expect(res.headers.get("location")).toBe("http://x/admin");
+  });
+
+  it("OAuth 注册拒绝：error 参数改写到登录页且只保留错误码", async () => {
+    const res = await proxy(
+      req("/?error=access_denied&error_code=signup_disabled"),
+    );
+
+    expect(res.status).toBe(307);
+    expect(res.headers.get("location")).toBe(
+      "http://x/login?error=signup_disabled",
+    );
+  });
+
+  it("登录页自身不再改写 error，避免循环", async () => {
+    const res = await proxy(req("/login?error=signup_disabled"));
+
+    expect(res.status).toBe(200);
+    expect(res.headers.get("location")).toBeNull();
   });
 
   it("未登录访问公开页面不跳转", async () => {

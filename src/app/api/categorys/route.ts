@@ -5,7 +5,7 @@ import { NextResponse } from "next/server";
 
 import { RESPONSE } from "@/enums";
 import { revalidateHome } from "@/lib/server/home";
-import { getSupabaseServerClient, requireAdmin } from "@/lib/supabase/server";
+import { getSupabaseServerClient, requireUser } from "@/lib/supabase/server";
 import { parseCategoryBody } from "@/lib/server/write-guard";
 import {
   catchError,
@@ -113,8 +113,8 @@ export async function GET(request: NextRequest) {
  */
 export async function POST(request: NextRequest) {
   try {
-    // 校验管理员（登录 + 邮箱白名单）
-    const user = await requireAdmin();
+    // 校验登录（注册已关闭，登录用户即可写）
+    const user = await requireUser();
 
     if (!user) {
       return NextResponse.json(
