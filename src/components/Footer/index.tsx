@@ -44,7 +44,7 @@ const Footer: FC = () => {
       {/* 三列布局只在 lg（≥1024px）启用：sm~lg 档三等分每列仅约 197px，
           品牌、版权、备案号都会被挤断行 */}
       <div className="flex items-center justify-center gap-3 justify-self-center lg:justify-self-start whitespace-nowrap">
-        <div className="w-[90px] h-6 relative">
+        <div className="w-22.5 h-6 relative">
           <Image fill alt="Logo" src="/logo.png" />
         </div>
         <Separator className="h-4 self-center" orientation="vertical" />
