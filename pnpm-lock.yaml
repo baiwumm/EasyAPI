@@ -308,8 +308,8 @@ importers:
         specifier: ^2.5.1
         version: 2.5.1(react@19.3.1)
       theme-switch-animation:
-        specifier: ^0.5.1
-        version: 0.5.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+        specifier: ^0.6.0
+        version: 0.6.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       tinycolor2:
         specifier: ^1.6.0
         version: 1.6.0
@@ -3970,8 +3970,8 @@ packages:
     resolution: {integrity: sha512-uxc/zpqFg6x7C8vOE7lh6Lbda8eEL9zmVm/PLeTPBRhh1xCgdWaQ+J1CUieGpIfm2HdtsUpRv+HshiasBMcc6A==}
     engines: {node: '>=6'}
 
-  theme-switch-animation@0.5.1:
-    resolution: {integrity: sha512-GXaZ6sG8Gzjtqy1axYmg2HWsFlojViRablKTvLHdpezS+y/MhY7QAgiLIlsGyz/3RVdJsNdOgyFRRwBkWtIcCA==}
+  theme-switch-animation@0.6.0:
+    resolution: {integrity: sha512-0vsd/D8QJlFI32YweImtbCmMg9PfO2LIs2XchT6HR2oiAIrxLA0nFhlFV3wR8p+9MVLPy6BRNCsFhcxfLW50qA==}
     engines: {node: '>=18', pnpm: '>=9'}
     peerDependencies:
       '@nuxt/kit': '>=3'
@@ -7961,7 +7961,7 @@ snapshots:
 
   tapable@2.3.3: {}
 
-  theme-switch-animation@0.5.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1):
+  theme-switch-animation@0.6.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1):
     optionalDependencies:
       react: 19.3.1
       react-dom: 19.3.1(react@19.3.1)
