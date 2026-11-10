@@ -49,12 +49,16 @@ export default async function proxy(request: NextRequest) {
   }
 
   // OAuth 新用户被注册开关拒绝时，Supabase 会把 error/error_code 参数带回
-  // redirectTo（站点根路径），浏览器端 detectSessionInUrl 会静默消费掉这些
-  // 参数导致毫无反馈；这里在服务端抢先改写到登录页，由登录页统一提示
-  // （登录页自身不再改写，防止循环）
+  // redirectTo（正常走 /auth/callback 由回调路由处理），浏览器端
+  // detectSessionInUrl 会静默消费掉这些参数导致毫无反馈；这里兜底改写
+  // 其他落地地址到登录页统一提示（登录页与回调路由自身不再改写，防止循环）
   const errorCode = request.nextUrl.searchParams.get("error_code");
 
-  if (request.nextUrl.searchParams.has("error") && !path.startsWith("/login")) {
+  if (
+    request.nextUrl.searchParams.has("error") &&
+    !path.startsWith("/login") &&
+    !path.startsWith("/auth")
+  ) {
     const url = request.nextUrl.clone();
 
     url.pathname = "/login";
