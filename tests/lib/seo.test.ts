@@ -7,6 +7,13 @@ import {
   SITE_URL,
 } from "@/lib/seo";
 
+const content = {
+  intro: "在线计算 BMI 指数并给出体重状态。",
+  steps: ["输入身高", "输入体重", "查看结果"],
+  faqs: [{ question: "BMI 怎么算？", answer: "体重除以身高的平方。" }],
+  example: { code: 'curl "https://api.baiwumm.com/api/bmi?height=175&weight=65"' },
+};
+
 const options = {
   title: "BMI 计算器",
   description: "在线计算 BMI 指数并给出体重状态。",
@@ -48,7 +55,8 @@ describe("createSiteJsonLd", () => {
 
 describe("createToolJsonLd", () => {
   it("输出 WebApplication，URL 由站点域名拼接站内路径，免费工具价格为 0", () => {
-    const schema = createToolJsonLd(options);
+    // 无内容块时返回顶层对象；断言前先放宽为 Record，兼容带内容块时的 @graph 形态
+    const schema = createToolJsonLd(options) as Record<string, unknown>;
 
     expect(schema["@type"]).toBe("WebApplication");
     expect(schema.url).toBe(`${SITE_URL}/bmi`);
@@ -58,5 +66,27 @@ describe("createToolJsonLd", () => {
       price: "0",
       priceCurrency: "CNY",
     });
+  });
+
+  it("提供内容块时输出 WebApplication + HowTo + FAQPage 的 @graph", () => {
+    const schema = createToolJsonLd(options, content);
+    const graph = schema["@graph"] as Array<Record<string, unknown>>;
+
+    expect(graph.map((entity) => entity["@type"])).toEqual([
+      "WebApplication",
+      "HowTo",
+      "FAQPage",
+    ]);
+
+    const howTo = graph[1] as Record<string, unknown>;
+    const steps = howTo.step as Array<Record<string, unknown>>;
+
+    expect(steps).toHaveLength(3);
+    expect(steps[0]?.position).toBe(1);
+
+    const faqPage = graph[2] as Record<string, unknown>;
+    const questions = faqPage.mainEntity as Array<Record<string, unknown>>;
+
+    expect(questions[0]?.name).toBe("BMI 怎么算？");
   });
 });

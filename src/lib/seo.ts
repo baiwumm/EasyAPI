@@ -72,13 +72,34 @@ export function createSiteJsonLd() {
   };
 }
 
+/** 工具页 SSR 内容块数据：与页面可见内容一致，同时驱动 HowTo / FAQPage 标记 */
+export interface ToolContentData {
+  /** 一句话介绍（工具是什么、解决什么需求） */
+  intro: string;
+  /** 使用步骤（有序） */
+  steps: string[];
+  /** 常见问题 */
+  faqs: { question: string; answer: string }[];
+  /** 接口调用示例 */
+  example?: {
+    /** 示例说明（如返回格式提示），可省略 */
+    label?: string;
+    /** 示例命令 */
+    code: string;
+  };
+}
+
 /**
  * 工具页实体：WebApplication（免费在线工具）。
- * 全站均为免费工具，offers 固定 0 元；publisher 引用首页 Organization 锚点
+ * 全站均为免费工具，offers 固定 0 元；publisher 引用首页 Organization 锚点。
+ * 提供内容块时升级为 @graph，附带与可见内容匹配的 HowTo + FAQPage 标记
+ * （结构化数据必须对应页面实际展示的内容，二者缺一不可）
  */
-export function createToolJsonLd({ title, description, path }: PageSeoOptions) {
-  return {
-    "@context": "https://schema.org",
+export function createToolJsonLd(
+  { title, description, path }: PageSeoOptions,
+  content?: ToolContentData,
+) {
+  const application = {
     "@type": "WebApplication",
     name: title,
     description,
@@ -88,5 +109,33 @@ export function createToolJsonLd({ title, description, path }: PageSeoOptions) {
     inLanguage: "zh-CN",
     offers: { "@type": "Offer", price: "0", priceCurrency: "CNY" },
     publisher: { "@id": `${SITE_URL}/#organization` },
+  };
+
+  if (!content) {
+    return { "@context": "https://schema.org", ...application };
+  }
+
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      application,
+      {
+        "@type": "HowTo",
+        name: `${title}使用方法`,
+        step: content.steps.map((text, index) => ({
+          "@type": "HowToStep",
+          position: index + 1,
+          text,
+        })),
+      },
+      {
+        "@type": "FAQPage",
+        mainEntity: content.faqs.map(({ question, answer }) => ({
+          "@type": "Question",
+          name: question,
+          acceptedAnswer: { "@type": "Answer", text: answer },
+        })),
+      },
+    ],
   };
 }
