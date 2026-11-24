@@ -1,6 +1,5 @@
-import type { Metadata } from "next";
-
 import QuoteWorld from "@/components/QuoteWorld";
+import { createPageMetadata } from "@/lib/seo";
 
 /*
  * @Author: 白雾茫茫丶<baiwumm.com>
@@ -10,10 +9,15 @@ import QuoteWorld from "@/components/QuoteWorld";
  * @Description: 每日笑话
  */
 
-export const metadata: Metadata = {
+const seo = {
   title: "每日笑话",
+  description:
+    "每日笑话接口与在线页面：随机返回一条笑话，支持 format=text 纯文本直出，给应用加点快乐。",
+  path: "/dairy-joke",
 };
 
+export const metadata = createPageMetadata(seo);
+
 export default function DairyJoke() {
-  return <QuoteWorld title="每日笑话" />;
+  return <QuoteWorld title={seo.title} />;
 }

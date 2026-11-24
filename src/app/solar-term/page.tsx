@@ -1,6 +1,6 @@
-import type { Metadata } from "next";
-
 import ClientComponent from "./ClientComponent";
+
+import { createPageMetadata } from "@/lib/seo";
 
 /*
  * @Author: 白雾茫茫丶<baiwumm.com>
@@ -10,10 +10,15 @@ import ClientComponent from "./ClientComponent";
  * @Description: 二十四节气
  */
 
-export const metadata: Metadata = {
+const seo = {
   title: "二十四节气",
+  description:
+    "二十四节气查询：按年份返回全部节气及公历交节时间（1900~2100 年），适合日历、黄历与文化类应用。",
+  path: "/solar-term",
 };
 
+export const metadata = createPageMetadata(seo);
+
 export default function SolarTerm() {
-  return <ClientComponent title="二十四节气" />;
+  return <ClientComponent title={seo.title} />;
 }

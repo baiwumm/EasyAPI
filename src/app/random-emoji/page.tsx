@@ -1,6 +1,6 @@
-import type { Metadata } from "next";
-
 import ClientComponent from "./ClientComponent";
+
+import { createPageMetadata } from "@/lib/seo";
 
 /*
  * @Author: 白雾茫茫丶<baiwumm.com>
@@ -10,10 +10,15 @@ import ClientComponent from "./ClientComponent";
  * @Description: 随机表情
  */
 
-export const metadata: Metadata = {
+const seo = {
   title: "随机表情",
+  description:
+    "随机 emoji 生成器：随机返回 emoji 字符及其英文名称，可批量生成，适合抽奖、测试数据与趣味场景。",
+  path: "/random-emoji",
 };
 
+export const metadata = createPageMetadata(seo);
+
 export default function RandomEmoji() {
-  return <ClientComponent title="随机表情" />;
+  return <ClientComponent title={seo.title} />;
 }

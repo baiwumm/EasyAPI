@@ -1,6 +1,6 @@
-import type { Metadata } from "next";
-
 import ClientComponent from "./ClientComponent";
+
+import { createPageMetadata } from "@/lib/seo";
 
 /*
  * @Author: 白雾茫茫丶<baiwumm.com>
@@ -10,10 +10,15 @@ import ClientComponent from "./ClientComponent";
  * @Description: 随机图片
  */
 
-export const metadata: Metadata = {
+const seo = {
   title: "随机图片",
+  description:
+    "随机图片 API：返回指定尺寸的真实照片地址（picsum.photos），可批量生成，适合占位图与开发测试。",
+  path: "/random-image",
 };
 
+export const metadata = createPageMetadata(seo);
+
 export default function RandomImage() {
-  return <ClientComponent title="随机图片" />;
+  return <ClientComponent title={seo.title} />;
 }

@@ -1,10 +1,9 @@
-import type { Metadata } from "next";
-
 import { Typography } from "@heroui/react";
 import Image from "next/image";
 
 import CopyText from "@/components/CopyText";
 import { getBingWallpaper } from "@/lib/server/bing-wallpaper";
+import { createPageMetadata } from "@/lib/seo";
 import { getUrl } from "@/lib/utils";
 
 /*
@@ -15,9 +14,14 @@ import { getUrl } from "@/lib/utils";
  * @Description: Bing 每日壁纸
  */
 
-export const metadata: Metadata = {
+const seo = {
   title: "Bing 每日壁纸",
+  description:
+    "Bing 每日壁纸在线预览：每天返回当天 1080P 与 4K 高清地址及壁纸标题，一天内结果不变，适合做每日背景图或壁纸应用数据源。",
+  path: "/bing-wallpaper",
 };
+
+export const metadata = createPageMetadata(seo);
 
 // 每日壁纸一天内不变，页面级 ISR 缓存 24 小时
 export const revalidate = 86400;
@@ -32,7 +36,7 @@ export default async function BingWallpaper() {
         className="text-2xl font-black shrink-0 tracking-normal"
         type="h1"
       >
-        Bing 每日壁纸
+        {seo.title}
       </Typography>
       <div className="relative flex-1 w-full h-full">
         <Image

@@ -1,6 +1,6 @@
-import type { Metadata } from "next";
-
 import ClientComponent from "./ClientComponent";
+
+import { createPageMetadata } from "@/lib/seo";
 
 /*
  * @Author: 白雾茫茫丶<baiwumm.com>
@@ -10,10 +10,15 @@ import ClientComponent from "./ClientComponent";
  * @Description: 车牌归属地查询
  */
 
-export const metadata: Metadata = {
+const seo = {
   title: "车牌归属地查询",
+  description:
+    "车牌归属地查询：按省份、城市或车牌前缀（如粤B）模糊查询，返回归属地与行政区划代码，数据稳定可缓存一小时。",
+  path: "/license-plate",
 };
 
+export const metadata = createPageMetadata(seo);
+
 export default function LicensePlate() {
-  return <ClientComponent title="车牌归属地查询" />;
+  return <ClientComponent title={seo.title} />;
 }

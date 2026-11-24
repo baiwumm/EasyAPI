@@ -1,6 +1,6 @@
-import type { Metadata } from "next";
-
 import ClientComponent from "./ClientComponent";
+
+import { createPageMetadata } from "@/lib/seo";
 
 /*
  * @Author: 白雾茫茫丶<baiwumm.com>
@@ -10,10 +10,15 @@ import ClientComponent from "./ClientComponent";
  * @Description: 随机头像
  */
 
-export const metadata: Metadata = {
+const seo = {
   title: "随机头像",
+  description:
+    "随机头像生成器：基于 DiceBear 提供十余种风格的 SVG 头像，支持固定 seed 复现、批量生成与自定义尺寸。",
+  path: "/random-avatar",
 };
 
+export const metadata = createPageMetadata(seo);
+
 export default function RandomAvatar() {
-  return <ClientComponent title="随机头像" />;
+  return <ClientComponent title={seo.title} />;
 }

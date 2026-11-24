@@ -1,6 +1,6 @@
-import type { Metadata } from "next";
-
 import ClientComponent from "./ClientComponent";
+
+import { createPageMetadata } from "@/lib/seo";
 
 /*
  * @Author: 白雾茫茫丶<baiwumm.com>
@@ -10,10 +10,15 @@ import ClientComponent from "./ClientComponent";
  * @Description: 生成条形码
  */
 
-export const metadata: Metadata = {
+const seo = {
   title: "生成条形码",
+  description:
+    "在线条形码生成器：支持 CODE128、CODE39、EAN13、UPC 等十种编码格式，可输出 SVG 或 PNG，自定义线宽、颜色与文字样式。",
+  path: "/barcode",
 };
 
+export const metadata = createPageMetadata(seo);
+
 export default function Barcode() {
-  return <ClientComponent title="生成条形码" />;
+  return <ClientComponent title={seo.title} />;
 }

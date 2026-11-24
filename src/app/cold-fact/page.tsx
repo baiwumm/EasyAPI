@@ -1,6 +1,5 @@
-import type { Metadata } from "next";
-
 import QuoteWorld from "@/components/QuoteWorld";
+import { createPageMetadata } from "@/lib/seo";
 
 /*
  * @Author: 白雾茫茫丶<baiwumm.com>
@@ -10,12 +9,17 @@ import QuoteWorld from "@/components/QuoteWorld";
  * @Description: 每日冷知识
  */
 
-export const metadata: Metadata = {
+const seo = {
   title: "每日冷知识",
+  description:
+    "每日冷知识 API 与在线页面：随机返回一条有趣冷知识，含分类与来源，支持 format=text 纯文本直出。",
+  path: "/cold-fact",
 };
+
+export const metadata = createPageMetadata(seo);
 
 export default function ColdFact() {
   return (
-    <QuoteWorld formWhoField="source" fromField="category" title="每日冷知识" />
+    <QuoteWorld formWhoField="source" fromField="category" title={seo.title} />
   );
 }

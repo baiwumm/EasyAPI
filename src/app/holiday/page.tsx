@@ -1,6 +1,6 @@
-import type { Metadata } from "next";
-
 import ClientComponent from "./ClientComponent";
+
+import { createPageMetadata } from "@/lib/seo";
 
 /*
  * @Author: 白雾茫茫丶<baiwumm.com>
@@ -10,10 +10,15 @@ import ClientComponent from "./ClientComponent";
  * @Description: 法定节假日
  */
 
-export const metadata: Metadata = {
+const seo = {
   title: "法定节假日",
+  description:
+    "法定节假日查询：按年份返回全年放假安排、调休上班日期、假期天数与剩余余额，适合日历、考勤与出行规划。",
+  path: "/holiday",
 };
 
+export const metadata = createPageMetadata(seo);
+
 export default function Holiday() {
-  return <ClientComponent title="法定节假日" />;
+  return <ClientComponent title={seo.title} />;
 }

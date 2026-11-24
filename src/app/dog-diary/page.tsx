@@ -1,6 +1,5 @@
-import type { Metadata } from "next";
-
 import QuoteWorld from "@/components/QuoteWorld";
+import { createPageMetadata } from "@/lib/seo";
 
 /*
  * @Author: 白雾茫茫丶<baiwumm.com>
@@ -10,10 +9,15 @@ import QuoteWorld from "@/components/QuoteWorld";
  * @Description: 舔狗日记
  */
 
-export const metadata: Metadata = {
+const seo = {
   title: "舔狗日记",
+  description:
+    "舔狗日记随机生成器：随机返回一段卑微又好笑的舔狗独白，支持纯文本直出，整活文案素材库。",
+  path: "/dog-diary",
 };
 
+export const metadata = createPageMetadata(seo);
+
 export default function DogDiary() {
-  return <QuoteWorld title="舔狗日记" />;
+  return <QuoteWorld title={seo.title} />;
 }

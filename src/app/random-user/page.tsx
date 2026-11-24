@@ -1,6 +1,6 @@
-import type { Metadata } from "next";
-
 import ClientComponent from "./ClientComponent";
+
+import { createPageMetadata } from "@/lib/seo";
 
 /*
  * @Author: 白雾茫茫丶<baiwumm.com>
@@ -10,10 +10,15 @@ import ClientComponent from "./ClientComponent";
  * @Description: 随机用户
  */
 
-export const metadata: Metadata = {
+const seo = {
   title: "随机用户",
+  description:
+    "随机用户信息生成器：生成中文姓名、手机号、邮箱、地址、公司等测试数据，支持指定性别与批量生成。",
+  path: "/random-user",
 };
 
+export const metadata = createPageMetadata(seo);
+
 export default function RandomUser() {
-  return <ClientComponent title="随机用户" />;
+  return <ClientComponent title={seo.title} />;
 }

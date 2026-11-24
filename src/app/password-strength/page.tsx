@@ -1,6 +1,6 @@
-import type { Metadata } from "next";
-
 import ClientComponent from "./ClientComponent";
+
+import { createPageMetadata } from "@/lib/seo";
 
 /*
  * @Author: 白雾茫茫丶<baiwumm.com>
@@ -10,10 +10,15 @@ import ClientComponent from "./ClientComponent";
  * @Description: 密码强度检测
  */
 
-export const metadata: Metadata = {
+const seo = {
   title: "密码强度检测",
+  description:
+    "密码强度检测：基于 zxcvbn（支持中文字典）评估密码强度，返回评分、破解耗时估算与改进建议，密码不落访问日志。",
+  path: "/password-strength",
 };
 
+export const metadata = createPageMetadata(seo);
+
 export default function PasswordStrength() {
-  return <ClientComponent title="密码强度检测" />;
+  return <ClientComponent title={seo.title} />;
 }

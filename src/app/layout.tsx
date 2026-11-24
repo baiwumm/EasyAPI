@@ -25,6 +25,10 @@ export const metadata: Metadata = {
   },
   description: process.env.NEXT_PUBLIC_APP_DESC,
   keywords: process.env.NEXT_PUBLIC_APP_KEYWORDS,
+  // 首页自引用 canonical（子页由各自 metadata 提供，见 lib/seo.ts）
+  alternates: {
+    canonical: "/",
+  },
   authors: [{ name: AUTHOR_HANDLE, url: pkg.author.url }],
   creator: AUTHOR_HANDLE,
   publisher: AUTHOR_HANDLE,

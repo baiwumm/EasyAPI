@@ -1,6 +1,5 @@
-import type { Metadata } from "next";
-
 import QuoteWorld from "@/components/QuoteWorld";
+import { createPageMetadata } from "@/lib/seo";
 
 /*
  * @Author: 白雾茫茫丶<baiwumm.com>
@@ -10,10 +9,15 @@ import QuoteWorld from "@/components/QuoteWorld";
  * @Description: 每日一言
  */
 
-export const metadata: Metadata = {
+const seo = {
   title: "每日一言",
+  description:
+    "每日一言 API 与在线页面：随机返回动画、文学、诗词、网易云等类型的句子，支持按类型与长度筛选，可纯文本直出。",
+  path: "/hitokoto",
 };
 
+export const metadata = createPageMetadata(seo);
+
 export default function Hitokoto() {
-  return <QuoteWorld mode="hitokoto" title="每日一言" />;
+  return <QuoteWorld mode="hitokoto" title={seo.title} />;
 }

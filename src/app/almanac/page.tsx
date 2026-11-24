@@ -1,6 +1,6 @@
-import type { Metadata } from "next";
-
 import ClientComponent from "./ClientComponent";
+
+import { createPageMetadata } from "@/lib/seo";
 
 /*
  * @Author: 白雾茫茫丶<baiwumm.com>
@@ -10,10 +10,15 @@ import ClientComponent from "./ClientComponent";
  * @Description: 十二时辰黄历
  */
 
-export const metadata: Metadata = {
+const seo = {
   title: "十二时辰黄历",
+  description:
+    "十二时辰黄历查询：按日期返回十二时辰的宜忌、冲煞、纳音与九星，子时排首位，可在线查看也可按日期调用接口。",
+  path: "/almanac",
 };
 
+export const metadata = createPageMetadata(seo);
+
 export default function Almanac() {
-  return <ClientComponent title="十二时辰黄历" />;
+  return <ClientComponent title={seo.title} />;
 }

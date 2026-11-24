@@ -1,6 +1,6 @@
-import type { Metadata } from "next";
-
 import ClientComponent from "./ClientComponent";
+
+import { createPageMetadata } from "@/lib/seo";
 
 /*
  * @Author: 白雾茫茫丶<baiwumm.com>
@@ -10,10 +10,15 @@ import ClientComponent from "./ClientComponent";
  * @Description: 颜色转换
  */
 
-export const metadata: Metadata = {
+const seo = {
   title: "颜色转换",
+  description:
+    "在线颜色转换工具：任意颜色值一键转换为 hex、rgb、hsl、hsv 四种格式，支持 CSS 颜色名，前端开发取色必备。",
+  path: "/color-conversion",
 };
 
+export const metadata = createPageMetadata(seo);
+
 export default function ColorConversion() {
-  return <ClientComponent title="颜色转换" />;
+  return <ClientComponent title={seo.title} />;
 }

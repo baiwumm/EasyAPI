@@ -1,6 +1,6 @@
-import type { Metadata } from "next";
-
 import ClientComponent from "./ClientComponent";
+
+import { createPageMetadata } from "@/lib/seo";
 
 /*
  * @Author: 白雾茫茫丶<baiwumm.com>
@@ -10,10 +10,15 @@ import ClientComponent from "./ClientComponent";
  * @Description: 随机字符串
  */
 
-export const metadata: Metadata = {
+const seo = {
   title: "随机字符串",
+  description:
+    "随机字符串生成器：密码学安全的随机串，支持字母数字、URL 安全、hex 等七种类型或自定义字符集。",
+  path: "/random-string",
 };
 
+export const metadata = createPageMetadata(seo);
+
 export default function RandomString() {
-  return <ClientComponent title="随机字符串" />;
+  return <ClientComponent title={seo.title} />;
 }

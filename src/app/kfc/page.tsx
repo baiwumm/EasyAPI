@@ -1,6 +1,5 @@
-import type { Metadata } from "next";
-
 import QuoteWorld from "@/components/QuoteWorld";
+import { createPageMetadata } from "@/lib/seo";
 
 /*
  * @Author: 白雾茫茫丶<baiwumm.com>
@@ -10,10 +9,15 @@ import QuoteWorld from "@/components/QuoteWorld";
  * @Description: 疯狂星期四
  */
 
-export const metadata: Metadata = {
+const seo = {
   title: "疯狂星期四",
+  description:
+    "疯狂星期四文案生成器：随机返回一条 KFC 疯四文学，支持纯文本直出，周四发圈整活必备。",
+  path: "/kfc",
 };
 
+export const metadata = createPageMetadata(seo);
+
 export default function Kfc() {
-  return <QuoteWorld title="疯狂星期四" />;
+  return <QuoteWorld title={seo.title} />;
 }

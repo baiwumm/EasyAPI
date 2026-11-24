@@ -1,6 +1,5 @@
-import type { Metadata } from "next";
-
 import QuoteWorld from "@/components/QuoteWorld";
+import { createPageMetadata } from "@/lib/seo";
 
 /*
  * @Author: 白雾茫茫丶<baiwumm.com>
@@ -10,10 +9,15 @@ import QuoteWorld from "@/components/QuoteWorld";
  * @Description: 土味情话
  */
 
-export const metadata: Metadata = {
+const seo = {
   title: "土味情话",
+  description:
+    "土味情话随机生成器：随机来一句甜到腻的情话文案，支持纯文本直出与接口调用，表白撩人素材库。",
+  path: "/love-words",
 };
 
+export const metadata = createPageMetadata(seo);
+
 export default function LoveWords() {
-  return <QuoteWorld title="土味情话" />;
+  return <QuoteWorld title={seo.title} />;
 }

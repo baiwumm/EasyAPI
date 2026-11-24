@@ -1,6 +1,6 @@
-import type { Metadata } from "next";
-
 import ClientComponent from "./ClientComponent";
+
+import { createPageMetadata } from "@/lib/seo";
 
 /*
  * @Author: 白雾茫茫丶<baiwumm.com>
@@ -10,10 +10,15 @@ import ClientComponent from "./ClientComponent";
  * @Description: 国际区号查询
  */
 
-export const metadata: Metadata = {
+const seo = {
   title: "国际区号查询",
+  description:
+    "国际电话区号查询：按国家或地区中文名、电话区号模糊搜索，返回国家代码与区号，数据稳定可缓存一小时。",
+  path: "/country-code",
 };
 
+export const metadata = createPageMetadata(seo);
+
 export default function CountryCode() {
-  return <ClientComponent title="国际区号查询" />;
+  return <ClientComponent title={seo.title} />;
 }

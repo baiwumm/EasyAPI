@@ -1,6 +1,6 @@
-import type { Metadata } from "next";
-
 import ClientComponent from "./ClientComponent";
+
+import { createPageMetadata } from "@/lib/seo";
 
 /*
  * @Author: 白雾茫茫丶<baiwumm.com>
@@ -10,10 +10,15 @@ import ClientComponent from "./ClientComponent";
  * @Description: 身份证信息查询
  */
 
-export const metadata: Metadata = {
+const seo = {
   title: "身份证信息查询",
+  description:
+    "身份证信息查询：解析 18 位身份证号，返回籍贯、性别、年龄、星座与校验结果，仅供合法合规场景使用。",
+  path: "/idcard",
 };
 
+export const metadata = createPageMetadata(seo);
+
 export default function Idcard() {
-  return <ClientComponent title="身份证信息查询" />;
+  return <ClientComponent title={seo.title} />;
 }

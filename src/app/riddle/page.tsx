@@ -1,6 +1,5 @@
-import type { Metadata } from "next";
-
 import QuoteWorld from "@/components/QuoteWorld";
+import { createPageMetadata } from "@/lib/seo";
 
 /*
  * @Author: 白雾茫茫丶<baiwumm.com>
@@ -10,10 +9,15 @@ import QuoteWorld from "@/components/QuoteWorld";
  * @Description: 歇后语
  */
 
-export const metadata: Metadata = {
+const seo = {
   title: "歇后语",
+  description:
+    "歇后语随机查询：随机返回一条歇后语及其答案，可在线学习或调用接口，语文教学与趣味场景适用。",
+  path: "/riddle",
 };
 
+export const metadata = createPageMetadata(seo);
+
 export default function Riddle() {
-  return <QuoteWorld mode="riddle" title="歇后语" />;
+  return <QuoteWorld mode="riddle" title={seo.title} />;
 }

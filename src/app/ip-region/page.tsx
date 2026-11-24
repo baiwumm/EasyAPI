@@ -1,6 +1,6 @@
-import type { Metadata } from "next";
-
 import ClientComponent from "./ClientComponent";
+
+import { createPageMetadata } from "@/lib/seo";
 
 /*
  * @Author: 白雾茫茫丶<baiwumm.com>
@@ -10,10 +10,15 @@ import ClientComponent from "./ClientComponent";
  * @Description: IP 归属地查询
  */
 
-export const metadata: Metadata = {
+const seo = {
   title: "IP 归属地查询",
+  description:
+    "IP 归属地查询：查询 IPv4/IPv6 的地理位置与运营商信息，不传 IP 自动识别请求来源，支持在线查询与接口调用。",
+  path: "/ip-region",
 };
 
+export const metadata = createPageMetadata(seo);
+
 export default function IpRegion() {
-  return <ClientComponent title="IP 归属地查询" />;
+  return <ClientComponent title={seo.title} />;
 }

@@ -1,6 +1,6 @@
-import type { Metadata } from "next";
-
 import ClientComponent from "./ClientComponent";
+
+import { createPageMetadata } from "@/lib/seo";
 
 /*
  * @Author: 白雾茫茫丶<baiwumm.com>
@@ -10,10 +10,15 @@ import ClientComponent from "./ClientComponent";
  * @Description: 随机颜色
  */
 
-export const metadata: Metadata = {
+const seo = {
   title: "随机颜色",
+  description:
+    "随机颜色生成器：一次生成多个随机颜色，同时返回 hex、rgb、hsl、hsv 四种格式，适合设计取色与测试数据。",
+  path: "/random-color",
 };
 
+export const metadata = createPageMetadata(seo);
+
 export default function RandomColor() {
-  return <ClientComponent title="随机颜色" />;
+  return <ClientComponent title={seo.title} />;
 }

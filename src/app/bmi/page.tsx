@@ -1,6 +1,6 @@
-import type { Metadata } from "next";
-
 import ClientComponent from "./ClientComponent";
+
+import { createPageMetadata } from "@/lib/seo";
 
 /*
  * @Author: 白雾茫茫丶<baiwumm.com>
@@ -10,10 +10,15 @@ import ClientComponent from "./ClientComponent";
  * @Description: BMI 计算器
  */
 
-export const metadata: Metadata = {
+const seo = {
   title: "BMI 计算器",
+  description:
+    "在线 BMI 计算器：输入身高体重即刻得出 BMI 指数与体重状态（过低/正常/超重/肥胖），并提供免费查询接口。",
+  path: "/bmi",
 };
 
+export const metadata = createPageMetadata(seo);
+
 export default function Bmi() {
-  return <ClientComponent title="BMI 计算器" />;
+  return <ClientComponent title={seo.title} />;
 }
