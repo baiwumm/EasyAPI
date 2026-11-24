@@ -1,0 +1,58 @@
+version: 2
+
+updates:
+  # 前端依赖：pnpm 单包，根目录统一处理
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: "09:00"
+      timezone: Asia/Shanghai
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "chore(deps)"
+    groups:
+      # 安全更新单独成组，避免和常规版本升级混在一个 PR 里
+      npm-security:
+        applies-to: security-updates
+        patterns:
+          - "*"
+      npm-minor-patch:
+        applies-to: version-updates
+        update-types:
+          - minor
+          - patch
+    ignore:
+      # TS 大版本会同时牵动 tsc 门禁与 typescript-eslint 的支持范围，由人工评估后再升
+      - dependency-name: "typescript"
+        update-types:
+          - version-update:semver-major
+      # Next / React 属核心运行时，major 升级需同步改配置与页面（见 docs/upgrades.md）
+      - dependency-name: "next"
+        update-types:
+          - version-update:semver-major
+      - dependency-name: "react"
+        update-types:
+          - version-update:semver-major
+      - dependency-name: "react-dom"
+        update-types:
+          - version-update:semver-major
+
+  # 工作流里 pin 的 actions 版本（checkout / setup-node / pnpm 等）
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: "09:00"
+      timezone: Asia/Shanghai
+    open-pull-requests-limit: 3
+    commit-message:
+      prefix: "ci(deps)"
+    groups:
+      actions-minor-patch:
+        applies-to: version-updates
+        update-types:
+          - minor
+          - patch
