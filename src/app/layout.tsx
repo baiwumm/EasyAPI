@@ -61,6 +61,13 @@ export const metadata: Metadata = {
     images: [`${process.env.NEXT_PUBLIC_APP_URL}/opengraph-image`],
   },
   manifest: `${process.env.NEXT_PUBLIC_APP_URL}/manifest.json`,
+  // 站点所有权验证：GSC + Bing Webmaster Tools（Next 按 verification 字段生成对应 <meta>）
+  verification: {
+    google: "4YBtBTmg5H9MGoyvCmvEeJx8viyBPjLnK4INCHT9SQs",
+    other: {
+      "msvalidate.01": "6DEA985B20CA4A215DAC4EA659011A8A",
+    },
+  },
 };
 
 export default function RootLayout({
