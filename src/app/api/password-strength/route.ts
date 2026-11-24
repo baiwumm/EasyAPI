@@ -2,12 +2,12 @@
  * @Author: 白雾茫茫丶<baiwumm.com>
  * @Date: 2026-03-02 17:15:37
  * @LastEditors: 白雾茫茫丶<baiwumm.com>
- * @LastEditTime: 2026-03-13 14:56:02
+ * @LastEditTime: 2026-11-24 16:30:00
  * @Description: 密码强度检测
  */
 import type { NextRequest } from "next/server";
 
-import { zxcvbn, zxcvbnOptions } from "@zxcvbn-ts/core";
+import { ZxcvbnFactory } from "@zxcvbn-ts/core";
 import * as zxcvbnCommonPackage from "@zxcvbn-ts/language-common";
 import * as zxcvbnZhPackage from "@zxcvbn-ts/language-zh";
 import { NextResponse } from "next/server";
@@ -17,8 +17,33 @@ import { getClientIp } from "@/lib/server/api-helpers";
 import { createRateLimiter } from "@/lib/server/rate-limit";
 import { catchError, responseMessage } from "@/lib/utils";
 
-// zxcvbn 全局配置与请求无关，模块加载时初始化一次，避免每个请求重复 setOptions
-zxcvbnOptions.setOptions({
+// 对外响应结构：与 @zxcvbn-ts v3 时代保持一致，避免破坏公开 API 契约（见 public/openapi.yaml）
+export type PasswordStrengthResult = {
+  score: number;
+  guesses: number;
+  guessesLog10: number;
+  calcTime: number;
+  crackTimesSeconds: {
+    onlineThrottling100PerHour: number;
+    onlineNoThrottling10PerSecond: number;
+    offlineSlowHashing1e4PerSecond: number;
+    offlineFastHashing1e10PerSecond: number;
+  };
+  crackTimesDisplay: {
+    onlineThrottling100PerHour: string;
+    onlineNoThrottling10PerSecond: string;
+    offlineSlowHashing1e4PerSecond: string;
+    offlineFastHashing1e10PerSecond: string;
+  };
+  feedback: {
+    warning: string | null;
+    suggestions: string[];
+  };
+};
+
+// zxcvbn 实例与请求无关，模块加载时初始化一次，避免每个请求重复构建词典索引。
+// v4 起改用 ZxcvbnFactory 注入翻译 / 邻接图 / 词典（取代 v3 的 zxcvbnOptions.setOptions）。
+const zxcvbn = new ZxcvbnFactory({
   translations: zxcvbnZhPackage.translations,
   graphs: zxcvbnCommonPackage.adjacencyGraphs,
   dictionary: {
@@ -63,29 +88,43 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const {
+    const { score, guesses, guessesLog10, calcTime, crackTimes, feedback } =
+      zxcvbn.check(password);
+
+    // v4 把破解时间收敛进 crackTimes（每项 { base, seconds, display }），
+    // 这里还原成 v3 的 crackTimesSeconds / crackTimesDisplay 两个平铺对象，保持响应契约不变。
+    // 只回文档登记的字段：zxcvbn 的原始返回里带 password 字段本身，不透出去，
+    // 避免前端 CopyText 把密码原文抄进剪贴板（C13）
+    const result: PasswordStrengthResult = {
       score,
       guesses,
       guessesLog10,
       calcTime,
-      crackTimesSeconds,
-      crackTimesDisplay,
-      feedback,
-    } = zxcvbn(password);
+      crackTimesSeconds: {
+        onlineThrottling100PerHour: crackTimes.onlineThrottlingXPerHour.seconds,
+        onlineNoThrottling10PerSecond:
+          crackTimes.onlineNoThrottlingXPerSecond.seconds,
+        offlineSlowHashing1e4PerSecond:
+          crackTimes.offlineSlowHashingXPerSecond.seconds,
+        offlineFastHashing1e10PerSecond:
+          crackTimes.offlineFastHashingXPerSecond.seconds,
+      },
+      crackTimesDisplay: {
+        onlineThrottling100PerHour: crackTimes.onlineThrottlingXPerHour.display,
+        onlineNoThrottling10PerSecond:
+          crackTimes.onlineNoThrottlingXPerSecond.display,
+        offlineSlowHashing1e4PerSecond:
+          crackTimes.offlineSlowHashingXPerSecond.display,
+        offlineFastHashing1e10PerSecond:
+          crackTimes.offlineFastHashingXPerSecond.display,
+      },
+      feedback: {
+        warning: feedback.warning,
+        suggestions: feedback.suggestions,
+      },
+    };
 
-    // 只回文档登记的字段：zxcvbn 的原始返回里带 password 字段本身，
-    // 不透出去，避免前端 CopyText 把密码原文抄进剪贴板（C13）
-    return NextResponse.json(
-      responseMessage({
-        score,
-        guesses,
-        guessesLog10,
-        calcTime,
-        crackTimesSeconds,
-        crackTimesDisplay,
-        feedback,
-      }),
-    );
+    return NextResponse.json(responseMessage(result));
   } catch (err) {
     return NextResponse.json(catchError(err));
   }

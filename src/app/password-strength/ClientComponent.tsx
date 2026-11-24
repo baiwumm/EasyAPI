@@ -2,7 +2,7 @@
 
 import type { GetColumnsFn } from "@/components/JsonContent";
 import type { ChipProps } from "@heroui/react";
-import type { ZxcvbnResult } from "@zxcvbn-ts/core";
+import type { PasswordStrengthResult } from "@/app/api/password-strength/route";
 import type { FC } from "react";
 import type { ClientComponentProps } from "@/typings";
 
@@ -11,10 +11,6 @@ import { Chip, Input, toast } from "@heroui/react";
 
 import JsonContent from "@/components/JsonContent";
 import { postApiData } from "@/services/common";
-
-// zxcvbn 结果里不再回显 password 字段（见 api/password-strength），
-// 密码展示直接用输入框里的本地值
-type PasswordStrengthResult = Omit<ZxcvbnResult, "password">;
 
 const ClientComponent: FC<ClientComponentProps> = ({ title }) => {
   const [password, setPassword] = useState("abc123456");
