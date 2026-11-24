@@ -12,7 +12,9 @@ import Provider from "./Provider";
 import { GoogleUtilities, MicrosoftClarity } from "@/components/Analytics";
 import Footer from "@/components/Footer";
 import FullLoading from "@/components/FullLoading";
+import JsonLd from "@/components/JsonLd";
 import { AUTHOR_HANDLE } from "@/lib/author";
+import { createSiteJsonLd } from "@/lib/seo";
 import pkg from "#/package.json";
 
 export const metadata: Metadata = {
@@ -74,6 +76,8 @@ export default function RootLayout({
           content={process.env.NEXT_PUBLIC_APP_NAME}
           name="apple-mobile-web-app-title"
         />
+        {/* 站点级结构化数据（Organization + WebSite）：此前全站零 JSON-LD */}
+        <JsonLd schema={createSiteJsonLd()} />
         {/* Google 统计 */}
         <GoogleUtilities />
         {/* 微软统计 */}

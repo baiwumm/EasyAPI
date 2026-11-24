@@ -1,4 +1,5 @@
 import QuoteWorld from "@/components/QuoteWorld";
+import ToolPage from "@/components/ToolPage";
 import { createPageMetadata } from "@/lib/seo";
 
 /*
@@ -20,6 +21,8 @@ export const metadata = createPageMetadata(seo);
 
 export default function DiaryPoetry() {
   return (
-    <QuoteWorld formWhoField="author" fromField="origin" title={seo.title} />
+    <ToolPage seo={seo}>
+      <QuoteWorld formWhoField="author" fromField="origin" title={seo.title} />
+    </ToolPage>
   );
 }

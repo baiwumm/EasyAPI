@@ -1,4 +1,5 @@
 import QuoteWorld from "@/components/QuoteWorld";
+import ToolPage from "@/components/ToolPage";
 import { createPageMetadata } from "@/lib/seo";
 
 /*
@@ -19,5 +20,9 @@ const seo = {
 export const metadata = createPageMetadata(seo);
 
 export default function Riddle() {
-  return <QuoteWorld mode="riddle" title={seo.title} />;
+  return (
+    <ToolPage seo={seo}>
+      <QuoteWorld mode="riddle" title={seo.title} />
+    </ToolPage>
+  );
 }

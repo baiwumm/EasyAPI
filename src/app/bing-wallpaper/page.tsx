@@ -2,6 +2,7 @@ import { Typography } from "@heroui/react";
 import Image from "next/image";
 
 import CopyText from "@/components/CopyText";
+import ToolPage from "@/components/ToolPage";
 import { getBingWallpaper } from "@/lib/server/bing-wallpaper";
 import { createPageMetadata } from "@/lib/seo";
 import { getUrl } from "@/lib/utils";
@@ -31,24 +32,26 @@ export default async function BingWallpaper() {
   const wallpaper = await getBingWallpaper();
 
   return (
-    <div className="flex-1 flex flex-col justify-between gap-4">
-      <Typography
-        className="text-2xl font-black shrink-0 tracking-normal"
-        type="h1"
-      >
-        {seo.title}
-      </Typography>
-      <div className="relative flex-1 w-full h-full">
-        <Image
-          fill
-          alt={wallpaper.title}
-          className="object-cover rounded-2xl"
-          src={getUrl(wallpaper.url)}
-        />
+    <ToolPage seo={seo}>
+      <div className="flex-1 flex flex-col justify-between gap-4">
+        <Typography
+          className="text-2xl font-black shrink-0 tracking-normal"
+          type="h1"
+        >
+          {seo.title}
+        </Typography>
+        <div className="relative flex-1 w-full h-full">
+          <Image
+            fill
+            alt={wallpaper.title}
+            className="object-cover rounded-2xl"
+            src={getUrl(wallpaper.url)}
+          />
+        </div>
+        <div className="flex justify-center shrink-0">
+          <CopyText content={wallpaper.url} />
+        </div>
       </div>
-      <div className="flex justify-center shrink-0">
-        <CopyText content={wallpaper.url} />
-      </div>
-    </div>
+    </ToolPage>
   );
 }

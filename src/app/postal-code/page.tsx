@@ -1,5 +1,6 @@
 import ClientComponent from "./ClientComponent";
 
+import ToolPage from "@/components/ToolPage";
 import { createPageMetadata } from "@/lib/seo";
 
 /*
@@ -20,5 +21,9 @@ const seo = {
 export const metadata = createPageMetadata(seo);
 
 export default function PostalCode() {
-  return <ClientComponent title={seo.title} />;
+  return (
+    <ToolPage seo={seo}>
+      <ClientComponent title={seo.title} />
+    </ToolPage>
+  );
 }

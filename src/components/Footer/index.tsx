@@ -78,6 +78,13 @@ const Footer: FC = () => {
         . All rights reserved.
       </Description>
       <div className="flex gap-2 items-center flex-col sm:flex-row justify-self-center lg:justify-self-end whitespace-nowrap">
+        {/* 接口文档入口：/docs 此前全站无内链（孤儿页，爬虫只能靠 sitemap 发现） */}
+        <Link
+          className="hover:text-accent no-underline transition-colors"
+          href="/docs"
+        >
+          <Description>接口文档</Description>
+        </Link>
         {IcpLinks.map(({ image, url, label }) => (
           <Link
             key={url}
