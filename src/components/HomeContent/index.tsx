@@ -71,6 +71,11 @@ export default function HomeContent({ data }: HomeContentProps) {
 
   return (
     <>
+      {/* 全站主 H1：与 <title> 同源（APP_TITLE）。此前每个分类名都是 H1，
+          首页出现 N 个 H1 且与 title 脱节，主题信号被稀释 */}
+      <Typography className="text-2xl font-black tracking-normal" type="h1">
+        {process.env.NEXT_PUBLIC_APP_TITLE}
+      </Typography>
       <div className="space-y-6">
         {list.map(({ id, name, apis }) => {
           return (
@@ -82,7 +87,7 @@ export default function HomeContent({ data }: HomeContentProps) {
             >
               <Typography
                 className="text-lg font-black tracking-normal"
-                type="h1"
+                type="h2"
               >
                 {name}
               </Typography>
