@@ -111,3 +111,5 @@ NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=
 ## 🌸 许可证
 
 [MIT](./LICENSE) © [baiwumm](https://baiwumm.com)
+
+<!-- 临时验证分支：确认 Vercel Preview 环境变量已配好，验证后即删，不合并 -->
