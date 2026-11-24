@@ -258,8 +258,8 @@ importers:
         specifier: 4.1.2
         version: 4.1.2
       crypto-random-string:
-        specifier: ^5.0.0
-        version: 5.0.0
+        specifier: ^6.0.0
+        version: 6.0.0
       dayjs:
         specifier: ^1.11.23
         version: 1.11.23
@@ -2291,9 +2291,9 @@ packages:
     resolution: {integrity: sha512-uV2QOWP2nWzsy2aMp8aRibhi9dlzF5Hgh5SHaB9OiTGEyDTiJJyx0uy51QXdyWbtAHNua4XJzUKca3OzKUd3vA==}
     engines: {node: '>= 8'}
 
-  crypto-random-string@5.0.0:
-    resolution: {integrity: sha512-KWjTXWwxFd6a94m5CdRGW/t82Tr8DoBc9dNnPCAbFI1EBweN6v1tv8y4Y1m7ndkp/nkIBRxUxAzpaBnR2k3bcQ==}
-    engines: {node: '>=14.16'}
+  crypto-random-string@6.0.0:
+    resolution: {integrity: sha512-x0TyqnFhk1RLzfzhtnDUEzUEox0C9NoY6s29nUVKUg8KZXa8XXgWD37T1+1yfrFI2ccSUnfscJ2y6n1FhR9+hw==}
+    engines: {node: '>=22'}
 
   css-tree@3.2.1:
     resolution: {integrity: sha512-X7sjQzceUhu1u7Y/ylrRZFU2FS6LRiFVp6rKLPg23y3x3c3DOKAwuXGDp+PAGjh6CSnCjYeAul8pcT8bAl+lSA==}
@@ -4103,6 +4103,10 @@ packages:
     resolution: {integrity: sha512-BqNMp7rXio6ON4XM1+ZM3RdGSo7vZvxUlMk14FVKEgWcphlpq4XKAYhGnXYMju68TSa6OO+rV8fbZFzJPIZRKQ==}
     peerDependencies:
       chroma-js: 3.x
+
+  uint8array-extras@1.6.0:
+    resolution: {integrity: sha512-8iAasVS4wUx0gPLjH8Xtz2PeDzTSiy8QiLGu2DT3X5GU+egFEQhpnbtkehbAwjvDcxIERmCYcysiODFmE3Ud0Q==}
+    engines: {node: '>=18'}
 
   unbox-primitive@1.1.0:
     resolution: {integrity: sha512-nWJ91DjeOkej/TA8pXQ3myruKpKEYgqvpw9lz4OPHj/NWFNluYrjbz9j01CJ8yKQd2g4jFoOkINCTW2I5LEEyw==}
@@ -6084,9 +6088,10 @@ snapshots:
       shebang-command: 2.0.0
       which: 2.0.2
 
-  crypto-random-string@5.0.0:
+  crypto-random-string@6.0.0:
     dependencies:
-      type-fest: 2.19.0
+      type-fest: 5.10.0
+      uint8array-extras: 1.6.0
 
   css-tree@3.2.1:
     dependencies:
@@ -8098,6 +8103,8 @@ snapshots:
   uicolors-generator@1.2.4(chroma-js@3.2.0):
     dependencies:
       chroma-js: 3.2.0
+
+  uint8array-extras@1.6.0: {}
 
   unbox-primitive@1.1.0:
     dependencies:
