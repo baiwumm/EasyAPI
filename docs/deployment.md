@@ -10,6 +10,11 @@
 自托管同样可行，只需保证 Node 环境可跑 `pnpm build && pnpm start`，
 并补齐下方的服务端变量（`NEXT_PUBLIC_SUPABASE_*` 缺失时接口直接不可用）。
 
+> **Vercel 环境变量三个环境都要配**：Production / Preview / Development 勾选同一批
+> `NEXT_PUBLIC_*` 公开变量。Preview 漏配时，PR 预览部署会在 `/api/*` 与页面预渲染阶段报
+> `@supabase/ssr: Your project's URL and API key are required` 直接构建失败（生产不受影响），
+> 表现为所有 PR 的 Vercel 检查都红、而本地带 `.env.local` 的 `pnpm build` 全绿。
+
 ## 环境变量清单
 
 `.env.example` 是唯一权威来源，下面是逐项说明与缺失时的表现。
