@@ -62,6 +62,19 @@ public/openapi.yaml       # 手工维护的 OpenAPI 3.1（/docs 数据源；版�
 - `pnpm build` 需要 env：没有 `.env.local` 时会在 `/api/*` 与页面预渲染阶段报 `@supabase/ssr: Your project's URL and API key are required`，先按 `.env.example` 复制一份（`.env.*` 已被 gitignore）。
 - CI 兜底：push(main)/PR 自动跑 lint/typecheck/test；发版走 Release workflow（手动触发，四道预检全绿后 release-it 一键发版）。细则见 `docs/deployment.md` 的「CI 与自动发版」。
 
+## 提交信息规范
+
+所有项目提交（含本文档所属仓库）统一遵循 `ai-commit-trailer` skill：
+
+- 提交信息用 Conventional Commits（feat / fix / docs / test / chore / refactor，scope 用目录或模块名）。
+- **AI 参与**的提交必须带 trailer：正文后空一行追加连续 trailer 块，`Co-authored-by` 与
+  `Assisted-by` **各自独占一行**；`Co-authored-by` 只写产品名与 registry 邮箱（模型名不进这里），
+  模型名只进 `Assisted-by` 的 `host:model`；纯人工改动不加 trailer。
+- 具体写法、身份表与校验流程以 `ai-commit-trailer` skill 为唯一规范，本文不重复其定义；身份按
+  实际运行本次会话的产品匹配其 `references/agents.json`，不得照抄其它产品。
+- 提交前用该 skill 的 `normalize.mjs check --message <文件>` 自检，exit 0 才算通过（`fix --write`
+  可自动归位 trailer）。
+
 ## Windows 本地坑
 
 - **lint 冒出上万条 `Delete ␍`**：本机 `core.autocrlf=true` 把 LF 检出成 CRLF 所致，判 lint 是否干净看**去掉 `prettier/prettier` 后还剩几条**。
