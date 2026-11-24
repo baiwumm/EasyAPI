@@ -1,0 +1,37 @@
+title: "[Show & tell] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        分享你的用法与二次开发：批量取了哪些接口、怎么接进自己的项目、自建部署踩了什么坑。截图欢迎，但要确认画面里没有密钥、邮箱或私有路径。
+  - type: input
+    id: what
+    attributes:
+      label: 分享什么
+      placeholder: 我用 EasyAPI 的 hitokoto 做了个每日壁纸小程序
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: 详情
+      description: 用到哪些接口、怎么组织调用、遇到过什么问题。
+    validations:
+      required: true
+  - type: textarea
+    id: media
+    attributes:
+      label: 截图或链接
+      description: 直接粘贴图片，或给出公开地址。
+  - type: input
+    id: stack
+    attributes:
+      label: 技术栈与部署方式
+      placeholder: 微信小程序 + Vercel 中转
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: 发布前确认
+      options:
+        - label: 截图里没有密钥、token、邮箱或私有路径。
+          required: true
