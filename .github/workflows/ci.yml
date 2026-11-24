@@ -4,12 +4,18 @@ name: CI
 # build 不在这里跑——Vercel 会用生产环境变量做真正的构建，这里只做轻量回归拦截；
 # 带完整 build 预检的发版流程见 release.yml。
 #
-# 说明：仓库索引全部 LF，Linux 检出无 CRLF 噪音，`pnpm lint` 以 0 warning 为准。
+# job id 即 main ruleset 里 required status checks 的 context（`Lint / Typecheck / Test`），
+# 改名时先同步 ruleset（见 docs/deployment.md「仓库治理」）。
+#
+# 说明：仓库经 .gitattributes 统一 LF，Linux 检出无 CRLF 噪音，`pnpm lint` 以 0 warning 为准。
 
 on:
   push:
     branches: [main]
   pull_request:
+
+permissions:
+  contents: read
 
 concurrency:
   group: ci-${{ github.ref }}
@@ -33,6 +39,10 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      # eslint.config.mjs 属禁改文件，opengraph-image.tsx 的 3 条 img 告警无法在
+      # 配置层豁免，因此这里仍以 error 为失败线（warning 放行）；
+      # 人工复核时用 `pnpm exec eslint src --max-warnings 0`，只需要看非
+      # prettier/prettier 的剩余条数（Windows 本机 CRLF 噪音见 AGENTS.md）。
       - name: Lint
         run: pnpm lint
 
