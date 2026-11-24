@@ -15,6 +15,13 @@ enums 改名 / G4，见文末「已完成」）。新发现的待办按原表格
 
 ## 已完成
 
+- 2026-11-24 发版流程改造（对齐 better-nav）：`release.yml` 从 workflow_dispatch
+  （CI 里用 GITHUB_TOKEN 直接推 main）改为 tag 触发（`push: tags: v*`）——校验 tag
+  落点与版本一致 + lint/typecheck/test/build 复检 + 取 CHANGELOG 段落创建 GitHub
+  Release；release-it 移除 github 插件、加 `requireBranch: main` 与 annotated tag，
+  发版推送改由 owner 本地完成（main ruleset 要求必需检查，GITHUB_TOKEN 推送不触发
+  workflow、必被拒）。同期完成仓库健康度配置、依赖升级（zxcvbn v4 迁移 / motion 14
+  等）、Topics 重设、Vercel Preview 环境变量补齐。
 - 2026-11 权限模型改造：登录鉴权从 `ADMIN_EMAILS` 白名单收敛为
   「注册已关闭（Dashboard 关 Allow new users to sign up）、登录即可信」，
   与 better-nav 同模型——删 `requireAdmin` 与 `/api/auth/me`，写接口与

@@ -93,14 +93,22 @@ secrets、Supabase Dashboard 的 OAuth provider 配置与 Redirect URLs 白名�
 |---|---|---|
 | `ci.yml` | push(main) / PR | `lint` + `typecheck` + `test` 三道门禁，轻量回归拦截；生产构建交给 Vercel |
 | `dependabot-auto-merge.yml` | dependabot PR | 非 major 更新直接开 GitHub 原生 auto-merge；是否真合仍由 ruleset 的必需检查决定 |
-| `release.yml` | 手动（workflow_dispatch） | 同上三道门禁 + `build` 预检，全绿后 release-it 完成 版本号 → openapi.yaml 同步 → CHANGELOG.md → Release 提交 → tag → GitHub Release，推上 main 后 Vercel 自动跟随部署 |
+| `release.yml` | push tag `v*` | 本地 `pnpm release` 打出 tag 后触发：校验 tag 落在 main 且版本一致 → lint / typecheck / test / build 复检 → 取 CHANGELOG 对应段落创建 GitHub Release |
 
-### 触发发版（二选一）
+### 触发发版（本地一条命令）
 
-- GitHub Actions 页面 → Release → Run workflow：选 patch / minor / major，或直接填自定义版本号；
-- 命令行：`gh workflow run release.yml -f bump=minor`（自定义版本号用 `-f version=2.10.0`，容忍 `v` 前缀写法）。
+发版动作全部在本地完成（为什么必须本地，见下方「发版相关约定」最后一条）：
 
-本地 `pnpm release` 仍可用（需本地 `GITHUB_TOKEN`），与 CI 共用 `.release-it.json`，行为一致。
+```bash
+pnpm release                       # patch
+pnpm exec release-it minor         # minor
+pnpm exec release-it major         # major
+pnpm exec release-it 3.1.0         # 自定义版本号
+```
+
+release-it 一次性完成 版本号 bump → openapi.yaml 同步（after:bump hook）→ CHANGELOG.md →
+Release 提交 → annotated tag `v*` → 推送 main 与 tag。tag 推上远端即触发 `release.yml`
+做校验、四道门禁复检并创建 GitHub Release。全程**无需 GITHUB_TOKEN**（github 插件已移除）。
 
 ### 发版相关约定
 
@@ -113,8 +121,12 @@ secrets、Supabase Dashboard 的 OAuth provider 配置与 Redirect URLs 白名�
   `NEXT_PUBLIC_SUPABASE_URL`、`NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`、`NEXT_PUBLIC_APP_URL`
   （生产域名 `https://api.baiwumm.com`，供 sitemap/metadata 等构建期内联；
   2026-11 起由 ANON_KEY 迁移为 PUBLISHABLE_KEY，旧 secret 需从 GitHub/Vercel 移除）。
-- Release workflow 用 `GITHUB_TOKEN`（`contents: write`）推送提交与 tag 并创建 Release，
-  提交作者为 `github-actions[bot]`；`concurrency: release` 保证同时只有一个发版流程。
+- **发版推送必须本地做**：main ruleset 要求 `Lint / Typecheck / Test` 必需检查，而 GITHUB_TOKEN
+  触发的推送不会连带运行任何 workflow（该检查永远出不来），个人仓库 ruleset 又无法把 GitHub Actions
+  加进 bypass 名单——所以 release-it 推 main 必须用 owner 身份在本地完成（owner 有 bypass always）。
+  `release.yml` 只做不涉及推 main 的部分；创建 GitHub Release 是 API 调用，不受 ruleset 限制。
+  Release 提交作者为本地 git 配置的 owner（不再由 `github-actions[bot]` 产生）；`concurrency: release-*` 按 tag 隔离。
+  （旧 workflow_dispatch 让 release-it 在 CI 里用 GITHUB_TOKEN 直接推 main，ruleset 上线后必被拒，已废弃。）
 
 ## 仓库治理（GitHub 侧配置）
 

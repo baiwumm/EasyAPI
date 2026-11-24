@@ -1,7 +1,8 @@
 /**
  * 发版时同步 public/openapi.yaml 的 info.version —— 由 .release-it.json 的
  * after:bump hook 调用（此时 package.json 已写入新版本号），并把改动
- * git add 进 Release 提交。本地手动跑 `pnpm release` 与 CI 发版行为一致。
+ * git add 进 Release 提交。发版在本地 `pnpm release` 完成（owner 身份推 main，
+ * tag 触发 CI 校验并发 GitHub Release，见 .github/workflows/release.yml）。
  *
  * 不从命令行参数取版本号：直接读 bump 后的 package.json，避免依赖
  * release-it 的模板插值行为；两处版本号永远以 package.json 为真源。

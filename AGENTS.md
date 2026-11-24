@@ -18,7 +18,7 @@ AI agents 在本仓库工作的入口规范。本文件只放「不看就会踩�
 | Lint 检查 / 自动修复 | `pnpm lint` / `pnpm lint:fix` |
 | 运行测试 | `pnpm test`（watch：`pnpm test:watch`） |
 | 启动生产服务 | `pnpm start` |
-| 发布 | `pnpm release`（release-it + conventional-changelog） |
+| 发布 | `pnpm release`（release-it + conventional-changelog；**本地执行**，tag 触发 CI 校验并发 Release） |
 
 ## Architecture
 
@@ -60,7 +60,7 @@ public/openapi.yaml       # 手工维护的 OpenAPI 3.1（/docs 数据源；版�
 四道全绿才能提交，任一不过不要提：`pnpm lint`（以 0 warning 为准）、`pnpm typecheck`、`pnpm test`、`pnpm build`。细则见 `docs/code-standards.md`。
 
 - `pnpm build` 需要 env：没有 `.env.local` 时会在 `/api/*` 与页面预渲染阶段报 `@supabase/ssr: Your project's URL and API key are required`，先按 `.env.example` 复制一份（`.env.*` 已被 gitignore）。
-- CI 兜底：push(main)/PR 自动跑 lint/typecheck/test；发版走 Release workflow（手动触发，四道预检全绿后 release-it 一键发版）。细则见 `docs/deployment.md` 的「CI 与自动发版」。
+- CI 兜底：push(main)/PR 自动跑 lint/typecheck/test；发版在本地 `pnpm release`（owner 身份推 main，绕过 ruleset），tag 触发 Release workflow 做校验 / 四道复检并创建 GitHub Release。细则见 `docs/deployment.md` 的「CI 与自动发版」。
 
 ## 提交信息规范
 
