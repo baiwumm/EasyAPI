@@ -77,7 +77,10 @@ public/openapi.yaml       # 手工维护的 OpenAPI 3.1（/docs 数据源；版�
 
 ## Windows 本地坑
 
-- **lint 冒出上万条 `Delete ␍`**：本机 `core.autocrlf=true` 把 LF 检出成 CRLF 所致，判 lint 是否干净看**去掉 `prettier/prettier` 后还剩几条**。
+- **lint 冒出上万条 `Delete ␍`**：本机 `core.autocrlf=true` 把 LF 检出成 CRLF 所致
+  （仓库已加 `.gitattributes`（`* text=auto eol=lf`）从源头修；老工作区需
+  `git add --renormalize .` 后提交一次才能真正落地）。判 lint 是否干净看
+  **去掉 `prettier/prettier` 后还剩几条**：`pnpm exec eslint src -f json` 过滤即可。
 - **`src/app/opengraph-image.tsx` 的 img 告警**：Windows 平台误报（CI 判定正常且该文件本就被规则豁免），忽略即可；**不要加** `eslint-disable @next/next/no-img-element`（CI 会报 unused）。GridReveal 的行级豁免是真命中，保留。
 - 其余踩坑按主题查：password-strength 测试词库 → `docs/code-standards.md`；HeroUI `render` 用法 → `docs/ai-tooling.md`；换字体补原生 DLL → `docs/deployment.md`。
 
@@ -89,7 +92,8 @@ public/openapi.yaml       # 手工维护的 OpenAPI 3.1（/docs 数据源；版�
 | 改 `/api/*` 前后 | `docs/api-docs.md` |
 | 写代码前 / 提交前 | `docs/code-standards.md` |
 | 查 HeroUI 用法、Skill、MCP | `docs/ai-tooling.md` |
-| 部署、环境变量、发版 | `docs/deployment.md` |
+| 部署、环境变量、发版、仓库治理 | `docs/deployment.md` |
+| 贡献流程、行为准则、安全问题上报 | `CONTRIBUTING.md` / `CODE_OF_CONDUCT.md` / `SECURITY.md` |
 | 改库 / 管理用户 / 密钥运维（免人工 Dashboard） | `docs/deployment.md` 的「Agent 运维指令」 |
 | 升级依赖前 | `docs/upgrades.md` |
 | 查某处为什么这么改 | `docs/audit-2026-10.md` |

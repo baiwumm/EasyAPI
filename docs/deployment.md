@@ -82,11 +82,12 @@ secrets、Supabase Dashboard 的 OAuth provider 配置与 Redirect URLs 白名�
 
 ## CI 与自动发版
 
-仓库有两个 GitHub Actions workflow（`.github/workflows/`）：
+仓库有三个 GitHub Actions workflow（`.github/workflows/`）：
 
 | workflow | 触发 | 内容 |
 |---|---|---|
 | `ci.yml` | push(main) / PR | `lint` + `typecheck` + `test` 三道门禁，轻量回归拦截；生产构建交给 Vercel |
+| `dependabot-auto-merge.yml` | dependabot PR | 非 major 更新直接开 GitHub 原生 auto-merge；是否真合仍由 ruleset 的必需检查决定 |
 | `release.yml` | 手动（workflow_dispatch） | 同上三道门禁 + `build` 预检，全绿后 release-it 完成 版本号 → openapi.yaml 同步 → CHANGELOG.md → Release 提交 → tag → GitHub Release，推上 main 后 Vercel 自动跟随部署 |
 
 ### 触发发版（二选一）
@@ -109,6 +110,26 @@ secrets、Supabase Dashboard 的 OAuth provider 配置与 Redirect URLs 白名�
   2026-11 起由 ANON_KEY 迁移为 PUBLISHABLE_KEY，旧 secret 需从 GitHub/Vercel 移除）。
 - Release workflow 用 `GITHUB_TOKEN`（`contents: write`）推送提交与 tag 并创建 Release，
   提交作者为 `github-actions[bot]`；`concurrency: release` 保证同时只有一个发版流程。
+
+## 仓库治理（GitHub 侧配置）
+
+这些配置不在代码里，改动用 `gh api` 直连，**不要只在网页点**（下次核对时以本节为准）。
+
+| 项 | 现状 |
+|---|---|
+| Ruleset `main` | 禁删除、禁强推；必需检查 `Lint / Typecheck / Test`；维护者（bypass `always`）可直接推 |
+| 合并 | squash / merge / rebase 全开；合并后自动删分支；auto-merge 与 update branch 可用 |
+| 安全 | Dependabot alerts + 自动安全更新、CodeQL（default setup，weekly）、Secret scanning + push protection、私密漏洞报告 全开 |
+| 社区 | Issues + Discussions 开；Wiki 关；`SECURITY.md` / `CONTRIBUTING.md` / `CODE_OF_CONDUCT.md` / 模板齐全 |
+| 行尾 | `.gitattributes` 强制 LF，覆盖 Windows 的 `core.autocrlf=true` |
+
+改 ruleset 的必需检查名时要与 `ci.yml` 里的 `jobs.<id>.name` 对齐，否则 PR 会永远等一个不存在的检查。
+核对命令：
+
+```bash
+gh api repos/baiwumm/EasyAPI/rulesets --jq '.[].id'
+gh api repos/baiwumm/EasyAPI/rulesets/<id> --jq '.rules'
+```
 
 ## 构建产物注意
 
