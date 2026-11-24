@@ -28,12 +28,9 @@
   },
   "git": {
     "commitMessage": "chore: Release v${version}",
+    "requireBranch": "main",
     "tagName": "v${version}",
+    "tagAnnotation": "Release v${version}",
     "additiveStaging": true
-  },
-  "github": {
-    "release": true,
-    "releaseName": "Release v${version}",
-    "draft": false
   }
 }

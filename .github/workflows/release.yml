@@ -1,58 +1,56 @@
 name: Release
 
-# 一键远程发版（workflow_dispatch，请在 main 上触发）：lint / typecheck / test / build
-# 四道预检全绿后才进入 release-it，任一失败即中止、不产生任何提交；
-# 通过后由 release-it 一次性完成 版本号 → openapi.yaml 同步 → CHANGELOG.md →
-# Release 提交 → tag → GitHub Release，推上 main 后 Vercel 自动跟随部署。
+# Tag 触发发版（对齐 better-nav 模式）：发版动作在本地完成——开发者在 main 上跑
+# `pnpm release`（release-it）一次性完成 版本号 → openapi.yaml 同步 → CHANGELOG.md →
+# Release 提交 → 打 tag v* → 推送 main。tag 推上远端后由本工作流接管：
+# 校验 tag 落点与版本一致 → lint / typecheck / test / build 复检 →
+# 用 CHANGELOG 对应段落创建 GitHub Release。
 #
-# 触发方式（二选一）：
-#   · GitHub Actions 页面 → Release → Run workflow：选 patch / minor / major，或直接填自定义版本号；
-#   · gh workflow run release.yml -f bump=minor（自定义版本号用 -f version=2.10.0）。
+# 为什么发版推送必须在本地做：main ruleset 要求 `Lint / Typecheck / Test` 必需检查，
+# 而 GITHUB_TOKEN 触发的推送不会连带运行任何 workflow（该检查永远出不来），
+# 个人仓库 ruleset 又无法把 GitHub Actions 加进 bypass 名单——所以推 main 必须用
+# owner 身份本地完成（owner 有 bypass always）；本工作流只做不涉及推 main 的部分，
+# 创建 GitHub Release 是 API 调用，不受 branch ruleset 限制。
+# （旧的 workflow_dispatch 模型让 release-it 在 CI 里用 GITHUB_TOKEN 直接推 main，
+#   在 ruleset 上线后必被拒，已废弃。）
 #
-# 设计取舍：
-#   · 版本真源是根 package.json（release-it bump），tag 由 .release-it.json 的
-#     git.tagName 锁定为 v 前缀（v2.10.0 起，历史 tag 已由
-#     scripts/migrate-tags-v-prefix.mjs 迁移）；openapi.yaml 的 info.version 由
-#     after:bump hook 读 bump 后的 package.json 自动同步，无需手改；
-#   · build 需要 Supabase 公开变量（缺失时 @supabase/ssr 在预渲染阶段报错），
-#     均为 NEXT_PUBLIC_ 前缀的前端公开值，存放于仓库 Actions secrets；
-#   · 权限仅 contents: write，最小化授权；release-it 以 GITHUB_TOKEN 推送提交与
-#     tag 并创建 GitHub Release，提交作者为 github-actions[bot]；
-#   · 本地仍可 `pnpm release`（需本地 GITHUB_TOKEN），与 CI 共用 .release-it.json，行为一致。
+# 日常发版（一条命令，无需 GITHUB_TOKEN——github 插件已从 release-it 移除）：
+#   pnpm release                                  # patch
+#   pnpm exec release-it minor|major|<版本号>     # 其他增量
+#
+# 失败处置：
+#   · lint / typecheck / test / build 失败时 tag 已推上远端、Release 不会创建：
+#     修复后正常发下一版本即可；若要彻底回滚：
+#     git push origin :refs/tags/v0.x.y 删远端 tag + revert Release 提交
+#   · 仅 GitHub Release 创建失败（如 API 抖动）：gh run rerun <id> --failed 补上
+#
+# tag 校验：package.json 版本必须与 tag 一致，且 tag 必须落在 main 上——防止把
+# 未进主干的代码发出去（旧提交上打的 tag 不会通过校验）。
+#
+# openapi.yaml 的 info.version 不用手改：release-it 的 after:bump hook 会读 bump 后的
+# package.json 自动同步并纳入 Release 提交（scripts/sync-openapi-version.mjs）。
 
 on:
-  workflow_dispatch:
-    inputs:
-      bump:
-        description: 版本类型
-        type: choice
-        required: true
-        default: patch
-        options:
-          - patch
-          - minor
-          - major
-      version:
-        description: 自定义版本号（选填，填写后覆盖版本类型，如 2.10.0）
-        type: string
-        required: false
+  push:
+    tags:
+      - 'v*'
 
 permissions:
-  contents: write # release-it 需要推送 Release 提交与 tag，并创建 GitHub Release
+  contents: write # 创建 GitHub Release
 
 concurrency:
-  group: release # 同一时刻只允许一个发版流程排队
+  group: release-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
   release:
-    name: Lint / Test / Build / Release
+    name: Verify & Create Release
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v7
         with:
-          # release-it 需要完整 tag 历史来计算上一版本与 CHANGELOG 区间
+          # 下面要判 tag 是否落在 main 上，需要 origin/main 可达
           fetch-depth: 0
 
       - uses: pnpm/action-setup@v6 # 版本取自 package.json 的 packageManager 字段
@@ -65,6 +63,16 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Verify tag matches version and sits on main
+        run: |
+          node -e "const p=require('./package.json');const t=process.env.GITHUB_REF_NAME.replace(/^v/,'');if(p.version!==t){console.error('package.json version '+p.version+' != tag '+t);process.exit(1)}"
+          git merge-base --is-ancestor "$GITHUB_SHA" origin/main \
+            || { echo "tag 不在 origin/main 上，拒绝发布（避免把没进主干的代码发出去）"; exit 1; }
+
+      # 同步复检：tag 指向的 Release 提交虽在 main 上，但 main 的 CI 是异步的，
+      # 此时未必跑完；发出的版本必须四道门禁全绿。build 需要 Supabase 公开变量
+      # （缺失时 @supabase/ssr 在预渲染阶段报错），均为 NEXT_PUBLIC_ 前端公开值，
+      # 存放于仓库 Actions secrets。
       - name: Lint
         run: pnpm lint
 
@@ -81,19 +89,49 @@ jobs:
           NEXT_PUBLIC_APP_URL: ${{ secrets.NEXT_PUBLIC_APP_URL }}
         run: pnpm build
 
-      - name: Configure git author
+      # Release 正文取 CHANGELOG.md 里本版本那一段（@release-it/conventional-changelog 生成，
+      # 标题形如 `## [3.0.0](…/compare/v2.10.0…v3.0.0) (2026-11-10)`）。
+      # 不用 --generate-notes：它靠合并的 PR 列表生成摘要，结果只剩一行 compare 链接。
+      # 取不到段落时退回自动生成，不让发布链路变红。
+      - name: Build release notes from CHANGELOG
+        id: notes
         run: |
-          git config user.name 'github-actions[bot]'
-          git config user.email 'github-actions[bot]@users.noreply.github.com'
+          node -e '
+            const fs = require("node:fs");
+            const v = process.env.GITHUB_REF_NAME.replace(/^v/, "");
+            let lines = [];
+            try { lines = fs.readFileSync("CHANGELOG.md", "utf8").split(/\r?\n/); } catch {}
+            const start = lines.findIndex((l) => {
+              const m = l.match(/^##\s*\[(\d+\.\d+\.\d+)\]/);
+              return m && m[1] === v;
+            });
+            let body = "";
+            if (start >= 0) {
+              let end = lines.length;
+              for (let i = start + 1; i < lines.length; i += 1) {
+                if (/^##\s/.test(lines[i])) { end = i; break; }
+              }
+              body = lines.slice(start, end).join("\n").trim();
+            }
+            if (body) {
+              fs.writeFileSync("/tmp/release-notes.md", body + "\n");
+              console.log("Release 正文取 CHANGELOG 的 " + v + " 段（" + body.split("\n").length + " 行）");
+            } else {
+              console.log("::notice::CHANGELOG 没有 " + v + " 段，退回 --generate-notes");
+            }
+          '
+          if [ -s /tmp/release-notes.md ]; then
+            echo "has_notes=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_notes=false" >> "$GITHUB_OUTPUT"
+          fi
 
-      - name: Release
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-          BUMP: ${{ inputs.bump }}
-          CUSTOM_VERSION: ${{ inputs.version }}
+      - name: Create GitHub Release
         run: |
-          INCREMENT="${CUSTOM_VERSION:-$BUMP}"
-          INCREMENT="${INCREMENT#v}" # 容忍 v 前缀写法，release-it 接受纯版本号
-          echo "发版增量：${INCREMENT}"
-          # 不用 `pnpm release -- ...`：pnpm 会把 -- 原样透传给脚本，release-it 会误当成版本参数
-          pnpm exec release-it "${INCREMENT}" --ci
+          if [ "${{ steps.notes.outputs.has_notes }}" = "true" ]; then
+            gh release create "$GITHUB_REF_NAME" --verify-tag --title "Release $GITHUB_REF_NAME" --notes-file /tmp/release-notes.md
+          else
+            gh release create "$GITHUB_REF_NAME" --verify-tag --title "Release $GITHUB_REF_NAME" --generate-notes
+          fi
+        env:
+          GH_TOKEN: ${{ github.token }}
