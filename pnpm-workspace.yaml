@@ -11,3 +11,11 @@ allowBuilds:
   cn-font-split: false
   koffi: false
   protobufjs: false
+
+# 修复 Dependabot 告警（dev 依赖链路，仅是构建工具，不进 bundle）：
+#   · get-uri 8.0.1 → 8.0.2 把 basic-ftp 拉到 6.2.4（上游唯一的修复版本）
+#   · @eslint/config-array 0.23.5 → 0.23.6 把 minimatch 拉到 11.x
+# 两处都是转录级补丁升级，升级后须跑齐 pnpm lint / typecheck / test 再提交。
+overrides:
+  get-uri: ^8.0.2
+  "@eslint/config-array": ^0.23.6
