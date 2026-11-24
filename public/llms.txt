@@ -1,0 +1,61 @@
+# EasyAPI
+
+> 一个把常用 API 收拾得干干净净的小站：30+ 个免费在线工具与开放接口，无需注册与鉴权，统一 JSON 响应壳，文案类接口支持 `format=text` 纯文本直出。作者：白雾茫茫丶（[baiwumm.com](https://baiwumm.com)）。
+
+EasyAPI 面向开发者与普通用户：每个工具既有网页版（点开即用），也有可直接 HTTP 调用的开放接口。公开接口按 IP 限流（30 次/60 秒），密码强度检测为 POST（每分钟 20 次）。完整接口规范见 [接口文档](https://api.baiwumm.com/docs)（OpenAPI 3.1，机器可读：<https://api.baiwumm.com/openapi.yaml>）。
+
+## 在线工具页
+
+### 每日推荐
+
+- [每日一言](https://api.baiwumm.com/hitokoto)：随机句子，支持按类型与长度筛选
+- [Bing 每日壁纸](https://api.baiwumm.com/bing-wallpaper)：当天 1080P/4K 壁纸地址与标题
+- [法定节假日](https://api.baiwumm.com/holiday)：全年放假安排、调休上班日与假期余额
+- [二十四节气](https://api.baiwumm.com/solar-term)：指定年份全部节气的公历交节时间
+- [十二时辰黄历](https://api.baiwumm.com/almanac)：指定日期十二时辰的宜忌、冲煞、纳音与九星
+
+### 随机生成
+
+- [随机头像](https://api.baiwumm.com/random-avatar)：DiceBear SVG 头像，十余种风格可固定 seed
+- [随机颜色](https://api.baiwumm.com/random-color)：随机色的 hex/rgb/hsl/hsv 四种格式
+- [随机表情](https://api.baiwumm.com/random-emoji)：随机 emoji 及其英文名称
+- [随机身份证号](https://api.baiwumm.com/random-idcard)：符合校验规则的测试身份证号（仅供测试）
+- [随机图片](https://api.baiwumm.com/random-image)：指定尺寸的真实照片地址（picsum.photos）
+- [随机人物](https://api.baiwumm.com/random-person)：人物肖像图片，性别与尺寸可选
+- [随机字符串](https://api.baiwumm.com/random-string)：密码学安全随机串，7 种类型或自定义字符集
+- [随机用户](https://api.baiwumm.com/random-user)：中文姓名、手机号、邮箱、地址等测试数据
+
+### 心灵语录
+
+- [毒鸡汤](https://api.baiwumm.com/chicken-soup)：扎心毒鸡汤语录
+- [飞花令](https://api.baiwumm.com/chinese-poetry)：随机古诗词，可按作者筛选
+- [每日冷知识](https://api.baiwumm.com/cold-fact)：冷知识，含分类与来源
+- [每日笑话](https://api.baiwumm.com/dairy-joke)：随机笑话
+- [今日诗词](https://api.baiwumm.com/diary-poetry)：每天推荐一句诗词并附出处
+- [舔狗日记](https://api.baiwumm.com/dog-diary)：舔狗独白文案
+- [疯狂星期四](https://api.baiwumm.com/kfc)：KFC 疯四文学文案
+- [土味情话](https://api.baiwumm.com/love-words)：甜到腻的情话文案
+- [歇后语](https://api.baiwumm.com/riddle)：歇后语谜面与答案
+- [骂人宝典（祖安语录）](https://api.baiwumm.com/swearing)：祖安语录（娱乐场景专用）
+- [每日绕口令](https://api.baiwumm.com/tongue-twister)：绕口令文案
+
+### 生活服务
+
+- [生成条形码](https://api.baiwumm.com/barcode)：CODE128、EAN13、UPC 等十种编码的 SVG/PNG 条形码
+- [BMI 计算器](https://api.baiwumm.com/bmi)：输入身高体重得出 BMI 指数与体重状态
+- [颜色转换](https://api.baiwumm.com/color-conversion)：颜色值转 hex/rgb/hsl/hsv，支持 CSS 颜色名
+- [国际区号查询](https://api.baiwumm.com/country-code)：按国家名或区号模糊查询
+- [身份证信息查询](https://api.baiwumm.com/idcard)：解析身份证号的籍贯、性别、年龄、星座
+- [IP 归属地查询](https://api.baiwumm.com/ip-region)：IPv4/IPv6 地理位置与运营商
+- [车牌归属地查询](https://api.baiwumm.com/license-plate)：按省份、城市或车牌前缀查询
+- [密码强度检测](https://api.baiwumm.com/password-strength)：zxcvbn 评分、破解耗时估算与改进建议
+- [邮政编码查询](https://api.baiwumm.com/postal-code)：邮编查地区、地区查邮编双向查询
+- [生成二维码](https://api.baiwumm.com/qrcode)：PNG/SVG/Base64 输出，尺寸可调
+- [Tailwind 色板生成器](https://api.baiwumm.com/tailwind-color-palette)：以基准色生成 50~950 十一档色阶
+
+## 接口约定
+
+- 响应壳：`{ code, msg, data, timestamp }`，`code=200` 成功；HTTP 状态码恒为 200（限流除外）
+- `format=text`：文案类接口直接返回 `text/plain` 正文
+- 限流：30 次/60 秒（按 IP，超限返回 429）
+- 管理端接口未公开，见文档页说明
