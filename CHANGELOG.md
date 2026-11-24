@@ -1,5 +1,44 @@
 # Changelog
 
+## [3.1.0](https://github.com/baiwumm/EasyAPI/compare/v3.0.0...v3.1.0) (2026-11-24)
+
+### ✨ Features | 新功能
+
+* **auth:** OAuth 回调收敛到服务端 /auth/callback 路由（移植 better-nav 模式） ([d4e8f78](https://github.com/baiwumm/EasyAPI/commit/d4e8f78b90499b1c9ef29ee94177d234eebf4028))
+* **seo:** 工具页 SSR 内容块上线，Top 10 页落地（正文 + HowTo/FAQPage） ([40d2650](https://github.com/baiwumm/EasyAPI/commit/40d26500aa159c58b0022a67b5926bb68cad17d6))
+* **seo:** 全站接入 JSON-LD 结构化数据，Footer 补 /docs 入口 ([8894ed7](https://github.com/baiwumm/EasyAPI/commit/8894ed7c8bbefc56200360c035dcfc8bd80be550))
+* **seo:** 新增 llms.txt，品牌名统一 EasyAPI，env 文案对齐实际定位 ([c124b9f](https://github.com/baiwumm/EasyAPI/commit/c124b9f7ba4e5e79195d4228eaab043fa96ed9b2))
+* **seo:** 页面级 metadata 收敛——逐页独立描述与自引用 canonical ([0b03972](https://github.com/baiwumm/EasyAPI/commit/0b0397275d9605e1197a168051071957c9c58d6e))
+* **seo:** GSC 与 Bing Webmaster Tools 所有权验证标记 ([a072dcd](https://github.com/baiwumm/EasyAPI/commit/a072dcd2d423cffa2edb2c0032c7f51f0a9fca9d))
+
+### 🐛 Bug Fixes | Bug 修复
+
+* **seo:** 首页收敛为单一 H1，sitemap 补 /docs 并使用真实内容时间 ([4e0e829](https://github.com/baiwumm/EasyAPI/commit/4e0e829ac67e2fba4f1b9917e3a140c93d4f78fc))
+
+### 🎫 Chores | 其他更新
+
+* 仓库健康度配置、依赖升级与 zxcvbn v4 迁移 ([#10](https://github.com/baiwumm/EasyAPI/issues/10)) ([5c55546](https://github.com/baiwumm/EasyAPI/commit/5c5554663befb746f93ab61d7001be6555c3b3bc))
+* **deps:** 升级 get-uri 与 @eslint/config-array 消除 Dependabot 告警 ([341cb3a](https://github.com/baiwumm/EasyAPI/commit/341cb3a87900462e149f3320409bc78cee24fa5e))
+* **deps:** bump the npm-minor-patch group with 13 updates ([#4](https://github.com/baiwumm/EasyAPI/issues/4)) ([d3974af](https://github.com/baiwumm/EasyAPI/commit/d3974afbb811684fb8332a3bb7b2a43bbd91235b))
+* **git:** 新增 .gitattributes 强制 LF 行尾 ([eae3cfc](https://github.com/baiwumm/EasyAPI/commit/eae3cfc5c6354e1545888d70da4a597ea73d6d5a))
+
+### 📝 Documentation | 文档
+
+* 新增 SECURITY / CONTRIBUTING / CODE_OF_CONDUCT ([62b0317](https://github.com/baiwumm/EasyAPI/commit/62b03170e2878f3c7a28ad9eef82cd93dcf16988))
+* **agents:** 记录仓库治理现状与 LF 修复方式 ([625f9ce](https://github.com/baiwumm/EasyAPI/commit/625f9ce3491755cec84a8387ec757827d32e9715))
+* **agents:** AGENTS.md 增补提交信息规范（ai-commit-trailer skill） ([1f42005](https://github.com/baiwumm/EasyAPI/commit/1f42005121dee346aef51bcc847b427069e3e2aa))
+* **github:** 补齐 issue / PR / discussion 模板 ([7f7c807](https://github.com/baiwumm/EasyAPI/commit/7f7c807a110103bddf6e4d01d321c89cdfae2518))
+
+### 💄 Styles | 风格
+
+* **seo:** 首页主 H1 改 sr-only，页面不再展示 ([6b276eb](https://github.com/baiwumm/EasyAPI/commit/6b276eb3baa20bdc67a0a6c83dd9bdad9f0dc474))
+
+### 🔧 Continuous Integration | CI 配置
+
+* 新增 Dependabot 周更与自动合并工作流 ([6aed2ff](https://github.com/baiwumm/EasyAPI/commit/6aed2ff26b3550557924273094485ba2ca15f4b9))
+* **deps:** 新增 Dependabot 依赖周更配置 ([bd53b79](https://github.com/baiwumm/EasyAPI/commit/bd53b796a894b305974912d13b776d776912685f))
+* **release:** 改为 tag 触发发版，修复 ruleset 阻断 GITHUB_TOKEN 推送 ([#12](https://github.com/baiwumm/EasyAPI/issues/12)) ([0e35f58](https://github.com/baiwumm/EasyAPI/commit/0e35f588b64164c0f4d77924f1d3e43007e4a2ac))
+
 ## [3.0.0](https://github.com/baiwumm/EasyAPI/compare/v2.10.0...v3.0.0) (2026-11-10)
 
 ### ⚠ BREAKING CHANGES
